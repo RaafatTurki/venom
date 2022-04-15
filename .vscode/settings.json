@@ -1,0 +1,12 @@
+{
+    "Lua.diagnostics.globals": [
+        "vim",
+        "log",
+        "inspect",
+        "catch",
+        "prequire",
+        "load_module",
+        "venom",
+        "logi"
+    ]
+}

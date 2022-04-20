@@ -13,8 +13,8 @@ function M.test(variant)
 end
 
 function M.builtin()
-  package.loaded['extras/colors'] = nil
-  local builtin_colors = require('extras/colors')
+  package.loaded['extras/builtin_colors'] = nil
+  local builtin_colors = require 'extras/builtin_colors'
   local lush = require 'lush'
   lush(builtin_colors)
 

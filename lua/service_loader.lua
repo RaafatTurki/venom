@@ -8,23 +8,26 @@ local PluginManager = load_module "plugin_manager"
 PluginManager.attempt_bootstrap()
 PluginManager.setup()
 
+Bind = load_module 'services.bind'
 Misc = load_module 'services.misc'
 Themes = load_module 'services.themes'
 Plugins = load_module 'services.plugins'
 Lang = load_module 'services.lang'
 Lsp = load_module 'services.lsp'
+Statusbar = load_module 'services.statusbar'
 
 venom.actions.pm_post_complete:subscribe(function()
-  -- log("config loading")
+  Bind.bind_leader:invoke()
+
   Misc.base:invoke()
   Misc.open_uri:invoke()
-  Misc.color_col:invoke()
+  -- Misc.color_col:invoke()
   Misc.term_smart_esc:invoke()
   Misc.disable_builtin_plugins:invoke()
   Misc.highlight_yank:invoke()
   Misc.lsp_funcs:invoke()
   -- Misc.automatic_treesitter:invoke()
-
+  
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},
     { func = Themes.material, args = 'darker',       name = 'Material Darker'},
@@ -34,20 +37,25 @@ venom.actions.pm_post_complete:subscribe(function()
     { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
     { func = Themes.default,  args = {},             name = 'Default'},
   })
-
+  
   Plugins.notify:invoke()
   Plugins.possession:invoke()
   Plugins.gitsigns:invoke()
   Plugins.nvim_comment:invoke()
+  Plugins.nvim_tree:invoke()
   Plugins.cmp:invoke()
-  Plugins.feline:invoke()
+  Plugins.toggle_term:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
-  Lsp.install_auto_installable_servers:invoke()
+  Lang.setup_treesitter:invoke()
   Lsp.setup_servers:invoke()
+  Lsp.install_auto_installable_servers:invoke()
 
-  log("config loading complete")
+  Statusbar.setup:invoke()
+
+  Bind.setup:invoke()
+
 end)
 
 local p = {
@@ -63,15 +71,15 @@ local p = {
 PluginManager.plugins = {
   -- plugin_manager
   {'wbthomason/packer.nvim'},
-
   -- themes
   {'rktjmp/lush.nvim'},
   {'marko-cerovac/material.nvim'},
-
   -- lsp
   p.lspconfig,
   {'williamboman/nvim-lsp-installer'},
-
+  -- lang
+  p.treesitter,
+  {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   -- plugins
   {'stevearc/dressing.nvim'},
   {'rcarriga/nvim-notify',                            requires = p.plenary },
@@ -88,23 +96,24 @@ PluginManager.plugins = {
     {'saadparwaiz1/cmp_luasnip'},
     {'L3MON4D3/LuaSnip'},
   }},
+  {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
+  {'ThePrimeagen/harpoon',                            requires = p.plenary },
+  {'akinsho/nvim-toggleterm.lua'},
+  -- statusbar
   {'famiu/feline.nvim',                               requires = { p.devicons, p.gitsigns }},
 
-  -- {'RaafatTurki/vim-quickui'},
   -- {'nvim-treesitter/nvim-treesitter',                 run = ':TSUpdate'},
 
   -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
-
+  
   -- zero config
   -- {'iamcco/markdown-preview.nvim',                    config = 'vim.call("mkdp#util#install")'},
   -- {'NTBBloodbath/rest.nvim',                          requires = p.plenary },
   
   -- config
+  -- {'RaafatTurki/vim-quickui'},
   -- {'karb94/neoscroll.nvim'},
   -- {p.telescope,                                       requires = p.plenary },
-  -- {'akinsho/nvim-toggleterm.lua'},
-  -- {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
-  -- {'ThePrimeagen/harpoon',                            requires = p.plenary },
   -- {'kosayoda/nvim-lightbulb'},
   -- {'j-hui/fidget.nvim'},
   -- {'dstein64/nvim-scrollview'},
@@ -129,8 +138,3 @@ PluginManager.plugins = {
 }
 
 PluginManager.register_plugins()
-
-
--- make into a snippet
--- M.$1 = U.service():require($2, "$3"):new(function()
--- end)

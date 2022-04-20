@@ -132,4 +132,47 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
 -- }
 end)
 
+
+M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(function(name, is_auto_installed, opts)
+  -- if not is_mod_exists('nvim-treesitter.configs') then return end
+  require 'nvim-treesitter.configs'.setup {
+    -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
+    ensure_installed = {
+      'bash',
+      'c',
+      'cmake',
+      'comment',
+      'cpp',
+      'css',
+      'fish',
+      'gdscript',
+      'go',
+      'godot_resource',
+      'html',
+      'http',
+      'javascript',
+      'jsdoc',
+      'json',
+      'latex',
+      'lua',
+      'markdown',
+      'python',
+      'query',
+      'regex',
+      'rust',
+      'scss',
+      'svelte',
+      'toml',
+      'typescript',
+      'vim',
+      'yaml',
+    },
+    -- playground = { enable = true },
+    highlight = { enable = true },
+    indent = { enable = true },
+    context_commentstring = { enable = true, enable_autocmd = false },
+  }
+end)
+
+
 return M

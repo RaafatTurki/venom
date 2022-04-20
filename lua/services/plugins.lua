@@ -67,6 +67,10 @@ M.nvim_comment = U.Service():require(FT.PLUGIN, "nvim-comment"):new(function()
       end
     end
   }
+
+  Bind.key:invoke {'<leader>c',  ':CommentToggle<CR>'}
+  Bind.key:invoke {'<leader>c',  ':CommentToggle<CR>',    mode = 'v'}
+  Bind.key:invoke {'Y',          'ygv:CommentToggle<CR>', mode = 'v'}
 end)
 
 M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
@@ -88,14 +92,16 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   cmp.setup {
     snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
     mapping = {
-      ["<Tab>"]       = snippet_jump(1,   { 'i', 's' }),
-      ["<S-Tab>"]     = snippet_jump(-1,  { 'i', 's' }),
+      ['<Tab>']       = snippet_jump(1,   { 'i', 's' }),
+      ['<S-Tab>']     = snippet_jump(-1,  { 'i', 's' }),
+      ['<Down>']      = cmp.mapping.select_next_item(),
+      ['<Up>']        = cmp.mapping.select_prev_item(),
       ['<C-d>']       = cmp.mapping.scroll_docs(-4),
       ['<C-f>']       = cmp.mapping.scroll_docs(4),
       ['<C-Space>']   = cmp.mapping.complete(),
       ['<C-e>']       = cmp.mapping.close(),
       ['<C-y>']       = cmp.config.disable,
-      ['<CR>']        = cmp.mapping.confirm({ select = false }),
+      ['<CR>']        = cmp.mapping.confirm(),
     },
     sources = {
       { name = 'nvim_lsp' },  -- depends on LSP:cmp feature
@@ -107,7 +113,8 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
     },
     formatting = {
       format = function(entry, vim_item)
-        vim_item.kind = venom.icons.item_kinds.codeicons[vim_item.kind] .. ' ' .. vim_item.kind
+        -- vim_item.kind = venom.icons.item_kinds.codeicons[vim_item.kind] .. ' ' .. vim_item.kind
+        vim_item.kind = venom.icons.item_kinds.cozette[vim_item.kind]
         return vim_item
       end
     },
@@ -125,12 +132,20 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   }
 
   cmp.setup.cmdline('/', {
+    -- mapping = {
+    --   ['<Down>']      = cmp.mapping.select_next_item(),
+    --   ['<Up>']        = cmp.mapping.select_prev_item(),
+    -- },
     sources = {
       { name = 'buffer' }
     }
   })
-
+  
   cmp.setup.cmdline(':', {
+    -- mapping = {
+    --   ['<Down>']      = cmp.mapping.select_next_item(),
+    --   ['<Up>']        = cmp.mapping.select_prev_item(),
+    -- },
     sources = {
       { name = 'path' },
       { name = 'cmdline' },
@@ -138,83 +153,147 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   })
 end)
 
--- abstract into a statusbar service
-M.feline = U.Service():require(FT.PLUGIN, "feline.nvim"):new(function()
-  local lsp_diag_icons = venom.icons.diagnostic_states.cozette
-
-  local function c(comp)
-    if comp == nil then comp = {} end
-
-    -- left and right separators
-    local sep = {
-      str = ' ',
-      hl = 'StatusLine'
-    }
-    comp.right_sep = sep
-    comp.left_sep = sep
-
-    -- fixing up highlighting
-
-    if type(comp.hl) == 'string' then
-
-      comp.hl = {
-        -- fg = get_col(comp.hl, 'fg') or get_col('StatusLine', 'fg') or 'NONE',
-        -- bg = get_col(comp.hl, 'bg') or get_col('StatusLine', 'bg') or 'NONE',
-        fg = U.hi(comp.hl).fg or U.hi('StatusLine').fg or 'NONE',
-        bg = U.hi(comp.hl).bg or U.hi('StatusLine').bg or 'NONE',
-      }
-    elseif comp.hl == nil then
-      comp.hl = {
-        fg = U.hi('StatusLine').fg or 'NONE',
-        bg = U.hi('StatusLine').bg or 'NONE',
-      }
-    end
-
-    return comp
-  end
-
-  local components = {
-    active = {
-      {
-        c({ provider = U.get_mode_name }),
-        c({ provider = { name = 'file_info',                              opts = { file_readonly_icon = '  ' }}}),
-
-        c({ provider = 'git_branch',          hl = 'GitSignsDelete',      icon = ' ' }),
-        c({ provider = 'git_diff_added',      hl = 'GitSignsAdd',         icon = '+' }),
-        c({ provider = 'git_diff_removed',    hl = 'GitSignsDelete',      icon = '-' }),
-        c({ provider = 'git_diff_changed',    hl = 'GitSignsChange',      icon = '~' }),
-      },
-      {
-        -- c({ provider = require 'package-info'.get_status, hl = 'Folded' }),
-        c({ provider = '',                  hl = 'WarningMsg',          enabled = function () return (vim.v.this_session ~= "") end }),
-        c({ provider = 'ROOT',                hl = 'ErrorMsg',            enabled = U.user():is_root() }),
-
-        c({ provider = 'diagnostic_errors',   hl = 'DiagnosticSignError', icon = lsp_diag_icons.Error }),
-        c({ provider = 'diagnostic_warnings', hl = 'DiagnosticSignWarn',  icon = lsp_diag_icons.Warn }),
-        c({ provider = 'diagnostic_info',     hl = 'DiagnosticSignInfo',  icon = lsp_diag_icons.Info }),
-        c({ provider = 'diagnostic_hints',    hl = 'DiagnosticSignHint',  icon = lsp_diag_icons.Hint }),
-
-        c({ provider = 'lsp_client_names' }),
-        c({ provider = 'file_type' }),
-        -- c({ provider = 'file_encoding' }),
-        -- c({ provider = 'file_size', enabled = function() return vim.fn.getfsize(vim.fn.expand('%:p')) > 0 end }),
-        c({ provider = U.get_indent_settings_str() }),
-        c({ provider = 'position' }),
-      },
+M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
+  U.gvar('nvim_tree_side'):set('left')
+  U.gvar('nvim_tree_width'):set(40)
+  U.gvar('nvim_tree_git_hl'):set(1)
+  U.gvar('nvim_tree_highlight_opened_files'):set(0)
+  U.gvar('nvim_tree_root_folder_modifier'):set(':t')
+  U.gvar('nvim_tree_add_trailing'):set(0)
+  U.gvar('nvim_tree_group_empty'):set(1)
+  U.gvar('nvim_tree_icon_padding'):set(' ')
+  U.gvar('nvim_tree_allow_resize'):set(1)
+  U.gvar('nvim_tree_auto_ignore_ft'):set({ 'startify', 'dashboard' })
+  U.gvar('nvim_tree_show_icons'):set({ git = 1, folders = 1, files = 1, folder_arrows = 0 })
+  U.gvar('nvim_tree_icons'):set({
+    default = '',
+    symlink = '',
+    git = {
+      unstaged = "+",
+      staged = "*",
+      unmerged = "",
+      renamed = "r ",
+      untracked = "-",
+      deleted = "d",
+      ignored = "i",
     },
-    inactive = {
-      {},
-      {}
+    folder = {
+      arrow_open = "",
+      arrow_closed = "",
+      default = "",
+      open = "",
+      empty = "",
+      empty_open = "",
+      symlink = "",
+      symlink_open = "",
     },
+  })
+
+  local nvimtree_keybindings = {
+    { key = "<C-Up>",     action = 'first_sibling' },
+    { key = "<C-Down>",   action = 'last_sibling' },
+    { key = "d",          action = 'trash' },
+    { key = "D",          action = 'remove' },
+    { key = "t",          action = 'tabnew' },
+    { key = "h",          action = 'toggle_help' },
+
+    { key = "<C-e>",      action = '' },
+    { key = "g?",         action = '' },
   }
 
-  require 'feline'.setup {
-    components = components,
-    force_inactive = {
-      filetypes = {'packer', 'NvimTree', 'DiffviewFiles'},
-      buftypes = {},
-      bufnames = {}
+  local NVIMTREE_LSP_DIAG_ICONS = venom.icons.diagnostic_states.cozette
+
+  require 'nvim-tree'.setup {
+    open_on_tab         = true,
+    hijack_cursor       = true,
+    update_cwd          = true,
+    hijack_unnamed_buffer_when_opening = false,
+    diagnostics = {
+      enable = true,
+      icons = {
+        hint    = NVIMTREE_LSP_DIAG_ICONS.Hint,
+        info    = NVIMTREE_LSP_DIAG_ICONS.Info,
+        warning = NVIMTREE_LSP_DIAG_ICONS.Warn,
+        error   = NVIMTREE_LSP_DIAG_ICONS.Error,
+      },
     },
+    update_focused_file = {
+      enable      = true,
+      update_cwd  = false,
+      ignore_list = {}
+    },
+    view = {
+      -- width = 40,
+      -- height = 10,
+      -- side = 'left',
+      auto_resize = true,
+      hide_root_folder = false,
+      mappings = {
+        custom_only = false,
+        list = nvimtree_keybindings
+      }
+    },
+    renderer = {
+      indent_markers = {
+        enable = true,
+        icons = {
+          corner = "└ ",
+          edge = "│ ",
+          none = "  ",
+        },
+      },
+    },
+    filters = {
+      dotfiles = false,
+      custom = {'.git', 'node_modules', '.cache', '*.import', '__pycache__', 'pnpm-lock.yaml', 'package-lock.json'}
+    },
+    git = {
+      ignore = true
+    },
+    trash = {
+      cmd = "trash",
+      require_confirm = true,
+    },
+    actions = {
+      change_dir = {
+        enable = true,
+        global = true,
+      },
+      open_file = {
+        window_picker = {
+          enable = true,
+          chars = "1234567890",
+          exclude = {
+            filetype = { "notify", "packer", "qf", "diff", "fugitive", "fugitiveblame", },
+            buftype  = { "nofile", "terminal", "help", },
+          }
+        }
+      }
+    }
+  }
+end)
+
+M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(function()
+  require("toggleterm").setup {
+    open_mapping = [[<C-\>]],
+    insert_mappings = true,
+
+    shade_terminals = false,
+
+    direction = 'vertical',
+
+    size = function(term)
+      if term.direction == "horizontal" then
+        return 15
+      elseif term.direction == "vertical" then
+        return 84
+        -- return vim.o.columns * 0.35
+      end
+    end,
+  -- on_close = fun(t: Terminal), -- function to run when the terminal closes
+  -- on_stdout = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stdout
+  -- on_stderr = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stderr
+  -- on_exit = fun(t: Terminal, job: number, exit_code: number, name: string) -- function to run when terminal process exits
   }
 end)
 

@@ -11,7 +11,7 @@ M.servers_configs = {}
 M.shared_server_config = {}
 
 M.add_server_config = U.Service():require(FT.LSP, 'setup'):new(function(server_config)
-  table.insert(M.servers_configs, server_config)
+  M.servers_configs[server_config.name] = server_config
 end)
 
 M.install_auto_installable_servers = U.Service():require(FT.LSP, 'setup'):new(function()
@@ -22,7 +22,7 @@ M.install_auto_installable_servers = U.Service():require(FT.LSP, 'setup'):new(fu
       local ok, ls = require 'nvim-lsp-installer.servers'.get_server(server_config.name)
       if ok then
         if not ls:is_installed() then
-          log("["..server_config.name.."] installing")
+          log("["..server_config.name.."] auto installing")
           -- TODO: attach the logging to a post complete hook
           ls:install()
           -- log("["..server_config.name.."] installed")
@@ -36,23 +36,24 @@ M.install_auto_installable_servers = U.Service():require(FT.LSP, 'setup'):new(fu
 end)
 
 M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function()
+  require 'nvim-lsp-installer'.on_server_ready(function(server)
+    log("["..server.name.."] setting up lsp server.", LL.DEBUG)
 
-  for _, server_config in pairs(M.servers_configs) do
-    log("["..server_config.name.."] setting up lsp server.", LL.DEBUG)
+    local opts = {}
 
-    -- TODO: use vim.tbl_extend and vim.tbl_deep_extend
-    server_config.opts.on_attach = M.shared_server_config.opts.on_attach
-    server_config.opts.capabilities = M.shared_server_config.opts.capabilities
-    server_config.opts.handlers = M.shared_server_config.opts.handlers
-
-    -- TODO: abstract into a M.get_server service and handle ok value with catch
-    local ok, ls = require 'nvim-lsp-installer.servers'.get_server(server_config.name)
-    if ok then
-      ls:setup(server_config.opts)
-      vim.cmd [[do User LspAttachBuffers]]
+    local server_config =  M.servers_configs[server.name]
+    if (server_config ~= nil) then
+      opts = server_config.opts
     end
 
-  end
+    -- TODO: use vim.tbl_extend and vim.tbl_deep_extend
+    opts.on_attach = M.shared_server_config.opts.on_attach
+    opts.capabilities = M.shared_server_config.opts.capabilities
+    opts.handlers = M.shared_server_config.opts.handlers
+
+    server:setup(opts)
+    vim.cmd [[do User LspAttachBuffers]]
+  end)
 end)
 
 M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'nvim-lsp-installer'):require(FT.PLUGIN, 'nvim-lspconfig'):new(function()

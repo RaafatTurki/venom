@@ -38,7 +38,6 @@ M.base = U.Service():new(function()
   -- diag on cursor hold
   -- U.create_augroup('autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()', 'cursor_hold_diagnostic')
 end)
-
 --- defines OpenURIUnderCursor(), works on urls, uris, vim plugins
 M.open_uri = U.Service():new(function()
   function OpenURIUnderCursor()
@@ -212,11 +211,6 @@ M.automatic_treesitter = U.Service():new(function()
   -- TODO: convert to auto group
   vim.cmd [[au FileType * :lua EnsureTSParserInstalled()]]
 end)
-
-
-
-
-
 
 
 --- (Linux) makes neovim support hex editing

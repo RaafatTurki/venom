@@ -89,7 +89,7 @@ local theme = lush(function()
     CursorIM        { Cursor },
 
     CursorColumn    { bg = c.line },                    -- Screen-column at the cursor, when 'cursorcolumn' is set.
-    CursorLine      { bg = c.line },                    -- Screen-line at the cursor, when 'cursorline' is set.  Low-priority if foreground (ctermfg OR guifg) is not set.
+    CursorLine      { },                                -- Screen-line at the cursor, when 'cursorline' is set.  Low-priority if foreground (ctermfg OR guifg) is not set.
     EndOfBuffer     { fg = c.bg },                      -- filler lines (~) after the end of the buffer.  By default, this is highlighted like |hl-NonText|.
     Folded          { fg = c.fold },                    -- line used for closed folds
     FoldColumn      { Folded },                         -- 'foldcolumn'
@@ -111,7 +111,7 @@ local theme = lush(function()
     WinSeparator    { VertSplit },
 
     LineNr          { Comment },                        -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
-    CursorLineNr    { fg = c.fg },                      -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
+    CursorLineNr    { fg = c.fg, gui = 'bold' },                      -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
 
     NonText         { fg = c.mg },                      -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
 
@@ -352,14 +352,12 @@ local theme = lush(function()
     GitSignsDeleteLn        { fg = c.del };
 
     -- cmp
-    CmpBorderedWindow_Normal      { NormalFloat };
-    CmpBorderedWindow_FloatBorder { fg = c.mg };
-    CmpBorderedWindow_CursorLine  { bg = c.mg };
     CmpItemAbbr             { fg = c.fold };
     CmpItemAbbrDeprecated   { CmpItemAbbr,      gui = 'strikethrough' };
     CmpItemAbbrMatch        { fg = c.fg,        gui = 'bold' };
     CmpItemAbbrMatchFuzzy   { CmpItemAbbrMatch, gui = '' };
-    CmpItemMenu             { bg = debug[1], fg = debug[10] };
+    -- CmpItemKind             { };
+    -- CmpItemMenu             { bg = debug[1], fg = debug[10] };   
     CmpItemKindText         { fg = c.fg       };
     CmpItemKindMethod       { fg = c.func     };
     CmpItemKindFunction     { fg = c.func     };

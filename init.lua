@@ -17,7 +17,7 @@ end
 -- catches and logs errors
 function catch(err)
   if (err) then
-    log(err)
+    log(err, LL.ERROR)
     return true
   else
     return false

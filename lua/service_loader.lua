@@ -1,5 +1,3 @@
--- vim: nofoldenable
-
 --- invokes various services
 -- @module service_loader
 local PluginManager = load_module "plugin_manager"

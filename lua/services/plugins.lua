@@ -83,29 +83,17 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   local cmp = require 'cmp'
   local luasnip = require 'luasnip'
 
-  local function snippet_jump(dir, modes)
-    return cmp.mapping(function(fallback)
-      if luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump(dir)
-      else
-        cmp.mapping.close()
-        fallback()
-      end
-    end, modes)
-  end
-
   cmp.setup {
     snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
     mapping = {
-      ['<Tab>']       = snippet_jump(1,   { 'i', 's' }),
-      ['<S-Tab>']     = snippet_jump(-1,  { 'i', 's' }),
+      ["<Tab>"]       = cmp.mapping(function(fallback) if luasnip.expand_or_jumpable() then luasnip.expand_or_jump() else fallback() end end, { "i", "s" }),
+      ["<S-Tab>"]     = cmp.mapping(function(fallback) if luasnip.jumpable(-1) then luasnip.jump(-1) else fallback() end end, { "i", "s" }),
       ['<Down>']      = cmp.mapping.select_next_item(),
       ['<Up>']        = cmp.mapping.select_prev_item(),
-      ['<C-d>']       = cmp.mapping.scroll_docs(-4),
-      ['<C-f>']       = cmp.mapping.scroll_docs(4),
+      ['<C-Down>']    = cmp.mapping.scroll_docs(4),
+      ['<C-Up>']      = cmp.mapping.scroll_docs(-4),
       ['<C-Space>']   = cmp.mapping.complete(),
       ['<C-e>']       = cmp.mapping.close(),
-      ['<C-y>']       = cmp.config.disable,
       ['<CR>']        = cmp.mapping.confirm(),
     },
     sources = {
@@ -117,22 +105,19 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       { name = 'spell' },
     },
     formatting = {
+      fields = { "kind", "abbr" },
       format = function(entry, vim_item)
-        -- vim_item.kind = venom.icons.item_kinds.codeicons[vim_item.kind] .. ' ' .. vim_item.kind
         vim_item.kind = venom.icons.item_kinds.cozette[vim_item.kind]
         return vim_item
       end
     },
     window = {
-      documentation = {
-        border = 'single',
-        -- max_width = 90,
-        -- scrollbar = '║',
-      },
-      completion = {
-        border = 'single',
-        -- scrollbar = '║',
-      }
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+      -- scrollbar = '║',
+    },
+    experimental = {
+      ghost_text = true
     }
   }
 
@@ -309,7 +294,7 @@ M.nvim_gps = U.Service():require(FT.PLUGIN, "nvim-gps"):new(function()
       ["class-name"] = venom.icons.item_kinds.cozette.Class..' ',
       ["function-name"] = venom.icons.item_kinds.cozette.Function..' ',
       ["method-name"] = venom.icons.item_kinds.cozette.Method..' ',
-      ["container-name"] = venom.icons.item_kinds.cozette.Snippet..' ',
+      ["container-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
       ["tag-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
     },
   }
@@ -324,7 +309,9 @@ M.fidget = U.Service():require(FT.PLUGIN, "fidget.nvim"):new(function()
 end)
 
 M.alpha = U.Service():require(FT.PLUGIN, "alpha-nvim"):new(function()
-  require 'alpha'.setup(require'alpha.themes.dashboard'.config)
+  -- require 'alpha'.setup(require 'alpha.themes.dashboard'.config)
+  -- require 'alpha'.setup(require 'alpha.themes.theta'.config)
+  require 'alpha'.setup(require '../extras/startpage'.config)
   -- require 'alpha'.setup({})
 end)
 

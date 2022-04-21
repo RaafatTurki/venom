@@ -209,6 +209,21 @@ function M.user()
         is_root = function(self) return (self.get() == 'root') end,
     }
 end
+--- returns a file name object
+function M.fn()
+  return {
+    ext = function(self, fn)
+      local match = fn:match("^.+(%..+)$")
+      return match and match:sub(2) or ""
+      -- if match ~= nil then
+      --   return match:sub(2)
+      -- else
+      --   return ""
+      -- end
+    end
+  }
+end
+
 
 -- Class Based Utils
 --- action class

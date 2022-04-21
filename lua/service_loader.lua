@@ -45,6 +45,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.nvim_tree:invoke()
   Plugins.cmp:invoke()
   Plugins.toggle_term:invoke()
+  Plugins.nvim_gps:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
@@ -55,7 +56,6 @@ venom.actions.pm_post_complete:subscribe(function()
   Statusbar.setup:invoke()
 
   Bind.setup:invoke()
-
 end)
 
 local p = {
@@ -78,8 +78,10 @@ PluginManager.plugins = {
   p.lspconfig,
   {'williamboman/nvim-lsp-installer'},
   -- lang
-  p.treesitter,
+  {p.treesitter,                                      run = ':TSUpdate' },
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
+  {'SmiteshP/nvim-gps',                               requires = p.treesitter },
+
   -- plugins
   {'stevearc/dressing.nvim'},
   {'rcarriga/nvim-notify',                            requires = p.plenary },
@@ -102,7 +104,8 @@ PluginManager.plugins = {
   -- statusbar
   {'famiu/feline.nvim',                               requires = { p.devicons, p.gitsigns }},
 
-  -- {'nvim-treesitter/nvim-treesitter',                 run = ':TSUpdate'},
+  -- DEBUGGING
+  -- {'nvim-treesitter/playground',                      requires = p.treesitter },
 
   -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
   
@@ -120,11 +123,9 @@ PluginManager.plugins = {
   -- {'rcarriga/vim-ultest',                             requires = 'vim-test/vim-test', run = ':UpdateRemotePlugins' },
 
   -- -- ts addons
-  -- {'nvim-treesitter/playground',                      requires = p.treesitter },
-  -- {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
 
-  -- -- extras
-  -- {'baskerville/vim-sxhkdrc'},
+  -- extras
+  {'baskerville/vim-sxhkdrc'},
 
 
   -- {'farmergreg/vim-lastplace'},

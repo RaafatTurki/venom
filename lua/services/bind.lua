@@ -30,12 +30,12 @@ M.setup = U.Service():new(function()
   M.key:invoke {'<C-Down>',        '<C-e>j'}
   M.key:invoke {'<leader>a',       'ggVG<CR>'}
   -- shifting line
-  M.key:invoke {'<A-Down>',         ':m .+1<CR>'}
-  M.key:invoke {'<A-Up>',           ':m .-2<CR>'}
+  M.key:invoke {'<A-Down>',         '<CMD>m .+1<CR>'}
+  M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR>'}
   M.key:invoke {'<A-Down>',         '<CMD>m .+1<CR><ESC>i', mode = 'i'}
   M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR><ESC>i', mode = 'i'}
-  M.key:invoke {'<A-Down>',         ":m '>+1<CR>gv", mode = 'v'}
-  M.key:invoke {'<A-Up>',           ":m '<-2<CR>gv", mode = 'v'}
+  M.key:invoke {'<A-Down>',         "<CMD>m '>+1<CR>gv", mode = 'v'}
+  M.key:invoke {'<A-Up>',           "<CMD>m '<-2<CR>gv", mode = 'v'}
   -- indent
   M.key:invoke {'<Tab>',           '>>_'}
   M.key:invoke {'<S-Tab>',         '<<_'}
@@ -44,7 +44,7 @@ M.setup = U.Service():new(function()
   -- switch between last 2 windows
   M.key:invoke {'<A-Tab>',         '<C-w>p'}
   -- make x delete without copying
-  M.key:invoke {'x',               '"_x', mode = {'v', 'n'}}
+  -- M.key:invoke {'x',               '"_x', mode = {'v', 'n'}}
   M.key:invoke {'X',               '"_X', mode = {'v', 'n'}}
   -- make Y copy to end of line
   M.key:invoke {'Y',               'y$'}
@@ -56,7 +56,7 @@ M.setup = U.Service():new(function()
   M.key:invoke {'n',               'nzzzv'}
   M.key:invoke {'N',               'Nzzzv'}
   -- re-edit current buffer
-  M.key:invoke {'<F5>',            ':e<CR>'}
+  M.key:invoke {'<F5>',            '<CMD>e<CR>'}
   -- clear action
   venom.actions.clear:subscribe [[let @/ = ""]]
   venom.actions.clear:subscribe(U.clear_prompt)

@@ -297,4 +297,17 @@ M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(functi
   }
 end)
 
+M.nvim_gps = U.Service():require(FT.PLUGIN, "nvim-gps"):new(function()
+  require 'nvim-gps'.setup {
+    -- separator = ' > ',
+    icons = {
+      ["class-name"] = venom.icons.item_kinds.cozette.Class..' ',
+      ["function-name"] = venom.icons.item_kinds.cozette.Function..' ',
+      ["method-name"] = venom.icons.item_kinds.cozette.Method..' ',
+      ["container-name"] = venom.icons.item_kinds.cozette.Snippet..' ',
+      ["tag-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
+    },
+  }
+end)
+
 return M

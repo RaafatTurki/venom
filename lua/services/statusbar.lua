@@ -47,10 +47,11 @@ M.setup = U.Service():require(FT.PLUGIN, "feline.nvim"):new(function()
         c({ provider = 'git_diff_added',      hl = 'GitSignsAdd',         icon = '+' }),
         c({ provider = 'git_diff_removed',    hl = 'GitSignsDelete',      icon = '-' }),
         c({ provider = 'git_diff_changed',    hl = 'GitSignsChange',      icon = '~' }),
+        c({ provider = require 'nvim-gps'.get_location,     hl = 'Folded',    enabled = require 'nvim-gps'.is_available }),
       },
       {
         -- c({ provider = require 'package-info'.get_status, hl = 'Folded' }),
-        c({ provider = '',                  hl = 'WarningMsg',          enabled = function () return (vim.v.this_session ~= "") end }),
+        c({ provider = '',                   hl = 'WarningMsg',          enabled = function () return (vim.v.this_session ~= "") end }),
         c({ provider = 'ROOT',                hl = 'ErrorMsg',            enabled = U.user():is_root() }),
 
         c({ provider = 'diagnostic_errors',   hl = 'DiagnosticSignError', icon = lsp_diag_icons.Error }),

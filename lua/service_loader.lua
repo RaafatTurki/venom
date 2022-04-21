@@ -38,6 +38,7 @@ venom.actions.pm_post_complete:subscribe(function()
     { func = Themes.default,  args = {},             name = 'Default'},
   })
   
+  Plugins.impatient:invoke()
   Plugins.notify:invoke()
   Plugins.possession:invoke()
   Plugins.gitsigns:invoke()
@@ -46,6 +47,8 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.cmp:invoke()
   Plugins.toggle_term:invoke()
   Plugins.nvim_gps:invoke()
+  Plugins.fidget:invoke()
+  Plugins.alpha:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
@@ -83,6 +86,7 @@ PluginManager.plugins = {
   {'SmiteshP/nvim-gps',                               requires = p.treesitter },
 
   -- plugins
+  {'lewis6991/impatient.nvim'},
   {'stevearc/dressing.nvim'},
   {'rcarriga/nvim-notify',                            requires = p.plenary },
   {'jedrzejboczar/possession.nvim',                   requires = p.plenary },
@@ -101,6 +105,8 @@ PluginManager.plugins = {
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
   {'ThePrimeagen/harpoon',                            requires = p.plenary },
   {'akinsho/nvim-toggleterm.lua'},
+  {'j-hui/fidget.nvim'},
+  {'goolord/alpha-nvim',                             requires = p.devicons },
   -- statusbar
   {'famiu/feline.nvim',                               requires = { p.devicons, p.gitsigns }},
 
@@ -118,7 +124,6 @@ PluginManager.plugins = {
   -- {'karb94/neoscroll.nvim'},
   -- {p.telescope,                                       requires = p.plenary },
   -- {'kosayoda/nvim-lightbulb'},
-  -- {'j-hui/fidget.nvim'},
   -- {'dstein64/nvim-scrollview'},
   -- {'rcarriga/vim-ultest',                             requires = 'vim-test/vim-test', run = ':UpdateRemotePlugins' },
 

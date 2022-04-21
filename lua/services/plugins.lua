@@ -2,6 +2,11 @@
 -- @module configs
 local M = {}
 
+M.impatient = U.Service():require(FT.PLUGIN, "impatient.nvim"):new(function()
+  require 'impatient'
+  require 'impatient'.enable_profile()
+end)
+
 M.notify = U.Service():require(FT.PLUGIN, "nvim-notify"):new(function()
   local notify = require 'notify'
 
@@ -308,6 +313,19 @@ M.nvim_gps = U.Service():require(FT.PLUGIN, "nvim-gps"):new(function()
       ["tag-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
     },
   }
+end)
+
+M.fidget = U.Service():require(FT.PLUGIN, "fidget.nvim"):new(function()
+  require 'fidget'.setup {
+    window = {
+      blend = 0,
+    }
+  }
+end)
+
+M.alpha = U.Service():require(FT.PLUGIN, "alpha-nvim"):new(function()
+  require 'alpha'.setup(require'alpha.themes.dashboard'.config)
+  -- require 'alpha'.setup({})
 end)
 
 return M

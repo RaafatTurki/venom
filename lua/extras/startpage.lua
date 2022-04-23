@@ -1,7 +1,9 @@
--- requires plenary, nvim-web-devicons
+-- requires plenary, nvim-web-devicons, possession
 
 local Path = require 'plenary.path'
 local button = require 'alpha.themes.dashboard'.button
+local query = require 'possession.query'
+local utils = require 'possession.utils'
 
 local M = {}
 
@@ -10,7 +12,7 @@ M.opts = {
     enabled = true,
     highlight = true,
   },
-  mru = {
+  recent_files = {
     ignore = function(path, ext)
       return (string.find(path, "COMMIT_EDITMSG")) or (vim.tbl_contains({ "gitcommit" }, ext))
     end,
@@ -40,7 +42,7 @@ local function get_icon(fn)
   return nwd.get_icon(fn, ext, { default = true })
 end
 
-local function file_button(fn, key, short_fn)
+local function create_file_button(key, fn, short_fn)
   short_fn = short_fn or fn
   local ico_txt = ""
   local fb_hl = {}
@@ -59,20 +61,18 @@ local function file_button(fn, key, short_fn)
     ico_txt = ico .. "  "
   end
 
-  local file_button_el = button(key, ico_txt .. short_fn, "<cmd>e " .. fn .. " <CR>")
+  local res = button(key, ico_txt .. short_fn, "<cmd>e " .. fn .. " <CR>")
   local fn_start = short_fn:match(".*[/\\]")
 
   if fn_start ~= nil then
     table.insert(fb_hl, { "Comment", #ico_txt-2, #fn_start + #ico_txt })
   end
 
-  file_button_el.opts.hl = fb_hl
-  return file_button_el
+  res.opts.hl = fb_hl
+  return res
 end
 
-local function spacer(amount)
-  return { type = "padding", val = amount }
-end
+local function spacer(amount) return { type = "padding", val = amount } end
 
 local function group(val)
   return {
@@ -90,12 +90,8 @@ local function section(title, content)
   }
 end
 
-
---- @param start number
---- @param cwd string optional
---- @param items_number number optional number of items to generate, default = 10
-local function mru(start, cwd, items_number, opts)
-  opts = opts or M.opts.mru
+local function recent_files_builder(start, cwd, items_number, opts)
+  opts = opts or M.opts.recent_files
   items_number = items_number or 10
 
   -- filling recent files with proper recent files
@@ -126,20 +122,30 @@ local function mru(start, cwd, items_number, opts)
       short_fn = vim.fn.fnamemodify(fn, ":~")
     end
 
-    if(#short_fn > M.opts.mru.target_width) then
+    if(#short_fn > M.opts.recent_files.target_width) then
       short_fn = Path.new(short_fn):shorten(1, {-2, -1})
-      if(#short_fn > M.opts.mru.target_width) then
+      if(#short_fn > M.opts.recent_files.target_width) then
         short_fn = Path.new(short_fn):shorten(1, {-1})
       end
     end
 
     local shortcut = tostring(i+start-1)
 
-    local file_button_el = file_button(fn, shortcut, short_fn)
-    res[i] = file_button_el
+    local file_button = create_file_button('f'..shortcut, fn, short_fn)
+    res[i] = file_button
   end
 
   return group(res)
+end
+
+local function possession_sessions_builder()
+  local layout = {}
+  local sessions = query.as_list()
+
+  for i, session in pairs(sessions) do
+    table.insert(layout, button('s'..i, session.name, "<CMD>PossessionLoad "..session.name.."<CR>"))
+  end
+  return layout
 end
 
 M.config = {
@@ -156,7 +162,9 @@ M.config = {
       -- button("SPC f g", "  Live grep"),
     }),
     spacer(2),
-    section("Recent files", function() return { mru(0, vim.fn.getcwd(), 5) } end),
+    section("Recent files", function() return { recent_files_builder(0, vim.fn.getcwd(), 5) } end),
+    spacer(2),
+    section('Sessions', possession_sessions_builder()),
   },
 
   opts = {

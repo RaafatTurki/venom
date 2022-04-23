@@ -97,12 +97,18 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       ['<CR>']        = cmp.mapping.confirm(),
     },
     sources = {
-      { name = 'nvim_lsp' },  -- depends on LSP:cmp feature
+      -- depends on LSP:cmp feature
+      { name = 'npm', keyword_length = 4 },
+      { name = 'nvim_lsp_signature_help' },
+      { name = 'nvim_lsp' },
+
       { name = 'nvim_lua' },
       { name = 'luasnip' },
       { name = 'path' },
-      { name = 'buffer' },
+      { name = 'rg' },
       { name = 'spell' },
+      -- { name = 'digraphs' },
+      -- { name = 'buffer' },
     },
     formatting = {
       fields = { "kind", "abbr" },
@@ -122,20 +128,15 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   }
 
   cmp.setup.cmdline('/', {
-    -- mapping = {
-    --   ['<Down>']      = cmp.mapping.select_next_item(),
-    --   ['<Up>']        = cmp.mapping.select_prev_item(),
-    -- },
+    mapping = cmp.mapping.preset.cmdline(),
     sources = {
+      { name = 'nvim_lsp_document_symbol' },
       { name = 'buffer' }
     }
   })
-  
+
   cmp.setup.cmdline(':', {
-    -- mapping = {
-    --   ['<Down>']      = cmp.mapping.select_next_item(),
-    --   ['<Up>']        = cmp.mapping.select_prev_item(),
-    -- },
+    mapping = cmp.mapping.preset.cmdline(),
     sources = {
       { name = 'path' },
       { name = 'cmdline' },

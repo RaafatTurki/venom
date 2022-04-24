@@ -154,7 +154,7 @@ M.config = {
     M.opts.header,
     spacer(2),
     section("Quick links", {
-      button("e", "  New file",        "<CMD>ene<CR>"),
+      button("a", "  New file",        "<CMD>ene<CR>"),
       button("c", "  Configuration",   "<CMD>cd ~/.config/nvim<CR>"),
       button("u", "  Update plugins" , "<CMD>PackerSync<CR>"),
       button("q", "  Quit",            "<CMD>qa<CR>"),

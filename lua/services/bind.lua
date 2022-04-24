@@ -9,10 +9,10 @@ end)
 
 M.keys = {}
 
--- a keymap object is {string, string, opts = {}, mode = {}|string}
+-- a keymap object is {string, string, opts = {}, mode = string}
 M.key = U.Service():new(function(keymap)
   keymap.opts = keymap.opts or { noremap = true, silent = true }
-  keymap.mode = keymap.mode or 'n'
+  keymap.mode = keymap.mode and vim.split(keymap.mode, ' ') or 'n'
 
   vim.keymap.set(keymap.mode, keymap[1], keymap[2], keymap.opts)
   table.insert(M.keys, keymap)
@@ -22,9 +22,9 @@ M.setup = U.Service():new(function()
 
   -- BASE
   -- write, undo, quit
-  M.key:invoke {'<C-s>',           '<CMD>write<CR><ESC>', mode = {'n', 'v', 'i'}}
-  M.key:invoke {'<C-z>',           '<CMD>undo<CR>', mode = {'n', 'v', 'i'}}
-  M.key:invoke {'<C-q>',           '<CMD>quit<CR>', mode = {'n', 'v', 'i'}}
+  M.key:invoke {'<C-s>',           '<CMD>write<CR><ESC>', mode = 'n v i'}
+  M.key:invoke {'<C-z>',           '<CMD>undo<CR>', mode = 'n v i'}
+  M.key:invoke {'<C-q>',           '<CMD>quit<CR>', mode = 'n v i'}
   -- page shift up/down, select all
   M.key:invoke {'<C-Up>',          '<C-y>k'}
   M.key:invoke {'<C-Down>',        '<C-e>j'}
@@ -45,8 +45,8 @@ M.setup = U.Service():new(function()
   -- switch between last 2 windows
   M.key:invoke {'<A-Tab>',         '<C-w>p'}
   -- make x delete without copying
-  -- M.key:invoke {'x',               '"_x', mode = {'v', 'n'}}
-  M.key:invoke {'X',               '"_X', mode = {'v', 'n'}}
+  -- M.key:invoke {'x',               '"_x', mode = 'v n'}
+  M.key:invoke {'X',               '"_X', mode = 'v n'}
   -- make Y copy to end of line
   M.key:invoke {'Y',               'y$'}
   -- go to end after a join
@@ -89,7 +89,7 @@ M.setup = U.Service():new(function()
   -- packer sync
   M.key:invoke {'<leader>p',       '<CMD>PackerSync<CR>'}
   -- nvim tree
-  M.key:invoke {'<C-e>',           '<CMD>NvimTreeToggle<CR>', mode = {'i', 'n'}}
+  M.key:invoke {'<C-e>',           '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
   -- harpoon
   M.key:invoke {'<C-p>',           require 'harpoon.ui'.toggle_quick_menu}
   M.key:invoke {'<C-k>',           require 'harpoon.mark'.add_file}

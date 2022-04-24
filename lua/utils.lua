@@ -186,20 +186,6 @@ function M.curpos()
       local pos = self.get_pos()
       self.set_pos {pos[1], coords[1]+1, coords[2]+1, pos[4]}
     end,
-  --   set_diag = function(self)
-  --     return {
-  --       next = function(self)
-  --         local coord
-  --         next = vim.lsp.diagnostic.get_next_pos()
-  --         if coord ~= false then self.set_coords(coord) end
-  --       end,
-  --       prev = function(self)
-  --         local coord
-  --         next = vim.lsp.diagnostic.get_prev_pos()
-  --         if coord ~= false then self.set_coords(coord) end
-  --       end,
-  --     }
-  -- end
   }
 end
 --- returns a user object

@@ -42,11 +42,12 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.gitsigns:invoke()
   Plugins.nvim_comment:invoke()
   Plugins.nvim_tree:invoke()
-  Plugins.cmp:invoke()
+  Plugins.cmp_ls:invoke()
   Plugins.toggle_term:invoke()
   Plugins.nvim_gps:invoke()
   Plugins.fidget:invoke()
   Plugins.alpha:invoke()
+  Plugins.autopairs:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
@@ -77,7 +78,8 @@ PluginManager.plugins = {
   {'marko-cerovac/material.nvim'},
   -- lsp
   p.lspconfig,
-  {'williamboman/nvim-lsp-installer'},
+  {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
+  {'b0o/schemastore.nvim',                            requires = p.lspconfig },
   -- lang
   {p.treesitter,                                      run = ':TSUpdate' },
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
@@ -102,13 +104,14 @@ PluginManager.plugins = {
     {'hrsh7th/cmp-nvim-lsp-signature-help'},
     {'hrsh7th/cmp-nvim-lsp-document-symbol'},
     {'dmitmel/cmp-digraphs'},
-    {'lukas-reineke/cmp-rg'},
+    {'hrsh7th/cmp-buffer'},
   }},
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
+  {'windwp/nvim-autopairs'},
   {'ThePrimeagen/harpoon',                            requires = p.plenary },
   {'akinsho/nvim-toggleterm.lua'},
   {'j-hui/fidget.nvim'},
-  {'goolord/alpha-nvim',                             requires = p.devicons },
+  {'goolord/alpha-nvim',                              requires = p.devicons },
   -- statusbar
   {'famiu/feline.nvim',                               requires = { p.devicons, p.gitsigns }},
 
@@ -133,8 +136,10 @@ PluginManager.plugins = {
 
   -- extras
   {'baskerville/vim-sxhkdrc'},
+  {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
 
 
+  -- {'folke/lua-dev.nvim'},
   -- {'farmergreg/vim-lastplace'},
   -- {'lambdalisue/suda.vim'},
   -- {'icatalina/vim-case-change'},
@@ -143,6 +148,7 @@ PluginManager.plugins = {
   -- {'weilbith/nvim-code-action-menu'},
   -- {'dstein64/vim-startuptime'},
   -- {'vuki656/package-info.nvim',                       requires = p.nui },
+  -- {'gelguy/wilder.nvim'},
 }
 
 PluginManager.register_plugins()

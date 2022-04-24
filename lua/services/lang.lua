@@ -103,15 +103,17 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
   M.configure_server:invoke("jsonls", false, {
     settings = {
       json = {
+        schemas = require 'schemastore'.json.schemas(),
+
         -- visit https://www.schemastore.org/json/ for more schemas
-        schemas = {
-          { fileMatch = { 'package.json' }, url = 'https://json.schemastore.org/package.json' },
-          { fileMatch = { 'tsconfig.json', 'tsconfig.*.json' }, url = 'http://json.schemastore.org/tsconfig' },
-          { fileMatch = { '.eslintrc.json', '.eslintrc' }, url = 'http://json.schemastore.org/eslintrc' },
-          { fileMatch = { '.prettierrc', '.prettierrc.json', 'prettier.config.json' }, url = 'http://json.schemastore.org/prettierrc' },
-          { fileMatch = { 'deno.json' }, url = 'https://raw.githubusercontent.com/denoland/deno/main/cli/schemas/config-file.v1.json' },
-          { fileMatch = { '.swcrc' }, url = 'https://json.schemastore.org/swcrc.json' },
-        },
+        -- schemas = {
+        --   { fileMatch = { 'package.json' }, url = 'https://json.schemastore.org/package.json' },
+        --   { fileMatch = { 'tsconfig.json', 'tsconfig.*.json' }, url = 'http://json.schemastore.org/tsconfig' },
+        --   { fileMatch = { '.eslintrc.json', '.eslintrc' }, url = 'http://json.schemastore.org/eslintrc' },
+        --   { fileMatch = { '.prettierrc', '.prettierrc.json', 'prettier.config.json' }, url = 'http://json.schemastore.org/prettierrc' },
+        --   { fileMatch = { 'deno.json' }, url = 'https://raw.githubusercontent.com/denoland/deno/main/cli/schemas/config-file.v1.json' },
+        --   { fileMatch = { '.swcrc' }, url = 'https://json.schemastore.org/swcrc.json' },
+        -- },
       },
     }
   })
@@ -131,7 +133,6 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
 --   },
 -- }
 end)
-
 
 M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(function(name, is_auto_installed, opts)
   -- if not is_mod_exists('nvim-treesitter.configs') then return end
@@ -173,6 +174,5 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
     context_commentstring = { enable = true, enable_autocmd = false },
   }
 end)
-
 
 return M

@@ -34,8 +34,9 @@ M.setup = U.Service():new(function()
   M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR>'}
   M.key:invoke {'<A-Down>',         '<CMD>m .+1<CR><ESC>i', mode = 'i'}
   M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR><ESC>i', mode = 'i'}
-  M.key:invoke {'<A-Down>',         "<CMD>m '>+1<CR>gv", mode = 'v'}
-  M.key:invoke {'<A-Up>',           "<CMD>m '<-2<CR>gv", mode = 'v'}
+  M.key:invoke {'<A-Down>',         "<CMD>m '>+1<CR>gv=gv", mode = 'v'}
+  M.key:invoke {'<A-Up>',           "<CMD>m '<-2<CR>gv=gv", mode = 'v'}
+
   -- indent
   M.key:invoke {'<Tab>',           '>>_'}
   M.key:invoke {'<S-Tab>',         '<<_'}

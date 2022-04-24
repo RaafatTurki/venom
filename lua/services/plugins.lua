@@ -19,7 +19,9 @@ M.notify = U.Service():require(FT.PLUGIN, "nvim-notify"):new(function()
 end)
 
 M.possession = U.Service():require(FT.PLUGIN, "possession.nvim"):new(function()
-  require 'possession'.setup {}
+  require 'possession'.setup {
+    prompt_use_ui_input = true,
+  }
   -- require('telescope').load_extension('possession')
 end)
 
@@ -78,24 +80,46 @@ M.nvim_comment = U.Service():require(FT.PLUGIN, "nvim-comment"):new(function()
   Bind.key:invoke {'Y',          'ygv:CommentToggle<CR>', mode = 'v'}
 end)
 
-M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
+M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
   local cmp = require 'cmp'
-  local luasnip = require 'luasnip'
+  local ls = require 'luasnip'
+  local ls_types = require 'luasnip.util.types'
+
+  -- TODO: lazy load vscode format snippets (lang.lua)
+
+  require'luasnip'.config.setup({
+    ext_opts = {
+      [ls_types.choiceNode] = {
+        active = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetChoiceIndicator'}} },
+        passive = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetPassiveIndicator'}} }
+      },
+      [ls_types.insertNode] = {
+        active = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetInsertIndicator'}} },
+        passive = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetPassiveIndicator'}} }
+      }
+    },
+  })
+
 
   cmp.setup {
-    snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
+    snippet = { expand = function(args) ls.lsp_expand(args.body) end },
     mapping = {
-      ["<Tab>"]       = cmp.mapping(function(fallback) if luasnip.expand_or_jumpable() then luasnip.expand_or_jump() else fallback() end end, { "i", "s" }),
-      ["<S-Tab>"]     = cmp.mapping(function(fallback) if luasnip.jumpable(-1) then luasnip.jump(-1) else fallback() end end, { "i", "s" }),
+      ["<Tab>"]       = cmp.mapping(function(fallback) if ls.expand_or_locally_jumpable() then ls.expand_or_jump() else fallback() end end, { "i", "s" }),
+      ["<S-Tab>"]     = cmp.mapping(function(fallback) if ls.jumpable(-1) then ls.jump(-1) else fallback() end end, { "i", "s" }),
       ['<Down>']      = cmp.mapping.select_next_item(),
       ['<Up>']        = cmp.mapping.select_prev_item(),
       ['<C-Down>']    = cmp.mapping.scroll_docs(4),
       ['<C-Up>']      = cmp.mapping.scroll_docs(-4),
       ['<C-Space>']   = cmp.mapping.complete(),
-      ['<C-e>']       = cmp.mapping.close(),
       ['<CR>']        = cmp.mapping.confirm(),
+      ['<C-e>']       = cmp.mapping.close(),
+      -- ['<Down>']      = cmp.mapping.select_next_item(),
+      -- ['<Up>']        = cmp.mapping.select_prev_item(),
     },
+    -- completion = {
+    --   autocomplete = false,
+    -- },
     sources = {
       -- depends on LSP:cmp feature
       { name = 'npm', keyword_length = 4 },
@@ -105,7 +129,7 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       { name = 'nvim_lua' },
       { name = 'luasnip' },
       { name = 'path' },
-      { name = 'rg' },
+      { name = 'buffer' },
       { name = 'spell' },
       -- { name = 'digraphs' },
       -- { name = 'buffer' },
@@ -113,7 +137,7 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
     formatting = {
       fields = { "kind", "abbr" },
       format = function(entry, vim_item)
-        vim_item.kind = venom.icons.item_kinds.cozette[vim_item.kind]
+        vim_item.kind = venom.icons.item_kinds.cozette[vim_item.kind] or ''
         return vim_item
       end
     },
@@ -127,21 +151,21 @@ M.cmp = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
     }
   }
 
-  cmp.setup.cmdline('/', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-      { name = 'nvim_lsp_document_symbol' },
-      { name = 'buffer' }
-    }
-  })
-
-  cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-      { name = 'path' },
-      { name = 'cmdline' },
-    }
-  })
+  -- cmp.setup.cmdline('/', {
+  --   mapping = cmp.mapping.preset.cmdline(),
+  --   sources = {
+  --     { name = 'nvim_lsp_document_symbol' },
+  --     { name = 'buffer' }
+  --   }
+  -- })
+  --
+  -- cmp.setup.cmdline(':', {
+  --   mapping = cmp.mapping.preset.cmdline(),
+  --   sources = {
+  --     { name = 'path' },
+  --     { name = 'cmdline' },
+  --   }
+  -- })
 end)
 
 M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
@@ -310,10 +334,15 @@ M.fidget = U.Service():require(FT.PLUGIN, "fidget.nvim"):new(function()
 end)
 
 M.alpha = U.Service():require(FT.PLUGIN, "alpha-nvim"):new(function()
-  -- require 'alpha'.setup(require 'alpha.themes.dashboard'.config)
-  -- require 'alpha'.setup(require 'alpha.themes.theta'.config)
   require 'alpha'.setup(require '../extras/startpage'.config)
-  -- require 'alpha'.setup({})
+end)
+
+M.autopairs = U.Service():require(FT.PLUGIN, "nvim-autopairs"):new(function()
+  require 'nvim-autopairs'.setup {
+    check_ts = true,
+    map_cr = true,
+    map_bs = true,
+  }
 end)
 
 return M

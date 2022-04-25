@@ -131,7 +131,7 @@ local function recent_files_builder(start, cwd, items_number, opts)
 
     local shortcut = tostring(i+start-1)
 
-    local file_button = create_file_button('f'..shortcut, fn, short_fn)
+    local file_button = create_file_button(shortcut, fn, short_fn)
     res[i] = file_button
   end
 
@@ -156,7 +156,7 @@ M.config = {
     section("Quick links", {
       button("a", "  New file",        "<CMD>ene<CR>"),
       button("c", "  Configuration",   "<CMD>cd ~/.config/nvim<CR>"),
-      button("u", "  Update plugins" , "<CMD>PackerSync<CR>"),
+      button("p", "  Update plugins" , "<CMD>PackerSync<CR>"),
       button("q", "  Quit",            "<CMD>qa<CR>"),
       -- button("SPC f f", "  Find file"),
       -- button("SPC f g", "  Live grep"),

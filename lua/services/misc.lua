@@ -24,20 +24,43 @@ M.base = U.Service():new(function()
 
   --- auto groups
   -- disable LspInfo win, package.json folding
-  U.create_augroup('autocmd FileType lspinfo setlocal nofoldenable', 'lspinfo_no_fold')
-  -- file specific settings
-  -- U.create_augroup("autocmd BufEnter package.json setlocal nofoldenable", 'packagejson_no_fold')
-  U.create_augroup("autocmd BufEnter .swcrc setlocal ft=json", 'swcrc_ft_json')
-  U.create_augroup("autocmd BufEnter tsconfig.json setlocal ft=jsonc", 'tsconfig_ft_jsonc')
-  U.create_augroup("autocmd BufEnter mimeapps.list setlocal ft=dosini", 'mimeapps_ft_dosini')
-  -- disable packer win cursor line
-  U.create_augroup('autocmd FileType packer setlocal nocursorline', 'packer_no_cursor_line')
-  -- disable terminal line numbers and cursor line
-  U.create_augroup('autocmd FileType terminal setlocal nocursorline', 'terminal_no_cursor_line')
-  U.create_augroup('autocmd TermOpen * setlocal nonumber', 'terminal_no_line_numbers')
-  -- diag on cursor hold
-  -- U.create_augroup('autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()', 'cursor_hold_diagnostic')
+  name = name or 'end'
+
+  vim.cmd [[
+    augroup base
+    autocmd!
+
+    " buffer type"
+    autocmd BufEnter .swcrc setlocal ft=json
+    autocmd BufEnter tsconfig.json setlocal ft=jsonc
+    autocmd BufEnter mimeapps.list setlocal ft=dosini
+
+    " file type
+    autocmd FileType lspinfo setlocal nofoldenable
+    autocmd FileType packer setlocal nocursorline
+    autocmd FileType alpha setlocal cursorline
+
+    " terminal"
+    autocmd FileType terminal setlocal nocursorline
+    autocmd TermOpen * setlocal nonumber
+
+    augroup base
+    ]]
+
 end)
+
+--- shows diagnostics on cursor hold
+M.diag_on_hold = U.Service():new(function()
+  vim.cmd [[
+    augroup diag_on_hold
+    autocmd!
+
+    autocmd CursorHold * lua vim.diagnostic.open_float()
+
+    augroup diag_on_hold
+  ]]
+end)
+
 --- defines OpenURIUnderCursor(), works on urls, uris, vim plugins
 M.open_uri = U.Service():new(function()
   function OpenURIUnderCursor()

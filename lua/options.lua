@@ -12,6 +12,7 @@ vim.o.hidden            = true                          -- (required by togglete
 vim.o.termguicolors     = true
 vim.o.splitbelow        = true
 vim.o.splitright        = true
+vim.o.spell             = true
 vim.o.writebackup       = false
 vim.o.ignorecase        = true
 vim.o.smartcase         = true
@@ -80,18 +81,35 @@ vim.diagnostic.config {
   underline = {
     -- severity = vim.diagnostic.severity.INFO,
   },
-  virtual_text = {
-    spacing = 2,
-    prefix = '●',
-    -- severity_limit = vim.diagnostic.severity.INFO,
-  },
+  virtual_text = false,
+  -- virtual_text = {
+  --   spacing = 2,
+  --   prefix = '●',
+  --   -- severity_limit = vim.diagnostic.severity.INFO,
+  -- },
   float = {
-    scope = "cursor",
-    border = "single",
-    header = "",
-    prefix = "",
-    focus = false,
-    format = function(diagnostic) return string.format("%s: %s", diagnostic.source, diagnostic.message) end,
+    scope = 'cursor',
+    border = 'single',
+    header = '',
+    prefix = '',
+    format = function(diag)
+      local msg = diag.message
+      local src = diag.source
+      local code = diag.user_data.lsp.code
+      local icon = venom.icons.diagnostic_states.cozette[venom.severity_names[diag.severity]]
+
+      -- remove dots
+      msg = msg:gsub('%.', '')
+      src = src:gsub('%.', '')
+      code = code:gsub('%.', '')
+
+      -- remove starting and trailing spaces
+      msg = msg:gsub('[ \t]+%f[\r\n%z]', '')
+      src = src:gsub('[ \t]+%f[\r\n%z]', '')
+      code = code:gsub('[ \t]+%f[\r\n%z]', '')
+
+      return string.format("%s%s > %s (%s)", icon, msg, src, code)
+    end,
   }
 }
 
@@ -207,6 +225,12 @@ venom = {
         TypeParameter   = ' ',
       },
     },
+  },
+  severity_names = {
+    [vim.diagnostic.severity.ERROR] = 'Error',
+    [vim.diagnostic.severity.WARN] = 'Warn',
+    [vim.diagnostic.severity.INFO] = 'Info',
+    [vim.diagnostic.severity.HINT] = 'Hint',
   }
 }
 

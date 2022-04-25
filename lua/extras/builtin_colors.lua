@@ -89,7 +89,7 @@ local theme = lush(function()
     CursorIM        { Cursor },
 
     CursorColumn    { bg = c.line },                    -- Screen-column at the cursor, when 'cursorcolumn' is set.
-    CursorLine      { },                                -- Screen-line at the cursor, when 'cursorline' is set.  Low-priority if foreground (ctermfg OR guifg) is not set.
+    CursorLine      { bg = c.line },                                -- Screen-line at the cursor, when 'cursorline' is set.  Low-priority if foreground (ctermfg OR guifg) is not set.
     EndOfBuffer     { fg = c.bg },                      -- filler lines (~) after the end of the buffer.  By default, this is highlighted like |hl-NonText|.
     Folded          { fg = c.fold },                    -- line used for closed folds
     FoldColumn      { Folded },                         -- 'foldcolumn'
@@ -260,7 +260,7 @@ local theme = lush(function()
 
 
     -- Spelling
-    SpellBad                { gui = 'undercurl', sp = c.err }; -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise. 
+    SpellBad                { gui = 'undercurl', sp = c.fold }; -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise. 
     SpellCap                { }; -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
     SpellLocal              { }; -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
     SpellRare               { }; -- Word that is recognized by the spellchecker as one that is hardly ever used.  |spell| Combined with the highlighting used otherwise.

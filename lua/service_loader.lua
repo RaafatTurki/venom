@@ -24,7 +24,8 @@ venom.actions.pm_post_complete:subscribe(function()
   Misc.disable_builtin_plugins:invoke()
   Misc.highlight_yank:invoke()
   Misc.lsp_funcs:invoke()
-  -- Misc.automatic_treesitter:invoke()
+  Misc.automatic_treesitter:invoke()
+  -- Misc.diag_on_hold:invoke()
   
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},
@@ -44,10 +45,14 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.nvim_tree:invoke()
   Plugins.cmp_ls:invoke()
   Plugins.toggle_term:invoke()
-  Plugins.nvim_gps:invoke()
   Plugins.fidget:invoke()
   Plugins.alpha:invoke()
   Plugins.autopairs:invoke()
+  Plugins.trld:invoke()
+  Plugins.dirty_talk:invoke()
+
+  Plugins.nvim_gps:invoke()
+  Plugins.spellsitter:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
@@ -84,6 +89,7 @@ PluginManager.plugins = {
   {p.treesitter,                                      run = ':TSUpdate' },
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   {'SmiteshP/nvim-gps',                               requires = p.treesitter },
+  {'lewis6991/spellsitter.nvim'},
 
   -- plugins
   {'lewis6991/impatient.nvim'},
@@ -92,6 +98,7 @@ PluginManager.plugins = {
   {'jedrzejboczar/possession.nvim',                   requires = p.plenary },
   {p.gitsigns,                                        requires = p.plenary },
   {'terrortylor/nvim-comment'},
+  {'fedepujol/move.nvim'},
   {p.cmp,                                             requires = {
     -- {'hrsh7th/cmp-buffer'},
     {'hrsh7th/cmp-path'},
@@ -112,6 +119,7 @@ PluginManager.plugins = {
   {'akinsho/nvim-toggleterm.lua'},
   {'j-hui/fidget.nvim'},
   {'goolord/alpha-nvim',                              requires = p.devicons },
+  {'Mofiqul/trld.nvim'},
   -- statusbar
   {'famiu/feline.nvim',                               requires = { p.devicons, p.gitsigns }},
 
@@ -137,6 +145,7 @@ PluginManager.plugins = {
   -- extras
   {'baskerville/vim-sxhkdrc'},
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
+  {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'}
 
 
   -- {'folke/lua-dev.nvim'},

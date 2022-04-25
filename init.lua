@@ -6,7 +6,7 @@ function inspect(val) log(vim.inspect(val)) end
 --- TODO: implement better logging with LT (log type)
 --- logs an arg
 function log(msg, log_level)
-  local log_level = log_level or LL.INFO
+  log_level = log_level or LL.INFO
   vim.notify(msg, log_level)
 end
 --- logs an inspected arg

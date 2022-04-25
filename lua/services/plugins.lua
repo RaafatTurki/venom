@@ -102,6 +102,43 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   })
 
 
+  local s = ls.snippet
+  local t = ls.text_node
+  local i = ls.insert_node
+  local c = ls.choice_node
+  local f = ls.function_node
+
+  ls.add_snippets(nil, {
+    all = {
+      s("vimodeline", { t {"vim: commentstring=#%s"} }),
+      s("shebang", { t {"#!/usr/bin/bash"} }),
+
+      s("trig", c(1, {
+        t("Ugh boring, a text node"),
+        i(nil, "At least I can edit something now..."),
+        f(function(args) return "Still only counts as text!!" end, {})
+      }))
+    },
+    html = {
+      s("html5", {
+        t {
+          "<html lang=\"en\">",
+          "\t<head>",
+          "\t\t<title>Web Page</title>",
+          "\t\t<meta charset=\"UTF-8\"/>",
+          "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>",
+          "\t\t<link href=\"style.css\" rel=\"stylesheet\"/>",
+          "\t</head>",
+          "\t<body>",
+          "\t\t<h1>hi friend!</h1>",
+          "\t\t"}, i(0), t {"",
+          "\t</body>",
+          "</html>"
+        },
+      }),
+    },
+  })
+
   cmp.setup {
     snippet = { expand = function(args) ls.lsp_expand(args.body) end },
     mapping = {
@@ -325,6 +362,12 @@ M.nvim_gps = U.Service():require(FT.PLUGIN, "nvim-gps"):new(function()
   }
 end)
 
+M.spellsitter = U.Service():require(FT.PLUGIN, "nvim-gps"):new(function()
+  require 'spellsitter'.setup {
+    enable = true,
+  }
+end)
+
 M.fidget = U.Service():require(FT.PLUGIN, "fidget.nvim"):new(function()
   require 'fidget'.setup {
     window = {
@@ -343,6 +386,44 @@ M.autopairs = U.Service():require(FT.PLUGIN, "nvim-autopairs"):new(function()
     map_cr = true,
     map_bs = true,
   }
+end)
+
+M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()
+  require 'trld'.setup {
+    position = 'top',
+    formatter = function(diag)
+      local u = require 'trld.utils'
+
+      local msg = diag.message
+      local src = diag.source
+      local code = diag.user_data.lsp.code
+      local icon = venom.icons.diagnostic_states.cozette[venom.severity_names[diag.severity]]
+
+      -- remove dots
+      msg = msg:gsub('%.', '')
+      src = src:gsub('%.', '')
+      code = code:gsub('%.', '')
+
+      -- remove starting and trailing spaces
+      msg = msg:gsub('[ \t]+%f[\r\n%z]', '')
+      src = src:gsub('[ \t]+%f[\r\n%z]', '')
+      code = code:gsub('[ \t]+%f[\r\n%z]', '')
+
+      return {
+        {msg, u.get_hl_by_serverity(diag.severity)},
+        -- {' ', ""},
+        -- {code, "Comment"},
+        {' ', ""},
+        {src, "Folded"},
+        {' ', ""},
+        {icon, u.get_hl_by_serverity(diag.severity)},
+      }
+    end,
+  }
+end)
+
+M.dirty_talk = U.Service():require(FT.PLUGIN, 'vim-dirtytalk'):new(function()
+  vim.opt.spelllang:append 'programming'
 end)
 
 return M

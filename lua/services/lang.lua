@@ -175,4 +175,25 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
   }
 end)
 
+M.setup_plugins = U.Service()
+:require(FT.PLUGIN, "nvim-gps")
+:require(FT.PLUGIN, "spellsitter.nvim")
+:new(function()
+
+  require 'nvim-gps'.setup {
+    -- separator = ' > ',
+    icons = {
+      ["class-name"] = venom.icons.item_kinds.cozette.Class..' ',
+      ["function-name"] = venom.icons.item_kinds.cozette.Function..' ',
+      ["method-name"] = venom.icons.item_kinds.cozette.Method..' ',
+      ["container-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
+      ["tag-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
+    },
+  }
+
+  require 'spellsitter'.setup {
+    enable = true,
+  }
+end)
+
 return M

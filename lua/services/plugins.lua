@@ -349,25 +349,6 @@ M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(functi
   }
 end)
 
-M.nvim_gps = U.Service():require(FT.PLUGIN, "nvim-gps"):new(function()
-  require 'nvim-gps'.setup {
-    -- separator = ' > ',
-    icons = {
-      ["class-name"] = venom.icons.item_kinds.cozette.Class..' ',
-      ["function-name"] = venom.icons.item_kinds.cozette.Function..' ',
-      ["method-name"] = venom.icons.item_kinds.cozette.Method..' ',
-      ["container-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
-      ["tag-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
-    },
-  }
-end)
-
-M.spellsitter = U.Service():require(FT.PLUGIN, "nvim-gps"):new(function()
-  require 'spellsitter'.setup {
-    enable = true,
-  }
-end)
-
 M.fidget = U.Service():require(FT.PLUGIN, "fidget.nvim"):new(function()
   require 'fidget'.setup {
     window = {
@@ -394,29 +375,41 @@ M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()
     formatter = function(diag)
       local u = require 'trld.utils'
 
-      local msg = diag.message
-      local src = diag.source
-      local code = diag.user_data.lsp.code
-      local icon = venom.icons.diagnostic_states.cozette[venom.severity_names[diag.severity]]
+      -- data sanitizer
+      local function sanitize(str)
+        if str == '' then return str end
 
-      -- remove dots
-      msg = msg:gsub('%.', '')
-      src = src:gsub('%.', '')
-      code = code:gsub('%.', '')
+        -- remove dots
+        -- msg = msg:gsub('%.', '')
 
-      -- remove starting and trailing spaces
-      msg = msg:gsub('[ \t]+%f[\r\n%z]', '')
-      src = src:gsub('[ \t]+%f[\r\n%z]', '')
-      code = code:gsub('[ \t]+%f[\r\n%z]', '')
+        -- remove starting and trailing spaces
+        str = str:gsub('[ \t]+%f[\r\n%z]', '')
+        
+        -- append a single space
+        str = str..' '
 
+        return str
+      end
+
+      -- collect all wanted data pieces from the diagnostic (or anywhere else)
+      local data = {
+        msg = diag.message or '',
+        src = diag.source or '',
+        code = diag.codeDescription or diag.code or '',
+        icon = venom.icons.diagnostic_states.cozette[venom.severity_names[diag.severity]] or '',
+      }
+
+      -- sanitize all data pieces
+      for key, value in pairs(data) do
+        data[key] = sanitize(value)
+      end
+
+      -- compose the final diagnostic line from all data pieces
       return {
-        {msg, u.get_hl_by_serverity(diag.severity)},
-        -- {' ', ""},
-        -- {code, "Comment"},
-        {' ', ""},
-        {src, "Folded"},
-        {' ', ""},
-        {icon, u.get_hl_by_serverity(diag.severity)},
+        {data.msg, u.get_hl_by_serverity(diag.severity)},
+        {data.code, "Comment"},
+        {data.src, "Folded"},
+        {data.icon, u.get_hl_by_serverity(diag.severity)},
       }
     end,
   }
@@ -424,6 +417,26 @@ end)
 
 M.dirty_talk = U.Service():require(FT.PLUGIN, 'vim-dirtytalk'):new(function()
   vim.opt.spelllang:append 'programming'
+end)
+
+M.hover = U.Service():require(FT.PLUGIN, 'hover.nvim'):new(function()
+
+  require 'hover'.setup {
+    init = function()
+      require('hover.providers.lsp')
+      require('hover.providers.gh')
+      require('hover.providers.man')
+      require('hover.providers.dictionary')
+    end,
+    preview_opts = {
+      border = nil
+    },
+    title = true
+  }
+
+  -- Setup keymaps
+  -- vim.keymap.set('n',  '<leader>v', require('hover').hover       , { desc='hover.nvim'         })
+  -- vim.keymap.set('n', '<leader>vs', require('hover').hover_select, { desc='hover.nvim (select)' })
 end)
 
 return M

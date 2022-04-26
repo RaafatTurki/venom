@@ -50,15 +50,18 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.autopairs:invoke()
   Plugins.trld:invoke()
   Plugins.dirty_talk:invoke()
+  Plugins.hover:invoke()
 
-  Plugins.nvim_gps:invoke()
-  Plugins.spellsitter:invoke()
+  -- Plugins.nvim_gps:invoke()
+  -- Plugins.spellsitter:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
   Lang.setup_treesitter:invoke()
   Lsp.setup_servers:invoke()
   Lsp.install_auto_installable_servers:invoke()
+
+  Lang.setup_plugins:invoke()
 
   Statusbar.setup:invoke()
 
@@ -96,6 +99,7 @@ PluginManager.plugins = {
   {'stevearc/dressing.nvim'},
   {'rcarriga/nvim-notify',                            requires = p.plenary },
   {'jedrzejboczar/possession.nvim',                   requires = p.plenary },
+  {'lewis6991/hover.nvim'},
   {p.gitsigns,                                        requires = p.plenary },
   {'terrortylor/nvim-comment'},
   {'fedepujol/move.nvim'},

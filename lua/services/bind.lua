@@ -109,6 +109,9 @@ M.setup = U.Service():new(function()
   M.key:invoke {'<A-Down>',         "<CMD>MoveLine(1)<CR>", mode = 'n i'}
   M.key:invoke {'<A-Up>',           ":MoveBlock(-1)<CR>", mode = 'v'}
   M.key:invoke {'<A-Down>',         ":MoveBlock(1)<CR>", mode = 'v'}
+  -- hover
+  -- M.key:invoke {'<A-Down>',         ":MoveBlock(1)<CR>", mode = 'v'}
+  
 end)
 
 return M

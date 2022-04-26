@@ -105,12 +105,14 @@ M.setup = U.Service():new(function()
   M.key:invoke {'g<Left>',          '<CMD>Gitsigns prev_hunk<CR>zz'}
   M.key:invoke {'g<Right>',         '<CMD>Gitsigns next_hunk<CR>zz'}
   -- move
-  M.key:invoke {'<A-Up>',           "<CMD>MoveLine(-1)<CR>", mode = 'n i'}
-  M.key:invoke {'<A-Down>',         "<CMD>MoveLine(1)<CR>", mode = 'n i'}
-  M.key:invoke {'<A-Up>',           ":MoveBlock(-1)<CR>", mode = 'v'}
-  M.key:invoke {'<A-Down>',         ":MoveBlock(1)<CR>", mode = 'v'}
+  M.key:invoke {'<A-Up>',           '<CMD>MoveLine(-1)<CR>', mode = 'n i'}
+  M.key:invoke {'<A-Down>',         '<CMD>MoveLine(1)<CR>', mode = 'n i'}
+  M.key:invoke {'<A-Up>',           ':MoveBlock(-1)<CR>', mode = 'v'}
+  M.key:invoke {'<A-Down>',         ':MoveBlock(1)<CR>', mode = 'v'}
   -- hover
-  -- M.key:invoke {'<A-Down>',         ":MoveBlock(1)<CR>", mode = 'v'}
+  M.key:invoke {'<leader>v',        require 'hover'.hover}
+  -- M.key:invoke {'<leader>v',        require 'hover'.hover_select}
+
   
 end)
 

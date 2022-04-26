@@ -25,6 +25,27 @@ M.possession = U.Service():require(FT.PLUGIN, "possession.nvim"):new(function()
   -- require('telescope').load_extension('possession')
 end)
 
+M.persisted = U.Service():require(FT.PLUGIN, "persisted.nvim"):new(function()
+  require 'persisted'.setup {
+    autosave = false,
+    autoload = false,
+    use_git_branch = false,
+    -- before_save = function() end, -- function to run before the session is saved to disk
+    -- after_save = function() end, -- function to run after the session is saved to disk
+  }
+
+  vim.cmd [[
+    augroup persisted
+    autocmd!
+
+    " autocmd CursorHold * lua vim.diagnostic.open_float()
+    au VimEnter * SessionLoad
+    au VimLeavePre * SessionSave
+
+    augroup persisted
+  ]]
+end)
+
 M.gitsigns = U.Service():require(FT.PLUGIN, "gitsigns.nvim"):new(function()
   require 'gitsigns'.setup {
     signs = {
@@ -420,7 +441,6 @@ M.dirty_talk = U.Service():require(FT.PLUGIN, 'vim-dirtytalk'):new(function()
 end)
 
 M.hover = U.Service():require(FT.PLUGIN, 'hover.nvim'):new(function()
-
   require 'hover'.setup {
     init = function()
       require('hover.providers.lsp')
@@ -433,10 +453,6 @@ M.hover = U.Service():require(FT.PLUGIN, 'hover.nvim'):new(function()
     },
     title = true
   }
-
-  -- Setup keymaps
-  -- vim.keymap.set('n',  '<leader>v', require('hover').hover       , { desc='hover.nvim'         })
-  -- vim.keymap.set('n', '<leader>vs', require('hover').hover_select, { desc='hover.nvim (select)' })
 end)
 
 return M

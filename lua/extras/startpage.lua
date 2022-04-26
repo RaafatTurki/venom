@@ -2,8 +2,8 @@
 
 local Path = require 'plenary.path'
 local button = require 'alpha.themes.dashboard'.button
-local query = require 'possession.query'
-local utils = require 'possession.utils'
+-- local query = require 'possession.query'
+-- local utils = require 'possession.utils'
 
 local M = {}
 
@@ -138,15 +138,15 @@ local function recent_files_builder(start, cwd, items_number, opts)
   return group(res)
 end
 
-local function possession_sessions_builder()
-  local layout = {}
-  local sessions = query.as_list()
-
-  for i, session in pairs(sessions) do
-    table.insert(layout, button('s'..i, session.name, "<CMD>PossessionLoad "..session.name.."<CR>"))
-  end
-  return layout
-end
+-- local function possession_sessions_builder()
+--   local layout = {}
+--   local sessions = query.as_list()
+--
+--   for i, session in pairs(sessions) do
+--     table.insert(layout, button('s'..i, session.name, "<CMD>PossessionLoad "..session.name.."<CR>"))
+--   end
+--   return layout
+-- end
 
 M.config = {
   layout = {
@@ -164,7 +164,7 @@ M.config = {
     spacer(2),
     section("Recent files", function() return { recent_files_builder(0, vim.fn.getcwd(), 5) } end),
     spacer(2),
-    section('Sessions', possession_sessions_builder()),
+    -- section('Sessions', possession_sessions_builder()),
   },
 
   opts = {

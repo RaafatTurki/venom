@@ -70,7 +70,7 @@ vim.opt.fillchars = {
   foldopen  = '┬',
   foldsep   = '│',
 }
-vim.opt.spelllang       = { 'en_us' }                   -- Spelling dictionary
+vim.opt.spelllang       = { 'en_us' }
 vim.opt.whichwrap:append  '<,>,[,],h,l'                 -- Move to next line with theses keys
 vim.opt.shortmess:append  'c'                           -- Don't pass messages to |ins-completion-menu| (required by compe)
 

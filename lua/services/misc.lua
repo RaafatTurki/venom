@@ -119,7 +119,7 @@ M.disable_builtin_plugins = U.Service():new(function()
     "netrwPlugin",
     "netrwSettings",
     "netrwFileHandlers",
-    "matchit",
+    -- "matchit",
     "tar",
     "tarPlugin",
     "rrhelper",

@@ -489,6 +489,12 @@ local theme = lush(function()
     SnippetPassiveIndicator { Comment };
     SnippetInsertIndicator  { fg = c.fg };
     SnippetChoiceIndicator  { fg = c.hint };
+
+    -- mini
+    MiniIndentscopeSymbol   { fg = c.mg };
+    -- MiniIndentscopePrefix   { };
+
+
   }
 end)
 

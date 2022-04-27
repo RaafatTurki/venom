@@ -241,6 +241,8 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
     { key = "D",          action = 'remove' },
     { key = "t",          action = 'tabnew' },
     { key = "h",          action = 'toggle_help' },
+    { key = "<space>",    action = 'cd' },
+    { key = "<BS>",       action = 'dir_up' },
 
     { key = "<C-e>",      action = '' },
     { key = "g?",         action = '' },
@@ -367,12 +369,8 @@ M.mini_starter = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   }
 end)
 
-M.autopairs = U.Service():require(FT.PLUGIN, "nvim-autopairs"):new(function()
-  require 'nvim-autopairs'.setup {
-    check_ts = true,
-    map_cr = true,
-    map_bs = true,
-  }
+M.mini_surround = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
+  require 'mini.surround'.setup()
 end)
 
 M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()

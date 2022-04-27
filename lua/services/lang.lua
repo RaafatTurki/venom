@@ -134,7 +134,7 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
 -- }
 end)
 
-M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(function(name, is_auto_installed, opts)
+M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(function()
   -- if not is_mod_exists('nvim-treesitter.configs') then return end
   require 'nvim-treesitter.configs'.setup {
     -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
@@ -179,7 +179,6 @@ M.setup_plugins = U.Service()
 :require(FT.PLUGIN, "nvim-gps")
 :require(FT.PLUGIN, "spellsitter.nvim")
 :new(function()
-
   require 'nvim-gps'.setup {
     -- separator = ' > ',
     icons = {
@@ -194,6 +193,13 @@ M.setup_plugins = U.Service()
   require 'spellsitter'.setup {
     enable = true,
   }
+end)
+
+M.setup_lang_opts = U.Service():new(function()
+  -- vim.opt.matchpairs      = '(:),{:},[:]'
+  -- vim.b.match_words = '<h1>:</h1>'
+
+	-- let b:match_words = '<:>,<tag>:</tag>'
 end)
 
 return M

@@ -28,11 +28,6 @@ M.setup = U.Service():new(function()
   M.key:invoke {'<C-Up>',           '<C-y>k'}
   M.key:invoke {'<C-Down>',         '<C-e>j'}
   M.key:invoke {'<leader>a',        'ggVG<CR>'}
-  -- shifting line
-  -- M.key:invoke {'<A-Down>',         '<CMD>m .+1<CR>'}
-  -- M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR>'}
-  -- M.key:invoke {'<A-Down>',         '<CMD>m .+1<CR><ESC>i', mode = 'i'}
-  -- M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR><ESC>i', mode = 'i'}
   -- indent
   M.key:invoke {'<Tab>',            '>>_'}
   M.key:invoke {'<S-Tab>',          '<<_'}
@@ -49,6 +44,8 @@ M.setup = U.Service():new(function()
   M.key:invoke {'J',                'J$'}
   -- split (opposite of J)
   M.key:invoke {'S',                'T hr<CR>k$'}
+  -- open man pages in new tabs
+  M.key:invoke {'K',                ':tab Man<CR>'}
   -- center line after n/N
   M.key:invoke {'n',                'nzzzv'}
   M.key:invoke {'N',                'Nzzzv'}
@@ -71,7 +68,14 @@ M.setup = U.Service():new(function()
   -- tabs
   M.key:invoke {'<C-t>',            '<CMD>tabnew<CR>'}
   M.key:invoke {'<A-Right>',        '<CMD>tabnext<CR>'}
-  M.key:invoke {'<A-Left>',         '<CMD>tabprevious<CR>'}  
+  M.key:invoke {'<A-Left>',         '<CMD>tabprevious<CR>'}
+
+  -- old
+  -- shifting line
+  -- M.key:invoke {'<A-Down>',         '<CMD>m .+1<CR>'}
+  -- M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR>'}
+  -- M.key:invoke {'<A-Down>',         '<CMD>m .+1<CR><ESC>i', mode = 'i'}
+  -- M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR><ESC>i', mode = 'i'}
 end)
 
 M.setup_plugins = U.Service():new(function()

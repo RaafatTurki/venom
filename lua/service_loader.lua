@@ -50,7 +50,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.toggle_term:invoke()
   Plugins.fidget:invoke()
   Plugins.mini_starter:invoke()
-  Plugins.autopairs:invoke()
+  Plugins.mini_surround:invoke()
   Plugins.trld:invoke()
   Plugins.dirty_talk:invoke()
   Plugins.hover:invoke()
@@ -62,6 +62,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Lsp.install_auto_installable_servers:invoke()
 
   Lang.setup_plugins:invoke()
+  Lang.setup_lang_opts :invoke()
 
   Statusbar.setup:invoke()
 
@@ -82,13 +83,16 @@ local p = {
 PluginManager.plugins = {
   -- plugin_manager
   {'wbthomason/packer.nvim'},
+
   -- themes
   {'rktjmp/lush.nvim'},
   {'marko-cerovac/material.nvim'},
+
   -- lsp
   p.lspconfig,
   {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
   {'b0o/schemastore.nvim',                            requires = p.lspconfig },
+
   -- lang
   {p.treesitter,                                      run = ':TSUpdate' },
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
@@ -99,36 +103,40 @@ PluginManager.plugins = {
   {'lewis6991/impatient.nvim'},
   {'stevearc/dressing.nvim'},
   {'rcarriga/nvim-notify',                            requires = p.plenary },
-  -- {'jedrzejboczar/possession.nvim',                   requires = p.plenary },
-  -- {'olimorris/persisted.nvim'},
   {'lewis6991/hover.nvim'},
   {p.gitsigns,                                        requires = p.plenary },
   {'terrortylor/nvim-comment'},
   {'fedepujol/move.nvim'},
   {p.cmp,                                             requires = {
-    -- {'hrsh7th/cmp-buffer'},
+    {'hrsh7th/cmp-buffer'},
     {'hrsh7th/cmp-path'},
-    {'hrsh7th/cmp-cmdline'},
     {'hrsh7th/cmp-nvim-lsp'},
     {'hrsh7th/cmp-nvim-lua'},
     {'f3fora/cmp-spell',                              requires = p.plenary },
     {'saadparwaiz1/cmp_luasnip'},
     {'L3MON4D3/LuaSnip'},
     {'hrsh7th/cmp-nvim-lsp-signature-help'},
-    {'hrsh7th/cmp-nvim-lsp-document-symbol'},
-    {'dmitmel/cmp-digraphs'},
-    {'hrsh7th/cmp-buffer'},
+    -- {'dmitmel/cmp-digraphs'},
+    -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
+    {'hrsh7th/cmp-cmdline'},
   }},
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
-  {'windwp/nvim-autopairs'},
   {'ThePrimeagen/harpoon',                            requires = p.plenary },
   {'akinsho/nvim-toggleterm.lua'},
   {'j-hui/fidget.nvim'},
   {'Mofiqul/trld.nvim'},
+
   -- statusbar
+  -- TODO: switch to mini.statusline
   {'famiu/feline.nvim',                               requires = { p.devicons, p.gitsigns }},
+
   -- sessions
+  -- mini.sessions
+
+  -- multiple
   {p.mini,                                            branch = 'stable' },
+
+  -- ls
 
   -- DEBUGGING
   -- {'nvim-treesitter/playground',                      requires = p.treesitter },
@@ -152,7 +160,7 @@ PluginManager.plugins = {
   -- extras
   {'baskerville/vim-sxhkdrc'},
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
-  {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'}
+  {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
 
 
   -- {'goolord/alpha-nvim',                              requires = p.devicons },

@@ -19,7 +19,6 @@ M.key = U.Service():new(function(keymap)
 end)
 
 M.setup = U.Service():new(function()
-
   -- BASE
   -- write, undo, quit
   M.key:invoke {'<C-s>',            '<CMD>write<CR><ESC>', mode = 'n v i'}
@@ -43,7 +42,7 @@ M.setup = U.Service():new(function()
   M.key:invoke {'<A-Tab>',          '<C-w>p'}
   -- make x delete without copying
   -- M.key:invoke {'x',                '"_x', mode = 'v n'}
-  M.key:invoke {'X',                '"_X', mode = 'v n'}
+  M.key:invoke {'X',                '"_x', mode = 'v n'}
   -- make Y copy to end of line
   M.key:invoke {'Y',                'y$'}
   -- go to end after a join
@@ -66,20 +65,21 @@ M.setup = U.Service():new(function()
   for _, break_point in pairs(undo_break_points) do
     M.key:invoke {break_point,     break_point..'<C-g>u', mode = 'i'}
   end
-
-
-  -- TODO move to related services
-  -- open uri under cursor
-  M.key:invoke {'gx',               OpenURIUnderCursor}
-  -- cycle theme
-  M.key:invoke {'<leader>t',        Themes.theme_cycle}
   -- goto and display to nex/prev lsp diagnositc
   M.key:invoke {'d<Left>',          function() vim.diagnostic.goto_prev({ float = false }) end}
   M.key:invoke {'d<Right>',         function() vim.diagnostic.goto_next({ float = false }) end}
   -- tabs
   M.key:invoke {'<C-t>',            '<CMD>tabnew<CR>'}
   M.key:invoke {'<A-Right>',        '<CMD>tabnext<CR>'}
-  M.key:invoke {'<A-Left>',         '<CMD>tabprevious<CR>'}
+  M.key:invoke {'<A-Left>',         '<CMD>tabprevious<CR>'}  
+end)
+
+M.setup_plugins = U.Service():new(function()
+  -- TODO move to related services
+  -- open uri under cursor
+  M.key:invoke {'gx',               OpenURIUnderCursor}
+  -- cycle theme
+  M.key:invoke {'<leader>t',        Themes.theme_cycle}
 
 
   -- PLUGINS
@@ -112,8 +112,6 @@ M.setup = U.Service():new(function()
   -- hover
   M.key:invoke {'<leader>v',        require 'hover'.hover}
   -- M.key:invoke {'<leader>v',        require 'hover'.hover_select}
-
-  
 end)
 
 return M

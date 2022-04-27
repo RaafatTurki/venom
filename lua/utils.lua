@@ -39,13 +39,6 @@ function M.call(func_name, ...)
     end
     return vim.api.nvim_call_function(func_name, args)
 end
--- DEPRECATED: in favor of vim.api.nvim_create_user_command
---- creates a command
-function M.create_command(cmd, nargs, attrs)
-    attrs = attrs or '!'
-    nargs = nargs or 0
-    vim.cmd('command'..attrs..' -nargs='..nargs..' '..cmd)
-end
 --- creates an auto group
 function M.create_augroup(autocmd, name)
   name = name or 'end'

@@ -50,6 +50,7 @@ vim.o.foldnestmax       = 10                            -- Maximum amount of nes
 vim.o.foldminlines      = 1                             -- Minimum amount of lines per fold
 -- vim.o.sessionoptions    = 'blank,curdir,folds,help,tabpages,winsize,winpos,terminal,globals'
 vim.o.sessionoptions    = 'buffers,curdir,folds,winpos,winsize'
+-- vim.o.sessionoptions    = 'buffers,curdir,winpos,winsize'
 
 -- indenting
 vim.o.shiftwidth        = 2                             -- How many whitespaces is an indent
@@ -255,4 +256,5 @@ FT = {
   BIN = "BIN",
   FUNC = "FUNC",
   LSP = "LSP",
+  SESSION = "SESSION",
 }

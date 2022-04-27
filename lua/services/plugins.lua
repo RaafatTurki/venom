@@ -18,34 +18,6 @@ M.notify = U.Service():require(FT.PLUGIN, "nvim-notify"):new(function()
   vim.notify = notify
 end)
 
-M.possession = U.Service():require(FT.PLUGIN, "possession.nvim"):new(function()
-  require 'possession'.setup {
-    prompt_use_ui_input = true,
-  }
-  -- require('telescope').load_extension('possession')
-end)
-
-M.persisted = U.Service():require(FT.PLUGIN, "persisted.nvim"):new(function()
-  require 'persisted'.setup {
-    autosave = false,
-    autoload = false,
-    use_git_branch = false,
-    -- before_save = function() end, -- function to run before the session is saved to disk
-    -- after_save = function() end, -- function to run after the session is saved to disk
-  }
-
-  vim.cmd [[
-    augroup persisted
-    autocmd!
-
-    " autocmd CursorHold * lua vim.diagnostic.open_float()
-    au VimEnter * SessionLoad
-    au VimLeavePre * SessionSave
-
-    augroup persisted
-  ]]
-end)
-
 M.gitsigns = U.Service():require(FT.PLUGIN, "gitsigns.nvim"):new(function()
   require 'gitsigns'.setup {
     signs = {
@@ -299,8 +271,8 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
       -- width = 40,
       -- height = 10,
       -- side = 'left',
-      auto_resize = true,
-      hide_root_folder = false,
+      -- auto_resize = true,
+      hide_root_folder = true,
       mappings = {
         custom_only = false,
         list = nvimtree_keybindings
@@ -378,8 +350,21 @@ M.fidget = U.Service():require(FT.PLUGIN, "fidget.nvim"):new(function()
   }
 end)
 
-M.alpha = U.Service():require(FT.PLUGIN, "alpha-nvim"):new(function()
-  require 'alpha'.setup(require '../extras/startpage'.config)
+M.mini_starter = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
+  local starter = require 'mini.starter'
+
+  starter.setup {
+    autoopen = true,
+    evaluate_single = true,
+    header = "",
+    footer = "",
+    -- content_hooks = nil,
+    content_hooks = {
+      starter.gen_hook.adding_bullet(),
+      starter.gen_hook.aligning('center', 'center'),
+    },
+    query_updaters = [[abcdefghijklmnopqrstuvwxyz0123456789_-.]],
+  }
 end)
 
 M.autopairs = U.Service():require(FT.PLUGIN, "nvim-autopairs"):new(function()

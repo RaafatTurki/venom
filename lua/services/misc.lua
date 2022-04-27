@@ -87,7 +87,7 @@ M.open_uri = U.Service():new(function()
     local regex_plugin_url = "[%a%d%-%.%_]*%/[%a%d%-%.%_]*"
     if (open_uri('https://github.com/'..string.match(word_under_cursor, regex_plugin_url))) then return end
   end
-  U.create_command('OpenURIUnderCursor lua OpenURIUnderCursor()')
+  vim.api.nvim_create_user_command('OpenURIUnderCursor', function() OpenURIUnderCursor() end, {})
 end)
 
 --- sets color colorcolumn on the below filetypes

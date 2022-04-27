@@ -6,6 +6,7 @@ local PluginManager = load_module "plugin_manager"
 PluginManager.attempt_bootstrap()
 PluginManager.setup()
 
+Sessions = load_module 'services.sessions'
 Bind = load_module 'services.bind'
 Misc = load_module 'services.misc'
 Themes = load_module 'services.themes'
@@ -15,6 +16,9 @@ Lsp = load_module 'services.lsp'
 Statusbar = load_module 'services.statusbar'
 
 venom.actions.pm_post_complete:subscribe(function()
+  Sessions.setup:invoke()
+  Bind.setup:invoke()
+
   Bind.bind_leader:invoke()
 
   Misc.base:invoke()
@@ -39,20 +43,17 @@ venom.actions.pm_post_complete:subscribe(function()
   
   Plugins.impatient:invoke()
   Plugins.notify:invoke()
-  Plugins.persisted:invoke()
   Plugins.gitsigns:invoke()
   Plugins.nvim_comment:invoke()
   Plugins.nvim_tree:invoke()
   Plugins.cmp_ls:invoke()
   Plugins.toggle_term:invoke()
   Plugins.fidget:invoke()
-  Plugins.alpha:invoke()
+  Plugins.mini_starter:invoke()
   Plugins.autopairs:invoke()
   Plugins.trld:invoke()
   Plugins.dirty_talk:invoke()
   Plugins.hover:invoke()
-
-  -- Plugins.possession:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
@@ -64,7 +65,7 @@ venom.actions.pm_post_complete:subscribe(function()
 
   Statusbar.setup:invoke()
 
-  Bind.setup:invoke()
+  Bind.setup_plugins:invoke()
 end)
 
 local p = {
@@ -76,6 +77,7 @@ local p = {
   telescope = 'nvim-telescope/telescope.nvim',
   lspconfig = 'neovim/nvim-lspconfig',
   cmp = 'hrsh7th/nvim-cmp',
+  mini = 'echasnovski/mini.nvim',
 }
 PluginManager.plugins = {
   -- plugin_manager
@@ -98,7 +100,7 @@ PluginManager.plugins = {
   {'stevearc/dressing.nvim'},
   {'rcarriga/nvim-notify',                            requires = p.plenary },
   -- {'jedrzejboczar/possession.nvim',                   requires = p.plenary },
-  {'olimorris/persisted.nvim'},
+  -- {'olimorris/persisted.nvim'},
   {'lewis6991/hover.nvim'},
   {p.gitsigns,                                        requires = p.plenary },
   {'terrortylor/nvim-comment'},
@@ -122,10 +124,11 @@ PluginManager.plugins = {
   {'ThePrimeagen/harpoon',                            requires = p.plenary },
   {'akinsho/nvim-toggleterm.lua'},
   {'j-hui/fidget.nvim'},
-  {'goolord/alpha-nvim',                              requires = p.devicons },
   {'Mofiqul/trld.nvim'},
   -- statusbar
   {'famiu/feline.nvim',                               requires = { p.devicons, p.gitsigns }},
+  -- sessions
+  {p.mini,                                            branch = 'stable' },
 
   -- DEBUGGING
   -- {'nvim-treesitter/playground',                      requires = p.treesitter },
@@ -152,6 +155,7 @@ PluginManager.plugins = {
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'}
 
 
+  -- {'goolord/alpha-nvim',                              requires = p.devicons },
   -- {'folke/lua-dev.nvim'},
   -- {'farmergreg/vim-lastplace'},
   -- {'lambdalisue/suda.vim'},

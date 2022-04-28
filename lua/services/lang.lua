@@ -2,21 +2,14 @@
 -- @module lang
 local M = {}
 
-M.configure_server = U.Service():require(FT.LSP, 'setup'):new(function(name, is_auto_installed, opts)
-  local available_server_names = require 'nvim-lsp-installer.servers'.get_available_server_names()
-
-  if U.has_value(available_server_names, name) then
-    local server_config = U.LspServerConfig():auto_install(is_auto_installed):new(name, opts)
-    Lsp.add_server_config:invoke(server_config)
-    log("["..name.."] added lsp server configurations.", LL.DEBUG)
-  else
-    log("["..name.."] no such server available!", LL.WARN)
-  end
+M.configure_server = U.Service():require(FT.LSP, 'setup'):new(function(name, opts)
+  local server_config = U.LspServerConfig():new(name, opts)
+  Lsp.add_server_config:invoke(server_config)
 end)
 
 M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
 
-  M.configure_server:invoke("sumneko_lua", true, {
+  M.configure_server:invoke("sumneko_lua", {
     settings = {
       Lua = {
         -- runtime = {
@@ -38,7 +31,7 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
-  M.configure_server:invoke("texlab", false, {
+  M.configure_server:invoke("texlab", {
     settings = {
       texlab = {
         build = {
@@ -65,7 +58,7 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
-  M.configure_server:invoke("svelte", false, {
+  M.configure_server:invoke("svelte", {
     settings = {
       svelte = {
         plugin = {
@@ -83,7 +76,7 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
-  M.configure_server:invoke("rust_analyzer", false, {
+  M.configure_server:invoke("rust_analyzer", {
     settings = {
       ["rust-analyzer"] = {
         diagnostics = {
@@ -96,11 +89,11 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
-  M.configure_server:invoke("emmet_ls", false, {
+  M.configure_server:invoke("emmet_ls", {
     filetypes = { 'html', 'css', 'svelte' },
   })
 
-  M.configure_server:invoke("jsonls", false, {
+  M.configure_server:invoke("jsonls", {
     settings = {
       json = {
         schemas = require 'schemastore'.json.schemas(),

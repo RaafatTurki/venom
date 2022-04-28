@@ -257,17 +257,17 @@ function M.LspServerConfig()
   return {
     name = "",
     opts = {},
-    is_auto_installed = false,
+    -- is_auto_installed = false,
     -- is_third_party = false,
     new = function(self, name, opts)
       self.name = name
       self.opts = opts or {}
       return self
     end,
-    auto_install = function(self, value)
-      self.is_auto_installed = value or false
-      return self
-    end,
+    -- auto_install = function(self, value)
+    --   self.is_auto_installed = value or false
+    --   return self
+    -- end,
     -- third_party = function(self, value)
     --   self.is_third_party = value or true
     --   return self

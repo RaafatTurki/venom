@@ -373,51 +373,19 @@ M.mini_surround = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   require 'mini.surround'.setup()
 end)
 
-M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()
-  require 'trld'.setup {
-    position = 'top',
-    formatter = function(diag)
-      local u = require 'trld.utils'
-
-      -- data sanitizer
-      local function sanitize(str)
-        if str == '' then return str end
-
-        -- remove dots
-        -- msg = msg:gsub('%.', '')
-
-        -- remove starting and trailing spaces
-        str = str:gsub('[ \t]+%f[\r\n%z]', '')
-        
-        -- append a single space
-        str = str..' '
-
-        return str
-      end
-
-      -- collect all wanted data pieces from the diagnostic (or anywhere else)
-      local data = {
-        msg = diag.message or '',
-        src = diag.source or '',
-        code = diag.codeDescription or diag.code or '',
-        icon = venom.icons.diagnostic_states.cozette[venom.severity_names[diag.severity]] or '',
-      }
-
-      -- sanitize all data pieces
-      for key, value in pairs(data) do
-        data[key] = sanitize(value)
-      end
-
-      -- compose the final diagnostic line from all data pieces
-      return {
-        {data.msg, u.get_hl_by_serverity(diag.severity)},
-        {data.code, "Comment"},
-        {data.src, "Folded"},
-        {data.icon, u.get_hl_by_serverity(diag.severity)},
-      }
-    end,
-  }
-end)
+-- M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()
+--   require 'trld'.setup {
+--     win_opts = {
+--       anchor = 'NE',
+--     },
+--     icons = {
+--       error = venom.icons.diagnostic_states.cozette.Error,  
+--       warn = venom.icons.diagnostic_states.cozette.Warn,  
+--       hint = venom.icons.diagnostic_states.cozette.Hint,  
+--       info = venom.icons.diagnostic_states.cozette.Info,  
+--     },
+--   }
+-- end)
 
 M.dirty_talk = U.Service():require(FT.PLUGIN, 'vim-dirtytalk'):new(function()
   vim.opt.spelllang:append 'programming'

@@ -14,53 +14,20 @@ M.add_server_config = U.Service():require(FT.LSP, 'setup'):new(function(server_c
   M.servers_configs[server_config.name] = server_config
 end)
 
-M.install_auto_installable_servers = U.Service():require(FT.LSP, 'setup'):new(function()
+M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function()
   for _, server_config in pairs(M.servers_configs) do
-    if (server_config.is_auto_installed) then
+    log("["..server_config.name.."] setting up lsp server.", LL.DEBUG)
 
-      -- TODO: abstract into a M.get_server service and handle ok value with catch
-      local ok, ls = require 'nvim-lsp-installer.servers'.get_server(server_config.name)
-      if ok then
-        if not ls:is_installed() then
-          log("["..server_config.name.."] auto installing")
-          -- TODO: attach the logging to a post complete hook
-          ls:install()
-          -- log("["..server_config.name.."] installed")
-        end
-      else
-        log("["..server_config.name.."] no server available with such name", LL.ERROR)
-      end
+    local opts = vim.tbl_deep_extend('force', server_config.opts, M.shared_server_config.opts)
 
-    end
+    -- TODO: check availability
+
+    require 'lspconfig'[server_config.name].setup(opts)
   end
 end)
 
-M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function()
-  require 'nvim-lsp-installer'.on_server_ready(function(server)
-    log("["..server.name.."] setting up lsp server.", LL.DEBUG)
-
-    local opts = {}
-
-    local server_config =  M.servers_configs[server.name]
-    if (server_config ~= nil) then
-      opts = server_config.opts
-    end
-
-    -- TODO: use vim.tbl_extend and vim.tbl_deep_extend
-    opts.on_attach = M.shared_server_config.opts.on_attach
-    opts.capabilities = M.shared_server_config.opts.capabilities
-    opts.handlers = M.shared_server_config.opts.handlers
-
-    server:setup(opts)
-    vim.cmd [[do User LspAttachBuffers]]
-  end)
-end)
-
 M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'nvim-lsp-installer'):require(FT.PLUGIN, 'nvim-lspconfig'):new(function()
-    local lspconfig = require 'lspconfig'
-    local lspinstaller = require 'nvim-lsp-installer'
-
-    lspinstaller.settings({
+    require 'nvim-lsp-installer'.setup({
       ui = {
         icons = {
           server_installed = " ",
@@ -110,9 +77,3 @@ M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'nvim-lsp-inst
 end)
 
 return M
-
--- get_available_servers()
--- get_installed_servers()
--- get_uninstalled_servers()
--- register({server})
--- get_server({server_name})

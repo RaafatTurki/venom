@@ -51,16 +51,15 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.fidget:invoke()
   Plugins.mini_starter:invoke()
   Plugins.mini_surround:invoke()
-  Plugins.trld:invoke()
   Plugins.dirty_talk:invoke()
   Plugins.hover:invoke()
+  -- Plugins.trld:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
-  Lang.setup_treesitter:invoke()
   Lsp.setup_servers:invoke()
-  Lsp.install_auto_installable_servers:invoke()
 
+  Lang.setup_treesitter:invoke()
   Lang.setup_plugins:invoke()
   Lang.setup_lang_opts :invoke()
 
@@ -102,6 +101,7 @@ PluginManager.plugins = {
   -- plugins
   {'lewis6991/impatient.nvim'},
   {'stevearc/dressing.nvim'},
+  -- {'kevinhwang91/nvim-bqf'},
   {'rcarriga/nvim-notify',                            requires = p.plenary },
   {'lewis6991/hover.nvim'},
   {p.gitsigns,                                        requires = p.plenary },
@@ -124,7 +124,6 @@ PluginManager.plugins = {
   {'ThePrimeagen/harpoon',                            requires = p.plenary },
   {'akinsho/nvim-toggleterm.lua'},
   {'j-hui/fidget.nvim'},
-  {'Mofiqul/trld.nvim'},
 
   -- statusbar
   -- TODO: switch to mini.statusline
@@ -163,6 +162,7 @@ PluginManager.plugins = {
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
 
 
+  -- {'Mofiqul/trld.nvim'},
   -- {'goolord/alpha-nvim',                              requires = p.devicons },
   -- {'folke/lua-dev.nvim'},
   -- {'farmergreg/vim-lastplace'},

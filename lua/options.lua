@@ -258,3 +258,9 @@ FT = {
   LSP = "LSP",
   SESSION = "SESSION",
 }
+
+--- lsp server tags
+-- LST = {
+--   AUTO_INSTALL = "AUTO_INSTALL",
+--   THIRD_PARTY = "THIRD_PARTY",
+-- }

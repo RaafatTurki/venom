@@ -1,10 +1,6 @@
 --- defines how language servers are installed and setup
 -- @module lsp
 
--- a langaue servers must be setup in order to be used, there are two types of language servers:
--- available servers      these are installed and setup through nvim-lsp-installer (which uses lspconfig internally)
--- WIP: third party servers    these are installed by 3rd party means and setup through lspconfig
-
 local M = {}
 
 M.servers_configs = {}
@@ -15,14 +11,27 @@ M.add_server_config = U.Service():require(FT.LSP, 'setup'):new(function(server_c
 end)
 
 M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function()
-  for _, server_config in pairs(M.servers_configs) do
-    log("["..server_config.name.."] setting up lsp server.", LL.DEBUG)
+  local lspi = require 'nvim-lsp-installer'
+  local lspconf = require 'lspconfig'
 
-    local opts = vim.tbl_deep_extend('force', server_config.opts, M.shared_server_config.opts)
+  -- looping all installed LSPI servers
+  for _, server_obj in pairs(lspi.get_installed_servers()) do
+    
+    -- adding unconfigured servers into M.servers_configs
+    if (not U.has_key(M.servers_configs, server_obj.name)) then
+      M.add_server_config:invoke(U.LspServerConfig():tag(LST.LSPI):new(server_obj.name, {}))
+    end
 
-    -- TODO: check availability
+    -- setting up servers
+    local server_config = M.servers_configs[server_obj.name]
 
-    require 'lspconfig'[server_config.name].setup(opts)
+    if U.has_value(server_config.tags, LST.NO_SHARED_CONFIG) then
+      lspconf[server_config.name].setup(server_config.opts)
+    else
+      local opts = vim.tbl_deep_extend('force', server_config.opts, M.shared_server_config.opts)
+      lspconf[server_config.name].setup(opts)
+    end
+
   end
 end)
 

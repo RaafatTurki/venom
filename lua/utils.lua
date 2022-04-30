@@ -27,6 +27,11 @@ function M.has_value(tbl, target_value)
   for _, value in pairs(tbl) do if value == target_value then return true end end
   return false
 end
+--- checks if table has a key
+function M.has_key(tbl, target_key)
+  for key, _ in pairs(tbl) do if key == target_key then return true end end
+  return false
+end
 
 
 -- Neovim Utils
@@ -257,21 +262,13 @@ function M.LspServerConfig()
   return {
     name = "",
     opts = {},
-    -- is_auto_installed = false,
-    -- is_third_party = false,
+    tags = {},
+    tag = function(self, server_tag) table.insert(self.tags, server_tag) return self end,
     new = function(self, name, opts)
       self.name = name
       self.opts = opts or {}
       return self
     end,
-    -- auto_install = function(self, value)
-    --   self.is_auto_installed = value or false
-    --   return self
-    -- end,
-    -- third_party = function(self, value)
-    --   self.is_third_party = value or true
-    --   return self
-    -- end,
   }
 end
 

@@ -450,22 +450,25 @@ local theme = lush(function()
     StartupTimePercent      { fg = red[5] };
     StartupTimePlot         { fg = red[1] };
 
-    -- notify
-    NotifyERRORBorder       { fg = c.err };
-    NotifyWARNBorder        { fg = c.warn };
-    NotifyINFOBorder        { fg = c.info };
-    NotifyDEBUGBorder       { fg = debug[10] };
-    NotifyTRACEBorder       { fg = debug[1] };
-    NotifyERRORIcon         { NotifyERRORBorder };
-    NotifyWARNIcon          { NotifyWARNBorder };
-    NotifyINFOIcon          { NotifyINFOBorder };
-    NotifyDEBUGIcon         { NotifyDEBUGBorder };
-    NotifyTRACEIcon         { NotifyTRACEBorder };
+    -- nvim-notify
+    NotifyERRORBorder       { DiagnosticVirtualTextError };
+    NotifyWARNBorder        { DiagnosticVirtualTextWarn };
+    NotifyINFOBorder        { DiagnosticVirtualTextInfo };
+    NotifyTRACEBorder       { DiagnosticFloatingHint };
+    NotifyDEBUGBorder       { DiagnosticVirtualTextHint };
+    
+    NotifyERRORIcon         { fg = c.fg };
+    NotifyWARNIcon          { fg = c.fg };
+    NotifyINFOIcon          { fg = c.fg };
+    NotifyDEBUGIcon         { fg = c.fg };
+    NotifyTRACEIcon         { fg = c.fg };
+    
     NotifyERRORTitle        { NotifyERRORBorder };
     NotifyWARNTitle         { NotifyWARNBorder };
     NotifyINFOTitle         { NotifyINFOBorder };
     NotifyDEBUGTitle        { NotifyDEBUGBorder };
     NotifyTRACETitle        { NotifyTRACEBorder };
+    
     NotifyERRORBody         { Normal };
     NotifyWARNBody          { Normal };
     NotifyINFOBody          { Normal };

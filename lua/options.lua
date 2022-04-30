@@ -134,7 +134,7 @@ venom = {
     has_str = function(self, feature_str) return U.has_value(self.list, feature_str) end,
   },
   icons = {
-    --  
+    --   
     diagnostic_states = {
       outline = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
       full    = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
@@ -259,8 +259,7 @@ FT = {
   SESSION = "SESSION",
 }
 
---- lsp server tags
--- LST = {
---   AUTO_INSTALL = "AUTO_INSTALL",
---   THIRD_PARTY = "THIRD_PARTY",
--- }
+--- language server tags
+LST = {
+  NO_SHARED_CONFIG = "NO_SHARED_CONFIG"
+}

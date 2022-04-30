@@ -2,14 +2,19 @@
 -- @module lang
 local M = {}
 
-M.configure_server = U.Service():require(FT.LSP, 'setup'):new(function(name, opts)
+M.configure_server = U.Service():require(FT.LSP, 'setup'):new(function(name, tags, opts)
   local server_config = U.LspServerConfig():new(name, opts)
+
+  for _, tag in pairs(tags) do
+    server_config:tag(tag)
+  end
+
   Lsp.add_server_config:invoke(server_config)
 end)
 
 M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
 
-  M.configure_server:invoke("sumneko_lua", {
+  M.configure_server:invoke("sumneko_lua", {},  {
     settings = {
       Lua = {
         -- runtime = {
@@ -31,7 +36,7 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
-  M.configure_server:invoke("texlab", {
+  M.configure_server:invoke("texlab", {},  {
     settings = {
       texlab = {
         build = {
@@ -58,7 +63,7 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
-  M.configure_server:invoke("svelte", {
+  M.configure_server:invoke("svelte", {}, {
     settings = {
       svelte = {
         plugin = {
@@ -76,7 +81,7 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
-  M.configure_server:invoke("rust_analyzer", {
+  M.configure_server:invoke("rust_analyzer", {}, {
     settings = {
       ["rust-analyzer"] = {
         diagnostics = {
@@ -89,11 +94,11 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
-  M.configure_server:invoke("emmet_ls", {
+  M.configure_server:invoke("emmet_ls", {}, {
     filetypes = { 'html', 'css', 'svelte' },
   })
 
-  M.configure_server:invoke("jsonls", {
+  M.configure_server:invoke("jsonls", {}, {
     settings = {
       json = {
         schemas = require 'schemastore'.json.schemas(),
@@ -110,9 +115,6 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
       },
     }
   })
-
-  M.configure_server:invoke("gopls", {}) -- TODO: make Lsp auto setup installed servers with empty opts if they don't exists here
-
 
   -- M.configure_server:invoke("$1", $2, {
   --  $3

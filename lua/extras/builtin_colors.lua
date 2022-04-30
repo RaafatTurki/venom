@@ -120,6 +120,11 @@ local theme = lush(function()
     PmenuSbar       { Pmenu },                          -- Popup menu: scrollbar.
     PmenuThumb      { bg = c.fg },                      -- Popup menu: Thumb of the scrollbar.
 
+    -- Pmenu           { fg = debug[1] },         -- Popup menu: normal item.
+    -- PmenuSel        { fg = debug[1] },           -- Popup menu: selected item.
+    -- PmenuSbar       { fg = debug[1] },                          -- Popup menu: scrollbar.
+    -- PmenuThumb      { fg = debug[1] },                      -- Popup menu: Thumb of the scrollbar.
+
     Directory       { fg = c.fg },                      -- directory names (and other special names in listings)
     QuickFixLine    { CursorLine, gui = 'bold' },       -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
 
@@ -356,8 +361,8 @@ local theme = lush(function()
     CmpItemAbbrDeprecated   { CmpItemAbbr,      gui = 'strikethrough' };
     CmpItemAbbrMatch        { fg = c.fg,        gui = 'bold' };
     CmpItemAbbrMatchFuzzy   { CmpItemAbbrMatch, gui = '' };
-    -- CmpItemKind             { };
-    -- CmpItemMenu             { bg = debug[1], fg = debug[10] };   
+    CmpItemKind             { };
+    CmpItemMenu             { fg = c.comment  };
     CmpItemKindText         { fg = c.fg       };
     CmpItemKindMethod       { fg = c.func     };
     CmpItemKindFunction     { fg = c.func     };

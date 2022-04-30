@@ -70,11 +70,10 @@ M.setup = U.Service():new(function()
   M.key:invoke {'<A-Right>',        '<CMD>tabnext<CR>'}
   M.key:invoke {'<A-Left>',         '<CMD>tabprevious<CR>'}
 
-  M.key:invoke {'<A-z>',            function() vim.notify("hi friend") end}
+  -- M.key:invoke {'<A-z>',            function() vim.notify("hi friend") end}
 
   -- MOTIONS
-  -- M.key:invoke {'a',                ':<c-u>normal! $v^<CR>', mode = 'o'}
-  M.key:invoke {'a',                ':<c-u>normal! ggVG<CR>', mode = 'o'}
+  M.key:invoke {'aa',                ':<c-u>normal! ggVG<CR>', mode = 'o'}
 
   -- old
   -- shifting line

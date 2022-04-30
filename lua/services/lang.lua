@@ -116,6 +116,21 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
+  M.configure_server:invoke("pylsp", {}, {
+    settings = {
+      configurationSources = { 'flake8' },
+      formatCommand = { 'black' },
+      pylsp = {
+        plugins = {
+          pycodestyle = {
+            enabled = true,
+            ignore=  {'E501', 'E231', 'E305', 'W391'},
+          },
+        }
+      }
+    }
+  })
+
   -- M.configure_server:invoke("$1", $2, {
   --  $3
   -- })
@@ -170,6 +185,15 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
     highlight = { enable = true },
     indent = { enable = true },
     context_commentstring = { enable = true, enable_autocmd = false },
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = '<CR>',
+        scope_incremental = '<CR>',
+        node_incremental = '<TAB>',
+        node_decremental = '<S-TAB>',
+      },
+    },
   }
 end)
 
@@ -178,7 +202,7 @@ M.setup_plugins = U.Service()
 :require(FT.PLUGIN, "spellsitter.nvim")
 :new(function()
   require 'nvim-gps'.setup {
-    -- separator = ' > ',
+    separator = ' > ',
     icons = {
       ["class-name"] = venom.icons.item_kinds.cozette.Class..' ',
       ["function-name"] = venom.icons.item_kinds.cozette.Function..' ',

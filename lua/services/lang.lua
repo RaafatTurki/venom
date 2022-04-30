@@ -111,6 +111,9 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
     }
   })
 
+  M.configure_server:invoke("gopls", {}) -- TODO: make Lsp auto setup installed servers with empty opts if they don't exists here
+
+
   -- M.configure_server:invoke("$1", $2, {
   --  $3
   -- })

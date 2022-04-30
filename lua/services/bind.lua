@@ -27,7 +27,7 @@ M.setup = U.Service():new(function()
   -- page shift up/down, select all
   M.key:invoke {'<C-Up>',           '<C-y>k'}
   M.key:invoke {'<C-Down>',         '<C-e>j'}
-  M.key:invoke {'<leader>a',        'ggVG<CR>'}
+  -- M.key:invoke {'<C-a>',            ':%'}
   -- indent
   M.key:invoke {'<Tab>',            '>>_'}
   M.key:invoke {'<S-Tab>',          '<<_'}
@@ -69,6 +69,12 @@ M.setup = U.Service():new(function()
   M.key:invoke {'<C-t>',            '<CMD>tabnew<CR>'}
   M.key:invoke {'<A-Right>',        '<CMD>tabnext<CR>'}
   M.key:invoke {'<A-Left>',         '<CMD>tabprevious<CR>'}
+
+  M.key:invoke {'<A-z>',            function() vim.notify("hi friend") end}
+
+  -- MOTIONS
+  -- M.key:invoke {'a',                ':<c-u>normal! $v^<CR>', mode = 'o'}
+  M.key:invoke {'a',                ':<c-u>normal! ggVG<CR>', mode = 'o'}
 
   -- old
   -- shifting line

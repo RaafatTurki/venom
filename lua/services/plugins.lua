@@ -13,6 +13,8 @@ M.notify = U.Service():require(FT.PLUGIN, "nvim-notify"):new(function()
   notify.setup {
     timeout = 500,
     render = 'minimal',
+    -- stages = 'fade',
+    stages = require 'extras.notify_stages',
   }
 
   vim.notify = notify
@@ -373,19 +375,19 @@ M.mini_surround = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   require 'mini.surround'.setup()
 end)
 
--- M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()
---   require 'trld'.setup {
---     win_opts = {
---       anchor = 'NE',
---     },
---     icons = {
---       error = venom.icons.diagnostic_states.cozette.Error,  
---       warn = venom.icons.diagnostic_states.cozette.Warn,  
---       hint = venom.icons.diagnostic_states.cozette.Hint,  
---       info = venom.icons.diagnostic_states.cozette.Info,  
---     },
---   }
--- end)
+M.corn = U.Service():require(FT.PLUGIN, "corn.nvim"):new(function()
+  require 'corn'.setup {
+    win_opts = {
+      anchor = 'NE',
+    },
+    icons = {
+      error = venom.icons.diagnostic_states.cozette.Error,  
+      warn = venom.icons.diagnostic_states.cozette.Warn,  
+      hint = venom.icons.diagnostic_states.cozette.Hint,  
+      info = venom.icons.diagnostic_states.cozette.Info,  
+    },
+  }
+end)
 
 M.dirty_talk = U.Service():require(FT.PLUGIN, 'vim-dirtytalk'):new(function()
   vim.opt.spelllang:append 'programming'

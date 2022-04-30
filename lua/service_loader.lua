@@ -1,5 +1,7 @@
 --- invokes various services
 -- @module service_loader
+
+---@diagnostic disable: need-check-nil
 local PluginManager = load_module "plugin_manager"
 
 -- venom.features:add("plugin_manager") -- XXX: set conditionally within plugin_manager.lua
@@ -53,7 +55,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.mini_surround:invoke()
   Plugins.dirty_talk:invoke()
   Plugins.hover:invoke()
-  -- Plugins.trld:invoke()
+  Plugins.corn:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
@@ -135,8 +137,6 @@ PluginManager.plugins = {
   -- multiple
   {p.mini,                                            branch = 'stable' },
 
-  -- ls
-
   -- DEBUGGING
   -- {'nvim-treesitter/playground',                      requires = p.treesitter },
 
@@ -160,6 +160,8 @@ PluginManager.plugins = {
   {'baskerville/vim-sxhkdrc'},
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
+
+  {'~/sectors/lua/corn.nvim'},
 
 
   -- {'Mofiqul/trld.nvim'},

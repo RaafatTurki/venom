@@ -19,6 +19,26 @@ M.key = U.Service():new(function(keymap)
 end)
 
 M.setup = U.Service():new(function()
+  -- DISABLES
+  -- ctrl-x submode, c-p and c-n
+  M.key:invoke {'<C-x>',            '<Nop>', mode = 'i'}
+  -- disable arrow keys
+  -- M.key:invoke {'<Down>',           '<Nop>', mode = 'n v i'}
+  -- M.key:invoke {'<Up>',             '<Nop>', mode = 'n v i'}
+  -- M.key:invoke {'<Left>',           '<Nop>', mode = 'n v i'}
+  -- M.key:invoke {'<Right>',          '<Nop>', mode = 'n v i'}
+  -- home and end
+  -- M.key:invoke {'<Home>',           '<Nop>', mode = 'n v i'}
+  -- M.key:invoke {'<End>',            '<Nop>', mode = 'n v i'}
+
+  -- CURSED
+  --- hjkl to jkil
+  -- M.key:invoke {'i',                'k', mode = 'n v i'}
+  -- M.key:invoke {'k',                'j', mode = 'n v i'}
+  -- M.key:invoke {'j',                'h', mode = 'n v i'}
+  -- M.key:invoke {'h',                '<Nop>', mode = 'n v i'}
+
+
   -- BASE
   -- write, undo, quit
   M.key:invoke {'<C-s>',            '<CMD>write<CR><ESC>', mode = 'n v i'}

@@ -76,100 +76,102 @@ M.nvim_comment = U.Service():require(FT.PLUGIN, "nvim-comment"):new(function()
 end)
 
 M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
-  -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
+  -- -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
+  -- local ls = require 'luasnip'
+  -- local ls_types = require 'luasnip.util.types'
+  --
+  -- -- TODO: lazy load vscode format snippets (lang.lua)
+  -- require'luasnip'.config.setup({
+  --   ext_opts = {
+  --     [ls_types.choiceNode] = {
+  --       active = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetChoiceIndicator'}} },
+  --       passive = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetPassiveIndicator'}} }
+  --     },
+  --     [ls_types.insertNode] = {
+  --       active = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetInsertIndicator'}} },
+  --       passive = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetPassiveIndicator'}} }
+  --     }
+  --   },
+  -- })
+  --
+  -- local s = ls.snippet
+  -- local t = ls.text_node
+  -- local i = ls.insert_node
+  -- local c = ls.choice_node
+  -- local f = ls.function_node
+  --
+  -- ls.add_snippets(nil, {
+  --   all = {
+  --     s("vimodeline", { t {"vim: commentstring=#%s"} }),
+  --     s("shebang", { t {"#!/usr/bin/bash"} }),
+  --
+  --     s("trig", c(1, {
+  --       t("Ugh boring, a text node"),
+  --       i(nil, "At least I can edit something now..."),
+  --       f(function(args) return "Still only counts as text!!" end, {})
+  --     }))
+  --   },
+  --   html = {
+  --     s("html5", {
+  --       t {
+  --         "<html lang=\"en\">",
+  --         "\t<head>",
+  --         "\t\t<title>Web Page</title>",
+  --         "\t\t<meta charset=\"UTF-8\"/>",
+  --         "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>",
+  --         "\t\t<link href=\"style.css\" rel=\"stylesheet\"/>",
+  --         "\t</head>",
+  --         "\t<body>",
+  --         "\t\t<h1>hi friend!</h1>",
+  --         "\t\t"}, i(0), t {"",
+  --         "\t</body>",
+  --         "</html>"
+  --       },
+  --     }),
+  --   },
+  -- })
+
+
+
   local cmp = require 'cmp'
-  local ls = require 'luasnip'
-  local ls_types = require 'luasnip.util.types'
-
-  -- TODO: lazy load vscode format snippets (lang.lua)
-
-  require'luasnip'.config.setup({
-    ext_opts = {
-      [ls_types.choiceNode] = {
-        active = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetChoiceIndicator'}} },
-        passive = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetPassiveIndicator'}} }
-      },
-      [ls_types.insertNode] = {
-        active = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetInsertIndicator'}} },
-        passive = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetPassiveIndicator'}} }
-      }
-    },
-  })
-
-
-  local s = ls.snippet
-  local t = ls.text_node
-  local i = ls.insert_node
-  local c = ls.choice_node
-  local f = ls.function_node
-
-  ls.add_snippets(nil, {
-    all = {
-      s("vimodeline", { t {"vim: commentstring=#%s"} }),
-      s("shebang", { t {"#!/usr/bin/bash"} }),
-
-      s("trig", c(1, {
-        t("Ugh boring, a text node"),
-        i(nil, "At least I can edit something now..."),
-        f(function(args) return "Still only counts as text!!" end, {})
-      }))
-    },
-    html = {
-      s("html5", {
-        t {
-          "<html lang=\"en\">",
-          "\t<head>",
-          "\t\t<title>Web Page</title>",
-          "\t\t<meta charset=\"UTF-8\"/>",
-          "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>",
-          "\t\t<link href=\"style.css\" rel=\"stylesheet\"/>",
-          "\t</head>",
-          "\t<body>",
-          "\t\t<h1>hi friend!</h1>",
-          "\t\t"}, i(0), t {"",
-          "\t</body>",
-          "</html>"
-        },
-      }),
-    },
-  })
 
   cmp.setup {
-    snippet = { expand = function(args) ls.lsp_expand(args.body) end },
+    -- snippet = { expand = function(args) ls.lsp_expand(args.body) end },
     mapping = {
-      ["<Tab>"]       = cmp.mapping(function(fallback) if ls.expand_or_locally_jumpable() then ls.expand_or_jump() else fallback() end end, { "i", "s" }),
-      ["<S-Tab>"]     = cmp.mapping(function(fallback) if ls.jumpable(-1) then ls.jump(-1) else fallback() end end, { "i", "s" }),
-      ['<Down>']      = cmp.mapping.select_next_item(),
-      ['<Up>']        = cmp.mapping.select_prev_item(),
-      ['<C-Down>']    = cmp.mapping.scroll_docs(4),
-      ['<C-Up>']      = cmp.mapping.scroll_docs(-4),
+      -- ["<Tab>"]       = cmp.mapping(function(fallback) if ls.expand_or_locally_jumpable() then ls.expand_or_jump() else fallback() end end, { "i", "s" }),
+      -- ["<S-Tab>"]     = cmp.mapping(function(fallback) if ls.jumpable(-1) then ls.jump(-1) else fallback() end end, { "i", "s" }),
+      ['<C-j>']       = cmp.mapping.select_next_item(),
+      ['<C-k>']       = cmp.mapping.select_prev_item(),
+      ['<S-j>']       = cmp.mapping.scroll_docs(4),
+      ['<S-k>']       = cmp.mapping.scroll_docs(-4),
       ['<C-Space>']   = cmp.mapping.complete(),
-      ['<CR>']        = cmp.mapping.confirm(),
-      ['<C-e>']       = cmp.mapping.close(),
-      -- ['<Down>']      = cmp.mapping.select_next_item(),
-      -- ['<Up>']        = cmp.mapping.select_prev_item(),
+      ['<C-e>']       = cmp.mapping.abort(),
+      ['<Esc>']       = cmp.mapping.close(),
+      ['<CR>']        = cmp.mapping.confirm({ select = false }),
+      -- TODO: know what's the deal with ConfirmBehavior (visit https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/types/cmp.lua)
+      -- ['<CR>']        = cmp.mapping.confirm({
+      --   behavior = cmp.ConfirmBehavior.Replace,
+      --   behavior = cmp.ConfirmBehavior.Insert,
+      -- }),
     },
-    -- completion = {
-    --   autocomplete = false,
-    -- },
     sources = {
       -- depends on LSP:cmp feature
-      { name = 'npm', keyword_length = 4 },
-      { name = 'nvim_lsp_signature_help' },
+      -- { name = 'nvim_lsp_signature_help' },
+      { name = 'buffer' },
+      { name = 'path' },
       { name = 'nvim_lsp' },
 
       { name = 'nvim_lua' },
       { name = 'luasnip' },
-      { name = 'path' },
-      { name = 'buffer' },
       { name = 'spell' },
       -- { name = 'digraphs' },
       -- { name = 'buffer' },
     },
     formatting = {
-      fields = { "kind", "abbr" },
+      fields = { "kind", "abbr", "menu" },
       format = function(entry, vim_item)
         vim_item.kind = venom.icons.item_kinds.cozette[vim_item.kind] or ''
+        -- vim_item.menu = entry.source.name
         return vim_item
       end
     },
@@ -178,16 +180,19 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       documentation = cmp.config.window.bordered(),
       -- scrollbar = '║',
     },
-    experimental = {
-      ghost_text = true
-    }
+    -- view = {
+    --   entries = 'native',
+    -- },
+    -- experimental = {
+    --   ghost_text = true,
+    -- }
   }
 
   -- cmp.setup.cmdline('/', {
   --   mapping = cmp.mapping.preset.cmdline(),
   --   sources = {
-  --     { name = 'nvim_lsp_document_symbol' },
   --     { name = 'buffer' }
+  --     -- { name = 'nvim_lsp_document_symbol' },
   --   }
   -- })
   --
@@ -406,6 +411,10 @@ M.hover = U.Service():require(FT.PLUGIN, 'hover.nvim'):new(function()
     },
     title = true
   }
+end)
+
+M.remember = U.Service():require(FT.PLUGIN, 'remember.nvim'):new(function()
+  require 'remember'.setup {}
 end)
 
 return M

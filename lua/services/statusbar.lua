@@ -50,19 +50,19 @@ M.setup = U.Service():require(FT.PLUGIN, "feline.nvim"):new(function()
         c({ provider = require 'nvim-gps'.get_location,     hl = 'Folded',    enabled = require 'nvim-gps'.is_available }),
       },
       {
-        c({
-          enabled = require 'luasnip'.jumpable,
-          provider = function()
-            local forward = (require 'luasnip'.jumpable(1)) and '⭢' or ''
-            local backward = (require 'luasnip'.jumpable(-1)) and '⭠' or ''
-            if forward ~= '' or backward ~= '' then
-              return backward..venom.icons.item_kinds.cozette.Snippet..forward
-            else
-              return ''
-            end
-          end,
-          hl = 'CmpItemKindSnippet',
-        }),
+        -- c({
+        --   enabled = require 'luasnip'.jumpable,
+        --   provider = function()
+        --     local forward = (require 'luasnip'.jumpable(1)) and '⭢' or ''
+        --     local backward = (require 'luasnip'.jumpable(-1)) and '⭠' or ''
+        --     if forward ~= '' or backward ~= '' then
+        --       return backward..venom.icons.item_kinds.cozette.Snippet..forward
+        --     else
+        --       return ''
+        --     end
+        --   end,
+        --   hl = 'CmpItemKindSnippet',
+        -- }),
         -- c({ provider = require 'package-info'.get_status, hl = 'Folded' }),
         c({ provider = venom.icons.item_kinds.cozette.Text,               enabled = function() return vim.wo.spell end }),
         c({ provider = '',                   hl = 'WarningMsg',          enabled = function () return (vim.v.this_session ~= "") end }),

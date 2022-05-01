@@ -36,7 +36,8 @@ vim.o.signcolumn        = 'yes'
 vim.o.encoding          = 'utf-8'
 vim.o.fileencoding      = 'utf-8'
 vim.o.guicursor         = 'a:hor25,v:block,i:ver25'
-vim.o.completeopt       = 'menu,menuone,noselect'       -- (required by cmp)
+vim.o.complete          = ''
+vim.o.completeopt       = ''
 vim.o.backspace         = 'indent,eol,nostop'
 vim.o.listchars         = 'trail:_,tab:  │'
 vim.o.shell             = '/usr/bin/fish'
@@ -48,7 +49,7 @@ vim.o.foldexpr          = 'nvim_treesitter#foldexpr()'  -- Tree sitter folding
 vim.o.foldtext          = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))"   -- Sexy minimal folds
 vim.o.foldnestmax       = 10                            -- Maximum amount of nested folds
 vim.o.foldminlines      = 1                             -- Minimum amount of lines per fold
-vim.o.sessionoptions    = 'buffers,curdir,folds,help,tabpages,winsize,winpos'
+vim.o.sessionoptions    = 'buffers,curdir,folds,help,tabpages,winsize'
 
 -- indenting
 vim.o.shiftwidth        = 2                             -- How many whitespaces is an indent

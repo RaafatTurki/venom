@@ -56,6 +56,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.dirty_talk:invoke()
   Plugins.hover:invoke()
   Plugins.corn:invoke()
+  Plugins.remember:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
@@ -113,19 +114,24 @@ PluginManager.plugins = {
     {'hrsh7th/cmp-buffer'},
     {'hrsh7th/cmp-path'},
     {'hrsh7th/cmp-nvim-lsp'},
-    {'hrsh7th/cmp-nvim-lua'},
-    {'f3fora/cmp-spell',                              requires = p.plenary },
-    {'saadparwaiz1/cmp_luasnip'},
-    {'L3MON4D3/LuaSnip'},
-    {'hrsh7th/cmp-nvim-lsp-signature-help'},
-    -- {'dmitmel/cmp-digraphs'},
-    -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
-    {'hrsh7th/cmp-cmdline'},
+  --   {'hrsh7th/cmp-nvim-lua'},
+  --   {'f3fora/cmp-spell',                              requires = p.plenary },
+  --   {'saadparwaiz1/cmp_luasnip'},
+  --   {'L3MON4D3/LuaSnip'},
+  --   {'hrsh7th/cmp-cmdline'},
+  --   -- {'hrsh7th/cmp-nvim-lsp-signature-help'},
+  --   -- {'dmitmel/cmp-digraphs'},
+  --   -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
   }},
+
+  -- {'ms-jpq/coq_nvim',                                 branch = 'coq' },
+  -- " 9000+ Snippets
+  -- 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
   {'ThePrimeagen/harpoon',                            requires = p.plenary },
   {'akinsho/nvim-toggleterm.lua'},
   {'j-hui/fidget.nvim'},
+  {'vladdoster/remember.nvim'},
 
   -- statusbar
   -- TODO: switch to mini.statusline

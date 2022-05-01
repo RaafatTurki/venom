@@ -183,7 +183,7 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
     },
     -- playground = { enable = true },
     highlight = { enable = true },
-    indent = { enable = true },
+    indent = { enable = true },   -- indentexpr (=)
     context_commentstring = { enable = true, enable_autocmd = false },
     incremental_selection = {
       enable = true,

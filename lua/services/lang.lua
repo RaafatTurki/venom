@@ -160,7 +160,9 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
       'css',
       'fish',
       'gdscript',
+      'glsl',
       'go',
+      'gomod',
       'godot_resource',
       'html',
       'http',
@@ -188,10 +190,12 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
     incremental_selection = {
       enable = true,
       keymaps = {
-        init_selection = '<CR>',
-        scope_incremental = '<CR>',
-        node_incremental = '<TAB>',
-        node_decremental = '<S-TAB>',
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        -- init_selection = '<CR>',
+        -- scope_incremental = '<CR>',
+        -- node_incremental = '<TAB>',
+        -- node_decremental = '<S-TAB>',
       },
     },
   }
@@ -215,6 +219,22 @@ M.setup_plugins = U.Service()
   require 'spellsitter'.setup {
     enable = true,
   }
+
+  -- require 'aerial'.setup {
+  --   backends = { "lsp" },
+  --   -- , "treesitter", "markdown"
+  --  
+  --   show_guides = true,
+  --   placement_editor_edge = true,
+  --
+  --   open_automatic = true,
+  --   -- filter_kind = false,
+  --
+  --
+  --   link_folds_to_tree = true,
+  --   link_tree_to_folds = true,
+  --   manage_folds = true,
+  -- }
 end)
 
 M.setup_lang_opts = U.Service():new(function()

@@ -44,6 +44,7 @@ vim.o.shell             = '/usr/bin/fish'
 
 -- folding
 -- vim.o.foldcolumn        = '1'
+-- vim.o.foldenable        = false
 vim.o.foldmethod        = 'expr'                        -- Tree sitter folding
 vim.o.foldexpr          = 'nvim_treesitter#foldexpr()'  -- Tree sitter folding
 vim.o.foldtext          = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))"   -- Sexy minimal folds
@@ -77,7 +78,7 @@ vim.opt.shortmess:append  'c'                           -- Don't pass messages t
 -- diagnostic options
 vim.diagnostic.config {
   signs = true,
-  update_in_insert = true,
+  update_in_insert = false,
   severity_sort = true,
   underline = {
     -- severity = vim.diagnostic.severity.INFO,

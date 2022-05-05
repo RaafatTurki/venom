@@ -44,6 +44,30 @@ M.setup = function()
   packer.reset()
 end
 
+--- registers a single plugin entry
+M.register_plugin = function(plugin_entry)
+  local plugin_entry_type = type(plugin_entry)
+  local plugin_full_name = nil
+  local plugin_deps = plugin_entry.requires or {}
+
+  if plugin_entry_type == 'nil' then
+    return
+  elseif plugin_entry_type == 'string' then
+    plugin_full_name = plugin_entry
+  elseif plugin_entry_type == 'table' then
+    plugin_full_name = plugin_entry[1]
+  end
+
+  local plugin_name_split = vim.split(plugin_full_name, '/')
+  local plugin_name_short = plugin_name_split[#plugin_name_split]
+
+  if venom.features:has(FT.PLUGIN, plugin_name_short) then
+    log("plugin feature re-registering attempt", LL.WARN)
+  else
+    venom.features:add(FT.PLUGIN, plugin_name_short)
+  end
+end
+
 --- registers plugins
 M.register_plugins = function()
   local packer = require 'packer'
@@ -51,18 +75,8 @@ M.register_plugins = function()
   for _, plugin in pairs(M.plugins) do
     packer.use(plugin)
 
-    -- TODO: make depends on install state
-    -- add feature PLUGIN:<plugin-name>
-    local plugin_name_full
-    if type(plugin) == 'string' then
-      plugin_name_full = plugin
-    elseif type(plugin) == 'table' then
-      plugin_name_full = plugin[1]
-    end
-    local plugin_name_arr = vim.split(plugin_name_full, '/')
-    local plugin_name = plugin_name_arr[#plugin_name_arr]
-    -- TODO: add features for each dependency as well
-    venom.features:add(FT.PLUGIN, plugin_name)
+    -- TODO: make this dependent on install state (not just exisiting in the M.plugins table)
+    M.register_plugin(plugin)
   end
 
   if (M.is_bootstraped) then 

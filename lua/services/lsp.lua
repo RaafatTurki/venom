@@ -31,7 +31,6 @@ M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function()
       local opts = vim.tbl_deep_extend('force', server_config.opts, M.shared_server_config.opts)
       lspconf[server_config.name].setup(opts)
     end
-
   end
 end)
 
@@ -56,86 +55,40 @@ M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'nvim-lsp-inst
   -- TODO: break into actions and features
   M.shared_server_config = U.LspServerConfig():new("SHARED", {
 
-
-    on_attach = function(client)
-      -- vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
-      -- vim.api.nvim_buf_set_keymap(0, 'n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
-
-      -- Use LSP as the handler for omnifunc.
-      --    See `:help omnifunc` and `:help ins-completion` for more information.
-      -- vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-      -- Use LSP as the handler for formatexpr.
+    on_attach = function (client, bufnr)
+      -- set gq command to use the lsp formatter for this buffer
       vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
 
-      -- For plugins with an `on_attach` callback, call them here. For example:
-      -- require('completion').on_attach()
-    end
+      -- document highlight on cursor hold if available
+      if client.resolved_capabilities.document_highlight then
+        -- U.create_augroup([[
+        --     au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+        --     au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+        --   ]], 'hover_highlight')
 
-    -- An example of configuring for `sumneko_lua`,
-    --  a language server for Lua.
+        vim.cmd [[
+          augroup hover_highlight
+          autocmd!
 
-    -- set the path to the sumneko installation
-    -- local system_name = "Linux" -- (Linux, macOS, or Windows)
-    -- local sumneko_root_path = '/path/to/lua-language-server'
-    -- local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-server"
+          au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+          au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 
-    -- require('lspconfig').sumneko_lua.setup({
-    --   cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
-    --   -- An example of settings for an LSP server.
-    --   --    For more options, see nvim-lspconfig
-    --   settings = {
-    --     Lua = {
-    --       runtime = {
-    --         -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-    --         version = 'LuaJIT',
-    --         -- Setup your lua path
-    --         path = vim.split(package.path, ';'),
-    --       },
-    --       diagnostics = {
-    --         -- Get the language server to recognize the `vim` global
-    --         globals = {'vim'},
-    --       },
-    --       workspace = {
-    --         -- Make the server aware of Neovim runtime files
-    --         library = {
-    --           [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-    --           [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-    --         },
-    --       },
-    --     }
-    --   },
-    --
-    --   on_attach = custom_lsp_attach
-    -- })
+          augroup hover_highlight
+          ]]
+      end
 
-
-
-
-
-
-
-
-
-
-    -- document highlight on cursor hold if available
-    -- on_attach = function (client, bufnr)
-    --   if client.resolved_capabilities.document_highlight then
-    --     U.create_augroup([[
-    --         au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-    --         au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-    --       ]], 'hover_highlight')
-    --   end
-    -- end,
+      -- aerial
+      -- require 'aerial'.on_attach(client, bufnr)
+    end,
 
     -- cmp autocompletion
-    -- capabilities = require 'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+    capabilities = require 'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()),
 
     -- method handlers settings
-    -- handlers = {
-    --   ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
-    --   ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' })
-    -- }
+    handlers = {
+      ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
+      ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
+    }
   })
 
   -- per line nvim diagnostics

@@ -87,7 +87,7 @@ M.open_uri = U.Service():new(function()
     local regex_plugin_url = "[%a%d%-%.%_]*%/[%a%d%-%.%_]*"
     if (open_uri('https://github.com/'..string.match(word_under_cursor, regex_plugin_url))) then return end
   end
-  vim.api.nvim_create_user_command('OpenURIUnderCursor', function() OpenURIUnderCursor() end, {})
+  vim.api.nvim_create_user_command('OpenURIUnderCursor', OpenURIUnderCursor, {})
 end)
 
 --- sets color colorcolumn on the below filetypes
@@ -169,7 +169,7 @@ M.lsp_funcs = U.Service():new(function()
       default = curr_name
     }
 
-    -- ask yser input
+    -- ask user input
     vim.ui.input(input_opts, function(new_name)
       -- check new_name is valid
       if not new_name or #new_name == 0 or curr_name == new_name then return end
@@ -198,6 +198,23 @@ M.lsp_funcs = U.Service():new(function()
       end)
     end)
   end
+  vim.api.nvim_create_user_command('LspRename', LspRename, {}) 
+
+  function LspReferences()
+    vim.lsp.buf.references()
+  end
+  vim.api.nvim_create_user_command('LspReferences', LspReferences, {}) 
+
+  function LspCodeAction()
+    vim.lsp.buf.code_action()
+  end
+  vim.api.nvim_create_user_command('LspCodeAction', LspCodeAction, {}) 
+
+  -- function LspCodeAction()
+  --   vim.lsp.buf.code_action()
+  -- end
+  -- vim.api.nvim_create_user_command('LspCodeAction', LspCodeAction, {}) 
+
 end)
 
 --- prompts to install ts parsers upon opening new file types with available ones.
@@ -235,6 +252,61 @@ M.automatic_treesitter = U.Service():new(function()
   vim.cmd [[au FileType * :lua EnsureTSParserInstalled()]]
 end)
 
+--- camel!
+M.camel = U.Service():new(function()
+  CamelsList = {}
+  local conf = { character="", winblend=100, speed=1, width=2 }
+
+  local waddle = function(camel)
+    local timer = vim.loop.new_timer()
+    local new_camel = { name = camel, timer = timer }
+    table.insert(CamelsList, new_camel)
+
+    local speed = math.abs(100 - (conf.speed or 1))
+    vim.loop.timer_start(timer, 1000, speed , vim.schedule_wrap(function()
+      if vim.api.nvim_win_is_valid(camel) then
+        local config = vim.api.nvim_win_get_config(camel)
+        local col, row = config["col"][false], config["row"][false]
+
+        math.randomseed(os.time()*camel)
+        local movement = math.ceil(math.random()*4)
+        if movement == 1 or row <= 0 then
+          config["row"] = row + 1
+        elseif movement == 2 or row >= vim.o.lines-1 then
+          config["row"] = row - 1
+        elseif movement == 3 or col <= 0 then
+          config["col"] = col + 1
+        elseif movement == 4 or col >= vim.o.columns-2 then
+          config["col"] = col - 1
+        end
+        vim.api.nvim_win_set_config(camel, config)
+      end
+    end))
+  end
+
+  CamelPut = function(character)
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(buf , 0, 1, true , {character or conf.character})
+
+    local camel = vim.api.nvim_open_win(buf, false, {
+      relative='cursor', style='minimal', row=1, col=1, width=conf.width or 2, height=1
+    })
+    -- vim.api.nvim_win_set_option(camel, 'winblend', conf.winblend or 100)
+    vim.api.nvim_win_set_option(camel, 'winhighlight', 'Normal:Camel')
+
+    waddle(camel)
+  end
+
+  CamelKill = function()
+    local last_camel = CamelsList[#CamelsList]
+    local camel = last_camel['name']
+    local timer = last_camel['timer']
+    table.remove(CamelsList, #CamelsList)
+    timer:stop()
+    timer:close()
+    vim.api.nvim_win_close(camel, true)
+  end
+end)
 
 --- (Linux) makes neovim support hex editing
 -- function M.binary_editor()

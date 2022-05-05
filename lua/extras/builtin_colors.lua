@@ -1,5 +1,5 @@
 --- defines the built-in colorscheme.
--- @module colors
+-- @module builtin_colors
 
 local lush = require('lush')
 local hsl = lush.hsl
@@ -43,7 +43,7 @@ local c = {
   warn      = yellow[4],
   hint      = purple[4],
 
-  regexp    = cyan[1],
+  regexp    = orange[5],
   entity    = cyan[1],
   tag       = cyan[5],
   func      = yellow[1],
@@ -74,7 +74,7 @@ local theme = lush(function()
     NormalFloat     { Normal },                         -- normal text in floating windows.
     NormalNC        { Normal },                         -- normal text in non-current windows
 
-    StatusLine      { bg = c.line },                         -- status line of current window
+    StatusLine      { bg = c.bg },                         -- status line of current window
     StatusLineNC    { Normal, fg = c.bg },              -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
 
     TabLine         { bg = c.line },                    -- tab pages line, not active tab page label
@@ -120,15 +120,10 @@ local theme = lush(function()
     PmenuSbar       { Pmenu },                          -- Popup menu: scrollbar.
     PmenuThumb      { bg = c.fg },                      -- Popup menu: Thumb of the scrollbar.
 
-    -- Pmenu           { fg = debug[1] },         -- Popup menu: normal item.
-    -- PmenuSel        { fg = debug[1] },           -- Popup menu: selected item.
-    -- PmenuSbar       { fg = debug[1] },                          -- Popup menu: scrollbar.
-    -- PmenuThumb      { fg = debug[1] },                      -- Popup menu: Thumb of the scrollbar.
-
     Directory       { fg = c.fg },                      -- directory names (and other special names in listings)
     QuickFixLine    { CursorLine, gui = 'bold' },       -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
 
-    Search          { bg = c.match, fg = c.bg },  -- Last search pattern highlighting (see 'hlsearch').  Also used for similar items that need to stand out.
+    Search          { bg = c.match, fg = c.bg, gui = 'bold' },        -- Last search pattern highlighting (see 'hlsearch').  Also used for similar items that need to stand out.
     IncSearch       { Search },                         -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
     Substitute      { Search },                         -- |:substitute| replacement text highlighting
 
@@ -142,7 +137,7 @@ local theme = lush(function()
     MsgArea         { fg = c.fg },                      -- Area for messages and cmdline
     MsgSeparator    { bg = c.bg, fg = c.mg },           -- Separator for scrolled messages, `msgsep` flag of 'display'
 
-    Visual          { bg = c.line },                    -- Visual mode selection
+    Visual          { bg = c.line },                      -- Visual mode selection
     -- VisualNOS    { },                                -- Visual mode selection when vim is "Not Owning the Selection".
 
     Whitespace      { fg = c.comment.mix(c.bg, 30) },   -- "nbsp", "space", "tab" and "trail" in 'listchars'
@@ -299,8 +294,9 @@ local theme = lush(function()
 
     TSConstructor           { }, -- For constructor calls and definitions: `{ }` in Lua, and Java constructors.
 
+    TSStringRegex           { fg = c.regexp, gui = 'italic' }, -- For regexes.
+
     -- TSString             { }, -- For strings.
-    -- TSStringRegex        { }, -- For regexes.
     -- TSCharacter          { }, -- For characters.
     -- TSLiteral            { }, -- Literal text.
 
@@ -439,11 +435,11 @@ local theme = lush(function()
 
     -- telescope
     TelescopeBorder         { fg = c.mg };
-    TelescopeTitle          { fg = c.fg };
+    TelescopeTitle          { Title };
     TelescopeMatching       { Search };
 
     -- harpoon
-    HarpoonBorder           { fg = c.mg };
+    HarpoonBorder           { VertSplit };
 
     -- startup-time
     StartupTimeStartupKey   { Bold };
@@ -455,25 +451,22 @@ local theme = lush(function()
     StartupTimePercent      { fg = red[5] };
     StartupTimePlot         { fg = red[1] };
 
-    -- nvim-notify
+    -- notify
     NotifyERRORBorder       { DiagnosticVirtualTextError };
     NotifyWARNBorder        { DiagnosticVirtualTextWarn };
     NotifyINFOBorder        { DiagnosticVirtualTextInfo };
     NotifyTRACEBorder       { DiagnosticFloatingHint };
     NotifyDEBUGBorder       { DiagnosticVirtualTextHint };
-    
     NotifyERRORIcon         { fg = c.fg };
     NotifyWARNIcon          { fg = c.fg };
     NotifyINFOIcon          { fg = c.fg };
     NotifyDEBUGIcon         { fg = c.fg };
     NotifyTRACEIcon         { fg = c.fg };
-    
-    NotifyERRORTitle        { NotifyERRORBorder };
-    NotifyWARNTitle         { NotifyWARNBorder };
-    NotifyINFOTitle         { NotifyINFOBorder };
-    NotifyDEBUGTitle        { NotifyDEBUGBorder };
-    NotifyTRACETitle        { NotifyTRACEBorder };
-    
+    NotifyERRORTitle        { NotifyERRORBorder,  gui = 'bold' };
+    NotifyWARNTitle         { NotifyWARNBorder,   gui = 'bold' };
+    NotifyINFOTitle         { NotifyINFOBorder,   gui = 'bold' };
+    NotifyDEBUGTitle        { NotifyDEBUGBorder,  gui = 'bold' };
+    NotifyTRACETitle        { NotifyTRACEBorder,  gui = 'bold' };
     NotifyERRORBody         { Normal };
     NotifyWARNBody          { Normal };
     NotifyINFOBody          { Normal };
@@ -489,7 +482,9 @@ local theme = lush(function()
     UltestSummaryFile       { UltestSummaryInfo, gui = 'bold'};
     UltestSummaryNamespace  { UltestSummaryFile };
 
-    -- custom groups (convenience color groups that won't automatically apply)
+
+
+    -- CUTSOM GROUPS
     DebugFg                 { fg = debug[10] };
     DebugBg                 { bg = debug[1] };
     DebugAll                { bg = debug[1], fg = debug[10] };
@@ -497,12 +492,7 @@ local theme = lush(function()
     SnippetPassiveIndicator { Comment };
     SnippetInsertIndicator  { fg = c.fg };
     SnippetChoiceIndicator  { fg = c.hint };
-
-    -- mini
-    MiniIndentscopeSymbol   { fg = c.mg };
-    -- MiniIndentscopePrefix   { };
-
-
+    Camel                   { WarningMsg };
   }
 end)
 

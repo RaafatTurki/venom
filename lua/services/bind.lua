@@ -67,12 +67,13 @@ M.setup = U.Service():new(function()
   -- open man pages in new tabs
   M.key:invoke {'K',                ':tab Man<CR>'}
   -- center line after n/N
-  M.key:invoke {'n',                'nzzzv'}
-  M.key:invoke {'N',                'Nzzzv'}
+  -- M.key:invoke {'n',                'nzzzv'}
+  -- M.key:invoke {'N',                'Nzzzv'}
   -- re-edit current buffer
   M.key:invoke {'<F5>',             '<CMD>e<CR>'}
   -- clear action
-  venom.actions.clear:subscribe [[let @/ = ""]]
+  -- venom.actions.clear:subscribe [[let @/ = ""]]
+  venom.actions.clear:subscribe [[noh]]
   venom.actions.clear:subscribe(U.clear_prompt)
   M.key:invoke {'<c-l>',           function() venom.actions.clear:invoke() end}
   -- terminal smart escape
@@ -89,11 +90,15 @@ M.setup = U.Service():new(function()
   M.key:invoke {'<C-t>',            '<CMD>tabnew<CR>'}
   M.key:invoke {'<A-Right>',        '<CMD>tabnext<CR>'}
   M.key:invoke {'<A-Left>',         '<CMD>tabprevious<CR>'}
+  -- lsp
+  M.key:invoke {'<leader>r',         '<CMD>LspRename<CR>'}
 
-  -- M.key:invoke {'<A-z>',            function() vim.notify("hi friend") end}
 
   -- MOTIONS
   M.key:invoke {'aa',                ':<c-u>normal! ggVG<CR>', mode = 'o'}
+
+  -- TESTING
+  -- M.key:invoke {'<A-z>',            function() vim.notify("hi friend") end}
 
   -- old
   -- shifting line
@@ -138,9 +143,8 @@ M.setup_plugins = U.Service():new(function()
   M.key:invoke {'<A-Down>',         '<CMD>MoveLine(1)<CR>', mode = 'n i'}
   M.key:invoke {'<A-Up>',           ':MoveBlock(-1)<CR>', mode = 'v'}
   M.key:invoke {'<A-Down>',         ':MoveBlock(1)<CR>', mode = 'v'}
-  -- hover
-  M.key:invoke {'<leader>v',        require 'hover'.hover}
-  -- M.key:invoke {'<leader>v',        require 'hover'.hover_select}
+  -- lsp
+  -- M.key:invoke {'<leader>v',        require 'hover'.hover}
 end)
 
 return M

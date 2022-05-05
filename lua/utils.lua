@@ -237,9 +237,13 @@ function M.Service()
     provide = function(self, feature_type, feature_name) table.insert(self.provided_features, feature_type..':'..feature_name) return self end,
     invoke = function(self, ...)
       local can_be_invoked = true
+      local missing_features = {}
       -- check for all required features
       for _, required_feature in pairs(self.required_features) do
-        if (not venom.features:has_str(required_feature)) then can_be_invoked = false end
+        if (not venom.features:has_str(required_feature)) then
+          can_be_invoked = false
+          table.insert(missing_features, required_feature)
+        end
       end
       if (can_be_invoked) then
         local return_value = self.callback(...)
@@ -249,7 +253,7 @@ function M.Service()
         end
         return return_value
       else
-        log("not all required features satisfied", LL.WARN)
+        log("missing features: "..table.concat(missing_features, ' / '), LL.WARN)
       end
     end,
     required_features = {},

@@ -32,31 +32,38 @@ venom.actions.pm_post_complete:subscribe(function()
   Misc.lsp_funcs:invoke()
   Misc.automatic_treesitter:invoke()
   -- Misc.diag_on_hold:invoke()
+  Misc.camel:invoke()
   
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},
-    { func = Themes.material, args = 'darker',       name = 'Material Darker'},
-    { func = Themes.material, args = 'lighter',      name = 'Material Lighter'},
-    { func = Themes.material, args = 'deep ocean',   name = 'Material Deep Ocean'},
-    { func = Themes.material, args = 'oceanic',      name = 'Material Oceanic'},
-    { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
+    -- { func = Themes.material, args = 'darker',       name = 'Material Darker'},
+    -- { func = Themes.material, args = 'lighter',      name = 'Material Lighter'},
+    -- { func = Themes.material, args = 'deep ocean',   name = 'Material Deep Ocean'},
+    -- { func = Themes.material, args = 'oceanic',      name = 'Material Oceanic'},
+    -- { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
     { func = Themes.default,  args = {},             name = 'Default'},
   })
   
   Plugins.impatient:invoke()
+  Plugins.devicons:invoke()
+  Plugins.dressing:invoke()
   Plugins.notify:invoke()
+  Plugins.bqf:invoke()
   Plugins.gitsigns:invoke()
   Plugins.nvim_comment:invoke()
   Plugins.nvim_tree:invoke()
   Plugins.cmp_ls:invoke()
   Plugins.toggle_term:invoke()
-  Plugins.fidget:invoke()
+  -- Plugins.fidget:invoke()
   Plugins.mini_starter:invoke()
   Plugins.mini_surround:invoke()
   Plugins.dirty_talk:invoke()
   Plugins.hover:invoke()
+  Plugins.paperplanes:invoke()
+  -- Plugins.trld:invoke()
   Plugins.corn:invoke()
-  Plugins.remember:invoke()
+  -- Plugins.cinnamon:invoke()
+  -- Plugins.remember:invoke()
 
   Lsp.setup:invoke()
   Lang.configure_servers:invoke()
@@ -103,8 +110,10 @@ PluginManager.plugins = {
 
   -- plugins
   {'lewis6991/impatient.nvim'},
+  p.devicons,
   {'stevearc/dressing.nvim'},
-  -- {'kevinhwang91/nvim-bqf'},
+  {'kevinhwang91/nvim-bqf'},
+  -- {'declancm/cinnamon.nvim'},
   {'rcarriga/nvim-notify',                            requires = p.plenary },
   {'lewis6991/hover.nvim'},
   {p.gitsigns,                                        requires = p.plenary },
@@ -114,13 +123,13 @@ PluginManager.plugins = {
     {'hrsh7th/cmp-buffer'},
     {'hrsh7th/cmp-path'},
     {'hrsh7th/cmp-nvim-lsp'},
-  --   {'hrsh7th/cmp-nvim-lua'},
-  --   {'f3fora/cmp-spell',                              requires = p.plenary },
-  --   {'saadparwaiz1/cmp_luasnip'},
-  --   {'L3MON4D3/LuaSnip'},
-  --   {'hrsh7th/cmp-cmdline'},
+    {'hrsh7th/cmp-nvim-lua'},
+    {'f3fora/cmp-spell',                              requires = p.plenary },
+    {'saadparwaiz1/cmp_luasnip'},
+    {'L3MON4D3/LuaSnip'},
+    {'hrsh7th/cmp-cmdline'},
+    {'dmitmel/cmp-digraphs'},
   --   -- {'hrsh7th/cmp-nvim-lsp-signature-help'},
-  --   -- {'dmitmel/cmp-digraphs'},
   --   -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
   }},
 
@@ -128,10 +137,11 @@ PluginManager.plugins = {
   -- " 9000+ Snippets
   -- 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
+
   {'ThePrimeagen/harpoon',                            requires = p.plenary },
   {'akinsho/nvim-toggleterm.lua'},
-  {'j-hui/fidget.nvim'},
-  {'vladdoster/remember.nvim'},
+  -- {'j-hui/fidget.nvim'},
+  -- {'vladdoster/remember.nvim'},
 
   -- statusbar
   -- TODO: switch to mini.statusline
@@ -166,8 +176,10 @@ PluginManager.plugins = {
   {'baskerville/vim-sxhkdrc'},
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
+  {'rktjmp/paperplanes.nvim'},
 
   {'~/sectors/lua/corn.nvim'},
+  -- {'Mofiqul/trld.nvim'},
 
 
   -- {'Mofiqul/trld.nvim'},

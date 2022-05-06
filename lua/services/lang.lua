@@ -198,6 +198,7 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
         -- node_decremental = '<S-TAB>',
       },
     },
+    matchup = { enable = true },
   }
 end)
 
@@ -219,6 +220,9 @@ M.setup_plugins = U.Service()
   require 'spellsitter'.setup {
     enable = true,
   }
+
+  
+  U.gvar('matchup_matchparen_offscreen'):set({})
 
   -- require 'aerial'.setup {
   --   backends = { "lsp" },

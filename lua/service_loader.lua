@@ -107,6 +107,7 @@ PluginManager.plugins = {
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   {'SmiteshP/nvim-gps',                               requires = p.treesitter },
   {'lewis6991/spellsitter.nvim'},
+  {'andymass/vim-matchup'},
 
   -- plugins
   {'lewis6991/impatient.nvim'},

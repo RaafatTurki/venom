@@ -157,6 +157,7 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
       'cmake',
       'comment',
       'cpp',
+      'c_sharp',
       'css',
       'fish',
       'gdscript',

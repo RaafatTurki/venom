@@ -36,11 +36,11 @@ venom.actions.pm_post_complete:subscribe(function()
   
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},
-    -- { func = Themes.material, args = 'darker',       name = 'Material Darker'},
-    -- { func = Themes.material, args = 'lighter',      name = 'Material Lighter'},
-    -- { func = Themes.material, args = 'deep ocean',   name = 'Material Deep Ocean'},
-    -- { func = Themes.material, args = 'oceanic',      name = 'Material Oceanic'},
-    -- { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
+    { func = Themes.material, args = 'darker',       name = 'Material Darker'},
+    { func = Themes.material, args = 'lighter',      name = 'Material Lighter'},
+    { func = Themes.material, args = 'deep ocean',   name = 'Material Deep Ocean'},
+    { func = Themes.material, args = 'oceanic',      name = 'Material Oceanic'},
+    { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
     { func = Themes.default,  args = {},             name = 'Default'},
   })
   

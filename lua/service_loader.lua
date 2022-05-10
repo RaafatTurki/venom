@@ -1,13 +1,7 @@
 --- invokes various services
 -- @module service_loader
 
----@diagnostic disable: need-check-nil
-local PluginManager = load_module "plugin_manager"
-
--- venom.features:add("plugin_manager") -- XXX: set conditionally within plugin_manager.lua
-PluginManager.attempt_bootstrap()
-PluginManager.setup()
-
+PluginManager = load_module 'plugin_manager'
 Sessions = load_module 'services.sessions'
 Bind = load_module 'services.bind'
 Misc = load_module 'services.misc'
@@ -16,6 +10,9 @@ Plugins = load_module 'services.plugins'
 Lang = load_module 'services.lang'
 Lsp = load_module 'services.lsp'
 Statusbar = load_module 'services.statusbar'
+
+PluginManager.attempt_bootstrap:invoke()
+PluginManager.setup:invoke()
 
 venom.actions.pm_post_complete:subscribe(function()
   Sessions.setup:invoke()
@@ -32,8 +29,9 @@ venom.actions.pm_post_complete:subscribe(function()
   Misc.lsp_funcs:invoke()
   Misc.automatic_treesitter:invoke()
   -- Misc.diag_on_hold:invoke()
+  Misc.remove_trailing_ws:invoke()
   Misc.camel:invoke()
-  
+
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},
     { func = Themes.material, args = 'darker',       name = 'Material Darker'},
@@ -43,11 +41,11 @@ venom.actions.pm_post_complete:subscribe(function()
     { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
     { func = Themes.default,  args = {},             name = 'Default'},
   })
-  
+
   Plugins.impatient:invoke()
   Plugins.devicons:invoke()
   Plugins.dressing:invoke()
-  Plugins.notify:invoke()
+  -- Plugins.notify:invoke()
   Plugins.bqf:invoke()
   Plugins.gitsigns:invoke()
   Plugins.nvim_comment:invoke()
@@ -89,26 +87,27 @@ local p = {
   mini = 'echasnovski/mini.nvim',
 }
 PluginManager.plugins = {
-  -- plugin_manager
+  -- PLUGIN_MANAGER:
   {'wbthomason/packer.nvim'},
 
-  -- themes
+  -- THEMES:
   {'rktjmp/lush.nvim'},
   {'marko-cerovac/material.nvim'},
 
-  -- lsp
+  -- LSP:
   p.lspconfig,
-  {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
-  {'b0o/schemastore.nvim',                            requires = p.lspconfig },
 
-  -- lang
+  -- LANG:
   {p.treesitter,                                      run = ':TSUpdate' },
+  {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   {'SmiteshP/nvim-gps',                               requires = p.treesitter },
   {'lewis6991/spellsitter.nvim'},
   {'andymass/vim-matchup'},
+  {'b0o/schemastore.nvim',                            requires = p.lspconfig },
 
-  -- plugins
+  -- PLUGINS:
+  -- mini.*
   {'lewis6991/impatient.nvim'},
   p.devicons,
   {'stevearc/dressing.nvim'},
@@ -119,6 +118,15 @@ PluginManager.plugins = {
   {p.gitsigns,                                        requires = p.plenary },
   {'terrortylor/nvim-comment'},
   {'fedepujol/move.nvim'},
+  {'rktjmp/paperplanes.nvim'},
+  {'Mofiqul/trld.nvim'},
+  -- {'~/sectors/lua/corn.nvim'},
+  {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
+  {'ThePrimeagen/harpoon',                            requires = p.plenary },
+  {'akinsho/nvim-toggleterm.lua'},
+  -- {'smjonas/snippet-converter.nvim'},
+  -- {'j-hui/fidget.nvim'},
+  -- {'vladdoster/remember.nvim'},
   {p.cmp,                                             requires = {
     {'hrsh7th/cmp-buffer'},
     {'hrsh7th/cmp-path'},
@@ -133,35 +141,27 @@ PluginManager.plugins = {
   --   -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
   }},
 
-  -- {'ms-jpq/coq_nvim',                                 branch = 'coq' },
-  -- " 9000+ Snippets
-  -- 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
-  {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
-
-  {'ThePrimeagen/harpoon',                            requires = p.plenary },
-  {'akinsho/nvim-toggleterm.lua'},
-  -- {'j-hui/fidget.nvim'},
-  -- {'vladdoster/remember.nvim'},
-
-  -- statusbar
-  -- TODO: switch to mini.statusline
+  -- STATUSBAR:
   {'famiu/feline.nvim',                               requires = { p.devicons, p.gitsigns }},
 
-  -- sessions
+  -- SESSIONS:
   -- mini.sessions
 
-  -- multiple
+  -- MULTI_PURPOSE:
   {p.mini,                                            branch = 'stable' },
 
-  -- DEBUGGING
+  -- DEBUGGING:
   -- {'nvim-treesitter/playground',                      requires = p.treesitter },
 
+
+
+
   -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
-  
+
   -- zero config
   -- {'iamcco/markdown-preview.nvim',                    config = 'vim.call("mkdp#util#install")'},
   -- {'NTBBloodbath/rest.nvim',                          requires = p.plenary },
-  
+
   -- config
   -- {'RaafatTurki/vim-quickui'},
   -- {'karb94/neoscroll.nvim'},
@@ -176,12 +176,7 @@ PluginManager.plugins = {
   {'baskerville/vim-sxhkdrc'},
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
-  {'rktjmp/paperplanes.nvim'},
   {'mfussenegger/nvim-jdtls'},
-
-  -- {'~/sectors/lua/corn.nvim'},
-  {'Mofiqul/trld.nvim'},
-
 
   -- {'Mofiqul/trld.nvim'},
   -- {'goolord/alpha-nvim',                              requires = p.devicons },
@@ -197,4 +192,4 @@ PluginManager.plugins = {
   -- {'gelguy/wilder.nvim'},
 }
 
-PluginManager.register_plugins()
+PluginManager.register_plugins:invoke()

@@ -83,7 +83,7 @@ M.open_uri = U.Service():new(function()
     local regex_protocol_uri = "%a*:%/%/[%a%d%#%[%]%-%%+:;!$@/?&=_.,~*()]*"
     if (open_uri(string.match(word_under_cursor, regex_protocol_uri))) then return end
 
-    -- plugin github url
+    -- consider anything that looks like string/string a github link
     local regex_plugin_url = "[%a%d%-%.%_]*%/[%a%d%-%.%_]*"
     if (open_uri('https://github.com/'..string.match(word_under_cursor, regex_plugin_url))) then return end
   end
@@ -242,10 +242,8 @@ M.automatic_treesitter = U.Service():new(function()
         else
           ask_install[lang] = false
         end
-
       end)()
     end
-
   end
 
   -- TODO: convert to auto group
@@ -306,6 +304,19 @@ M.camel = U.Service():new(function()
     timer:close()
     vim.api.nvim_win_close(camel, true)
   end
+end)
+
+--- trailing space
+M.remove_trailing_ws = U.Service():new(function()
+  function RemoveTrailingWS()
+    -- Save cursor position to later restore
+    local curpos = vim.api.nvim_win_get_cursor(0)
+
+    -- Search and replace trailing whitespace
+    vim.cmd([[keeppatterns %s/\s\+$//e]])
+    vim.api.nvim_win_set_cursor(0, curpos)
+  end
+  vim.api.nvim_create_user_command('RemoveTrailingWS', RemoveTrailingWS, {}) 
 end)
 
 --- (Linux) makes neovim support hex editing

@@ -7,16 +7,16 @@ M.install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 M.plugins = {}
 
 --- bootstraps the plugin manager if not installed
-M.attempt_bootstrap = function()
+M.attempt_bootstrap = U.Service():new(function()
   if vim.fn.empty(vim.fn.glob(M.install_path)) > 0 then
     M.is_bootstraped = true
     vim.fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', M.install_path})
     vim.api.nvim_command 'packadd packer.nvim'
   end
-end
+end)
 
 --- initializes and configures the plugin manager
-M.setup = function()
+M.setup = U.Service():new(function()
   -- Settings
   local packer = require 'packer'
   packer.init {
@@ -42,10 +42,10 @@ M.setup = function()
     }
   }
   packer.reset()
-end
+end)
 
 --- registers a single plugin entry
-M.register_plugin = function(plugin_entry)
+M.register_plugin = U.Service():new(function(plugin_entry)
   local plugin_entry_type = type(plugin_entry)
   local plugin_full_name = nil
   local plugin_deps = plugin_entry.requires or {}
@@ -66,17 +66,17 @@ M.register_plugin = function(plugin_entry)
   else
     venom.features:add(FT.PLUGIN, plugin_name_short)
   end
-end
+end)
 
 --- registers plugins
-M.register_plugins = function()
+M.register_plugins = U.Service():new(function()
   local packer = require 'packer'
 
   for _, plugin in pairs(M.plugins) do
     packer.use(plugin)
 
     -- TODO: make this dependent on install state (not just exisiting in the M.plugins table)
-    M.register_plugin(plugin)
+    M.register_plugin:invoke(plugin)
   end
 
   if (M.is_bootstraped) then 
@@ -86,6 +86,14 @@ M.register_plugins = function()
   else
     venom.actions.pm_post_complete:invoke()
   end
-end
+end)
+
+--- syncs plugins (updates them regardless of the method)
+M.sync = U.Service():new(function()
+  log("packer syncing...")
+  local time = os.date("!%Y-%m-%dT%TZ")
+  vim.cmd([[PackerSnapshot snapshot_]]..time)
+  vim.cmd [[PackerSync]]
+end)
 
 return M

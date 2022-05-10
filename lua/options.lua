@@ -255,6 +255,7 @@ FT = {
   MISC = "MISC",
   BIN = "BIN",
   FUNC = "FUNC",
+  LANG = "LANG",
   LSP = "LSP",
   SESSION = "SESSION",
 }
@@ -264,4 +265,3 @@ LST = {
   NO_SHARED_CONFIG_SETUP = "NO_SHARED_CONFIG_SETUP",
   NO_AUTO_SETUP = "NO_AUTO_SETUP",
 }
-

@@ -41,7 +41,7 @@ M.notify = U.Service():require(FT.PLUGIN, "nvim-notify"):new(function()
     timeout = 1000,
     render = 'minimal',
     -- stages = 'static',
-    -- stages = require 'extras.notify_stages',
+    stages = require 'extras.notify_stages',
   }
 
   vim.notify = notify
@@ -435,6 +435,41 @@ M.corn = U.Service():require(FT.PLUGIN, "corn.nvim"):new(function()
   --     info = venom.icons.diagnostic_states.cozette.Info,
   --   },
   -- }
+end)
+
+M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()
+  local function get_icon_by_severity(severity)
+    local icon_set = venom.icons.diagnostic_states.cozette
+    local icons = {
+      icon_set.Error,
+      icon_set.Warn,
+      icon_set.Info,
+      icon_set.Hint,
+    }
+    return icons[severity]
+  end
+
+  require 'trld'.setup {
+    formatter = function(diag)
+      local u = require 'trld.utils'
+      local diag_lines = {}
+
+      for line in diag.message:gmatch("[^\n]+") do
+        line = line:gsub('[ \t]+%f[\r\n%z]', '')
+        table.insert(diag_lines, line)
+      end
+
+      local lines = {}
+      for _, diag_line in ipairs(diag_lines) do
+        table.insert(lines, {
+          { diag_line..' ', u.get_hl_by_serverity(diag.severity) },
+          { get_icon_by_severity(diag.severity), u.get_hl_by_serverity(diag.severity) },
+        })
+      end
+
+      return lines
+    end,
+  }
 end)
 
 M.dirty_talk = U.Service():require(FT.PLUGIN, 'vim-dirtytalk'):new(function()

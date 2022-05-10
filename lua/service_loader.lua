@@ -47,7 +47,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.impatient:invoke()
   Plugins.devicons:invoke()
   Plugins.dressing:invoke()
-  -- Plugins.notify:invoke()
+  Plugins.notify:invoke()
   Plugins.bqf:invoke()
   Plugins.gitsigns:invoke()
   Plugins.nvim_comment:invoke()
@@ -60,7 +60,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.dirty_talk:invoke()
   Plugins.hover:invoke()
   Plugins.paperplanes:invoke()
-  -- Plugins.trld:invoke()
+  Plugins.trld:invoke()
   -- Plugins.corn:invoke()
   -- Plugins.cinnamon:invoke()
   -- Plugins.remember:invoke()
@@ -179,8 +179,8 @@ PluginManager.plugins = {
   {'rktjmp/paperplanes.nvim'},
   {'mfussenegger/nvim-jdtls'},
 
-  {'~/sectors/lua/corn.nvim'},
-  -- {'Mofiqul/trld.nvim'},
+  -- {'~/sectors/lua/corn.nvim'},
+  {'Mofiqul/trld.nvim'},
 
 
   -- {'Mofiqul/trld.nvim'},

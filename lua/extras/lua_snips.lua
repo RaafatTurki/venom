@@ -22,7 +22,8 @@ return {
       t {
         "<html lang=\"en\">",
         "\t<head>",
-        "\t\t<title>Web Page</title>",
+        -- "\t\t<title>Web Page</title>",
+        "\t\t<title>"}, i(1), t {"</title>",
         "\t\t<meta charset=\"UTF-8\"/>",
         "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>",
         "\t\t<link href=\"style.css\" rel=\"stylesheet\"/>",

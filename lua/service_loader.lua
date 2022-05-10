@@ -47,7 +47,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.impatient:invoke()
   Plugins.devicons:invoke()
   Plugins.dressing:invoke()
-  Plugins.notify:invoke()
+  -- Plugins.notify:invoke()
   Plugins.bqf:invoke()
   Plugins.gitsigns:invoke()
   Plugins.nvim_comment:invoke()
@@ -61,17 +61,16 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.hover:invoke()
   Plugins.paperplanes:invoke()
   -- Plugins.trld:invoke()
-  Plugins.corn:invoke()
+  -- Plugins.corn:invoke()
   -- Plugins.cinnamon:invoke()
   -- Plugins.remember:invoke()
 
-  Lsp.setup:invoke()
+  Lang.setup:invoke()
   Lang.configure_servers:invoke()
-  Lsp.setup_servers:invoke()
-
   Lang.setup_treesitter:invoke()
-  Lang.setup_plugins:invoke()
-  Lang.setup_lang_opts :invoke()
+
+  Lsp.setup:invoke()
+  Lsp.setup_servers:invoke(Lang.lsp_servers_configs)
 
   Statusbar.setup:invoke()
 
@@ -178,6 +177,7 @@ PluginManager.plugins = {
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   {'rktjmp/paperplanes.nvim'},
+  {'mfussenegger/nvim-jdtls'},
 
   {'~/sectors/lua/corn.nvim'},
   -- {'Mofiqul/trld.nvim'},

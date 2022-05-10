@@ -38,9 +38,9 @@ M.notify = U.Service():require(FT.PLUGIN, "nvim-notify"):new(function()
   local notify = require 'notify'
 
   notify.setup {
-    timeout = 500,
+    timeout = 1000,
     render = 'minimal',
-    stages = 'static',
+    -- stages = 'static',
     -- stages = require 'extras.notify_stages',
   }
 
@@ -324,6 +324,9 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
           none = "  ",
         },
       },
+      icons = {
+        git_placement = 'after'
+      }
     },
     filters = {
       dotfiles = false,
@@ -456,7 +459,10 @@ end)
 M.paperplanes = U.Service():require(FT.PLUGIN, 'paperplanes.nvim'):new(function()
   require 'paperplanes'.setup {
     register = "+",
-    provider = "0x0.st",
+    -- provider = "0x0.st",
+    -- provider = "sr.ht",
+    -- provider = "dpaste.org",
+    provider = "paste.rs",
     provider_options = {},
     cmd = "curl"
   }

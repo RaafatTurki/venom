@@ -2,17 +2,19 @@
 -- @module lang
 local M = {}
 
-M.configure_server = U.Service():require(FT.LSP, 'setup'):new(function(name, tags, opts)
+M.lsp_servers_configs = {}
+
+M.configure_server = U.Service():new(function(name, tags, opts)
   local server_config = U.LspServerConfig():new(name, opts)
 
   for _, tag in pairs(tags) do
     server_config:tag(tag)
   end
 
-  Lsp.add_server_config:invoke(server_config)
+  M.lsp_servers_configs[server_config.name] = server_config
 end)
 
-M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
+M.configure_servers = U.Service():new(function()
 
   M.configure_server:invoke("sumneko_lua", {},  {
     settings = {
@@ -124,27 +126,47 @@ M.configure_servers = U.Service():require(FT.LSP, 'setup'):new(function()
         plugins = {
           pycodestyle = {
             enabled = true,
-            ignore=  {'E501', 'E231', 'E305', 'W391'},
+            ignore=  {'E501', 'E231', 'E305', 'W391', 'W191'},
           },
         }
       }
     }
   })
 
-  -- M.configure_server:invoke("$1", $2, {
-  --  $3
-  -- })
+  M.configure_server:invoke("gopls", {}, {
+    settings = {
+      gopls = {
+        analyses = {
+          -- unusedparams = true,
+          fieldalignment = true,
+          useany = true,
+        }
+      }
+    }
+  })
 
---- language servers options that are installed by third party means
--- @field table ls opts
--- M.SERVERS_THIRD_PARTY_OPTS = {
---   gdscript = {
---     cmd = {'godot-ls'},
---     flags = {
---       debounce_text_changes = 150,
---     },
---   },
--- }
+
+  -- annoying and up to no good lsp servers:
+  M.configure_server:invoke("jdtls", { LST.NO_AUTO_SETUP }, {})
+
+  M.configure_server:invoke("java_language_server", { LST.NO_AUTO_SETUP }, {
+    cmd = {'/usr/share/java/java-language-server/lang_server_linux.sh'},
+  })
+
+  M.configure_server:invoke("gdscript", { LST.NO_AUTO_SETUP }, {
+    cmd = {'godot-ls'},
+    flags = {
+      debounce_text_changes = 150,
+    },
+  })
+
+  -- adding all unconfigured and installed LSPI servers into server_configs
+  local lspi = require 'nvim-lsp-installer'
+  for _, server_obj in ipairs(lspi.get_installed_servers()) do
+    if (not U.has_key(M.lsp_servers_configs, server_obj.name)) then
+      M.configure_server:invoke(server_obj.name, {}, {})
+    end
+  end
 end)
 
 M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(function()
@@ -167,6 +189,7 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
       'godot_resource',
       'html',
       'http',
+      'java',
       'javascript',
       'jsdoc',
       'json',
@@ -203,10 +226,29 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
   }
 end)
 
-M.setup_plugins = U.Service()
+M.setup = U.Service()
 :require(FT.PLUGIN, "nvim-gps")
 :require(FT.PLUGIN, "spellsitter.nvim")
 :new(function()
+  -- lsp-installer
+  require 'nvim-lsp-installer'.setup({
+    ui = {
+      icons = {
+        server_installed = " ",
+        server_pending = " ",
+        server_uninstalled = "  ",
+      },
+      keymaps = {
+        toggle_server_expand = "<Space>",
+        install_server = "<CR>",
+        update_server = "<CR>",
+        uninstall_server = "<BS>",
+      },
+    },
+    max_concurrent_installers = 3,
+  })
+
+  -- gps
   require 'nvim-gps'.setup {
     separator = ' > ',
     icons = {
@@ -218,13 +260,17 @@ M.setup_plugins = U.Service()
     },
   }
 
+  -- spellsitter
   require 'spellsitter'.setup {
     enable = true,
   }
 
-  
+  -- matchup
   U.gvar('matchup_matchparen_offscreen'):set({})
 
+  -- nvim-jdtls
+
+  
   -- require 'aerial'.setup {
   --   backends = { "lsp" },
   --   -- , "treesitter", "markdown"
@@ -240,13 +286,6 @@ M.setup_plugins = U.Service()
   --   link_tree_to_folds = true,
   --   manage_folds = true,
   -- }
-end)
-
-M.setup_lang_opts = U.Service():new(function()
-  -- vim.opt.matchpairs      = '(:),{:},[:]'
-  -- vim.b.match_words = '<h1>:</h1>'
-
-	-- let b:match_words = '<:>,<tag>:</tag>'
 end)
 
 return M

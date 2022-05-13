@@ -97,4 +97,23 @@ M.setup = U.Service():require(FT.PLUGIN, "feline.nvim"):new(function()
   }
 end)
 
+
+-- TODO: divide up into related services
+-- M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
+--   require 'mini.statusline'.setup {
+--     -- Content of statusline as functions which return statusline string. See
+--     -- `:h statusline` and code of default contents (used instead of `nil`).
+--     content = {
+--       inactive = nil,
+--       active = nil
+--     },
+--
+--     -- Whether to set Vim's settings for statusline (make it always shown with
+--     -- 'laststatus' set to 2). To use global statusline in Neovim>=0.7.0, set
+--     -- this to `false` and 'laststatus' to 3.
+--     set_vim_settings = true,
+--   }
+-- end)
+
+
 return M

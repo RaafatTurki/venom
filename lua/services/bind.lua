@@ -122,11 +122,25 @@ M.setup_plugins = U.Service():new(function()
   -- nvim tree
   M.key:invoke {'<C-e>',            '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
   -- harpoon
-  M.key:invoke {'<C-p>',            require 'harpoon.ui'.toggle_quick_menu}
-  M.key:invoke {'<C-k>',            require 'harpoon.mark'.add_file}
+  -- M.key:invoke {'<C-p>',            require 'harpoon.ui'.toggle_quick_menu}
+  -- M.key:invoke {'<C-k>',            require 'harpoon.mark'.add_file}
+  -- for n = 1, 9 do
+  --   M.key:invoke {'<A-'..n..'>',      '<CMD>lua require("harpoon.ui").nav_file('..n..')<CR>'}
+  -- end
+  -- reach
+  M.key:invoke {'<C-p>',            function()
+    require 'reach'.buffers {
+      show_current = true,
+      modified_icon = '•',
+      previous = {
+        enable = false,
+      },
+    }
+  end}
   for n = 1, 9 do
-    M.key:invoke {'<A-'..n..'>',      '<CMD>lua require("harpoon.ui").nav_file('..n..')<CR>'}
+    M.key:invoke {'<A-'..n..'>',      function() require 'reach'.switch_to_buffer(n) end}
   end
+
   -- gitsigns
   M.key:invoke {'gr',               '<CMD>Gitsigns reset_hunk<CR>'}
   M.key:invoke {'gr',               '<CMD>Gitsigns reset_hunk<CR>', mode = 'v'}

@@ -72,6 +72,12 @@ M.bqf = U.Service():require(FT.PLUGIN, 'nvim-bqf'):new(function()
   }
 end)
 
+M.reach = U.Service():require(FT.PLUGIN, 'reach.nvim'):new(function()
+  require 'reach'.setup {
+    notifications = false
+  }
+end)
+
 -- M.cinnamon = U.Service():require(FT.PLUGIN, "cinnamon.nvim"):new(function()
 --   require 'cinnamon'.setup {
 --     default_keymaps = false,
@@ -164,15 +170,47 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
 
   local cmp = require 'cmp'
 
+  local function tab(fb)
+    if cmp.visible() then cmp.select_next_item()
+    elseif ls.expand_or_locally_jumpable() then ls.expand_or_jump()
+    else fb() end
+  end
+
+  local function s_tab(fb)
+    if cmp.visible() then cmp.select_prev_item()
+    elseif ls.jumpable(-1) then ls.jump(-1)
+    else fb() end
+  end
+
   cmp.setup {
     -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
     snippet = { expand = function(args) ls.lsp_expand(args.body) end },
 
     mapping = {
       -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
-      ["<Tab>"]       = cmp.mapping(function(fallback) if ls.expand_or_locally_jumpable() then ls.expand_or_jump() else fallback() end end, { "i", "s" }),
-      ["<S-Tab>"]     = cmp.mapping(function(fallback) if ls.jumpable(-1) then ls.jump(-1) else fallback() end end, { "i", "s" }),
+      ["<Tab>"]     = cmp.mapping({
+        i = function(fb) tab(fb) end,
+        s = function(fb) tab(fb) end,
+        c = function(fb)
+          if cmp.visible() then cmp.select_next_item()
+          else cmp.complete() end
+          -- local complete_or_next = not cmp.visible() and cmp.mapping.complete() or cmp.mapping.select_next_item()
+          -- complete_or_next(fb)
+        end
+      }),
+      ["<S-Tab>"]     = cmp.mapping({
+        i = function(fb) s_tab(fb) end,
+        s = function(fb) s_tab(fb) end,
+        c = function(fb)
+          if cmp.visible() then cmp.select_prev_item()
+          else cmp.complete() end
+          -- local complete_or_prev = not cmp.visible() and cmp.mapping.complete() or cmp.mapping.select_prev_item()
+          -- complete_or_prev(fb)
+        end
+      }),
 
+      ['<C-n>']       = cmp.mapping.select_next_item(),
+      ['<C-p>']       = cmp.mapping.select_prev_item(),
       ['<Down>']      = cmp.mapping.select_next_item(),
       ['<Up>']        = cmp.mapping.select_prev_item(),
       ['<S-j>']       = cmp.mapping.scroll_docs(4),
@@ -217,19 +255,17 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   }
 
   cmp.setup.cmdline('/', {
-    mapping = cmp.mapping.preset.cmdline(),
     sources = {
-      { name = 'buffer' }
+      { name = 'buffer' },
       -- { name = 'nvim_lsp_document_symbol' },
     }
   })
 
   cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
     sources = {
       { name = 'path' },
       { name = 'cmdline' },
-    }
+    },
   })
 end)
 

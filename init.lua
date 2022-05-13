@@ -14,39 +14,8 @@ function logi(data, log_level)
   local msg = vim.inspect(data)
   log(msg, log_level)
 end
--- catches and logs errors
-function catch(err)
-  if (err) then
-    log(err, LL.ERROR)
-    return true
-  else
-    return false
-  end
-end
---- calls require safely
-function prequire(module_name)
-  local status, value = pcall(require, module_name)
-  if (not status) then
-    -- "requiring a missing module ["..module_name.."]"
-    return nil, value
-  else
-    return value, nil
-  end
-end
---- loads a module safely
-function load_module(module_name)
-  -- return require(module_name)
-  local module_value, err = prequire(module_name)
-  if (catch(err)) then
-    log(err)
-    return nil
-  else
-    return module_value
-  end
-end
-
 
 -- Loading Modules
-U = load_module "utils"
-load_module "options"
-load_module "service_loader"
+U = require 'utils'
+require 'options'
+require 'service_loader'

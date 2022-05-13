@@ -1,15 +1,15 @@
 --- invokes various services
 -- @module service_loader
 
-PluginManager = load_module 'plugin_manager'
-Sessions = load_module 'services.sessions'
-Bind = load_module 'services.bind'
-Misc = load_module 'services.misc'
-Themes = load_module 'services.themes'
-Plugins = load_module 'services.plugins'
-Lang = load_module 'services.lang'
-Lsp = load_module 'services.lsp'
-Statusbar = load_module 'services.statusbar'
+PluginManager = require 'plugin_manager'
+Sessions = require 'services.sessions'
+Bind = require 'services.bind'
+Misc = require 'services.misc'
+Themes = require 'services.themes'
+Plugins = require 'services.plugins'
+Lang = require 'services.lang'
+Lsp = require 'services.lsp'
+Statusbar = require 'services.statusbar'
 
 PluginManager.attempt_bootstrap:invoke()
 PluginManager.setup:invoke()
@@ -29,7 +29,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Misc.lsp_funcs:invoke()
   Misc.automatic_treesitter:invoke()
   -- Misc.diag_on_hold:invoke()
-  Misc.remove_trailing_ws:invoke()
+  Misc.buffer_edits:invoke()
   Misc.camel:invoke()
 
   Themes.init({
@@ -47,6 +47,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.dressing:invoke()
   -- Plugins.notify:invoke()
   Plugins.bqf:invoke()
+  Plugins.reach:invoke()
   Plugins.gitsigns:invoke()
   Plugins.nvim_comment:invoke()
   Plugins.nvim_tree:invoke()
@@ -73,6 +74,35 @@ venom.actions.pm_post_complete:subscribe(function()
   Statusbar.setup:invoke()
 
   Bind.setup_plugins:invoke()
+
+
+  -- local test_ns = vim.api.nvim_create_namespace('test')
+  -- vim.cmd('hi! def Dim guifg=grey')
+  --
+  -- vim.lsp.handlers['textDocument/publishDiagnostics'] = function(_, result, ctx, config)
+  --   local bufnr = vim.uri_to_bufnr(result.uri)
+  --   if not bufnr then
+  --     return
+  --   end
+  --   vim.api.nvim_buf_clear_namespace(bufnr, test_ns, 0, -1)
+  --   local real_diags = {}
+  --   for _, diag in pairs(result.diagnostics) do
+  --     if diag.severity == vim.lsp.protocol.DiagnosticSeverity.Hint
+  --       and vim.tbl_contains(diag.tags, vim.lsp.protocol.DiagnosticTag.Unnecessary) then
+  --       pcall(vim.api.nvim_buf_set_extmark, bufnr, test_ns,
+  --         diag.range.start.line, diag.range.start.character, {
+  --           end_row = diag.range['end'].line,
+  --           end_col = diag.range['end'].character,
+  --           hl_group = 'Dim',
+  --         }) 
+  --     else
+  --       table.insert(real_diags, diag)
+  --     end
+  --   end
+  --   result.diagnostics = real_diags
+  --   vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
+  -- end
+
 end)
 
 local p = {
@@ -122,7 +152,7 @@ PluginManager.plugins = {
   {'Mofiqul/trld.nvim'},
   -- {'~/sectors/lua/corn.nvim'},
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
-  {'ThePrimeagen/harpoon',                            requires = p.plenary },
+  -- {'ThePrimeagen/harpoon',                            requires = p.plenary },
   {'akinsho/nvim-toggleterm.lua'},
   -- {'smjonas/snippet-converter.nvim'},
   -- {'j-hui/fidget.nvim'},
@@ -172,11 +202,12 @@ PluginManager.plugins = {
 
   -- -- ts addons
 
-  -- extras
+  -- UNCHARTED:
   {'baskerville/vim-sxhkdrc'},
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   {'mfussenegger/nvim-jdtls'},
+  {'toppair/reach.nvim'},
 
   -- {'Mofiqul/trld.nvim'},
   -- {'goolord/alpha-nvim',                              requires = p.devicons },

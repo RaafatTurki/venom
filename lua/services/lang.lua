@@ -118,7 +118,7 @@ M.configure_servers = U.Service():new(function()
     }
   })
 
-  M.configure_server:invoke("pylsp", {}, {
+  M.configure_server:invoke("pylsp", { LST.NO_AUTO_SETUP }, {
     settings = {
       configurationSources = { 'flake8' },
       formatCommand = { 'black' },
@@ -227,8 +227,10 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
 end)
 
 M.setup = U.Service()
+:require(FT.PLUGIN, "nvim-lsp-installer")
 :require(FT.PLUGIN, "nvim-gps")
 :require(FT.PLUGIN, "spellsitter.nvim")
+:require(FT.PLUGIN, "nvim-jdtls")
 :new(function()
   -- lsp-installer
   require 'nvim-lsp-installer'.setup({
@@ -269,7 +271,54 @@ M.setup = U.Service()
   U.gvar('matchup_matchparen_offscreen'):set({})
 
   -- nvim-jdtls
+  function JDTLSSetup()
+    local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+    local workspace_dir = '/home/potato/jdtls_workspaces/' .. project_name
 
+    JDTLS_CONFIG = {
+      cmd = {
+        'java',
+
+        '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+        '-Dosgi.bundles.defaultStartLevel=4',
+        '-Declipse.product=org.eclipse.jdt.ls.core.product',
+        '-Dlog.protocol=true',
+        '-Dlog.level=ALL',
+
+        '-javaagent:/home/potato/.local/share/nvim/lsp_servers/jdtls/lombok.jar',
+
+        '-Xms1g',
+        '--add-modules=ALL-SYSTEM',
+        '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+        '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+
+        '-jar', '/home/potato/.local/share/nvim/lsp_servers/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+        '-configuration', '/home/potato/.local/share/nvim/lsp_servers/jdtls/config_linux',
+        '-data', workspace_dir,
+      },
+
+      root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
+
+      settings = {
+        java = {}
+      },
+
+      init_options = {
+        bundles = {}
+      },
+    }
+
+    require('jdtls').start_or_attach(JDTLS_CONFIG)
+  end
+
+  vim.cmd [[
+    augroup java
+    autocmd!
+    " autocmd BufEnter .swcrc setlocal ft=json
+    autocmd FileType java lua JDTLSSetup()
+
+    augroup java
+  ]]
   
   -- require 'aerial'.setup {
   --   backends = { "lsp" },

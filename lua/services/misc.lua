@@ -307,7 +307,7 @@ M.camel = U.Service():new(function()
 end)
 
 --- trailing space
-M.remove_trailing_ws = U.Service():new(function()
+M.buffer_edits = U.Service():new(function()
   function RemoveTrailingWS()
     -- Save cursor position to later restore
     local curpos = vim.api.nvim_win_get_cursor(0)
@@ -317,6 +317,16 @@ M.remove_trailing_ws = U.Service():new(function()
     vim.api.nvim_win_set_cursor(0, curpos)
   end
   vim.api.nvim_create_user_command('RemoveTrailingWS', RemoveTrailingWS, {}) 
+
+  function FixEOLs()
+    -- Save cursor position to later restore
+    local curpos = vim.api.nvim_win_get_cursor(0)
+
+    -- Search and replace trailing whitespace
+    vim.cmd([[keeppatterns %s/\r\+$//e]])
+    vim.api.nvim_win_set_cursor(0, curpos)
+  end
+  vim.api.nvim_create_user_command('FixEOLs', FixEOLs, {})
 end)
 
 --- (Linux) makes neovim support hex editing

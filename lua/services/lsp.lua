@@ -53,7 +53,7 @@ M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_
     end
 
     -- setting up server
-    if not U.has_value(server_config.tags, LST.NO_AUTO_SETUP) then
+    if U.has_value(server_config.tags, LST.AUTO_SETUP) and not U.has_value(server_config.tags, LST.NO_AUTO_SETUP) then
       lspconf[server_config.name].setup(server_config.opts)
     end
   end

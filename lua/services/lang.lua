@@ -122,7 +122,7 @@ M.configure_servers = U.Service():new(function()
     }
   })
 
-  M.configure_server:invoke("pylsp", { LST.NO_AUTO_SETUP }, {
+  M.configure_server:invoke("pylsp", {}, {
     settings = {
       configurationSources = { 'flake8' },
       formatCommand = { 'black' },
@@ -153,24 +153,34 @@ M.configure_servers = U.Service():new(function()
   -- annoying and up to no good lsp servers:
   M.configure_server:invoke("jdtls", { LST.NO_AUTO_SETUP }, {})
 
-  M.configure_server:invoke("java_language_server", { LST.NO_AUTO_SETUP }, {
-    cmd = {'/usr/share/java/java-language-server/lang_server_linux.sh'},
-  })
+  -- M.configure_server:invoke("java_language_server", {}, {
+  --   cmd = {'/usr/share/java/java-language-server/lang_server_linux.sh'},
+  -- })
 
-  M.configure_server:invoke("gdscript", { LST.NO_AUTO_SETUP }, {
+  M.configure_server:invoke("gdscript", {}, {
     cmd = {'godot-ls'},
     flags = {
       debounce_text_changes = 150,
     },
   })
 
-  -- adding all unconfigured and installed LSPI servers into server_configs
+  -- looping over all installed LSPI servers
   local lspi = require 'nvim-lsp-installer'
   for _, server_obj in ipairs(lspi.get_installed_servers()) do
     if (not U.has_key(M.lsp_servers_configs, server_obj.name)) then
-      M.configure_server:invoke(server_obj.name, {}, {})
+      -- configure unconfigured servers
+      M.configure_server:invoke(server_obj.name, { LST.AUTO_SETUP }, {})
+    else
+      -- add LST.AUTO_SETUP tag to configured servers
+      M.lsp_servers_configs[server_obj.name]:tag(LST.AUTO_SETUP)
     end
   end
+
+  -- log configured server names and tags
+  -- for _, server_config in pairs(M.lsp_servers_configs) do
+  --   logi(server_config.name)
+  --   logi(server_config.tags)
+  -- end
 end)
 
 M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(function()

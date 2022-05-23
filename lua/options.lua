@@ -94,24 +94,24 @@ vim.diagnostic.config {
     border = 'single',
     header = '',
     prefix = '',
-    format = function(diag)
-      local msg = diag.message
-      local src = diag.source
-      local code = diag.user_data.lsp.code
-      local icon = venom.icons.diagnostic_states.cozette[venom.severity_names[diag.severity]]
-
-      -- remove dots
-      msg = msg:gsub('%.', '')
-      src = src:gsub('%.', '')
-      code = code:gsub('%.', '')
-
-      -- remove starting and trailing spaces
-      msg = msg:gsub('[ \t]+%f[\r\n%z]', '')
-      src = src:gsub('[ \t]+%f[\r\n%z]', '')
-      code = code:gsub('[ \t]+%f[\r\n%z]', '')
-
-      return string.format("%s%s > %s (%s)", icon, msg, src, code)
-    end,
+    -- format = function(diag)
+    --   local msg = diag.message
+    --   local src = diag.source
+    --   local code = diag.user_data.lsp.code
+    --   local icon = venom.icons.diagnostic_states.cozette[venom.severity_names[diag.severity]]
+    --
+    --   -- remove dots
+    --   msg = msg:gsub('%.', '')
+    --   src = src:gsub('%.', '')
+    --   code = code:gsub('%.', '')
+    --
+    --   -- remove starting and trailing spaces
+    --   msg = msg:gsub('[ \t]+%f[\r\n%z]', '')
+    --   src = src:gsub('[ \t]+%f[\r\n%z]', '')
+    --   code = code:gsub('[ \t]+%f[\r\n%z]', '')
+    --
+    --   return string.format("%s%s > %s (%s)", icon, msg, src, code)
+    -- end,
   }
 }
 
@@ -132,6 +132,9 @@ venom = {
     add_str = function(self, feature_str) table.insert(self.list, feature_str) end,
     has = function(self, feature_type, feature_name) return U.has_value(self.list, feature_type..":"..feature_name) end,
     has_str = function(self, feature_str) return U.has_value(self.list, feature_str) end,
+  },
+  vals = {
+    is_disagnostics_visible = true,
   },
   icons = {
     --   

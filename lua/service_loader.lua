@@ -48,8 +48,8 @@ venom.actions.pm_post_complete:subscribe(function()
   -- Plugins.notify:invoke()
   Plugins.bqf:invoke()
   Plugins.reach:invoke()
+  -- Plugins.fzf_lua:invoke()
   Plugins.gitsigns:invoke()
-  Plugins.nvim_comment:invoke()
   Plugins.nvim_tree:invoke()
   Plugins.cmp_ls:invoke()
   Plugins.toggle_term:invoke()
@@ -94,7 +94,7 @@ venom.actions.pm_post_complete:subscribe(function()
   --           end_row = diag.range['end'].line,
   --           end_col = diag.range['end'].character,
   --           hl_group = 'Dim',
-  --         }) 
+  --         })
   --     else
   --       table.insert(real_diags, diag)
   --     end
@@ -130,10 +130,11 @@ PluginManager.plugins = {
   -- LANG:
   {p.treesitter,                                      run = ':TSUpdate' },
   {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
+  {'terrortylor/nvim-comment'},
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   {'SmiteshP/nvim-gps',                               requires = p.treesitter },
   {'lewis6991/spellsitter.nvim'},
-  {'andymass/vim-matchup'},
+  -- {'andymass/vim-matchup'},
   {'b0o/schemastore.nvim',                            requires = p.lspconfig },
 
   -- PLUGINS:
@@ -143,16 +144,15 @@ PluginManager.plugins = {
   {'stevearc/dressing.nvim'},
   {'kevinhwang91/nvim-bqf'},
   -- {'declancm/cinnamon.nvim'},
-  {'rcarriga/nvim-notify',                            requires = p.plenary },
+  -- {'rcarriga/nvim-notify',                            requires = p.plenary },
   {'lewis6991/hover.nvim'},
   {p.gitsigns,                                        requires = p.plenary },
-  {'terrortylor/nvim-comment'},
   {'fedepujol/move.nvim'},
-  {'rktjmp/paperplanes.nvim'},
+  {'rktjmp/paperplanes.nvim',                         branch = 'rel-0.1.2' },
   {'Mofiqul/trld.nvim'},
   -- {'~/sectors/lua/corn.nvim'},
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
-  -- {'ThePrimeagen/harpoon',                            requires = p.plenary },
+  {'toppair/reach.nvim'},
   {'akinsho/nvim-toggleterm.lua'},
   -- {'smjonas/snippet-converter.nvim'},
   -- {'j-hui/fidget.nvim'},
@@ -199,6 +199,7 @@ PluginManager.plugins = {
   -- {'kosayoda/nvim-lightbulb'},
   -- {'dstein64/nvim-scrollview'},
   -- {'rcarriga/vim-ultest',                             requires = 'vim-test/vim-test', run = ':UpdateRemotePlugins' },
+  -- {'ThePrimeagen/harpoon',                            requires = p.plenary },
 
   -- -- ts addons
 
@@ -207,7 +208,7 @@ PluginManager.plugins = {
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   {'mfussenegger/nvim-jdtls'},
-  {'toppair/reach.nvim'},
+  {'ibhagwan/fzf-lua',                                requires = p.devicons },
 
   -- {'Mofiqul/trld.nvim'},
   -- {'goolord/alpha-nvim',                              requires = p.devicons },

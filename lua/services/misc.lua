@@ -198,22 +198,39 @@ M.lsp_funcs = U.Service():new(function()
       end)
     end)
   end
-  vim.api.nvim_create_user_command('LspRename', LspRename, {}) 
+  vim.api.nvim_create_user_command('LspRename', LspRename, {})
 
   function LspReferences()
     vim.lsp.buf.references()
   end
-  vim.api.nvim_create_user_command('LspReferences', LspReferences, {}) 
+  vim.api.nvim_create_user_command('LspReferences', LspReferences, {})
 
   function LspCodeAction()
     vim.lsp.buf.code_action()
   end
-  vim.api.nvim_create_user_command('LspCodeAction', LspCodeAction, {}) 
+  vim.api.nvim_create_user_command('LspCodeAction', LspCodeAction, {})
 
   -- function LspCodeAction()
   --   vim.lsp.buf.code_action()
   -- end
-  -- vim.api.nvim_create_user_command('LspCodeAction', LspCodeAction, {}) 
+  -- vim.api.nvim_create_user_command('LspCodeAction', LspCodeAction, {})
+
+  function LspDiags()
+    vim.diagnostic.setloclist()
+    -- vim.diagnostic.setqflist()
+  end
+  vim.api.nvim_create_user_command('LspDiags', LspDiags, {})
+
+  function LspDiagsHover()
+    vim.diagnostic.open_float()
+  end
+  vim.api.nvim_create_user_command('LspDiagsHover', LspDiagsHover, {})
+
+  function LspDiagsToggle()
+    venom.vals.is_disagnostics_visible = not venom.vals.is_disagnostics_visible
+    if venom.vals.is_disagnostics_visible then vim.diagnostic.show() else vim.diagnostic.hide() end
+  end
+  vim.api.nvim_create_user_command('LspDiagsToggle', LspDiagsToggle, {})
 
 end)
 
@@ -316,7 +333,7 @@ M.buffer_edits = U.Service():new(function()
     vim.cmd([[keeppatterns %s/\s\+$//e]])
     vim.api.nvim_win_set_cursor(0, curpos)
   end
-  vim.api.nvim_create_user_command('RemoveTrailingWS', RemoveTrailingWS, {}) 
+  vim.api.nvim_create_user_command('RemoveTrailingWS', RemoveTrailingWS, {})
 
   function FixEOLs()
     -- Save cursor position to later restore

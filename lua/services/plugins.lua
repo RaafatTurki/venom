@@ -12,6 +12,9 @@ M.devicons = U.Service():require(FT.PLUGIN, "nvim-web-devicons"):new(function()
     override = {
       default_icon = {
         icon = "",
+        color = "#6d8086",
+        cterm_color = "66",
+        name = "Default",
       }
     },
   }
@@ -78,6 +81,9 @@ M.reach = U.Service():require(FT.PLUGIN, 'reach.nvim'):new(function()
   }
 end)
 
+-- M.fzf_lua = U.Service():require(FT.PLUGIN, 'fzf-lua'):new(function()
+-- end)
+
 -- M.cinnamon = U.Service():require(FT.PLUGIN, "cinnamon.nvim"):new(function()
 --   require 'cinnamon'.setup {
 --     default_keymaps = false,
@@ -102,48 +108,6 @@ M.gitsigns = U.Service():require(FT.PLUGIN, "gitsigns.nvim"):new(function()
     keymaps = {},
     sign_priority = 14, -- because nvim diagnostic signs are <13
   }
-end)
-
-M.nvim_comment = U.Service():require(FT.PLUGIN, "nvim-comment"):new(function()
-  local commentstrings_context_aware = {
-    vue = {},
-    svelte = {},
-    html = {},
-    javascript = {},
-  }
-
-  local commentstrings = {
-    gdscript = '#%s',
-    fish = '#%s',
-    c = '//%s',
-    toml = '#%s',
-    samba = '#%s',
-    desktop = '#%s',
-    dosini = '#%s',
-    bc = '#%s',
-    glsl = '//%s',
-  }
-
-  require 'nvim_comment'.setup {
-    create_mappings = false,
-    marker_padding = true,
-    hook = function()
-      for filetype, value in pairs(commentstrings) do
-        if vim.api.nvim_buf_get_option(0, "filetype") == filetype then
-          vim.api.nvim_buf_set_option(0, "commentstring", value)
-        end
-      end
-      for filetype, value in pairs(commentstrings_context_aware) do
-        if vim.api.nvim_buf_get_option(0, "filetype") == filetype then
-          require("ts_context_commentstring.internal").update_commentstring()
-        end
-      end
-    end
-  }
-
-  Bind.key:invoke {'<leader>c',  ':CommentToggle<CR>'}
-  Bind.key:invoke {'<leader>c',  ':CommentToggle<CR>',    mode = 'v'}
-  Bind.key:invoke {'Y',          'ygv:CommentToggle<CR>', mode = 'v'}
 end)
 
 M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
@@ -407,7 +371,7 @@ M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(functi
       if term.direction == "horizontal" then
         return 15
       elseif term.direction == "vertical" then
-        return 84
+        return 116
         -- return vim.o.columns * 0.35
       end
     end,
@@ -529,11 +493,11 @@ end)
 
 M.paperplanes = U.Service():require(FT.PLUGIN, 'paperplanes.nvim'):new(function()
   require 'paperplanes'.setup {
-    register = "+",
+    register = '+',
     -- provider = "0x0.st",
     -- provider = "sr.ht",
-    -- provider = "dpaste.org",
-    provider = "paste.rs",
+    provider = "dpaste.org",
+    -- provider = "paste.rs",
     provider_options = {},
     cmd = "curl"
   }

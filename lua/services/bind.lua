@@ -119,6 +119,10 @@ M.setup_plugins = U.Service():new(function()
   -- PLUGINS
   -- packer sync
   M.key:invoke {'<leader>p',        '<CMD>PackerSync<CR>'}
+  -- nvim comment
+  M.key:invoke {'<leader>c',        ':CommentToggle<CR>'}
+  M.key:invoke {'<leader>c',        ':CommentToggle<CR>',    mode = 'v'}
+  M.key:invoke {'Y',                'ygv:CommentToggle<CR>', mode = 'v'}
   -- nvim tree
   M.key:invoke {'<C-e>',            '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
   -- harpoon
@@ -131,6 +135,7 @@ M.setup_plugins = U.Service():new(function()
   M.key:invoke {'<C-p>',            function()
     require 'reach'.buffers {
       show_current = true,
+      grayout_current = false,
       modified_icon = '•',
       previous = {
         enable = false,

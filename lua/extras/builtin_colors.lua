@@ -482,7 +482,23 @@ local theme = lush(function()
     UltestSummaryFile       { UltestSummaryInfo, gui = 'bold'};
     UltestSummaryNamespace  { UltestSummaryFile };
 
-
+    -- reach
+    ReachBorder             { VertSplit };
+    ReachDirectory          { Directory };
+    ReachModifiedIndicator  { String };
+    ReachHandleBuffer       { String };
+    ReachHandleDelete       { Error };
+    ReachHandleSplit        { Directory };
+    ReachTail               { Normal };
+    ReachHandleMarkLocal    { Type };
+    ReachHandleMarkGlobal   { Number };
+    ReachMark               { Normal };
+    ReachMarkLocation       { Comment };
+    ReachHandleTabpage      { TabLineSel };
+    ReachGrayOut            { Comment };
+    ReachMatchExact         { String };
+    ReachPriority           { Special };
+    ReachCurrent            { Folded, gui = 'bold' };
 
     -- CUTSOM GROUPS
     DebugFg                 { fg = debug[10] };

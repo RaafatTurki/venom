@@ -33,6 +33,10 @@ M.configure_servers = U.Service():new(function()
             [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
           },
         },
+        completion= {
+          keywordSnippet="Replace",
+          callSnippet="Replace",
+        },
         telemetry = { enable = false },
       }
     }
@@ -228,6 +232,7 @@ end)
 
 M.setup = U.Service()
 :require(FT.PLUGIN, "nvim-lsp-installer")
+:require(FT.PLUGIN, "nvim-comment")
 :require(FT.PLUGIN, "nvim-gps")
 :require(FT.PLUGIN, "spellsitter.nvim")
 :require(FT.PLUGIN, "nvim-jdtls")
@@ -250,6 +255,41 @@ M.setup = U.Service()
     max_concurrent_installers = 3,
   })
 
+  -- nvim comment
+  local commentstrings_context_aware = {
+    vue = {},
+    svelte = {},
+    html = {},
+    javascript = {},
+  }
+  local commentstrings = {
+    gdscript = '#%s',
+    fish = '#%s',
+    c = '//%s',
+    toml = '#%s',
+    samba = '#%s',
+    desktop = '#%s',
+    dosini = '#%s',
+    bc = '#%s',
+    glsl = '//%s',
+  }
+  require 'nvim_comment'.setup {
+    create_mappings = false,
+    marker_padding = true,
+    hook = function()
+      for filetype, value in pairs(commentstrings) do
+        if vim.api.nvim_buf_get_option(0, "filetype") == filetype then
+          vim.api.nvim_buf_set_option(0, "commentstring", value)
+        end
+      end
+      for filetype, value in pairs(commentstrings_context_aware) do
+        if vim.api.nvim_buf_get_option(0, "filetype") == filetype then
+          require("ts_context_commentstring.internal").update_commentstring()
+        end
+      end
+    end
+  }
+
   -- gps
   require 'nvim-gps'.setup {
     separator = ' > ',
@@ -268,12 +308,12 @@ M.setup = U.Service()
   }
 
   -- matchup
-  U.gvar('matchup_matchparen_offscreen'):set({})
+  -- U.gvar('matchup_matchparen_offscreen'):set({})
 
   -- nvim-jdtls
   function JDTLSSetup()
     local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-    local workspace_dir = '/home/potato/jdtls_workspaces/' .. project_name
+    local workspace_dir = os.getenv('XDG_CACHE_HOME') .. '/jdtls/workspaces/' .. project_name
 
     JDTLS_CONFIG = {
       cmd = {

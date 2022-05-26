@@ -253,12 +253,12 @@ function M.Service()
         end
         return return_value
       else
-        log("missing features: "..table.concat(missing_features, ' / '), LL.WARN)
+        log.warn("missing features: "..table.concat(missing_features, ' / '))
       end
     end,
     required_features = {},
     provided_features = {},
-    callback = function(self, ...) log("empty service callback called", LL.WARN) end,
+    callback = function(self, ...) log.warn("empty service callback called") end,
   }
 end
 --- lsp server config class

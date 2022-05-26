@@ -108,8 +108,8 @@ M.setup = U.Service():new(function()
   -- M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR><ESC>i', mode = 'i'}
 end)
 
+-- TODO load each conditionally depending on registered features
 M.setup_plugins = U.Service():new(function()
-  -- TODO move to related services
   -- open uri under cursor
   M.key:invoke {'gx',               OpenURIUnderCursor}
   -- cycle theme
@@ -162,8 +162,15 @@ M.setup_plugins = U.Service():new(function()
   M.key:invoke {'<A-Down>',         '<CMD>MoveLine(1)<CR>', mode = 'n i'}
   M.key:invoke {'<A-Up>',           ':MoveBlock(-1)<CR>', mode = 'v'}
   M.key:invoke {'<A-Down>',         ':MoveBlock(1)<CR>', mode = 'v'}
+  -- lsp installer
+  M.key:invoke {'<leader>l',        '<CMD>LspInstallInfo<CR>'}
   -- lsp
-  -- M.key:invoke {'<leader>v',        require 'hover'.hover}
+  M.key:invoke {'<leader>r',        '<CMD>LspRename<CR>'}
+  M.key:invoke {'<leader>R',        '<CMD>LspReferences<CR>'}
+  M.key:invoke {'<leader>C',        '<CMD>LspCodeAction<CR>'}
+  M.key:invoke {'<leader>v',        '<CMD>LspHover<CR>'}
+  M.key:invoke {'<leader>dl',       '<CMD>LspDiagsList<CR>'}
+  M.key:invoke {'<leader>dv',       '<CMD>LspDiagsHover<CR>'}
 end)
 
 return M

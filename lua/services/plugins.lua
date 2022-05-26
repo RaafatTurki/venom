@@ -135,14 +135,14 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   local cmp = require 'cmp'
 
   local function tab(fb)
-    if cmp.visible() then cmp.select_next_item()
-    elseif ls.expand_or_locally_jumpable() then ls.expand_or_jump()
+    -- if cmp.visible() then cmp.select_next_item()
+    if ls.expand_or_locally_jumpable() then ls.expand_or_jump()
     else fb() end
   end
 
   local function s_tab(fb)
-    if cmp.visible() then cmp.select_prev_item()
-    elseif ls.jumpable(-1) then ls.jump(-1)
+    -- if cmp.visible() then cmp.select_prev_item()
+    if ls.jumpable(-1) then ls.jump(-1)
     else fb() end
   end
 
@@ -194,7 +194,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       { name = 'luasnip' },
       { name = 'nvim_lsp' },
       { name = 'nvim_lua' },
-      -- { name = 'digraphs' },
+      { name = 'digraphs' },
       -- { name = 'nvim_lsp_signature_help' },
     },
     formatting = {

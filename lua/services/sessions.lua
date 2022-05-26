@@ -8,7 +8,7 @@ M.setup = U.Service():provide(FT.SESSION, "setup"):require(FT.PLUGIN, "mini.nvim
     autowrite = true,
     directory = vim.fn.stdpath('data')..'/sessions',
     file = 'session.vim',
-    force = { read = false, write = true, delete = false },
+    force = { read = true, write = true, delete = true },
     verbose = { read = false, write = false, delete = false },
   }
 end)
@@ -33,7 +33,11 @@ M.delete = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
   require 'mini.sessions'.delete(session_name)
 end)
 
-function get_all_names()
+M.select = U.Service():require(FT.SESSION, "setup"):new(function()
+  require 'mini.sessions'.select()
+end)
+
+local function get_all_names()
   local sessions_objs = M.get_all:invoke()
   local session_names = {}
 
@@ -48,5 +52,6 @@ vim.api.nvim_create_user_command('SessionSave', function(opts) M.save:invoke(opt
 vim.api.nvim_create_user_command('SessionLoad', function(opts) M.load:invoke(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
 vim.api.nvim_create_user_command('SessionDelete', function(opts) M.delete:invoke(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
 vim.api.nvim_create_user_command('SessionLoadLast', function(opts) M.load:invoke() end, {})
+vim.api.nvim_create_user_command('SessionSelect', function(opts) M.select:invoke() end, {})
 
 return M

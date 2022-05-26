@@ -66,6 +66,79 @@ M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'nvim-lsp-inst
     -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
   end
+
+  vim.api.nvim_create_user_command('LspRename', function() M.rename:invoke() end, {})
+  vim.api.nvim_create_user_command('LspReferences', function() M.references:invoke() end, {})
+  vim.api.nvim_create_user_command('LspCodeAction', function() M.code_action:invoke() end, {})
+  vim.api.nvim_create_user_command('LspHover', function() M.hover:invoke() end, {})
+  vim.api.nvim_create_user_command('LspDiagsList', function() M.diags_list:invoke() end, {})
+  vim.api.nvim_create_user_command('LspDiagsHover', function() M.diags_hover:invoke() end, {})
+  -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle:invoke() end, {})
 end)
+
+
+M.rename = U.Service():new(function()
+  local curr_name = vim.fn.expand("<cword>")
+  local input_opts = {
+    prompt = 'LSP Rename',
+    default = curr_name
+  }
+
+  -- ask user input
+  vim.ui.input(input_opts, function(new_name)
+    -- check new_name is valid
+    if not new_name or #new_name == 0 or curr_name == new_name then return end
+
+    -- request lsp rename
+    local params = vim.lsp.util.make_position_params()
+    params.newName = new_name
+
+    vim.lsp.buf_request(0, "textDocument/rename", params, function(_, res, ctx, _)
+      if not res then return end
+
+      -- apply renames
+      local client = vim.lsp.get_client_by_id(ctx.client_id)
+      vim.lsp.util.apply_workspace_edit(res, client.offset_encoding)
+
+      -- display a message
+      local changes = U.count_lsp_res_changes(res)
+      local message = string.format("renamed %s instance%s in %s file%s. %s",
+        changes.instances,
+        changes.instances== 1 and '' or 's',
+        changes.files,
+        changes.files == 1 and '' or 's',
+        changes.files > 1 and "To save them run ':wa'" or ''
+      )
+      vim.notify(message)
+    end)
+  end)
+end)
+
+M.references = U.Service():new(function()
+  vim.lsp.buf.references()
+end)
+
+M.code_action = U.Service():new(function()
+  vim.lsp.buf.code_action()
+end)
+
+M.hover = U.Service():require(FT.PLUGIN, 'hover.nvim'):new(function()
+  -- vim.lsp.buf.hover()
+  require 'hover'.hover()
+end)
+
+M.diags_list = U.Service():new(function()
+  vim.diagnostic.setloclist()
+  -- vim.diagnostic.setqflist()
+end)
+
+M.diags_hover = U.Service():new(function()
+  vim.diagnostic.open_float()
+end)
+
+-- M.diags_toggle = U.Service():new(function()
+--   venom.vals.is_disagnostics_visible = not venom.vals.is_disagnostics_visible
+--   if venom.vals.is_disagnostics_visible then vim.diagnostic.show() else vim.diagnostic.hide() end
+-- end)
 
 return M

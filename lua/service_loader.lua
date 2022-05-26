@@ -26,7 +26,6 @@ venom.actions.pm_post_complete:subscribe(function()
   Misc.term_smart_esc:invoke()
   Misc.disable_builtin_plugins:invoke()
   Misc.highlight_yank:invoke()
-  Misc.lsp_funcs:invoke()
   Misc.automatic_treesitter:invoke()
   -- Misc.diag_on_hold:invoke()
   Misc.buffer_edits:invoke()
@@ -126,6 +125,7 @@ PluginManager.plugins = {
 
   -- LSP:
   p.lspconfig,
+  {'lewis6991/hover.nvim'},
 
   -- LANG:
   {p.treesitter,                                      run = ':TSUpdate' },
@@ -145,7 +145,6 @@ PluginManager.plugins = {
   {'kevinhwang91/nvim-bqf'},
   -- {'declancm/cinnamon.nvim'},
   -- {'rcarriga/nvim-notify',                            requires = p.plenary },
-  {'lewis6991/hover.nvim'},
   {p.gitsigns,                                        requires = p.plenary },
   {'fedepujol/move.nvim'},
   {'rktjmp/paperplanes.nvim',                         branch = 'rel-0.1.2' },

@@ -62,7 +62,7 @@ M.register_plugin = U.Service():new(function(plugin_entry)
   local plugin_name_short = plugin_name_split[#plugin_name_split]
 
   if venom.features:has(FT.PLUGIN, plugin_name_short) then
-    log("plugin feature re-registering attempt", LL.WARN)
+    log.warn("plugin feature re-registering attempt")
   else
     venom.features:add(FT.PLUGIN, plugin_name_short)
   end
@@ -90,7 +90,7 @@ end)
 
 --- syncs plugins (updates them regardless of the method)
 M.sync = U.Service():new(function()
-  log("packer syncing...")
+  log.info("packer syncing...")
   local time = os.date("!%Y-%m-%dT%TZ")
   vim.cmd([[PackerSnapshot snapshot_]]..time)
   vim.cmd [[PackerSync]]

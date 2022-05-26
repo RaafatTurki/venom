@@ -115,7 +115,6 @@ vim.diagnostic.config {
   }
 }
 
-
 -- venom options
 venom = {
   -- actions are tables that can hold lua functions and vim commands for later execution (when invoked)
@@ -237,17 +236,6 @@ venom = {
     [vim.diagnostic.severity.INFO] = 'Info',
     [vim.diagnostic.severity.HINT] = 'Hint',
   }
-}
-
-
--- enums
---- log levels
-LL = {
-  DEBUG = vim.log.levels.DEBUG,
-  ERROR = vim.log.levels.ERROR,
-  INFO = vim.log.levels.INFO,
-  TRACE = vim.log.levels.TRACE,
-  WARN = vim.log.levels.WARN,
 }
 
 --- feature types

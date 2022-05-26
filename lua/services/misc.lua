@@ -11,8 +11,6 @@ M.base = U.Service():new(function()
   vim.cmd [[cnoreabbrev w!! w !sudo tee > /dev/null %]]
   -- new tab help page
   vim.cmd [[cnoreabbrev h tab help]]
-  -- inspect lua utility
-  vim.cmd [[cnoreabbrev insp lua inspect()]]
   -- new tab
   vim.cmd [[cnoreabbrev nt tabnew]]
   -- quit all
@@ -157,81 +155,6 @@ M.term_smart_esc = U.Service():new(function()
       return U.term_codes_esc [[<C-\><C-n>]]
     end
   end
-end)
-
---- defines new/improved lsp functions
-M.lsp_funcs = U.Service():new(function()
-  -- better rename
-  function LspRename()
-    local curr_name = vim.fn.expand("<cword>")
-    local input_opts = {
-      prompt = 'LSP Rename',
-      default = curr_name
-    }
-
-    -- ask user input
-    vim.ui.input(input_opts, function(new_name)
-      -- check new_name is valid
-      if not new_name or #new_name == 0 or curr_name == new_name then return end
-
-      -- request lsp rename
-      local params = vim.lsp.util.make_position_params()
-      params.newName = new_name
-
-      vim.lsp.buf_request(0, "textDocument/rename", params, function(_, res, ctx, _)
-        if not res then return end
-
-        -- apply renames
-        local client = vim.lsp.get_client_by_id(ctx.client_id)
-        vim.lsp.util.apply_workspace_edit(res, client.offset_encoding)
-
-        -- display a message
-        local changes = U.count_lsp_res_changes(res)
-        local message = string.format("renamed %s instance%s in %s file%s. %s",
-          changes.instances,
-          changes.instances== 1 and '' or 's',
-          changes.files,
-          changes.files == 1 and '' or 's',
-          changes.files > 1 and "To save them run ':wa'" or ''
-        )
-        vim.notify(message)
-      end)
-    end)
-  end
-  vim.api.nvim_create_user_command('LspRename', LspRename, {})
-
-  function LspReferences()
-    vim.lsp.buf.references()
-  end
-  vim.api.nvim_create_user_command('LspReferences', LspReferences, {})
-
-  function LspCodeAction()
-    vim.lsp.buf.code_action()
-  end
-  vim.api.nvim_create_user_command('LspCodeAction', LspCodeAction, {})
-
-  -- function LspCodeAction()
-  --   vim.lsp.buf.code_action()
-  -- end
-  -- vim.api.nvim_create_user_command('LspCodeAction', LspCodeAction, {})
-
-  function LspDiags()
-    vim.diagnostic.setloclist()
-    -- vim.diagnostic.setqflist()
-  end
-  vim.api.nvim_create_user_command('LspDiags', LspDiags, {})
-
-  function LspDiagsHover()
-    vim.diagnostic.open_float()
-  end
-  vim.api.nvim_create_user_command('LspDiagsHover', LspDiagsHover, {})
-
-  function LspDiagsToggle()
-    venom.vals.is_disagnostics_visible = not venom.vals.is_disagnostics_visible
-    if venom.vals.is_disagnostics_visible then vim.diagnostic.show() else vim.diagnostic.hide() end
-  end
-  vim.api.nvim_create_user_command('LspDiagsToggle', LspDiagsToggle, {})
-
 end)
 
 --- prompts to install ts parsers upon opening new file types with available ones.

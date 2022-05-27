@@ -11,25 +11,25 @@ Lang = require 'services.lang'
 Lsp = require 'services.lsp'
 Statusbar = require 'services.statusbar'
 
-PluginManager.attempt_bootstrap:invoke()
-PluginManager.setup:invoke()
+PluginManager.attempt_bootstrap()
+PluginManager.setup()
 
 venom.actions.pm_post_complete:subscribe(function()
-  Sessions.setup:invoke()
-  Bind.setup:invoke()
+  Sessions.setup()
+  Bind.setup()
 
-  Bind.bind_leader:invoke()
+  Bind.bind_leader()
 
-  Misc.base:invoke()
-  Misc.open_uri:invoke()
-  -- Misc.color_col:invoke()
-  Misc.term_smart_esc:invoke()
-  Misc.disable_builtin_plugins:invoke()
-  Misc.highlight_yank:invoke()
-  Misc.automatic_treesitter:invoke()
-  -- Misc.diag_on_hold:invoke()
-  Misc.buffer_edits:invoke()
-  Misc.camel:invoke()
+  Misc.base()
+  Misc.open_uri()
+  -- Misc.color_col()
+  Misc.term_smart_esc()
+  Misc.disable_builtin_plugins()
+  Misc.highlight_yank()
+  Misc.automatic_treesitter()
+  -- Misc.diag_on_hold()
+  Misc.buffer_edits()
+  Misc.camel()
 
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},
@@ -41,38 +41,38 @@ venom.actions.pm_post_complete:subscribe(function()
     { func = Themes.default,  args = {},             name = 'Default'},
   })
 
-  Plugins.impatient:invoke()
-  Plugins.devicons:invoke()
-  Plugins.dressing:invoke()
-  -- Plugins.notify:invoke()
-  Plugins.bqf:invoke()
-  Plugins.reach:invoke()
-  -- Plugins.fzf_lua:invoke()
-  Plugins.gitsigns:invoke()
-  Plugins.nvim_tree:invoke()
-  Plugins.cmp_ls:invoke()
-  Plugins.toggle_term:invoke()
-  -- Plugins.fidget:invoke()
-  Plugins.mini_starter:invoke()
-  Plugins.mini_surround:invoke()
-  Plugins.dirty_talk:invoke()
-  Plugins.hover:invoke()
-  Plugins.paperplanes:invoke()
-  Plugins.trld:invoke()
-  -- Plugins.corn:invoke()
-  -- Plugins.cinnamon:invoke()
-  -- Plugins.remember:invoke()
+  Plugins.impatient()
+  Plugins.devicons()
+  Plugins.dressing()
+  -- Plugins.notify()
+  Plugins.bqf()
+  Plugins.reach()
+  -- Plugins.fzf_lua()
+  Plugins.gitsigns()
+  Plugins.nvim_tree()
+  Plugins.cmp_ls()
+  Plugins.toggle_term()
+  -- Plugins.fidget()
+  Plugins.mini_starter()
+  Plugins.mini_surround()
+  Plugins.dirty_talk()
+  Plugins.hover()
+  Plugins.paperplanes()
+  Plugins.trld()
+  -- Plugins.corn()
+  -- Plugins.cinnamon()
+  -- Plugins.remember()
 
-  Lang.setup:invoke()
-  Lang.configure_servers:invoke()
-  Lang.setup_treesitter:invoke()
+  Lang.setup()
+  Lang.configure_servers()
+  Lang.setup_treesitter()
 
-  Lsp.setup:invoke()
-  Lsp.setup_servers:invoke(Lang.lsp_servers_configs)
+  Lsp.setup()
+  Lsp.setup_servers(Lang.lsp_servers_configs)
 
-  Statusbar.setup:invoke()
+  Statusbar.setup()
 
-  Bind.setup_plugins:invoke()
+  Bind.setup_plugins()
 
 
   -- local test_ns = vim.api.nvim_create_namespace('test')
@@ -223,4 +223,4 @@ PluginManager.plugins = {
   -- {'gelguy/wilder.nvim'},
 }
 
-PluginManager.register_plugins:invoke()
+PluginManager.register_plugins()

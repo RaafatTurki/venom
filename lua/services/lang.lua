@@ -16,7 +16,7 @@ end)
 
 M.configure_servers = U.Service():new(function()
 
-  M.configure_server:invoke("sumneko_lua", {},  {
+  M.configure_server("sumneko_lua", {},  {
     settings = {
       Lua = {
         -- runtime = {
@@ -42,7 +42,7 @@ M.configure_servers = U.Service():new(function()
     }
   })
 
-  M.configure_server:invoke("texlab", {},  {
+  M.configure_server("texlab", {},  {
     settings = {
       texlab = {
         build = {
@@ -69,7 +69,7 @@ M.configure_servers = U.Service():new(function()
     }
   })
 
-  M.configure_server:invoke("svelte", {}, {
+  M.configure_server("svelte", {}, {
     settings = {
       svelte = {
         plugin = {
@@ -87,7 +87,7 @@ M.configure_servers = U.Service():new(function()
     }
   })
 
-  M.configure_server:invoke("rust_analyzer", {}, {
+  M.configure_server("rust_analyzer", {}, {
     settings = {
       ["rust-analyzer"] = {
         diagnostics = {
@@ -100,11 +100,11 @@ M.configure_servers = U.Service():new(function()
     }
   })
 
-  M.configure_server:invoke("emmet_ls", {}, {
+  M.configure_server("emmet_ls", {}, {
     filetypes = { 'html', 'css', 'svelte' },
   })
 
-  M.configure_server:invoke("jsonls", {}, {
+  M.configure_server("jsonls", {}, {
     settings = {
       json = {
         schemas = require 'schemastore'.json.schemas(),
@@ -122,7 +122,7 @@ M.configure_servers = U.Service():new(function()
     }
   })
 
-  M.configure_server:invoke("pylsp", {}, {
+  M.configure_server("pylsp", {}, {
     settings = {
       configurationSources = { 'flake8' },
       formatCommand = { 'black' },
@@ -137,7 +137,7 @@ M.configure_servers = U.Service():new(function()
     }
   })
 
-  M.configure_server:invoke("gopls", {}, {
+  M.configure_server("gopls", {}, {
     settings = {
       gopls = {
         analyses = {
@@ -151,13 +151,13 @@ M.configure_servers = U.Service():new(function()
 
 
   -- annoying and up to no good lsp servers:
-  M.configure_server:invoke("jdtls", { LST.NO_AUTO_SETUP }, {})
+  M.configure_server("jdtls", { LST.NO_AUTO_SETUP }, {})
 
-  -- M.configure_server:invoke("java_language_server", {}, {
+  -- M.configure_server("java_language_server", {}, {
   --   cmd = {'/usr/share/java/java-language-server/lang_server_linux.sh'},
   -- })
 
-  M.configure_server:invoke("gdscript", {}, {
+  M.configure_server("gdscript", {}, {
     cmd = {'godot-ls'},
     flags = {
       debounce_text_changes = 150,
@@ -169,7 +169,7 @@ M.configure_servers = U.Service():new(function()
   for _, server_obj in ipairs(lspi.get_installed_servers()) do
     if (not U.has_key(M.lsp_servers_configs, server_obj.name)) then
       -- configure unconfigured servers
-      M.configure_server:invoke(server_obj.name, { LST.AUTO_SETUP }, {})
+      M.configure_server(server_obj.name, { LST.AUTO_SETUP }, {})
     else
       -- add LST.AUTO_SETUP tag to configured servers
       M.lsp_servers_configs[server_obj.name]:tag(LST.AUTO_SETUP)

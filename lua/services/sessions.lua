@@ -38,7 +38,7 @@ M.select = U.Service():require(FT.SESSION, "setup"):new(function()
 end)
 
 local function get_all_names()
-  local sessions_objs = M.get_all:invoke()
+  local sessions_objs = M.get_all()
   local session_names = {}
 
   for session_name, _ in pairs(sessions_objs) do
@@ -48,10 +48,10 @@ local function get_all_names()
   return session_names
 end
 
-vim.api.nvim_create_user_command('SessionSave', function(opts) M.save:invoke(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionLoad', function(opts) M.load:invoke(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionDelete', function(opts) M.delete:invoke(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionLoadLast', function(opts) M.load:invoke() end, {})
-vim.api.nvim_create_user_command('SessionSelect', function(opts) M.select:invoke() end, {})
+vim.api.nvim_create_user_command('SessionSave', function(opts) M.save(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionLoad', function(opts) M.load(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionDelete', function(opts) M.delete(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionLoadLast', function(opts) M.load() end, {})
+vim.api.nvim_create_user_command('SessionSelect', function(opts) M.select() end, {})
 
 return M

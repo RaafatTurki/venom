@@ -76,15 +76,15 @@ M.register_plugins = U.Service():new(function()
     packer.use(plugin)
 
     -- TODO: make this dependent on install state (not just exisiting in the M.plugins table)
-    M.register_plugin:invoke(plugin)
+    M.register_plugin(plugin)
   end
 
   if (M.is_bootstraped) then 
     vim.api.nvim_command 'PackerSync'
     -- TODO: convert to an auto group
-    vim.cmd [[autocmd User PackerComplete lua venom.actions.pm_post_complete:invoke()]]
+    vim.cmd [[autocmd User PackerComplete lua venom.actions.pm_post_complete()]]
   else
-    venom.actions.pm_post_complete:invoke()
+    venom.actions.pm_post_complete()
   end
 end)
 

@@ -3,7 +3,7 @@
 local M = {}
 
 M.bind_leader = U.Service():new(function()
-  M.key:invoke({'<Space>', '<Nop>', mode = ''})
+  M.key({'<Space>', '<Nop>', mode = ''})
   U.gvar('mapleader'):set(' ')
 end)
 
@@ -21,118 +21,118 @@ end)
 M.setup = U.Service():new(function()
   -- DISABLES
   -- ctrl-x submode, c-p and c-n
-  M.key:invoke {'<C-x>',            '<Nop>', mode = 'i'}
+  M.key {'<C-x>',            '<Nop>', mode = 'i'}
   -- disable arrow keys
-  -- M.key:invoke {'<Down>',           '<Nop>', mode = 'n v i'}
-  -- M.key:invoke {'<Up>',             '<Nop>', mode = 'n v i'}
-  -- M.key:invoke {'<Left>',           '<Nop>', mode = 'n v i'}
-  -- M.key:invoke {'<Right>',          '<Nop>', mode = 'n v i'}
+  -- M.key {'<Down>',           '<Nop>', mode = 'n v i'}
+  -- M.key {'<Up>',             '<Nop>', mode = 'n v i'}
+  -- M.key {'<Left>',           '<Nop>', mode = 'n v i'}
+  -- M.key {'<Right>',          '<Nop>', mode = 'n v i'}
   -- home and end
-  -- M.key:invoke {'<Home>',           '<Nop>', mode = 'n v i'}
-  -- M.key:invoke {'<End>',            '<Nop>', mode = 'n v i'}
+  -- M.key {'<Home>',           '<Nop>', mode = 'n v i'}
+  -- M.key {'<End>',            '<Nop>', mode = 'n v i'}
 
   -- CURSED
   --- hjkl to jkil
-  -- M.key:invoke {'i',                'k', mode = 'n v i'}
-  -- M.key:invoke {'k',                'j', mode = 'n v i'}
-  -- M.key:invoke {'j',                'h', mode = 'n v i'}
-  -- M.key:invoke {'h',                '<Nop>', mode = 'n v i'}
+  -- M.key {'i',                'k', mode = 'n v i'}
+  -- M.key {'k',                'j', mode = 'n v i'}
+  -- M.key {'j',                'h', mode = 'n v i'}
+  -- M.key {'h',                '<Nop>', mode = 'n v i'}
 
 
   -- BASE
   -- write, undo, quit
-  M.key:invoke {'<C-s>',            '<CMD>write<CR><ESC>', mode = 'n v i'}
-  M.key:invoke {'<C-z>',            '<CMD>undo<CR>', mode = 'n v i'}
-  M.key:invoke {'<C-q>',            '<CMD>quit<CR>', mode = 'n v i'}
+  M.key {'<C-s>',            '<CMD>write<CR><ESC>', mode = 'n v i'}
+  M.key {'<C-z>',            '<CMD>undo<CR>', mode = 'n v i'}
+  M.key {'<C-q>',            '<CMD>quit<CR>', mode = 'n v i'}
   -- page shift up/down, select all
-  M.key:invoke {'<C-Up>',           '<C-y>k'}
-  M.key:invoke {'<C-Down>',         '<C-e>j'}
-  -- M.key:invoke {'<C-a>',            ':%'}
+  M.key {'<C-Up>',           '<C-y>k'}
+  M.key {'<C-Down>',         '<C-e>j'}
+  -- M.key {'<C-a>',            ':%'}
   -- indent
-  M.key:invoke {'<Tab>',            '>>_'}
-  M.key:invoke {'<S-Tab>',          '<<_'}
-  M.key:invoke {'<Tab>',            '>gv', mode = 'v'}
-  M.key:invoke {'<S-Tab>',          '<gv', mode = 'v'}
+  M.key {'<Tab>',            '>>_'}
+  M.key {'<S-Tab>',          '<<_'}
+  M.key {'<Tab>',            '>gv', mode = 'v'}
+  M.key {'<S-Tab>',          '<gv', mode = 'v'}
   -- switch between last 2 windows
-  M.key:invoke {'<A-Tab>',          '<C-w>p'}
+  M.key {'<A-Tab>',          '<C-w>p'}
   -- make x delete without copying
-  -- M.key:invoke {'x',                '"_x', mode = 'v n'}
-  M.key:invoke {'X',                '"_x', mode = 'v n'}
+  -- M.key {'x',                '"_x', mode = 'v n'}
+  M.key {'X',                '"_x', mode = 'v n'}
   -- make Y copy to end of line
-  M.key:invoke {'Y',                'y$'}
+  M.key {'Y',                'y$'}
   -- go to end after a join
-  M.key:invoke {'J',                'J$'}
+  M.key {'J',                'J$'}
   -- split (opposite of J)
-  M.key:invoke {'S',                'T hr<CR>k$'}
+  M.key {'S',                'T hr<CR>k$'}
   -- open man pages in new tabs
-  M.key:invoke {'K',                ':tab Man<CR>'}
+  M.key {'K',                ':tab Man<CR>'}
   -- center line after n/N
-  -- M.key:invoke {'n',                'nzzzv'}
-  -- M.key:invoke {'N',                'Nzzzv'}
+  -- M.key {'n',                'nzzzv'}
+  -- M.key {'N',                'Nzzzv'}
   -- re-edit current buffer
-  M.key:invoke {'<F5>',             '<CMD>e<CR>'}
+  M.key {'<F5>',             '<CMD>e<CR>'}
   -- clear action
   -- venom.actions.clear:subscribe [[let @/ = ""]]
   venom.actions.clear:subscribe [[noh]]
   venom.actions.clear:subscribe(U.clear_prompt)
-  M.key:invoke {'<c-l>',           function() venom.actions.clear:invoke() end}
+  M.key {'<c-l>',           function() venom.actions.clear() end}
   -- terminal smart escape
-  M.key:invoke {'<Esc>',            "v:lua.TermSmartEsc(b:terminal_job_pid, '"..'<Esc>'.."')", mode = 't', opts = { noremap = true, expr = true } }
+  M.key {'<Esc>',            "v:lua.TermSmartEsc(b:terminal_job_pid, '"..'<Esc>'.."')", mode = 't', opts = { noremap = true, expr = true } }
   -- undo breakpoints
   local undo_break_points = {',', '.', '!', '?', '-'}
   for _, break_point in pairs(undo_break_points) do
-    M.key:invoke {break_point,     break_point..'<C-g>u', mode = 'i'}
+    M.key {break_point,     break_point..'<C-g>u', mode = 'i'}
   end
   -- goto and display to nex/prev lsp diagnositc
-  M.key:invoke {'d<Left>',          function() vim.diagnostic.goto_prev({ float = false }) end}
-  M.key:invoke {'d<Right>',         function() vim.diagnostic.goto_next({ float = false }) end}
+  M.key {'d<Left>',          function() vim.diagnostic.goto_prev({ float = false }) end}
+  M.key {'d<Right>',         function() vim.diagnostic.goto_next({ float = false }) end}
   -- tabs
-  M.key:invoke {'<C-t>',            '<CMD>tabnew<CR>'}
-  M.key:invoke {'<A-Right>',        '<CMD>tabnext<CR>'}
-  M.key:invoke {'<A-Left>',         '<CMD>tabprevious<CR>'}
+  M.key {'<C-t>',            '<CMD>tabnew<CR>'}
+  M.key {'<A-Right>',        '<CMD>tabnext<CR>'}
+  M.key {'<A-Left>',         '<CMD>tabprevious<CR>'}
   -- lsp
-  M.key:invoke {'<leader>r',         '<CMD>LspRename<CR>'}
+  M.key {'<leader>r',         '<CMD>LspRename<CR>'}
 
 
   -- MOTIONS
-  M.key:invoke {'aa',                ':<c-u>normal! ggVG<CR>', mode = 'o'}
+  M.key {'aa',                ':<c-u>normal! ggVG<CR>', mode = 'o'}
 
   -- TESTING
-  -- M.key:invoke {'<A-z>',            function() vim.notify("hi friend") end}
+  -- M.key {'<A-z>',            function() vim.notify("hi friend") end}
 
   -- old
   -- shifting line
-  -- M.key:invoke {'<A-Down>',         '<CMD>m .+1<CR>'}
-  -- M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR>'}
-  -- M.key:invoke {'<A-Down>',         '<CMD>m .+1<CR><ESC>i', mode = 'i'}
-  -- M.key:invoke {'<A-Up>',           '<CMD>m .-2<CR><ESC>i', mode = 'i'}
+  -- M.key {'<A-Down>',         '<CMD>m .+1<CR>'}
+  -- M.key {'<A-Up>',           '<CMD>m .-2<CR>'}
+  -- M.key {'<A-Down>',         '<CMD>m .+1<CR><ESC>i', mode = 'i'}
+  -- M.key {'<A-Up>',           '<CMD>m .-2<CR><ESC>i', mode = 'i'}
 end)
 
 -- TODO load each conditionally depending on registered features
 M.setup_plugins = U.Service():new(function()
   -- open uri under cursor
-  M.key:invoke {'gx',               OpenURIUnderCursor}
+  M.key {'gx',               OpenURIUnderCursor}
   -- cycle theme
-  M.key:invoke {'<leader>t',        Themes.theme_cycle}
+  M.key {'<leader>t',        Themes.theme_cycle}
 
 
   -- PLUGINS
   -- packer sync
-  M.key:invoke {'<leader>p',        '<CMD>PackerSync<CR>'}
+  M.key {'<leader>p',        function() PluginManager.sync () end}
   -- nvim comment
-  M.key:invoke {'<leader>c',        ':CommentToggle<CR>'}
-  M.key:invoke {'<leader>c',        ':CommentToggle<CR>',    mode = 'v'}
-  M.key:invoke {'Y',                'ygv:CommentToggle<CR>', mode = 'v'}
+  M.key {'<leader>c',        ':CommentToggle<CR>'}
+  M.key {'<leader>c',        ':CommentToggle<CR>',    mode = 'v'}
+  M.key {'Y',                'ygv:CommentToggle<CR>', mode = 'v'}
   -- nvim tree
-  M.key:invoke {'<C-e>',            '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
+  M.key {'<C-e>',            '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
   -- harpoon
-  -- M.key:invoke {'<C-p>',            require 'harpoon.ui'.toggle_quick_menu}
-  -- M.key:invoke {'<C-k>',            require 'harpoon.mark'.add_file}
+  -- M.key {'<C-p>',            require 'harpoon.ui'.toggle_quick_menu}
+  -- M.key {'<C-k>',            require 'harpoon.mark'.add_file}
   -- for n = 1, 9 do
-  --   M.key:invoke {'<A-'..n..'>',      '<CMD>lua require("harpoon.ui").nav_file('..n..')<CR>'}
+  --   M.key {'<A-'..n..'>',      '<CMD>lua require("harpoon.ui").nav_file('..n..')<CR>'}
   -- end
   -- reach
-  M.key:invoke {'<C-p>',            function()
+  M.key {'<C-p>',            function()
     require 'reach'.buffers {
       show_current = true,
       grayout_current = false,
@@ -143,34 +143,34 @@ M.setup_plugins = U.Service():new(function()
     }
   end}
   for n = 1, 9 do
-    M.key:invoke {'<A-'..n..'>',      function() require 'reach'.switch_to_buffer(n) end}
+    M.key {'<A-'..n..'>',      function() require 'reach'.switch_to_buffer(n) end}
   end
 
   -- gitsigns
-  M.key:invoke {'gr',               '<CMD>Gitsigns reset_hunk<CR>'}
-  M.key:invoke {'gr',               '<CMD>Gitsigns reset_hunk<CR>', mode = 'v'}
-  M.key:invoke {'gp',               '<CMD>Gitsigns preview_hunk<CR>'}
-  M.key:invoke {'gb',               '<CMD>Gitsigns blame_line<CR>'}
-  M.key:invoke {'gd',               '<CMD>Gitsigns diffthis<CR>'}
-  M.key:invoke {'gs',               '<CMD>Gitsigns stage_hunk<CR>'}
-  M.key:invoke {'gs',               '<CMD>Gitsigns stage_hunk<CR>', mode = 'v'}
-  M.key:invoke {'gu',               '<CMD>Gitsigns undo_stage_hunk<CR>'}
-  M.key:invoke {'g<Left>',          '<CMD>Gitsigns prev_hunk<CR>zz'}
-  M.key:invoke {'g<Right>',         '<CMD>Gitsigns next_hunk<CR>zz'}
+  M.key {'gr',               '<CMD>Gitsigns reset_hunk<CR>'}
+  M.key {'gr',               '<CMD>Gitsigns reset_hunk<CR>', mode = 'v'}
+  M.key {'gp',               '<CMD>Gitsigns preview_hunk<CR>'}
+  M.key {'gb',               '<CMD>Gitsigns blame_line<CR>'}
+  M.key {'gd',               '<CMD>Gitsigns diffthis<CR>'}
+  M.key {'gs',               '<CMD>Gitsigns stage_hunk<CR>'}
+  M.key {'gs',               '<CMD>Gitsigns stage_hunk<CR>', mode = 'v'}
+  M.key {'gu',               '<CMD>Gitsigns undo_stage_hunk<CR>'}
+  M.key {'g<Left>',          '<CMD>Gitsigns prev_hunk<CR>zz'}
+  M.key {'g<Right>',         '<CMD>Gitsigns next_hunk<CR>zz'}
   -- move
-  M.key:invoke {'<A-Up>',           '<CMD>MoveLine(-1)<CR>', mode = 'n i'}
-  M.key:invoke {'<A-Down>',         '<CMD>MoveLine(1)<CR>', mode = 'n i'}
-  M.key:invoke {'<A-Up>',           ':MoveBlock(-1)<CR>', mode = 'v'}
-  M.key:invoke {'<A-Down>',         ':MoveBlock(1)<CR>', mode = 'v'}
+  M.key {'<A-Up>',           '<CMD>MoveLine(-1)<CR>', mode = 'n i'}
+  M.key {'<A-Down>',         '<CMD>MoveLine(1)<CR>', mode = 'n i'}
+  M.key {'<A-Up>',           ':MoveBlock(-1)<CR>', mode = 'v'}
+  M.key {'<A-Down>',         ':MoveBlock(1)<CR>', mode = 'v'}
   -- lsp installer
-  M.key:invoke {'<leader>l',        '<CMD>LspInstallInfo<CR>'}
+  M.key {'<leader>l',        '<CMD>LspInstallInfo<CR>'}
   -- lsp
-  M.key:invoke {'<leader>r',        '<CMD>LspRename<CR>'}
-  M.key:invoke {'<leader>R',        '<CMD>LspReferences<CR>'}
-  M.key:invoke {'<leader>C',        '<CMD>LspCodeAction<CR>'}
-  M.key:invoke {'<leader>v',        '<CMD>LspHover<CR>'}
-  M.key:invoke {'<leader>dl',       '<CMD>LspDiagsList<CR>'}
-  M.key:invoke {'<leader>dv',       '<CMD>LspDiagsHover<CR>'}
+  M.key {'<leader>r',        '<CMD>LspRename<CR>'}
+  M.key {'<leader>R',        '<CMD>LspReferences<CR>'}
+  M.key {'<leader>C',        '<CMD>LspCodeAction<CR>'}
+  M.key {'<leader>v',        '<CMD>LspHover<CR>'}
+  M.key {'<leader>dl',       '<CMD>LspDiagsList<CR>'}
+  M.key {'<leader>dv',       '<CMD>LspDiagsHover<CR>'}
 end)
 
 return M

@@ -212,54 +212,68 @@ end
 -- Class Based Utils
 --- action class
 function M.Action()
-  return {
-    commands = {},
-    new = function(self) return self end,
-    subscribe = function(self, cmd) table.insert(self.commands, cmd) end,
-    invoke = function(self)
-      for _, cmd in pairs(self.commands) do
-        if type(cmd) == 'string' then vim.cmd(cmd)
-        elseif type(cmd) == 'function' then cmd() end
+  return setmetatable(
+    {
+      commands = {},
+      new = function(self) return self end,
+      subscribe = function(self, cmd) table.insert(self.commands, cmd) end,
+      invoke = function(self)
+        for _, cmd in pairs(self.commands) do
+          if type(cmd) == 'string' then vim.cmd(cmd)
+          elseif type(cmd) == 'function' then cmd() end
+        end
       end
-    end
-  }
+    },
+    {
+      __call = function(self, ...)
+        self:invoke(...)
+      end
+    }
+  )
 end
 --- service class
 function M.Service()
-  return {
-    new = function(self, cb)
-      self.callback = cb
-      return self
-    end,
-    -- provide = function(self, feature_type, feature_name) table.insert(venom.features:add(feature_type, feature_name)) return self end,
-    -- TODO: abstract feature name stitching into venom.features.str_to_tbl and venom.features.tbl_to_str
-    require = function(self, feature_type, feature_name) table.insert(self.required_features, feature_type..':'..feature_name) return self end,
-    provide = function(self, feature_type, feature_name) table.insert(self.provided_features, feature_type..':'..feature_name) return self end,
-    invoke = function(self, ...)
-      local can_be_invoked = true
-      local missing_features = {}
-      -- check for all required features
-      for _, required_feature in pairs(self.required_features) do
-        if (not venom.features:has_str(required_feature)) then
-          can_be_invoked = false
-          table.insert(missing_features, required_feature)
+  return setmetatable(
+    {
+      new = function(self, cb)
+        self.callback = cb
+        return self
+      end,
+      -- provide = function(self, feature_type, feature_name) table.insert(venom.features:add(feature_type, feature_name)) return self end,
+      -- TODO: abstract feature name stitching into venom.features.str_to_tbl and venom.features.tbl_to_str
+      require = function(self, feature_type, feature_name) table.insert(self.required_features, feature_type..':'..feature_name) return self end,
+      provide = function(self, feature_type, feature_name) table.insert(self.provided_features, feature_type..':'..feature_name) return self end,
+      invoke = function(self, ...)
+        local can_be_invoked = true
+        local missing_features = {}
+        -- check for all required features
+        for _, required_feature in pairs(self.required_features) do
+          if (not venom.features:has_str(required_feature)) then
+            can_be_invoked = false
+            table.insert(missing_features, required_feature)
+          end
         end
-      end
-      if (can_be_invoked) then
-        local return_value = self.callback(...)
-        -- add all provided features
-        for _, provided_feature in pairs(self.provided_features) do
-          venom.features:add_str(provided_feature)
+        if (can_be_invoked) then
+          local return_value = self.callback(...)
+          -- add all provided features
+          for _, provided_feature in pairs(self.provided_features) do
+            venom.features:add_str(provided_feature)
+          end
+          return return_value
+        else
+          log.warn("missing features: "..table.concat(missing_features, ' / '))
         end
-        return return_value
-      else
-        log.warn("missing features: "..table.concat(missing_features, ' / '))
+      end,
+      required_features = {},
+      provided_features = {},
+      callback = function(self, ...) log.warn("empty service callback called") end,
+    },
+    {
+      __call = function(self, ...)
+        self:invoke(...)
       end
-    end,
-    required_features = {},
-    provided_features = {},
-    callback = function(self, ...) log.warn("empty service callback called") end,
-  }
+    }
+  )
 end
 --- lsp server config class
 function M.LspServerConfig()

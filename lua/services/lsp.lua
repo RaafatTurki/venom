@@ -67,13 +67,13 @@ M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'nvim-lsp-inst
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
   end
 
-  vim.api.nvim_create_user_command('LspRename', function() M.rename:invoke() end, {})
-  vim.api.nvim_create_user_command('LspReferences', function() M.references:invoke() end, {})
-  vim.api.nvim_create_user_command('LspCodeAction', function() M.code_action:invoke() end, {})
-  vim.api.nvim_create_user_command('LspHover', function() M.hover:invoke() end, {})
-  vim.api.nvim_create_user_command('LspDiagsList', function() M.diags_list:invoke() end, {})
-  vim.api.nvim_create_user_command('LspDiagsHover', function() M.diags_hover:invoke() end, {})
-  -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle:invoke() end, {})
+  vim.api.nvim_create_user_command('LspRename', function() M.rename() end, {})
+  vim.api.nvim_create_user_command('LspReferences', function() M.references() end, {})
+  vim.api.nvim_create_user_command('LspCodeAction', function() M.code_action() end, {})
+  vim.api.nvim_create_user_command('LspHover', function() M.hover() end, {})
+  vim.api.nvim_create_user_command('LspDiagsList', function() M.diags_list() end, {})
+  vim.api.nvim_create_user_command('LspDiagsHover', function() M.diags_hover() end, {})
+  -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {})
 end)
 
 M.progress_spinner_curr_stage_index = 1

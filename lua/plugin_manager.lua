@@ -90,7 +90,7 @@ end)
 
 --- syncs plugins (updates them regardless of the method)
 M.sync = U.Service():new(function()
-  log.info("packer syncing...")
+  log("packer syncing...")
   local time = os.date("!%Y-%m-%dT%TZ")
   vim.cmd([[PackerSnapshot snapshot_]]..time)
   vim.cmd [[PackerSync]]

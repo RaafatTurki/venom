@@ -26,8 +26,8 @@ local printh = function(msg, hlgroup)
   vim.cmd(cmd)
 end
 
-local get_caller_src = function()
-  local dbg_info = debug.getinfo(4, "Sl")
+local get_caller_src = function(stack_lvl_off)
+  local dbg_info = debug.getinfo(4 + stack_lvl_off, "Sl")
   local dbg_src_arr = vim.split(dbg_info.short_src, '/')
   return dbg_src_arr[#dbg_src_arr]..':'.. dbg_info.currentline
 end
@@ -39,17 +39,8 @@ local sanitize_value = function(val)
   return val
 end
 
--- enums
---- log levels
--- LL = {
---   DEBUG = vim.log.levels.DEBUG,
---   ERROR = vim.log.levels.ERROR,
---   INFO = vim.log.levels.INFO,
---   TRACE = vim.log.levels.TRACE,
---   WARN = vim.log.levels.WARN,
--- }
-
-M.process = function(val, hl)
+M.process = function(val, opts)
+  -- repeat log counting
   if M.last_log_msg == val then
     M.last_log_msg_count = M.last_log_msg_count + 1
   else
@@ -57,23 +48,27 @@ M.process = function(val, hl)
   end
   M.last_log_msg = val
 
-  val = sanitize_value(val)
-  local src = get_caller_src()
+  local msg = sanitize_value(val)
+
+  local src = get_caller_src(opts.stack_lvl_off or 0)
+
   local count = M.last_log_msg_count > 0 and ' ×'..M.last_log_msg_count or ''
-  printh(src..' '..val..count, hl)
+
+  printh(src..' '..msg..count, opts.hl)
 end
 
 M.log = {
-  dbg = function(val) M.process(val, "NotifyDEBUGBorder") end,
-  err = function(val) M.process(val, "NotifyERRORBorder") end,
-  info = function(val) M.process(val, "NotifyINFOBorder") end,
-  trace = function(val) M.process(val, "NotifyTRACEBorder") end,
-  warn = function(val) M.process(val, "NotifyWARNBorder") end,
+  dbg = function(val) M.process(val, { hl = "NotifyDEBUGBorder"}) end,
+  err = function(val) M.process(val, { hl = "NotifyERRORBorder" }) end,
+  info = function(val) M.process(val, { hl = "NotifyINFOBorder" }) end,
+  trace = function(val) M.process(val, { hl = "NotifyTRACEBorder" }) end,
+  warn = function(val) M.process(val, { hl = "NotifyWARNBorder" }) end,
 }
 
--- setmetatable(M.log, {
---   __call = function(val)
---   end
--- })
+setmetatable(M.log, {
+  __call = function(self, val)
+    M.process(val, { hl = "NotifyINFOBorder"})
+  end
+})
 
 return M

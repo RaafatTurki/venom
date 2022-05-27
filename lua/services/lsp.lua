@@ -76,6 +76,49 @@ M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'nvim-lsp-inst
   -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle:invoke() end, {})
 end)
 
+M.progress_spinner_curr_stage_index = 1
+-- M.progress_spinner_curr_stage_index = 1
+M.progress_spinner_stages = {
+  -- "⠋",
+  -- "⠙",
+  -- "⠹",
+  -- "⠸",
+  -- "⠼",
+  -- "⠴",
+  -- "⠦",
+  -- "⠧",
+  -- "⠇",
+  -- "⠏",
+  "∙∙∙",
+  "●∙∙",
+  "●∙∙",
+  "∙●∙",
+  "∙●∙",
+  "∙●∙",
+  "∙∙●",
+  "∙∙●",
+  "∙∙∙",
+}
+M.progress_spinner = U.Service():require(FT.LSP, 'setup'):new(function()
+  if #vim.lsp.buf_get_clients() == 0 then return '' end
+  local prog_msg = vim.lsp.util.get_progress_messages()[1]
+  if prog_msg then
+    -- set current stage
+    local curr_stage = M.progress_spinner_stages[M.progress_spinner_curr_stage_index]
+
+    -- increment
+    M.progress_spinner_curr_stage_index = M.progress_spinner_curr_stage_index + 1
+
+    -- loop back if out of range
+    if (M.progress_spinner_curr_stage_index > #M.progress_spinner_stages) then
+      M.progress_spinner_curr_stage_index = 1
+    end
+
+    return curr_stage
+  else
+    return ''
+  end
+end)
 
 M.rename = U.Service():new(function()
   local curr_name = vim.fn.expand("<cword>")

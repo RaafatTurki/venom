@@ -344,17 +344,6 @@ endfunction
 ]]
 end)
 
---- format on save
-M.format_on_save_all = U.Service():new(function()
-  local augroup_fmt_on_save = vim.api.nvim_create_augroup('format_on_save', {})
-  vim.api.nvim_create_autocmd("BufWritePre", {
-    group = augroup_fmt_on_save,
-    callback = function()
-      vim.lsp.buf.formatting()
-    end,
-  })
-end)
-
 --- (Linux) makes neovim support hex editing
 -- function M.binary_editor()
 --   -- this is achievable through a piece of software that resides within vim called xxd, one must either:

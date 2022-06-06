@@ -39,8 +39,6 @@ M.shared_server_on_attach_hook = function (client, bufnr)
 
   -- aerial
   -- require 'aerial'.on_attach(client, bufnr)
-
-  print("on attach SHARED")
 end
 
 M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_configs)

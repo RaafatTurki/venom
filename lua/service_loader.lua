@@ -31,7 +31,6 @@ venom.deligates.pm_post_complete:subscribe(function()
   Misc.camel()
   Misc.buffer_edits()
   Misc.tabline_minimal()
-  -- Misc.format_on_save_all()
 
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},

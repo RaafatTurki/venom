@@ -71,7 +71,7 @@ M.setup = U.Service():require(FT.PLUGIN, "feline.nvim"):new(function()
         c({ provider = 'diagnostic_warnings', hl = 'DiagnosticSignWarn',  icon = lsp_diag_icons.Warn }),
         c({ provider = 'diagnostic_info',     hl = 'DiagnosticSignInfo',  icon = lsp_diag_icons.Info }),
         c({ provider = 'diagnostic_hints',    hl = 'DiagnosticSignHint',  icon = lsp_diag_icons.Hint }),
-        c({ provider = 'lsp_client_names',    icon = function() return Lsp.progress_spinner:invoke()..' ' end }),
+        c({ provider = 'lsp_client_names',    icon = U.swrap(Lsp.progress_spinner) }),
 
         c({ provider = '',                   hl = 'WarningMsg',          enabled = function () return (vim.v.this_session ~= "") end }),
         c({ provider = 'file_type' }),

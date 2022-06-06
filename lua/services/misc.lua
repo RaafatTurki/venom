@@ -246,7 +246,7 @@ M.camel = U.Service():new(function()
   end
 end)
 
---- trailing space
+--- buffer edits (remove trailing spaces, EOLs)
 M.buffer_edits = U.Service():new(function()
   function RemoveTrailingWS()
     -- Save cursor position to later restore
@@ -267,6 +267,92 @@ M.buffer_edits = U.Service():new(function()
     vim.api.nvim_win_set_cursor(0, curpos)
   end
   vim.api.nvim_create_user_command('FixEOLs', FixEOLs, {})
+end)
+
+--- minimal tabline
+M.tabline_minimal = U.Service():new(function()
+vim.cmd [[
+set tabline=%!MyTabLine()
+
+function! MyTabLine()
+  let s = ''
+
+  " loop through each tab page
+  for i in range(tabpagenr('$'))
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#' " WildMenu
+    else
+      let s .= '%#Title#'
+    endif
+    " set the tab page number (for mouse clicks)
+    let s .= '%' . (i + 1) . 'T '
+    " set page number string
+    let s .= i + 1 . ''
+    " get buffer names and statuses
+    let n = ''  " temp str for buf names
+    let m = 0   " &modified counter
+    let buflist = tabpagebuflist(i + 1)
+    " loop through each buffer in a tab
+    for b in buflist
+      if getbufvar(b, "&buftype") == 'help'
+        " let n .= '[H]' . fnamemodify(bufname(b), ':t:s/.txt$//')
+      elseif getbufvar(b, "&buftype") == 'quickfix'
+        " let n .= '[Q]'
+      elseif getbufvar(b, "&modifiable")
+        let n .= fnamemodify(bufname(b), ':t') . ', ' " pathshorten(bufname(b))
+      endif
+      if getbufvar(b, "&modified")
+        let m += 1
+      endif
+    endfor
+    " let n .= fnamemodify(bufname(buflist[tabpagewinnr(i + 1) - 1]), ':t')
+    let n = substitute(n, ', $', '', '')
+    " add modified label
+    if m > 0
+      let s .= '+'
+      " let s .= '[' . m . '+]'
+    endif
+    if i + 1 == tabpagenr()
+      let s .= ' %#TabLineSel#'
+    else
+      let s .= ' %#TabLine#'
+    endif
+    " add buffer names
+    if n == ''
+      let s.= '[new]'
+    else
+      let s .= n
+    endif
+    " switch to no underlining and add final space
+    let s .= ' '
+  endfor
+
+  " after last tab fill
+  let s .= '%#TabLineFill#%T'
+
+  " right-aligned close button
+  " if tabpagenr('$') > 1
+  "   let s .= '%=%#TabLineFill#%999Xclose'
+  " endif
+  return s
+endfunction
+]]
+end)
+
+--- format on save
+M.format_on_save_all = U.Service():new(function()
+  local augroup_fmt_on_save = vim.api.nvim_create_augroup('format_on_save', {})
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    group = augroup_fmt_on_save,
+    callback = function()
+      vim.lsp.buf.formatting()
+    end,
+  })
 end)
 
 --- (Linux) makes neovim support hex editing

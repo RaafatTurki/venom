@@ -131,7 +131,7 @@ function M.get_indent_settings_str()
 end
 
 
--- Object Based Utils
+-- Object Based Utils (stateless)
 --- returns a date object
 function M.date()
   return {
@@ -207,11 +207,14 @@ function M.fn()
     end
   }
 end
+--- service invoke wrapper with self
+function M.swrap(service)
+  return function() return service() end
+end
 
-
--- Class Based Utils
+-- Class Based Utils (statefull)
 --- action class
-function M.Action()
+function M.Deligate()
   return setmetatable(
     {
       commands = {},
@@ -226,7 +229,7 @@ function M.Action()
     },
     {
       __call = function(self, ...)
-        self:invoke(...)
+        return self:invoke(...)
       end
     }
   )
@@ -270,7 +273,7 @@ function M.Service()
     },
     {
       __call = function(self, ...)
-        self:invoke(...)
+        return self:invoke(...)
       end
     }
   )

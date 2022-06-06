@@ -84,7 +84,7 @@ M.register_plugins = U.Service():new(function()
     -- TODO: convert to an auto group
     vim.cmd [[autocmd User PackerComplete lua venom.actions.pm_post_complete()]]
   else
-    venom.actions.pm_post_complete()
+    venom.deligates.pm_post_complete()
   end
 end)
 

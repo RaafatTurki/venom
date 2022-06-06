@@ -73,9 +73,10 @@ M.setup = U.Service():new(function()
   M.key {'<F5>',             '<CMD>e<CR>'}
   -- clear action
   -- venom.actions.clear:subscribe [[let @/ = ""]]
-  venom.actions.clear:subscribe [[noh]]
-  venom.actions.clear:subscribe(U.clear_prompt)
-  M.key {'<c-l>',           function() venom.actions.clear() end}
+  venom.deligates.clear:subscribe [[noh]]
+  venom.deligates.clear:subscribe(U.clear_prompt)
+  M.key {'<C-l>',           function() venom.deligates.clear() end, mode = 'n'}
+  M.key {'<C-l>',           '<ESC>', mode = 'i'}
   -- terminal smart escape
   M.key {'<Esc>',            "v:lua.TermSmartEsc(b:terminal_job_pid, '"..'<Esc>'.."')", mode = 't', opts = { noremap = true, expr = true } }
   -- undo breakpoints
@@ -137,6 +138,13 @@ M.setup_plugins = U.Service():new(function()
       show_current = true,
       grayout_current = false,
       modified_icon = '•',
+      -- sort = function(bufnr_a, bufnr_b)
+      --   if bufnr_a > bufnr_b then
+      --     return true
+      --   else
+      --     return false
+      --   end
+      -- end,
       previous = {
         enable = false,
       },
@@ -145,6 +153,9 @@ M.setup_plugins = U.Service():new(function()
   for n = 1, 9 do
     M.key {'<A-'..n..'>',      function() require 'reach'.switch_to_buffer(n) end}
   end
+  -- fold-cycle
+  -- M.key {'za',               '<CMD>lua vim.opt.foldmethod = vim.opt.foldmethod<CR>za'}
+  M.key {'za',               function() require 'fold-cycle'.toggle_all() end}
 
   -- gitsigns
   M.key {'gr',               '<CMD>Gitsigns reset_hunk<CR>'}
@@ -167,6 +178,7 @@ M.setup_plugins = U.Service():new(function()
   -- lsp
   M.key {'<leader>r',        '<CMD>LspRename<CR>'}
   M.key {'<leader>R',        '<CMD>LspReferences<CR>'}
+  M.key {'<leader>d',        '<CMD>LspDefinition<CR>'}
   M.key {'<leader>C',        '<CMD>LspCodeAction<CR>'}
   M.key {'<leader>v',        '<CMD>LspHover<CR>'}
   M.key {'<leader>dl',       '<CMD>LspDiagsList<CR>'}

@@ -1,11 +1,16 @@
 --- defines various settings, options, constants, enums and global variables.
 -- @module options
 
+-- use filetype.lua instead of filetype.vim
+-- vim.g.did_load_filetypes = 0
+-- vim.g.do_filetype_lua   = 1
+
 -- vim builtin options
 vim.o.number            = true
 vim.o.wrap              = false
 vim.o.cursorline        = true
 vim.o.swapfile          = false
+-- vim.o.undofile          = true
 vim.o.showmode          = false
 vim.o.hidden            = true                          -- (required by toggleterm)
 
@@ -67,8 +72,10 @@ vim.opt.fillchars = {
   eob       = ' ',
   diff      = '╱',
   foldclose =	'>',
-  foldopen  = '┬',
-  foldsep   = '│',
+  foldopen  = ' ',
+  foldsep   = ' ',
+  -- foldopen  = '┬',
+  -- foldsep   = '│',
 }
 vim.opt.spelllang       = { 'en_us' }
 vim.opt.whichwrap:append  '<,>,[,],h,l'                 -- Move to next line with theses keys
@@ -119,9 +126,9 @@ vim.diagnostic.config {
 venom = {
   -- actions are tables that can hold lua functions and vim commands for later execution (when invoked)
   -- TODO: make it the responsibility of the related service to instantiate an action here
-  actions = {
-    pm_post_complete = U.Action():new(),
-    clear = U.Action():new(),
+  deligates = {
+    pm_post_complete = U.Deligate():new(),
+    clear = U.Deligate():new(),
   },
   -- features is a table that can hold strings representing the availability of said feature for later querying.
   -- each string must be in the form of <TYPE>:<name> where TYPE is one of the FT enum values (for example "PLUGIN:nvim-cmp" means the plugin cmp is available)

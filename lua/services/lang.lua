@@ -39,7 +39,10 @@ M.configure_servers = U.Service():new(function()
         },
         telemetry = { enable = false },
       }
-    }
+    },
+    on_attach_hook = function(client, bufnr)
+      Lsp.setup_buf_fmt_on_save(client, bufnr)
+    end
   })
 
   M.configure_server("texlab", {},  {
@@ -282,6 +285,7 @@ M.setup = U.Service()
     dosini = '#%s',
     bc = '#%s',
     glsl = '//%s',
+    cs = '//%s',
   }
   require 'nvim_comment'.setup {
     create_mappings = false,

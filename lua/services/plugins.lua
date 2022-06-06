@@ -188,13 +188,13 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       }),
     },
     sources = {
+      { name = 'nvim_lsp' },
+      { name = 'luasnip' },
+      { name = 'nvim_lua' },
       { name = 'buffer' },
       { name = 'path' },
       { name = 'spell' },
-      { name = 'luasnip' },
-      { name = 'nvim_lsp' },
-      { name = 'nvim_lua' },
-      { name = 'digraphs' },
+      -- { name = 'digraphs' },
       -- { name = 'nvim_lsp_signature_help' },
     },
     formatting = {
@@ -234,40 +234,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
 end)
 
 M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
-  U.gvar('nvim_tree_side'):set('left')
-  U.gvar('nvim_tree_width'):set(40)
-  U.gvar('nvim_tree_git_hl'):set(1)
-  U.gvar('nvim_tree_highlight_opened_files'):set(0)
-  U.gvar('nvim_tree_root_folder_modifier'):set(':t')
-  U.gvar('nvim_tree_add_trailing'):set(0)
-  U.gvar('nvim_tree_group_empty'):set(1)
-  U.gvar('nvim_tree_icon_padding'):set(' ')
   U.gvar('nvim_tree_allow_resize'):set(1)
-  U.gvar('nvim_tree_auto_ignore_ft'):set({ 'startify', 'dashboard' })
-  U.gvar('nvim_tree_show_icons'):set({ git = 1, folders = 1, files = 1, folder_arrows = 0 })
-  U.gvar('nvim_tree_icons'):set({
-    default = '',
-    symlink = '',
-    git = {
-      unstaged = "+",
-      staged = "*",
-      unmerged = "",
-      renamed = "r ",
-      untracked = "-",
-      deleted = "d",
-      ignored = "i",
-    },
-    folder = {
-      arrow_open = "",
-      arrow_closed = "",
-      default = "",
-      open = "",
-      empty = "",
-      empty_open = "",
-      symlink = "",
-      symlink_open = "",
-    },
-  })
 
   local nvimtree_keybindings = {
     { key = "<C-Up>",     action = 'first_sibling' },
@@ -286,29 +253,11 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
   local NVIMTREE_LSP_DIAG_ICONS = venom.icons.diagnostic_states.cozette
 
   require 'nvim-tree'.setup {
-    open_on_tab         = true,
     hijack_cursor       = true,
+    open_on_tab         = true,
     update_cwd          = true,
-    hijack_unnamed_buffer_when_opening = false,
-    diagnostics = {
-      enable = true,
-      icons = {
-        hint    = NVIMTREE_LSP_DIAG_ICONS.Hint,
-        info    = NVIMTREE_LSP_DIAG_ICONS.Info,
-        warning = NVIMTREE_LSP_DIAG_ICONS.Warn,
-        error   = NVIMTREE_LSP_DIAG_ICONS.Error,
-      },
-    },
-    update_focused_file = {
-      enable      = true,
-      update_cwd  = false,
-      ignore_list = {}
-    },
     view = {
-      -- width = 40,
-      -- height = 10,
-      -- side = 'left',
-      -- auto_resize = true,
+      adaptive_size = true,
       hide_root_folder = true,
       mappings = {
         custom_only = false,
@@ -320,13 +269,57 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
         enable = true,
         icons = {
           corner = "└ ",
+          item = "├─",
           edge = "│ ",
           none = "  ",
         },
       },
       icons = {
-        git_placement = 'after'
+        git_placement = 'after',
+        padding = ' ',
+        glyphs = {
+          default = '',
+          symlink = '',
+          folder = {
+            arrow_open = "",
+            arrow_closed = "",
+            default = "",
+            open = "",
+            empty = "",
+            empty_open = "",
+            symlink = "",
+            symlink_open = "",
+          },
+          git = {
+            unstaged = "+",
+            staged = "*",
+            unmerged = "",
+            renamed = "r ",
+            untracked = "-",
+            deleted = "d",
+            ignored = "i",
+          },
+        }
       }
+    },
+    update_focused_file = {
+      enable      = true,
+      update_cwd  = false,
+      ignore_list = {}
+    },
+    ignore_ft_on_setup = { 'startify', 'dashboard' },
+    diagnostics = {
+      enable = true,
+      icons = {
+        hint    = NVIMTREE_LSP_DIAG_ICONS.Hint,
+        info    = NVIMTREE_LSP_DIAG_ICONS.Info,
+        warning = NVIMTREE_LSP_DIAG_ICONS.Warn,
+        error   = NVIMTREE_LSP_DIAG_ICONS.Error,
+      },
+    },
+    filesystem_watchers = {
+      enable = true,
+      interval = 100,
     },
     filters = {
       dotfiles = false,
@@ -334,10 +327,6 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
     },
     git = {
       ignore = true
-    },
-    trash = {
-      cmd = "trash",
-      require_confirm = true,
     },
     actions = {
       change_dir = {
@@ -354,7 +343,11 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
           }
         }
       }
-    }
+    },
+    trash = {
+      cmd = "trash",
+      require_confirm = true,
+    },
   }
 end)
 
@@ -500,6 +493,14 @@ M.paperplanes = U.Service():require(FT.PLUGIN, 'paperplanes.nvim'):new(function(
     -- provider = "paste.rs",
     provider_options = {},
     cmd = "curl"
+  }
+end)
+
+M.fold_cycle = U.Service():require(FT.PLUGIN, 'fold-cycle.nvim'):new(function()
+  require 'fold-cycle'.setup {
+    open_if_max_closed = true,
+    close_if_max_opened = true,
+    softwrap_movement_fix = false,
   }
 end)
 

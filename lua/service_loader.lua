@@ -14,7 +14,7 @@ Statusbar = require 'services.statusbar'
 PluginManager.attempt_bootstrap()
 PluginManager.setup()
 
-venom.actions.pm_post_complete:subscribe(function()
+venom.deligates.pm_post_complete:subscribe(function()
   Sessions.setup()
   Bind.setup()
 
@@ -28,8 +28,10 @@ venom.actions.pm_post_complete:subscribe(function()
   Misc.highlight_yank()
   Misc.automatic_treesitter()
   -- Misc.diag_on_hold()
-  Misc.buffer_edits()
   Misc.camel()
+  Misc.buffer_edits()
+  Misc.tabline_minimal()
+  -- Misc.format_on_save_all()
 
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},
@@ -59,6 +61,7 @@ venom.actions.pm_post_complete:subscribe(function()
   Plugins.hover()
   Plugins.paperplanes()
   Plugins.trld()
+  Plugins.fold_cycle()
   -- Plugins.corn()
   -- Plugins.cinnamon()
   -- Plugins.remember()
@@ -73,35 +76,6 @@ venom.actions.pm_post_complete:subscribe(function()
   Statusbar.setup()
 
   Bind.setup_plugins()
-
-
-  -- local test_ns = vim.api.nvim_create_namespace('test')
-  -- vim.cmd('hi! def Dim guifg=grey')
-  --
-  -- vim.lsp.handlers['textDocument/publishDiagnostics'] = function(_, result, ctx, config)
-  --   local bufnr = vim.uri_to_bufnr(result.uri)
-  --   if not bufnr then
-  --     return
-  --   end
-  --   vim.api.nvim_buf_clear_namespace(bufnr, test_ns, 0, -1)
-  --   local real_diags = {}
-  --   for _, diag in pairs(result.diagnostics) do
-  --     if diag.severity == vim.lsp.protocol.DiagnosticSeverity.Hint
-  --       and vim.tbl_contains(diag.tags, vim.lsp.protocol.DiagnosticTag.Unnecessary) then
-  --       pcall(vim.api.nvim_buf_set_extmark, bufnr, test_ns,
-  --         diag.range.start.line, diag.range.start.character, {
-  --           end_row = diag.range['end'].line,
-  --           end_col = diag.range['end'].character,
-  --           hl_group = 'Dim',
-  --         })
-  --     else
-  --       table.insert(real_diags, diag)
-  --     end
-  --   end
-  --   result.diagnostics = real_diags
-  --   vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
-  -- end
-
 end)
 
 local p = {
@@ -153,6 +127,8 @@ PluginManager.plugins = {
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
   {'toppair/reach.nvim'},
   {'akinsho/nvim-toggleterm.lua'},
+  {'ibhagwan/fzf-lua',                                requires = p.devicons },
+  {'jghauser/fold-cycle.nvim'},
   -- {'smjonas/snippet-converter.nvim'},
   -- {'j-hui/fidget.nvim'},
   -- {'vladdoster/remember.nvim'},
@@ -207,7 +183,6 @@ PluginManager.plugins = {
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   {'mfussenegger/nvim-jdtls'},
-  {'ibhagwan/fzf-lua',                                requires = p.devicons },
 
   -- {'Mofiqul/trld.nvim'},
   -- {'goolord/alpha-nvim',                              requires = p.devicons },
@@ -221,6 +196,7 @@ PluginManager.plugins = {
   -- {'dstein64/vim-startuptime'},
   -- {'vuki656/package-info.nvim',                       requires = p.nui },
   -- {'gelguy/wilder.nvim'},
+  -- {'p00f/clangd_extensions.nvim'},
 }
 
 PluginManager.register_plugins()

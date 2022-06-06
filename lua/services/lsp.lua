@@ -5,33 +5,6 @@ local M = {}
 
 -- TODO: break into actions and features
 M.shared_server_config = U.LspServerConfig():new("SHARED", {
-
-  on_attach = function (client, bufnr)
-    -- set gq command to use the lsp formatter for this buffer
-    vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
-
-    -- document highlight on cursor hold if available
-    if client.resolved_capabilities.document_highlight then
-      -- U.create_augroup([[
-      --     au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-      --     au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      --   ]], 'hover_highlight')
-
-      vim.cmd [[
-          augroup hover_highlight
-          autocmd!
-
-          au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-          au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-
-          augroup hover_highlight
-          ]]
-    end
-
-    -- aerial
-    -- require 'aerial'.on_attach(client, bufnr)
-  end,
-
   -- cmp autocompletion
   capabilities = require 'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()),
 
@@ -42,6 +15,34 @@ M.shared_server_config = U.LspServerConfig():new("SHARED", {
   }
 })
 
+M.shared_server_on_attach_hook = function (client, bufnr)
+  -- set gq command to use the lsp formatter for this buffer
+  vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
+
+  -- document highlight on cursor hold if available
+  if client.resolved_capabilities.document_highlight then
+    -- U.create_augroup([[
+    --     au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+    --     au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+    --   ]], 'hover_highlight')
+
+    vim.cmd [[
+          augroup hover_highlight
+          autocmd!
+
+          au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+          au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+
+          augroup hover_highlight
+          ]]
+  end
+
+  -- aerial
+  -- require 'aerial'.on_attach(client, bufnr)
+
+  print("on attach SHARED")
+end
+
 M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_configs)
   local lspconf = require 'lspconfig'
 
@@ -50,6 +51,14 @@ M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_
     -- applying shared configs opts
     if not U.has_value(server_config.tags, LST.NO_SHARED_CONFIG_SETUP) then
       server_config.opts = vim.tbl_deep_extend('force', server_config.opts, M.shared_server_config.opts)
+    end
+
+    -- setting up on_attach
+    server_config.opts.on_attach = function(client, bufnr)
+      M.shared_server_on_attach_hook(client, bufnr)
+      if server_config.opts.on_attach_hook then
+        server_config.opts.on_attach_hook(client, bufnr)
+      end
     end
 
     -- setting up server
@@ -69,6 +78,7 @@ M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'nvim-lsp-inst
 
   vim.api.nvim_create_user_command('LspRename', function() M.rename() end, {})
   vim.api.nvim_create_user_command('LspReferences', function() M.references() end, {})
+  vim.api.nvim_create_user_command('LspDefinition', function() M.definition() end, {})
   vim.api.nvim_create_user_command('LspCodeAction', function() M.code_action() end, {})
   vim.api.nvim_create_user_command('LspHover', function() M.hover() end, {})
   vim.api.nvim_create_user_command('LspDiagsList', function() M.diags_list() end, {})
@@ -161,6 +171,10 @@ M.references = U.Service():new(function()
   vim.lsp.buf.references()
 end)
 
+M.definition = U.Service():new(function()
+  vim.lsp.buf.definition()
+end)
+
 M.code_action = U.Service():new(function()
   vim.lsp.buf.code_action()
 end)
@@ -183,5 +197,19 @@ end)
 --   venom.vals.is_disagnostics_visible = not venom.vals.is_disagnostics_visible
 --   if venom.vals.is_disagnostics_visible then vim.diagnostic.show() else vim.diagnostic.hide() end
 -- end)
+
+M.setup_buf_fmt_on_save = U.Service():new(function(client, bufnr)
+  local augroup_fmt_on_save = vim.api.nvim_create_augroup('format_on_save', {})
+	if client.supports_method("textDocument/formatting") then
+		vim.api.nvim_clear_autocmds({ group = augroup_fmt_on_save, buffer = bufnr })
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			group = augroup_fmt_on_save,
+			buffer = bufnr,
+			callback = function()
+        vim.lsp.buf.formatting_sync()
+			end,
+		})
+	end
+end)
 
 return M

@@ -500,6 +500,34 @@ local theme = lush(function()
     ReachPriority           { Special };
     ReachCurrent            { Folded, gui = 'bold' };
 
+	  NavicIconsFile          { CmpItemKindFile };
+	  NavicIconsModule        { CmpItemKindModule };
+	  NavicIconsNamespace     { CmpItemKindModule };
+	  NavicIconsPackage       { CmpItemKindModule };
+	  NavicIconsClass         { CmpItemKindClass };
+	  NavicIconsMethod        { CmpItemKindMethod };
+	  NavicIconsProperty      { CmpItemKindProperty };
+	  NavicIconsField         { CmpItemKindField };
+	  NavicIconsConstructor   { CmpItemKindConstructor };
+	  NavicIconsEnum          { CmpItemKindEnum };
+	  NavicIconsInterface     { CmpItemKindInterface };
+	  NavicIconsFunction      { CmpItemKindFunction };
+	  NavicIconsVariable      { CmpItemKindVariable };
+	  NavicIconsConstant      { CmpItemKindConstant };
+	  NavicIconsString        { CmpItemKindValue };
+	  NavicIconsNumber        { CmpItemKindValue };
+	  NavicIconsBoolean       { CmpItemKindValue };
+	  NavicIconsArray         { CmpItemKindValue };
+	  NavicIconsObject        { CmpItemKindValue };
+	  NavicIconsKey           { CmpItemKindProperty };
+	  NavicIconsNull          { CmpItemKindConstant };
+	  NavicIconsEnumMember    { CmpItemKindEnumMember };
+	  NavicIconsStruct        { CmpItemKindStruct };
+	  NavicIconsEvent         { CmpItemKindEvent };
+	  NavicIconsOperator      { CmpItemKindOperator };
+	  NavicIconsTypeParameter { CmpItemKindTypeParameter };
+	  NavicText               { CmpItemKindText };
+
     -- CUTSOM GROUPS
     DebugFg                 { fg = debug[10] };
     DebugBg                 { bg = debug[1] };

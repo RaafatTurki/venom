@@ -143,11 +143,11 @@ M.configure_servers = U.Service():new(function()
   M.configure_server("gopls", {}, {
     settings = {
       gopls = {
+        usePlaceholders = true,
+        linksInHover = false,
         analyses = {
-          -- unusedparams = true,
-          fieldalignment = true,
           useany = true,
-        }
+        },
       }
     }
   })
@@ -246,7 +246,7 @@ end)
 M.setup = U.Service()
 :require(FT.PLUGIN, "nvim-lsp-installer")
 :require(FT.PLUGIN, "nvim-comment")
-:require(FT.PLUGIN, "nvim-gps")
+:require(FT.PLUGIN, "nvim-navic")
 :require(FT.PLUGIN, "spellsitter.nvim")
 :require(FT.PLUGIN, "nvim-jdtls")
 :new(function()
@@ -304,16 +304,13 @@ M.setup = U.Service()
     end
   }
 
-  -- gps
-  require 'nvim-gps'.setup {
+  -- navic
+  local navic_icons = {}
+  for _, icon in pairs(venom.icons.item_kinds.cozette) do table.insert(navic_icons, icon..' ') end
+  require 'nvim-navic'.setup {
+    highlight = true,
     separator = ' > ',
-    icons = {
-      ["class-name"] = venom.icons.item_kinds.cozette.Class..' ',
-      ["function-name"] = venom.icons.item_kinds.cozette.Function..' ',
-      ["method-name"] = venom.icons.item_kinds.cozette.Method..' ',
-      ["container-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
-      ["tag-name"] = venom.icons.item_kinds.cozette.TypeParameter..' ',
-    },
+    icons = navic_icons,
   }
 
   -- spellsitter
@@ -373,22 +370,6 @@ M.setup = U.Service()
 
     augroup java
   ]]
-  
-  -- require 'aerial'.setup {
-  --   backends = { "lsp" },
-  --   -- , "treesitter", "markdown"
-  --  
-  --   show_guides = true,
-  --   placement_editor_edge = true,
-  --
-  --   open_automatic = true,
-  --   -- filter_kind = false,
-  --
-  --
-  --   link_folds_to_tree = true,
-  --   link_tree_to_folds = true,
-  --   manage_folds = true,
-  -- }
 end)
 
 return M

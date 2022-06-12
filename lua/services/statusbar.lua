@@ -47,7 +47,7 @@ M.setup = U.Service():require(FT.PLUGIN, "feline.nvim"):new(function()
         c({ provider = 'git_diff_added',      hl = 'GitSignsAdd',         icon = '+' }),
         c({ provider = 'git_diff_removed',    hl = 'GitSignsDelete',      icon = '-' }),
         c({ provider = 'git_diff_changed',    hl = 'GitSignsChange',      icon = '~' }),
-        c({ provider = require 'nvim-gps'.get_location,     hl = 'Folded',    enabled = require 'nvim-gps'.is_available }),
+        c({ provider = require 'nvim-navic'.get_location,     hl = 'Folded',    enabled = require 'nvim-navic'.is_available }),
       },
       {
         -- c({

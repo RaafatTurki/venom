@@ -37,8 +37,8 @@ M.shared_server_on_attach_hook = function (client, bufnr)
           ]]
   end
 
-  -- aerial
-  -- require 'aerial'.on_attach(client, bufnr)
+  -- nvic
+  require 'nvim-navic'.attach(client, bufnr)
 end
 
 M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_configs)

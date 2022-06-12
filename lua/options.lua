@@ -37,7 +37,7 @@ vim.o.timeoutlen        = 200
 vim.o.mouse             = 'a'
 vim.o.clipboard         = 'unnamedplus'
 vim.o.inccommand        = 'split'
-vim.o.signcolumn        = 'yes'
+vim.o.signcolumn        = 'yes:2'
 vim.o.encoding          = 'utf-8'
 vim.o.fileencoding      = 'utf-8'
 vim.o.guicursor         = 'a:hor25,v:block,i:ver25'
@@ -152,7 +152,7 @@ venom = {
       none    = { Error = "  ",   Warn = "  ",  Hint = "  ",  Info = "  "  },
     },
     item_kinds = {
-        -- ⌂ θ ғ  Ω
+      -- ⌂ θ ғ  Ω
       cozette = {
         Text            = '',
         Method          = 'ƒ',
@@ -179,8 +179,17 @@ venom = {
         Event           = '',
         Operator        = '∓',
         TypeParameter   = '',
+
+        Namespace       = '',
+       	Package         = '',
+       	String          = '',
+       	Number          = '',
+       	Boolean         = '✓',
+       	Array           = '',
+        Object          = '',
+       	Key             = '',
+       	Null            = '⌀',
       },
-      -- 
       codeicons = {
         Text            = ' ',
         Method          = ' ',
@@ -207,6 +216,16 @@ venom = {
         Event           = ' ',
         Operator        = ' ',
         TypeParameter   = ' ',
+
+        Namespace       = '',
+       	Package         = '',
+        String          = '',
+       	Number          = '',
+       	Boolean         = '',
+       	Array           = '',
+        Object          = '',
+       	Key             = '',
+       	Null            = '',
       },
       nerdfont = {
         Text            = ' ',
@@ -234,6 +253,16 @@ venom = {
         Event           = ' ',
         Operator        = ' ',
         TypeParameter   = ' ',
+
+        Namespace     = " ",
+        Package       = " ",
+        String        = " ",
+        Number        = " ",
+        Boolean       = "◩ ",
+        Array         = " ",
+        Object        = " ",
+        Key           = " ",
+        Null          = "ﳠ ",
       },
     },
   },

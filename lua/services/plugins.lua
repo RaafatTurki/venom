@@ -106,12 +106,12 @@ M.gitsigns = U.Service():require(FT.PLUGIN, "gitsigns.nvim"):new(function()
       changedelete    = {text = '~'},
     },
     keymaps = {},
-    sign_priority = 14, -- because nvim diagnostic signs are <13
+    sign_priority = 9, -- because nvim diagnostic signs are 10
   }
 end)
 
 M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
-  -- -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
+  -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
   local ls = require 'luasnip'
   local ls_types = require 'luasnip.util.types'
 
@@ -210,6 +210,9 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       documentation = cmp.config.window.bordered(),
       -- scrollbar = '║',
     },
+    -- sorting = {
+    --   priority_weight = 0,
+    -- },
     -- view = {
     --   entries = 'native',
     -- },
@@ -259,6 +262,7 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
     view = {
       adaptive_size = true,
       hide_root_folder = true,
+      centralize_selection = true,
       mappings = {
         custom_only = false,
         list = nvimtree_keybindings
@@ -323,7 +327,7 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
     },
     filters = {
       dotfiles = false,
-      custom = {'.git', 'node_modules', '.cache', '*.import', '__pycache__', 'pnpm-lock.yaml', 'package-lock.json'}
+      custom = {'node_modules', '.cache', '*.import', '__pycache__', 'pnpm-lock.yaml', 'package-lock.json'}
     },
     git = {
       ignore = true
@@ -343,11 +347,7 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
           }
         }
       }
-    },
-    trash = {
-      cmd = "trash",
-      require_confirm = true,
-    },
+    }
   }
 end)
 

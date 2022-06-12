@@ -32,6 +32,8 @@ M.base = U.Service():new(function()
     autocmd BufEnter .swcrc setlocal ft=json
     autocmd BufEnter tsconfig.json setlocal ft=jsonc
     autocmd BufEnter mimeapps.list setlocal ft=dosini
+    autocmd BufEnter PKGBUILD.* setlocal ft=PKGBUILD
+    autocmd BufEnter README setlocal ft=markdown
 
     " file type
     autocmd FileType lspinfo setlocal nofoldenable

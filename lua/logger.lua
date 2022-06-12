@@ -1,30 +1,26 @@
 local M = {}
 
 M.last_log_msg = ""
+M.last_log_msg_log_lvl = 0
 M.last_log_msg_count = 0
 
-M.log_level_hl = {
-  "Normal",
-  "Error",
-  "Normal",
-  "Normal",
-  "WarningMsg",
---   -- DEBUG = vim.log.levels.DEBUG,
---   -- ERROR = vim.log.levels.ERROR,
---   -- INFO = vim.log.levels.INFO,
---   -- TRACE = vim.log.levels.TRACE,
---   -- WARN = vim.log.levels.WARN,
+M.highlights = {
+  source = "Comment",
+  log_levels = {
+    "DebugFG",
+    "DiagnosticFloatingError",
+    "DiagnosticFloatingInfo",
+    "DiagnosticFloatingHint",
+    "DiagnosticFloatingWarn",
+
+    -- DEBUG = vim.log.levels.DEBUG,
+    -- ERROR = vim.log.levels.ERROR,
+    -- INFO = vim.log.levels.INFO,
+    -- TRACE = vim.log.levels.TRACE,
+    -- WARN = vim.log.levels.WARN,
+  }
 }
 
-local printh = function(msg, hlgroup)
-  -- TODO: neovim does not retain highlight unlike :echom does, see neovim#13812            
-  -- vim.api.nvim_echo({{ msg, hlgroup }}, true, {})                                        
-  hlgroup = hlgroup or 'Normal'
-  msg = vim.fn.escape(msg, '"')
-  local cmd = [[echohl $hlgroup | echomsg "$msg" | echohl None]]
-  cmd = cmd:gsub('%$(%w+)', { msg = msg, hlgroup = hlgroup })
-  vim.cmd(cmd)
-end
 
 local get_caller_src = function(stack_lvl_off)
   local dbg_info = debug.getinfo(4 + stack_lvl_off, "Sl")
@@ -40,34 +36,44 @@ local sanitize_value = function(val)
 end
 
 M.process = function(val, opts)
+  val = sanitize_value(val)
+
   -- repeat log counting
-  if M.last_log_msg == val then
+  if M.last_log_msg == val and opts.log_lvl == M.last_log_msg_log_lvl then
     M.last_log_msg_count = M.last_log_msg_count + 1
   else
     M.last_log_msg_count = 0
   end
-  M.last_log_msg = val
 
-  local msg = sanitize_value(val)
+  M.last_log_msg = val
+  M.last_log_msg_log_lvl = opts.log_lvl
 
   local src = get_caller_src(opts.stack_lvl_off or 0)
-
   local count = M.last_log_msg_count > 0 and ' ×'..M.last_log_msg_count or ''
+  local hl = M.highlights.log_levels[opts.log_lvl] 
+  -- local msg = src..' '..val..count
 
-  printh(src..' '..msg..count, opts.hl)
+  vim.api.nvim_echo({
+    { src, M.highlights.source },
+    { ' ', '' },
+    { val, M.highlights.log_levels[opts.log_lvl] },
+  }, true, {})
 end
 
 M.log = {
-  dbg = function(val) M.process(val, { hl = "NotifyDEBUGBorder"}) end,
-  err = function(val) M.process(val, { hl = "NotifyERRORBorder" }) end,
-  info = function(val) M.process(val, { hl = "NotifyINFOBorder" }) end,
-  trace = function(val) M.process(val, { hl = "NotifyTRACEBorder" }) end,
-  warn = function(val) M.process(val, { hl = "NotifyWARNBorder" }) end,
+  dbg   = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_lvl = 1 })) end,
+  err   = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_lvl = 2 })) end,
+  info  = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_lvl = 3 })) end,
+  trace = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_lvl = 4 })) end,
+  warn  = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_lvl = 5 })) end,
+
+  -- TODO: replace with proper buffer flushing
+  flush = function() vim.api.nvim_echo({ { '\n', '' }, }, false, {}) end
 }
 
 setmetatable(M.log, {
-  __call = function(self, val)
-    M.process(val, { hl = "NotifyINFOBorder"})
+  __call = function(self, val, opts)
+    self.info(val, { stack_lvl_off = 1 })
   end
 })
 

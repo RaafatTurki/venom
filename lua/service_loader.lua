@@ -106,7 +106,8 @@ PluginManager.plugins = {
   {'terrortylor/nvim-comment'},
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   -- {'SmiteshP/nvim-gps',                               requires = p.treesitter },
-  {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
+  -- {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
+  {'/home/potato/nvim-navic',                         requires = p.lspconfig },
   {'lewis6991/spellsitter.nvim'},
   -- {'andymass/vim-matchup'},
   {'b0o/schemastore.nvim',                            requires = p.lspconfig },
@@ -129,6 +130,7 @@ PluginManager.plugins = {
   {'akinsho/nvim-toggleterm.lua'},
   {'ibhagwan/fzf-lua',                                requires = p.devicons },
   {'jghauser/fold-cycle.nvim'},
+  -- {'kevinhwang91/nvim-ufo',                           requires = 'kevinhwang91/promise-async' },
   -- {'smjonas/snippet-converter.nvim'},
   -- {'j-hui/fidget.nvim'},
   -- {'vladdoster/remember.nvim'},
@@ -142,8 +144,8 @@ PluginManager.plugins = {
     {'L3MON4D3/LuaSnip'},
     {'hrsh7th/cmp-cmdline'},
     {'dmitmel/cmp-digraphs'},
-  --   -- {'hrsh7th/cmp-nvim-lsp-signature-help'},
-  --   -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
+    {'hrsh7th/cmp-nvim-lsp-signature-help'},
+    -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
   }},
 
   -- STATUSBAR:
@@ -184,6 +186,8 @@ PluginManager.plugins = {
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   {'mfussenegger/nvim-jdtls'},
 
+  -- {'floobits/floobits-neovim'},
+  -- {'jbyuki/nabla.nvim'},
   -- {'Mofiqul/trld.nvim'},
   -- {'goolord/alpha-nvim',                              requires = p.devicons },
   -- {'folke/lua-dev.nvim'},

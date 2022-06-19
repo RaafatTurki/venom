@@ -81,21 +81,6 @@ M.reach = U.Service():require(FT.PLUGIN, 'reach.nvim'):new(function()
   }
 end)
 
--- M.fzf_lua = U.Service():require(FT.PLUGIN, 'fzf-lua'):new(function()
--- end)
-
--- M.cinnamon = U.Service():require(FT.PLUGIN, "cinnamon.nvim"):new(function()
---   require 'cinnamon'.setup {
---     default_keymaps = false,
---     extra_keymaps = false,
---     extended_keymaps = false,
---     centered = true,
---     default_delay = 4,
---     horizontal_scroll = true,
---     scroll_limit = 150,
---   }
--- end)
-
 M.gitsigns = U.Service():require(FT.PLUGIN, "gitsigns.nvim"):new(function()
   require 'gitsigns'.setup {
     signs = {
@@ -194,8 +179,8 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       { name = 'buffer' },
       { name = 'path' },
       { name = 'spell' },
+      { name = 'nvim_lsp_signature_help' },
       -- { name = 'digraphs' },
-      -- { name = 'nvim_lsp_signature_help' },
     },
     formatting = {
       fields = { "kind", "abbr", "menu" },
@@ -206,8 +191,15 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       end
     },
     window = {
-      completion = cmp.config.window.bordered(),
-      documentation = cmp.config.window.bordered(),
+      -- completion = cmp.config.window.bordered(),
+      completion = {
+        border = 'single',
+        winhighlight = '',
+      },
+      documentation = {
+        border = 'single',
+        winhighlight = '',
+      },
       -- scrollbar = '║',
     },
     -- sorting = {
@@ -503,6 +495,9 @@ M.fold_cycle = U.Service():require(FT.PLUGIN, 'fold-cycle.nvim'):new(function()
     softwrap_movement_fix = false,
   }
 end)
+
+-- M.fzf_lua = U.Service():require(FT.PLUGIN, 'fzf-lua'):new(function()
+-- end)
 
 -- M.remember = U.Service():require(FT.PLUGIN, 'remember.nvim'):new(function()
 --   require 'remember'.setup {

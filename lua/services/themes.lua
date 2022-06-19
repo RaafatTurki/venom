@@ -18,26 +18,26 @@ function M.builtin()
   local lush = require 'lush'
   lush(builtin_colors)
 
-  local contrast = {
-    filetypes = {
-      "terminal",
-      "packer",
-      "qf",
-      "NvimTree",
-      "DiffviewFiles",
-      -- "Outline",
-    }
-  }
+  -- local contrast = {
+  --   filetypes = {
+  --     "terminal",
+  --     -- "packer",
+  --     -- "qf",
+  --     -- "NvimTree",
+  --     -- "DiffviewFiles",
+  --     -- "Outline",
+  --   }
+  -- }
 
-  for _, ft in ipairs(contrast.filetypes) do
-    if ft == "terminal" then
-      U.create_augroup('autocmd TermOpen * setlocal winhighlight=Normal:NormalAlt,SignColumn:SignColumnFloat', 'builtin_theme_terminal')
-    elseif ft == "NvimTree" then
-      -- hi('NvimTreeNormal NormalAlt', '! link')
-    else
-      U.create_augroup('autocmd FileType ' .. ft .. ' setlocal winhighlight=Normal:NormalAlt,SignColumn:SignColumnFloat', 'builtin_theme_'..ft)
-    end
-  end
+  -- for _, ft in ipairs(contrast.filetypes) do
+  --   if ft == "terminal" then
+  --     U.create_augroup('autocmd TermOpen * setlocal winhighlight=Normal:NormalAlt,SignColumn:SignColumnFloat', 'builtin_theme_terminal')
+  --   elseif ft == "NvimTree" then
+  --     -- hi('NvimTreeNormal NormalAlt', '! link')
+  --   else
+  --     U.create_augroup('autocmd FileType ' .. ft .. ' setlocal winhighlight=Normal:NormalAlt,SignColumn:SignColumnFloat', 'builtin_theme_'..ft)
+  --   end
+  -- end
 
 end
 

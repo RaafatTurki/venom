@@ -18,6 +18,12 @@ M.highlights = {
     -- INFO = vim.log.levels.INFO,
     -- TRACE = vim.log.levels.TRACE,
     -- WARN = vim.log.levels.WARN,
+
+    -- trace  0
+    -- debug  1
+    -- info   2
+    -- warn   3
+    -- error  4
   }
 }
 

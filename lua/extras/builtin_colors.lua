@@ -182,7 +182,7 @@ local theme = lush(function()
     Define          { PreProc },
     Macro           { PreProc },
     PreCondit       { PreProc },
-    
+
     Special         { fg = lime[1] },
     SpecialChar     { Special },
 
@@ -190,7 +190,7 @@ local theme = lush(function()
     StorageClass    { Type },
     Structure       { Type },
     Typedef         { Type },
-    
+
     SpecialComment  { fg = c.warn },
     Todo            { SpecialComment };
 
@@ -205,7 +205,7 @@ local theme = lush(function()
     UnderlineWarn   { gui = 'undercurl', sp = c.warn };
     UnderlineInfo   { gui = 'undercurl', sp = c.info };
     UnderlineHint   { gui = 'undercurl', sp = c.hint };
- 
+
 
     -- LSP
     LspReferenceText                      { Bold, bg = c.mg };
@@ -500,33 +500,34 @@ local theme = lush(function()
     ReachPriority           { Special };
     ReachCurrent            { Folded, gui = 'bold' };
 
-	  NavicIconsFile          { CmpItemKindFile };
-	  NavicIconsModule        { CmpItemKindModule };
-	  NavicIconsNamespace     { CmpItemKindModule };
-	  NavicIconsPackage       { CmpItemKindModule };
-	  NavicIconsClass         { CmpItemKindClass };
-	  NavicIconsMethod        { CmpItemKindMethod };
-	  NavicIconsProperty      { CmpItemKindProperty };
-	  NavicIconsField         { CmpItemKindField };
-	  NavicIconsConstructor   { CmpItemKindConstructor };
-	  NavicIconsEnum          { CmpItemKindEnum };
-	  NavicIconsInterface     { CmpItemKindInterface };
-	  NavicIconsFunction      { CmpItemKindFunction };
-	  NavicIconsVariable      { CmpItemKindVariable };
-	  NavicIconsConstant      { CmpItemKindConstant };
-	  NavicIconsString        { CmpItemKindValue };
-	  NavicIconsNumber        { CmpItemKindValue };
-	  NavicIconsBoolean       { CmpItemKindValue };
-	  NavicIconsArray         { CmpItemKindValue };
-	  NavicIconsObject        { CmpItemKindValue };
-	  NavicIconsKey           { CmpItemKindProperty };
-	  NavicIconsNull          { CmpItemKindConstant };
-	  NavicIconsEnumMember    { CmpItemKindEnumMember };
-	  NavicIconsStruct        { CmpItemKindStruct };
-	  NavicIconsEvent         { CmpItemKindEvent };
-	  NavicIconsOperator      { CmpItemKindOperator };
-	  NavicIconsTypeParameter { CmpItemKindTypeParameter };
-	  NavicText               { CmpItemKindText };
+    NavicIconsFile          { CmpItemKindFile };
+    NavicIconsModule        { CmpItemKindModule };
+    NavicIconsNamespace     { CmpItemKindModule };
+    NavicIconsPackage       { CmpItemKindModule };
+    NavicIconsClass         { CmpItemKindClass };
+    NavicIconsMethod        { CmpItemKindMethod };
+    NavicIconsProperty      { CmpItemKindProperty };
+    NavicIconsField         { CmpItemKindField };
+    NavicIconsConstructor   { CmpItemKindConstructor };
+    NavicIconsEnum          { CmpItemKindEnum };
+    NavicIconsInterface     { CmpItemKindInterface };
+    NavicIconsFunction      { CmpItemKindFunction };
+    NavicIconsVariable      { CmpItemKindVariable };
+    NavicIconsConstant      { CmpItemKindConstant };
+    NavicIconsString        { CmpItemKindValue };
+    NavicIconsNumber        { CmpItemKindValue };
+    NavicIconsBoolean       { CmpItemKindValue };
+    NavicIconsArray         { CmpItemKindValue };
+    NavicIconsObject        { CmpItemKindValue };
+    NavicIconsKey           { CmpItemKindProperty };
+    NavicIconsNull          { CmpItemKindConstant };
+    NavicIconsEnumMember    { CmpItemKindEnumMember };
+    NavicIconsStruct        { CmpItemKindStruct };
+    NavicIconsEvent         { CmpItemKindEvent };
+    NavicIconsOperator      { CmpItemKindOperator };
+    NavicIconsTypeParameter { CmpItemKindTypeParameter };
+    NavicText               { CmpItemKindText };
+    NavicSeparator          { Folded };
 
     -- CUTSOM GROUPS
     DebugFg                 { fg = debug[10] };

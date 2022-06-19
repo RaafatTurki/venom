@@ -266,11 +266,13 @@ end
 function M.Service()
   return setmetatable(
     {
+      required_features = {},
+      provided_features = {},
+      callback = function(self, ...) log.warn("empty service callback called") end,
       new = function(self, cb)
         self.callback = cb
         return self
       end,
-      -- provide = function(self, feature_type, feature_name) table.insert(venom.features:add(feature_type, feature_name)) return self end,
       -- TODO: abstract feature name stitching into venom.features.str_to_tbl and venom.features.tbl_to_str
       require = function(self, feature_type, feature_name) table.insert(self.required_features, feature_type..':'..feature_name) return self end,
       provide = function(self, feature_type, feature_name) table.insert(self.provided_features, feature_type..':'..feature_name) return self end,
@@ -295,9 +297,6 @@ function M.Service()
           log.warn("missing features: "..table.concat(missing_features, ' / '))
         end
       end,
-      required_features = {},
-      provided_features = {},
-      callback = function(self, ...) log.warn("empty service callback called") end,
     },
     {
       __call = function(self, ...)

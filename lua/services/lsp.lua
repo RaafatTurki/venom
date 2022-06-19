@@ -20,7 +20,7 @@ M.shared_server_on_attach_hook = function (client, bufnr)
   vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
 
   -- document highlight on cursor hold if available
-  if client.resolved_capabilities.document_highlight then
+  if client.server_capabilities.document_highlight then
     -- U.create_augroup([[
     --     au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
     --     au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
@@ -37,8 +37,10 @@ M.shared_server_on_attach_hook = function (client, bufnr)
           ]]
   end
 
-  -- nvic
-  require 'nvim-navic'.attach(client, bufnr)
+  -- navic
+  if client.server_capabilities.documentSymbolProvider then
+    require 'nvim-navic'.attach(client, bufnr)
+  end
 end
 
 M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_configs)

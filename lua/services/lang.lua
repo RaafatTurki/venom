@@ -253,6 +253,7 @@ M.setup = U.Service()
   -- lsp-installer
   require 'nvim-lsp-installer'.setup({
     ui = {
+      border = 'single',
       icons = {
         server_installed = " ",
         server_pending = " ",
@@ -306,11 +307,12 @@ M.setup = U.Service()
 
   -- navic
   local navic_icons = {}
-  for _, icon in pairs(venom.icons.item_kinds.cozette) do table.insert(navic_icons, icon..' ') end
+  for name, icon in pairs(venom.icons.item_kinds.cozette) do navic_icons[name] = icon..' ' end
   require 'nvim-navic'.setup {
     highlight = true,
     separator = ' > ',
     icons = navic_icons,
+    log_level = -1,
   }
 
   -- spellsitter

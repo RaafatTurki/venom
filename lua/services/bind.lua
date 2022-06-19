@@ -126,37 +126,34 @@ M.setup_plugins = U.Service():new(function()
   M.key {'Y',                'ygv:CommentToggle<CR>', mode = 'v'}
   -- nvim tree
   M.key {'<C-e>',            '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
-  -- harpoon
-  -- M.key {'<C-p>',            require 'harpoon.ui'.toggle_quick_menu}
-  -- M.key {'<C-k>',            require 'harpoon.mark'.add_file}
-  -- for n = 1, 9 do
-  --   M.key {'<A-'..n..'>',      '<CMD>lua require("harpoon.ui").nav_file('..n..')<CR>'}
-  -- end
   -- reach
+  local auto_handles = {
+    '1', '2', '3', '4',
+    'q', 'w', 'e', 'r',
+    'a', 's', 'd', 'f',
+    'z', 'x', 'c', 'v',
+    'Q', 'W', 'E', 'R',
+    'A', 'S', 'D', 'F',
+    'Z', 'X', 'C', 'V'
+  }
+  local auto_handles_bind_count = 8
   M.key {'<C-p>',            function()
     require 'reach'.buffers {
       show_current = true,
       grayout_current = false,
       modified_icon = '•',
-      -- sort = function(bufnr_a, bufnr_b)
-      --   if bufnr_a > bufnr_b then
-      --     return true
-      --   else
-      --     return false
-      --   end
-      -- end,
+      auto_handles = auto_handles,
       previous = {
         enable = false,
       },
     }
   end}
-  for n = 1, 9 do
-    M.key {'<A-'..n..'>',      function() require 'reach'.switch_to_buffer(n) end}
+  for i, char in ipairs(auto_handles) do
+    if (i > auto_handles_bind_count) then break end
+    M.key {'<A-'..char..'>',      function() require 'reach'.switch_to_buffer(i) end}
   end
   -- fold-cycle
-  -- M.key {'za',               '<CMD>lua vim.opt.foldmethod = vim.opt.foldmethod<CR>za'}
   M.key {'za',               function() require 'fold-cycle'.toggle_all() end}
-
   -- gitsigns
   M.key {'gr',               '<CMD>Gitsigns reset_hunk<CR>'}
   M.key {'gr',               '<CMD>Gitsigns reset_hunk<CR>', mode = 'v'}

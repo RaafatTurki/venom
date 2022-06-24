@@ -36,7 +36,7 @@ vim.o.updatetime        = 100
 vim.o.timeoutlen        = 200
 vim.o.mouse             = 'a'
 vim.o.clipboard         = 'unnamedplus'
-vim.o.inccommand        = 'split'
+-- vim.o.inccommand        = 'split'
 vim.o.signcolumn        = 'yes:2'
 vim.o.encoding          = 'utf-8'
 vim.o.fileencoding      = 'utf-8'
@@ -49,12 +49,14 @@ vim.o.shell             = '/usr/bin/fish'
 
 -- folding
 -- vim.o.foldcolumn        = '1'
--- vim.o.foldenable        = false
+-- vim.o.foldenable        = true
+-- vim.o.foldlevel         = 99
 vim.o.foldmethod        = 'expr'                        -- Tree sitter folding
 vim.o.foldexpr          = 'nvim_treesitter#foldexpr()'  -- Tree sitter folding
 vim.o.foldtext          = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))"   -- Sexy minimal folds
 vim.o.foldnestmax       = 10                            -- Maximum amount of nested folds
 vim.o.foldminlines      = 1                             -- Minimum amount of lines per fold
+
 vim.o.sessionoptions    = 'buffers,curdir,folds,help,tabpages,winsize'
 
 -- indenting
@@ -71,9 +73,9 @@ vim.opt.fillchars = {
   fold      = ' ',
   eob       = ' ',
   diff      = '╱',
-  foldclose =	'>',
-  foldopen  = ' ',
-  foldsep   = ' ',
+  -- foldclose =	'>',
+  -- foldopen  = ' ',
+  -- foldsep   = ' ',
   -- foldopen  = '┬',
   -- foldsep   = '│',
 }
@@ -124,11 +126,13 @@ vim.diagnostic.config {
 
 -- venom options
 venom = {
-  -- actions are tables that can hold lua functions and vim commands for later execution (when invoked)
-  -- TODO: make it the responsibility of the related service to instantiate an action here
+  -- deligates are tables that can hold lua functions and vim commands for later execution (when invoked)
+  -- TODO: make it the responsibility of the related service to instantiate a deligate here
   deligates = {
     pm_post_complete = U.Deligate():new(),
+    refresh = U.Deligate():new(),
     clear = U.Deligate():new(),
+    -- write = U.Deligate():new(),
   },
   -- features is a table that can hold strings representing the availability of said feature for later querying.
   -- each string must be in the form of <TYPE>:<name> where TYPE is one of the FT enum values (for example "PLUGIN:nvim-cmp" means the plugin cmp is available)

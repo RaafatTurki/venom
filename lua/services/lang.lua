@@ -187,10 +187,21 @@ M.configure_servers = U.Service():new(function()
 end)
 
 M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(function()
+  local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
+  -- parser_configs.ron = {
+  --   install_info = {
+  --     url = "https://github.com/zee-editor/tree-sitter-ron",
+  --     files = { "src/parser.c" },
+  --     branch = "main",
+  --   },
+  -- }
+
   -- if not is_mod_exists('nvim-treesitter.configs') then return end
   require 'nvim-treesitter.configs'.setup {
     -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
     ensure_installed = {
+      -- 'ron',
+
       'bash',
       'c',
       'cmake',
@@ -248,7 +259,7 @@ M.setup = U.Service()
 :require(FT.PLUGIN, "nvim-comment")
 :require(FT.PLUGIN, "nvim-navic")
 :require(FT.PLUGIN, "spellsitter.nvim")
-:require(FT.PLUGIN, "nvim-jdtls")
+-- :require(FT.PLUGIN, "nvim-jdtls")
 :new(function()
   -- lsp-installer
   require 'nvim-lsp-installer'.setup({
@@ -287,6 +298,7 @@ M.setup = U.Service()
     bc = '#%s',
     glsl = '//%s',
     cs = '//%s',
+    sshdconfig = '#%s',
   }
   require 'nvim_comment'.setup {
     create_mappings = false,
@@ -308,11 +320,11 @@ M.setup = U.Service()
   -- navic
   local navic_icons = {}
   for name, icon in pairs(venom.icons.item_kinds.cozette) do navic_icons[name] = icon..' ' end
+  U.gvar('navic_silence'):set(true)
   require 'nvim-navic'.setup {
     highlight = true,
     separator = ' > ',
     icons = navic_icons,
-    log_level = -1,
   }
 
   -- spellsitter
@@ -324,45 +336,46 @@ M.setup = U.Service()
   -- U.gvar('matchup_matchparen_offscreen'):set({})
 
   -- nvim-jdtls
-  function JDTLSSetup()
-    local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-    local workspace_dir = os.getenv('XDG_CACHE_HOME') .. '/jdtls/workspaces/' .. project_name
-
-    JDTLS_CONFIG = {
-      cmd = {
-        'java',
-
-        '-Declipse.application=org.eclipse.jdt.ls.core.id1',
-        '-Dosgi.bundles.defaultStartLevel=4',
-        '-Declipse.product=org.eclipse.jdt.ls.core.product',
-        '-Dlog.protocol=true',
-        '-Dlog.level=ALL',
-
-        '-javaagent:/home/potato/.local/share/nvim/lsp_servers/jdtls/lombok.jar',
-
-        '-Xms1g',
-        '--add-modules=ALL-SYSTEM',
-        '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-        '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
-
-        '-jar', '/home/potato/.local/share/nvim/lsp_servers/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
-        '-configuration', '/home/potato/.local/share/nvim/lsp_servers/jdtls/config_linux',
-        '-data', workspace_dir,
-      },
-
-      root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
-
-      settings = {
-        java = {}
-      },
-
-      init_options = {
-        bundles = {}
-      },
-    }
-
-    require('jdtls').start_or_attach(JDTLS_CONFIG)
-  end
+  -- function JDTLSSetup()
+  --   local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+  --   local workspace_dir = os.getenv('XDG_CACHE_HOME') .. '/jdtls/workspaces/' .. project_name
+  --
+  --   JDTLS_CONFIG = {
+  --     cmd = {
+  --       'java',
+  --
+  --       '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+  --       '-Dosgi.bundles.defaultStartLevel=4',
+  --       '-Declipse.product=org.eclipse.jdt.ls.core.product',
+  --       '-Dlog.protocol=true',
+  --       '-Dlog.level=ALL',
+  --
+  --       '-javaagent:/home/potato/.local/share/nvim/lsp_servers/jdtls/lombok.jar',
+  --
+  --       '-Xms1g',
+  --       '--add-modules=ALL-SYSTEM',
+  --       '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+  --       '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+  --
+  --       '-jar', '/home/potato/.local/share/nvim/lsp_servers/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+  --       '-configuration', '/home/potato/.local/share/nvim/lsp_servers/jdtls/config_linux',
+  --       '-data', workspace_dir,
+  --     },
+  --
+  --     root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
+  --
+  --     -- TODO: extract into a ServerConfig
+  --     settings = {
+  --       java = {}
+  --     },
+  --
+  --     init_options = {
+  --       bundles = {}
+  --     },
+  --   }
+  --
+  --   require('jdtls').start_or_attach(JDTLS_CONFIG)
+  -- end
 
   vim.cmd [[
     augroup java

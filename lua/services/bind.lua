@@ -41,56 +41,57 @@ M.setup = U.Service():new(function()
 
   -- BASE
   -- write, undo, quit
-  M.key {'<C-s>',            '<CMD>write<CR><ESC>', mode = 'n v i'}
-  M.key {'<C-z>',            '<CMD>undo<CR>', mode = 'n v i'}
-  M.key {'<C-q>',            '<CMD>quit<CR>', mode = 'n v i'}
+  M.key {'<C-s>',             '<CMD>write<CR><ESC>', mode = 'n v i'}
+  M.key {'<C-z>',             '<CMD>undo<CR>', mode = 'n v i'}
+  M.key {'<C-q>',             '<CMD>quit<CR>', mode = 'n v i'}
   -- page shift up/down, select all
-  M.key {'<C-Up>',           '<C-y>k'}
-  M.key {'<C-Down>',         '<C-e>j'}
+  M.key {'<C-Up>',            '<C-y>k'}
+  M.key {'<C-Down>',          '<C-e>j'}
   -- M.key {'<C-a>',            ':%'}
   -- indent
-  M.key {'<Tab>',            '>>_'}
-  M.key {'<S-Tab>',          '<<_'}
-  M.key {'<Tab>',            '>gv', mode = 'v'}
-  M.key {'<S-Tab>',          '<gv', mode = 'v'}
+  M.key {'<Tab>',             '>>_'}
+  M.key {'<S-Tab>',           '<<_'}
+  M.key {'<Tab>',             '>gv', mode = 'v'}
+  M.key {'<S-Tab>',           '<gv', mode = 'v'}
   -- switch between last 2 windows
-  M.key {'<A-Tab>',          '<C-w>p'}
+  M.key {'<A-Tab>',           '<C-w>p'}
   -- make x delete without copying
   -- M.key {'x',                '"_x', mode = 'v n'}
-  M.key {'X',                '"_x', mode = 'v n'}
+  M.key {'X',                 '"_x', mode = 'v n'}
   -- make Y copy to end of line
-  M.key {'Y',                'y$'}
+  M.key {'Y',                 'y$'}
   -- go to end after a join
-  M.key {'J',                'J$'}
+  M.key {'J',                 'J$'}
   -- split (opposite of J)
-  M.key {'S',                'T hr<CR>k$'}
+  M.key {'S',                 'T hr<CR>k$'}
   -- open man pages in new tabs
-  M.key {'K',                ':tab Man<CR>'}
+  M.key {'K',                 ':tab Man<CR>'}
   -- center line after n/N
   -- M.key {'n',                'nzzzv'}
   -- M.key {'N',                'Nzzzv'}
-  -- re-edit current buffer
-  M.key {'<F5>',             '<CMD>e<CR>'}
+  -- refresh action
+  venom.deligates.refresh:subscribe [[e]]
+  M.key {'<F5>',              function() venom.deligates.refresh() end}
   -- clear action
   -- venom.actions.clear:subscribe [[let @/ = ""]]
   venom.deligates.clear:subscribe [[noh]]
   venom.deligates.clear:subscribe(U.clear_prompt)
-  M.key {'<C-l>',           function() venom.deligates.clear() end, mode = 'n'}
-  M.key {'<C-l>',           '<ESC>', mode = 'i'}
+  M.key {'<C-l>',             function() venom.deligates.clear() end}
+  M.key {'<C-l>',             '<ESC>', mode = 'i'}
   -- terminal smart escape
-  M.key {'<Esc>',            "v:lua.TermSmartEsc(b:terminal_job_pid, '"..'<Esc>'.."')", mode = 't', opts = { noremap = true, expr = true } }
+  M.key {'<Esc>',             "v:lua.TermSmartEsc(b:terminal_job_pid, '"..'<Esc>'.."')", mode = 't', opts = { noremap = true, expr = true } }
   -- undo breakpoints
   local undo_break_points = {',', '.', '!', '?', '-'}
   for _, break_point in pairs(undo_break_points) do
-    M.key {break_point,     break_point..'<C-g>u', mode = 'i'}
+    M.key {break_point,       break_point..'<C-g>u', mode = 'i'}
   end
   -- goto and display to nex/prev lsp diagnositc
-  M.key {'d<Left>',          function() vim.diagnostic.goto_prev({ float = false }) end}
-  M.key {'d<Right>',         function() vim.diagnostic.goto_next({ float = false }) end}
+  M.key {'d<Left>',           function() vim.diagnostic.goto_prev({ float = false }) end}
+  M.key {'d<Right>',          function() vim.diagnostic.goto_next({ float = false }) end}
   -- tabs
-  M.key {'<C-t>',            '<CMD>tabnew<CR>'}
-  M.key {'<A-Right>',        '<CMD>tabnext<CR>'}
-  M.key {'<A-Left>',         '<CMD>tabprevious<CR>'}
+  M.key {'<C-t>',             '<CMD>tabnew<CR>'}
+  M.key {'<A-Right>',         '<CMD>tabnext<CR>'}
+  M.key {'<A-Left>',          '<CMD>tabprevious<CR>'}
   -- lsp
   M.key {'<leader>r',         '<CMD>LspRename<CR>'}
 
@@ -112,29 +113,31 @@ end)
 -- TODO load each conditionally depending on registered features
 M.setup_plugins = U.Service():new(function()
   -- open uri under cursor
-  M.key {'gx',               OpenURIUnderCursor}
+  M.key {'gx',                OpenURIUnderCursor}
   -- cycle theme
-  M.key {'<leader>t',        Themes.theme_cycle}
+  M.key {'<leader>t',         Themes.theme_cycle}
 
 
   -- PLUGINS
   -- packer sync
-  M.key {'<leader>p',        function() PluginManager.sync () end}
+  M.key {'<leader>p',         function() PluginManager.sync () end}
   -- nvim comment
-  M.key {'<leader>c',        ':CommentToggle<CR>'}
-  M.key {'<leader>c',        ':CommentToggle<CR>',    mode = 'v'}
-  M.key {'Y',                'ygv:CommentToggle<CR>', mode = 'v'}
+  M.key {'<leader>c',         ':CommentToggle<CR>'}
+  M.key {'<leader>c',         ':CommentToggle<CR>',    mode = 'v'}
+  M.key {'Y',                 'ygv:CommentToggle<CR>', mode = 'v'}
   -- nvim tree
-  M.key {'<C-e>',            '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
+  M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
+  -- icon picker
+  M.key {'<leader>i',         '<CMD>PickNerd<CR>', mode = 'n'}
   -- reach
   local auto_handles = {
-    '1', '2', '3', '4',
-    'q', 'w', 'e', 'r',
-    'a', 's', 'd', 'f',
-    'z', 'x', 'c', 'v',
-    'Q', 'W', 'E', 'R',
-    'A', 'S', 'D', 'F',
-    'Z', 'X', 'C', 'V'
+    '1', '2', '3',
+    'q', 'w', 'e',
+    'a', 's', 'd',
+    'z', 'x', 'c',
+    'Q', 'W', 'E',
+    'A', 'S', 'D',
+    'Z', 'X', 'C'
   }
   local auto_handles_bind_count = 8
   M.key {'<C-p>',            function()
@@ -153,33 +156,33 @@ M.setup_plugins = U.Service():new(function()
     M.key {'<A-'..char..'>',      function() require 'reach'.switch_to_buffer(i) end}
   end
   -- fold-cycle
-  M.key {'za',               function() require 'fold-cycle'.toggle_all() end}
+  M.key {'za',                function() require 'fold-cycle'.toggle_all() end}
   -- gitsigns
-  M.key {'gr',               '<CMD>Gitsigns reset_hunk<CR>'}
-  M.key {'gr',               '<CMD>Gitsigns reset_hunk<CR>', mode = 'v'}
-  M.key {'gp',               '<CMD>Gitsigns preview_hunk<CR>'}
-  M.key {'gb',               '<CMD>Gitsigns blame_line<CR>'}
-  M.key {'gd',               '<CMD>Gitsigns diffthis<CR>'}
-  M.key {'gs',               '<CMD>Gitsigns stage_hunk<CR>'}
-  M.key {'gs',               '<CMD>Gitsigns stage_hunk<CR>', mode = 'v'}
-  M.key {'gu',               '<CMD>Gitsigns undo_stage_hunk<CR>'}
-  M.key {'g<Left>',          '<CMD>Gitsigns prev_hunk<CR>zz'}
-  M.key {'g<Right>',         '<CMD>Gitsigns next_hunk<CR>zz'}
+  M.key {'gr',                '<CMD>Gitsigns reset_hunk<CR>'}
+  M.key {'gr',                '<CMD>Gitsigns reset_hunk<CR>', mode = 'v'}
+  M.key {'gp',                '<CMD>Gitsigns preview_hunk<CR>'}
+  M.key {'gb',                '<CMD>Gitsigns blame_line<CR>'}
+  M.key {'gd',                '<CMD>Gitsigns diffthis<CR>'}
+  M.key {'gs',                '<CMD>Gitsigns stage_hunk<CR>'}
+  M.key {'gs',                '<CMD>Gitsigns stage_hunk<CR>', mode = 'v'}
+  M.key {'gu',                '<CMD>Gitsigns undo_stage_hunk<CR>'}
+  M.key {'g<Left>',           '<CMD>Gitsigns prev_hunk<CR>zz'}
+  M.key {'g<Right>',          '<CMD>Gitsigns next_hunk<CR>zz'}
   -- move
-  M.key {'<A-Up>',           '<CMD>MoveLine(-1)<CR>', mode = 'n i'}
-  M.key {'<A-Down>',         '<CMD>MoveLine(1)<CR>', mode = 'n i'}
-  M.key {'<A-Up>',           ':MoveBlock(-1)<CR>', mode = 'v'}
-  M.key {'<A-Down>',         ':MoveBlock(1)<CR>', mode = 'v'}
+  M.key {'<A-Up>',            '<CMD>MoveLine(-1)<CR>', mode = 'n i'}
+  M.key {'<A-Down>',          '<CMD>MoveLine(1)<CR>', mode = 'n i'}
+  M.key {'<A-Up>',            ':MoveBlock(-1)<CR>', mode = 'v'}
+  M.key {'<A-Down>',          ':MoveBlock(1)<CR>', mode = 'v'}
   -- lsp installer
-  M.key {'<leader>l',        '<CMD>LspInstallInfo<CR>'}
+  M.key {'<leader>l',         '<CMD>LspInstallInfo<CR>'}
   -- lsp
-  M.key {'<leader>r',        '<CMD>LspRename<CR>'}
-  M.key {'<leader>R',        '<CMD>LspReferences<CR>'}
-  M.key {'<leader>d',        '<CMD>LspDefinition<CR>'}
-  M.key {'<leader>C',        '<CMD>LspCodeAction<CR>'}
-  M.key {'<leader>v',        '<CMD>LspHover<CR>'}
-  M.key {'<leader>dl',       '<CMD>LspDiagsList<CR>'}
-  M.key {'<leader>dv',       '<CMD>LspDiagsHover<CR>'}
+  M.key {'<leader>r',         '<CMD>LspRename<CR>'}
+  M.key {'<leader>R',         '<CMD>LspReferences<CR>'}
+  M.key {'<leader>d',         '<CMD>LspDefinition<CR>'}
+  M.key {'<leader>C',         '<CMD>LspCodeAction<CR>'}
+  M.key {'<leader>v',         '<CMD>LspHover<CR>'}
+  M.key {'<leader>dl',        '<CMD>LspDiagsList<CR>'}
+  M.key {'<leader>dv',        '<CMD>LspDiagsHover<CR>'}
 end)
 
 return M

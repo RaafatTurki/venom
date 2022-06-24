@@ -68,13 +68,19 @@ M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_
   end
 end)
 
-M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'nvim-lsp-installer'):require(FT.PLUGIN, 'nvim-lspconfig'):new(function()
+M.setup = U.Service():provide(FT.LSP, 'setup')
+:require(FT.PLUGIN, 'nvim-lsp-installer')
+:require(FT.PLUGIN, 'nvim-lspconfig')
+-- :require(FT.PLUGIN, 'inc-rename.nvim')
+:new(function()
   -- per line nvim diagnostics
   for type, icon in pairs(venom.icons.diagnostic_states.cozette) do
     local hl = "DiagnosticSign" .. type
     -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
   end
+
+  -- require("inc_rename").setup {}
 
   vim.api.nvim_create_user_command('LspRename', function() M.rename() end, {})
   vim.api.nvim_create_user_command('LspReferences', function() M.references() end, {})
@@ -146,7 +152,11 @@ M.rename = U.Service():new(function()
     local params = vim.lsp.util.make_position_params()
     params.newName = new_name
 
-    vim.lsp.buf_request(0, "textDocument/rename", params, function(_, res, ctx, _)
+    vim.lsp.buf_request(0, "textDocument/rename", params, function(err, res, ctx, _)
+      if err then
+        if err.message then log.err(err.message) end
+        return
+      end
       if not res then return end
 
       -- apply renames

@@ -23,23 +23,25 @@ M.base = U.Service():new(function()
   --- auto groups
   vim.cmd [[
     augroup base
-    autocmd!
+    au!
 
     " buffer type"
-    autocmd BufEnter .swcrc setlocal ft=json
-    autocmd BufEnter tsconfig.json setlocal ft=jsonc
-    autocmd BufEnter mimeapps.list setlocal ft=dosini
-    autocmd BufEnter PKGBUILD.* setlocal ft=PKGBUILD
-    autocmd BufEnter README setlocal ft=markdown
+    au BufEnter .swcrc setlocal ft=json
+    au BufEnter tsconfig.json setlocal ft=jsonc
+    au BufEnter mimeapps.list setlocal ft=dosini
+    au BufEnter PKGBUILD.* setlocal ft=PKGBUILD
+    au BufEnter README setlocal ft=markdown
 
     " file type
-    autocmd FileType lspinfo setlocal nofoldenable
-    autocmd FileType packer setlocal nocursorline
-    autocmd FileType alpha setlocal cursorline
+    au FileType lspinfo setlocal nofoldenable
+    au FileType packer setlocal nocursorline
+    au FileType alpha setlocal cursorline
 
     " terminal"
-    autocmd FileType terminal setlocal nocursorline
-    autocmd TermOpen * setlocal nonumber
+    au FileType terminal setlocal nocursorline
+    au TermOpen * setlocal nonumber
+
+    au InsertLeave,TextChanged * set foldmethod=expr
 
     augroup base
     ]]

@@ -61,6 +61,7 @@ venom.deligates.pm_post_complete:subscribe(function()
   Plugins.paperplanes()
   Plugins.trld()
   Plugins.fold_cycle()
+  Plugins.icon_picker()
   -- Plugins.corn()
   -- Plugins.cinnamon()
   -- Plugins.remember()
@@ -99,17 +100,15 @@ PluginManager.plugins = {
   -- LSP:
   p.lspconfig,
   {'lewis6991/hover.nvim'},
+  -- {'smjonas/inc-rename.nvim'},
 
   -- LANG:
   {p.treesitter,                                      run = ':TSUpdate' },
   {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
   {'terrortylor/nvim-comment'},
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
-  -- {'SmiteshP/nvim-gps',                               requires = p.treesitter },
-  -- {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
-  {'/home/potato/nvim-navic',                         requires = p.lspconfig },
+  {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
   {'lewis6991/spellsitter.nvim'},
-  -- {'andymass/vim-matchup'},
   {'b0o/schemastore.nvim',                            requires = p.lspconfig },
 
   -- PLUGINS:
@@ -144,7 +143,7 @@ PluginManager.plugins = {
     {'L3MON4D3/LuaSnip'},
     {'hrsh7th/cmp-cmdline'},
     {'dmitmel/cmp-digraphs'},
-    {'hrsh7th/cmp-nvim-lsp-signature-help'},
+    -- {'hrsh7th/cmp-nvim-lsp-signature-help'},
     -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
   }},
 
@@ -184,8 +183,12 @@ PluginManager.plugins = {
   {'baskerville/vim-sxhkdrc'},
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
-  {'mfussenegger/nvim-jdtls'},
+  -- {'mfussenegger/nvim-jdtls'},
+  {'ziontee113/icon-picker.nvim'},
+  {'ron-rs/ron.vim'},
 
+  -- {'andymass/vim-matchup'},
+  -- {'github/copilot.vim'},
   -- {'floobits/floobits-neovim'},
   -- {'jbyuki/nabla.nvim'},
   -- {'Mofiqul/trld.nvim'},

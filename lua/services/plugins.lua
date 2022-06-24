@@ -179,7 +179,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       { name = 'buffer' },
       { name = 'path' },
       { name = 'spell' },
-      { name = 'nvim_lsp_signature_help' },
+      -- { name = 'nvim_lsp_signature_help' },
       -- { name = 'digraphs' },
     },
     formatting = {
@@ -360,10 +360,10 @@ M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(functi
         -- return vim.o.columns * 0.35
       end
     end,
-  -- on_close = fun(t: Terminal), -- function to run when the terminal closes
-  -- on_stdout = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stdout
-  -- on_stderr = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stderr
-  -- on_exit = fun(t: Terminal, job: number, exit_code: number, name: string) -- function to run when terminal process exits
+    -- on_close = fun(t: Terminal), -- function to run when the terminal closes
+    -- on_stdout = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stdout
+    -- on_stderr = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stderr
+    -- on_exit = fun(t: Terminal, job: number, exit_code: number, name: string) -- function to run when terminal process exits
   }
 end)
 
@@ -378,16 +378,16 @@ end)
 M.mini_starter = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   local starter = require 'mini.starter'
 
---     header = [[
--- ┬  ┬┬─╮╭╮╭╭─╮╭┬╮
--- ╰┐┌╯├┤ ││││ ││││
---  ╰╯ ╰─╯╯╰╯╰─╯┴ ┴]],
-
-    local header_art = [[
-╭╮╭┬─╮╭─╮┬  ┬┬╭┬╮
-│││├┤ │ │╰┐┌╯││││
-╯╰╯╰─╯╰─╯ ╰╯ ┴┴ ┴
+  local header_art = [[
+┬  ┬┬─╮╭╮╭╭─╮╭┬╮
+╰┐┌╯├┤ ││││ ││││
+ ╰╯ ╰─╯╯╰╯╰─╯┴ ┴
 ]]
+--   local header_art = [[
+-- ╭╮╭┬─╮╭─╮┬  ┬┬╭┬╮
+-- │││├┤ │ │╰┐┌╯││││
+-- ╯╰╯╰─╯╰─╯ ╰╯ ┴┴ ┴
+-- ]]
 
   starter.setup {
     autoopen = true,
@@ -494,6 +494,10 @@ M.fold_cycle = U.Service():require(FT.PLUGIN, 'fold-cycle.nvim'):new(function()
     close_if_max_opened = true,
     softwrap_movement_fix = false,
   }
+end)
+
+M.icon_picker = U.Service():require(FT.PLUGIN, 'icon-picker.nvim'):new(function()
+  require 'icon-picker'
 end)
 
 -- M.fzf_lua = U.Service():require(FT.PLUGIN, 'fzf-lua'):new(function()

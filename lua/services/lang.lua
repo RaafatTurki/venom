@@ -332,9 +332,6 @@ M.setup = U.Service()
     enable = true,
   }
 
-  -- matchup
-  -- U.gvar('matchup_matchparen_offscreen'):set({})
-
   -- nvim-jdtls
   -- function JDTLSSetup()
   --   local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
@@ -380,11 +377,10 @@ M.setup = U.Service()
   vim.cmd [[
     augroup java
     autocmd!
-    " autocmd BufEnter .swcrc setlocal ft=json
     autocmd FileType java lua JDTLSSetup()
-
     augroup java
   ]]
+
 end)
 
 return M

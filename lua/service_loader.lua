@@ -30,7 +30,7 @@ venom.deligates.pm_post_complete:subscribe(function()
   -- Misc.diag_on_hold()
   Misc.camel()
   Misc.buffer_edits()
-  Misc.tabline_minimal()
+  -- Misc.tabline_minimal()
 
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},
@@ -51,6 +51,7 @@ venom.deligates.pm_post_complete:subscribe(function()
   -- Plugins.fzf_lua()
   Plugins.gitsigns()
   Plugins.nvim_tree()
+  Plugins.bufferline()
   Plugins.cmp_ls()
   Plugins.toggle_term()
   -- Plugins.fidget()
@@ -101,6 +102,8 @@ PluginManager.plugins = {
   p.lspconfig,
   {'lewis6991/hover.nvim'},
   -- {'smjonas/inc-rename.nvim'},
+  {'smjonas/inc-rename.nvim',                         branch = 'dressing_support'},
+  {'akinsho/bufferline.nvim',                         requires = 'kyazdani42/nvim-web-devicons',  tag = "v2.*" },
 
   -- LANG:
   {p.treesitter,                                      run = ':TSUpdate' },
@@ -129,6 +132,7 @@ PluginManager.plugins = {
   {'akinsho/nvim-toggleterm.lua'},
   {'ibhagwan/fzf-lua',                                requires = p.devicons },
   {'jghauser/fold-cycle.nvim'},
+  {'ziontee113/icon-picker.nvim'},
   -- {'kevinhwang91/nvim-ufo',                           requires = 'kevinhwang91/promise-async' },
   -- {'smjonas/snippet-converter.nvim'},
   -- {'j-hui/fidget.nvim'},
@@ -184,8 +188,8 @@ PluginManager.plugins = {
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   -- {'mfussenegger/nvim-jdtls'},
-  {'ziontee113/icon-picker.nvim'},
   {'ron-rs/ron.vim'},
+  -- {'tiagovla/scope.nvim'},
 
   -- {'andymass/vim-matchup'},
   -- {'github/copilot.vim'},

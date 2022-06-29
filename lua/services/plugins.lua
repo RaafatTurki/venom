@@ -21,11 +21,16 @@ M.devicons = U.Service():require(FT.PLUGIN, "nvim-web-devicons"):new(function()
 end)
 
 M.dressing = U.Service():require(FT.PLUGIN, "dressing.nvim"):new(function()
-  require('dressing').setup({
+  require 'dressing'.setup {
     input = {
       enabled = true,
       border = "single",
       winblend = 0,
+      override = function(conf)
+        conf.col = -1
+        conf.row = 0
+        return conf
+      end,
     },
     select = {
       enabled = true,
@@ -34,7 +39,7 @@ M.dressing = U.Service():require(FT.PLUGIN, "dressing.nvim"):new(function()
         winblend = 0,
       },
     },
-  })
+  }
 end)
 
 M.notify = U.Service():require(FT.PLUGIN, "nvim-notify"):new(function()
@@ -340,6 +345,25 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
         }
       }
     }
+  }
+end)
+
+M.bufferline = U.Service():require(FT.PLUGIN, 'bufferline.nvim'):new(function()
+  require 'bufferline'.setup {
+    options = {
+      mode = 'tabs',
+      indicator_icon = ' ',
+      modified_icon = '●',
+      left_trunc_marker = '←',
+      right_trunc_marker = '→',
+      show_buffer_close_icons = false,
+      show_close_icon = false,
+      always_show_bufferline = false,
+      -- enforce_regular_tabs = true,
+      offsets = {
+        { filetype = "NvimTree", },
+      },
+    },
   }
 end)
 

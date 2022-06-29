@@ -3,10 +3,13 @@
 
 local M = {}
 
+
 -- TODO: break into actions and features
+-- vim.lsp.start_client()
 M.shared_server_config = U.LspServerConfig():new("SHARED", {
   -- cmp autocompletion
   capabilities = require 'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+  -- capabilities = vim.lsp.protocol.make_client_capabilities(),
 
   -- method handlers settings
   handlers = {
@@ -71,7 +74,7 @@ end)
 M.setup = U.Service():provide(FT.LSP, 'setup')
 :require(FT.PLUGIN, 'nvim-lsp-installer')
 :require(FT.PLUGIN, 'nvim-lspconfig')
--- :require(FT.PLUGIN, 'inc-rename.nvim')
+:require(FT.PLUGIN, 'inc-rename.nvim')
 :new(function()
   -- per line nvim diagnostics
   for type, icon in pairs(venom.icons.diagnostic_states.cozette) do
@@ -90,6 +93,9 @@ M.setup = U.Service():provide(FT.LSP, 'setup')
   vim.api.nvim_create_user_command('LspDiagsList', function() M.diags_list() end, {})
   vim.api.nvim_create_user_command('LspDiagsHover', function() M.diags_hover() end, {})
   -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {})
+  
+  require 'inc_rename'.setup()
+  
 end)
 
 M.progress_spinner_curr_stage_index = 1
@@ -137,6 +143,12 @@ M.progress_spinner = U.Service():require(FT.LSP, 'setup'):new(function()
 end)
 
 M.rename = U.Service():new(function()
+  require 'inc_rename'.rename {
+    default = vim.fn.expand("<cword>")
+  }
+end)
+
+M.rename_old = U.Service():new(function()
   local curr_name = vim.fn.expand("<cword>")
   local input_opts = {
     prompt = 'LSP Rename',

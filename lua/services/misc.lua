@@ -14,7 +14,7 @@ M.base = U.Service():new(function()
   -- new tab
   vim.cmd [[cnoreabbrev nt tabnew]]
   -- quit all
-  vim.cmd [[cnoreabbrev Q qall]]
+  -- vim.cmd [[cnoreabbrev Q qall]]
   -- edit config file
   vim.cmd [[cnoreabbrev conf tabnew $VIM_ROOT/init.vim]]
 
@@ -31,6 +31,7 @@ M.base = U.Service():new(function()
     au BufEnter mimeapps.list setlocal ft=dosini
     au BufEnter PKGBUILD.* setlocal ft=PKGBUILD
     au BufEnter README setlocal ft=markdown
+    au BufEnter nanorc setlocal ft=nanorc
 
     " file type
     au FileType lspinfo setlocal nofoldenable

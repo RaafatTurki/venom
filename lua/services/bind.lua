@@ -43,7 +43,7 @@ M.setup = U.Service():new(function()
   -- write, undo, quit
   M.key {'<C-s>',             '<CMD>write<CR><ESC>', mode = 'n v i'}
   M.key {'<C-z>',             '<CMD>undo<CR>', mode = 'n v i'}
-  M.key {'<C-q>',             '<CMD>quit<CR>', mode = 'n v i'}
+  M.key {'<C-q>',             '<CMD>quitall<CR>', mode = 'n v i'}
   -- page shift up/down, select all
   M.key {'<C-Up>',            '<C-y>k'}
   M.key {'<C-Down>',          '<C-e>j'}

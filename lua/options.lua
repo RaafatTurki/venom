@@ -126,6 +126,8 @@ vim.diagnostic.config {
 
 -- venom options
 venom = {
+  -- a table containing key-value pairs to persist per session
+  persistent = {},
   -- deligates are tables that can hold lua functions and vim commands for later execution (when invoked)
   -- TODO: make it the responsibility of the related service to instantiate a deligate here
   deligates = {

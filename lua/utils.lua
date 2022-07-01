@@ -19,8 +19,9 @@ end
 function M.is_within_range(n, min, max) return ((n >= min) and (n <= max)) end
 --- checks if file exists
 function M.is_file_exists(path)
-  local f = io.open(path, 'r')
-  if f ~= nil then io.close(f) return true else return false end
+  local f = io.open(path, 'rb')
+  if f then io.close(f) end
+  return f ~= nil
 end
 --- checks if table has a value
 function M.has_value(tbl, target_value)
@@ -31,6 +32,39 @@ end
 function M.has_key(tbl, target_key)
   for key, _ in pairs(tbl) do if key == target_key then return true end end
   return false
+end
+-- returns joined array into string
+function M.join(arr, delimiter)
+  if (delimiter == nil) then delimiter = ' ' end
+  local str = ""
+  for i, v in ipairs(arr) do
+    str = str..arr[i]
+    if (i < #arr) then str = str..delimiter end
+  end
+  return str
+end
+--- writes content to file
+function M.file_write(path, content)
+  local fh = assert(io.open(path, "wb"))
+  fh:write(content)
+  fh:flush()
+  fh:close()
+end
+--- reads file content
+function M.file_read(path)
+  local fh = assert(io.open(path, "rb"))
+  local content = assert(fh:read(_VERSION <= "Lua 5.2" and "*a" or "a"))
+  fh:close()
+  return content
+end
+--- reads file content as lines (empty table if file not found)
+function M.file_read_lines(path)
+  if not M.is_file_exists(path) then return {} end
+  local lines = {}
+  for line in io.lines(path) do 
+    lines[#lines + 1] = line
+  end
+  return lines
 end
 
 
@@ -128,6 +162,16 @@ function M.get_indent_settings_str()
   local indent_width = vim.o.shiftwidth..':'..vim.o.tabstop..':'..vim.o.softtabstop
   if vim.o.shiftwidth == vim.o.tabstop and vim.o.tabstop == vim.o.softtabstop then indent_width = vim.o.shiftwidth end
   return indent_type..':'..indent_width
+end
+--- returns nth field of a segmented string (much like unix cut) (omit field to return full array, fields <= 0 count from the end)
+function M.cut(str, delimiter, field)
+  delimiter = delimiter or ' '
+  local arr = vim.split(str, delimiter)
+  if (field ~= nil) then
+    if (field > 0) then return arr[field] else return arr[#arr + field] end
+  else
+    return arr
+  end
 end
 
 

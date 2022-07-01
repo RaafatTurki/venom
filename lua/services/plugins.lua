@@ -527,12 +527,4 @@ end)
 -- M.fzf_lua = U.Service():require(FT.PLUGIN, 'fzf-lua'):new(function()
 -- end)
 
--- M.remember = U.Service():require(FT.PLUGIN, 'remember.nvim'):new(function()
---   require 'remember'.setup {
---     ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit", "NvimTree" },
---     ignore_buftype  = { "quickfix", "nofile", "help" },
---     open_folds      = true
---   }
--- end)
-
 return M

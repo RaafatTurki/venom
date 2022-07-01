@@ -48,10 +48,10 @@ local function get_all_names()
   return session_names
 end
 
-vim.api.nvim_create_user_command('SessionSave', function(opts) M.save(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionLoad', function(opts) M.load(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionDelete', function(opts) M.delete(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionLoadLast', function(opts) M.load() end, {})
-vim.api.nvim_create_user_command('SessionSelect', function(opts) M.select() end, {})
+vim.api.nvim_create_user_command('SessionSave',     function(opts) M.save(opts.fargs[1]) end,   { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionLoad',     function(opts) M.load(opts.fargs[1]) end,   { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionDelete',   function(opts) M.delete(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionLoadLast', function(opts) M.load() end,                {})
+vim.api.nvim_create_user_command('SessionSelect',   function(opts) M.select() end,              {})
 
 return M

@@ -3,69 +3,62 @@
 
 local M = {}
 
+M.apply_shared_server_config = U.Service():new(function(server_config)
 
--- TODO: break into actions and features
--- vim.lsp.start_client()
-M.shared_server_config = U.LspServerConfig():new("SHARED", {
-  -- cmp autocompletion
-  capabilities = require 'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()),
-  -- capabilities = vim.lsp.protocol.make_client_capabilities(),
+  -- subscribe on_attach to deligates.on_attach and change on_attach to deligates.on_attach invoker
+  server_config.deligates.on_attach:subscribe(server_config.opts.on_attach)
+  server_config.opts.on_attach = function(client, bufnr)
+    server_config.deligates.on_attach(client, bufnr)
+  end
 
-  -- method handlers settings
-  handlers = {
+  -- skip here if NO_SHARED_CONFIG tag exists
+  if U.has_value(server_config.tags, LST.NO_SHARED_CONFIG) then
+    return server_config
+  end
+
+  -- shared opts (more at vim.lsp.start_client)
+  local shared_capabilities = require 'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  local shared_handlers = {
     ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
     ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
   }
-})
-
-M.shared_server_on_attach_hook = function (client, bufnr)
-  -- set gq command to use the lsp formatter for this buffer
-  vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
-
-  -- document highlight on cursor hold if available
-  if client.server_capabilities.document_highlight then
-    -- U.create_augroup([[
-    --     au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-    --     au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-    --   ]], 'hover_highlight')
-
-    vim.cmd [[
+  local shared_on_attach = function(client, bufnr)
+    -- set gq command to use the lsp formatter for this buffer
+    vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
+    -- document highlight on cursor hold if available
+    if client.server_capabilities.document_highlight then
+      vim.cmd [[
           augroup hover_highlight
           autocmd!
-
           au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
           au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-
           augroup hover_highlight
           ]]
+    end
   end
 
-  -- navic
-  if client.server_capabilities.documentSymbolProvider then
-    require 'nvim-navic'.attach(client, bufnr)
+  if not U.has_value(server_config.tags, LST.NO_SHARED_CAPABILITIES) then
+    server_config.opts.capabilities = shared_capabilities
   end
-end
+  if not U.has_value(server_config.tags, LST.NO_SHARED_HANDLERS) then
+    server_config.opts.handlers = shared_handlers
+  end
+  if not U.has_value(server_config.tags, LST.NO_SHARED_ON_ATTACH) then
+    server_config.deligates.on_attach:subscribe(shared_on_attach)
+  end
+
+  return server_config
+end)
 
 M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_configs)
   local lspconf = require 'lspconfig'
 
   -- seting up all servers in servers_configs
   for _, server_config in pairs(lsp_servers_configs) do
-    -- applying shared configs opts
-    if not U.has_value(server_config.tags, LST.NO_SHARED_CONFIG_SETUP) then
-      server_config.opts = vim.tbl_deep_extend('force', server_config.opts, M.shared_server_config.opts)
-    end
-
-    -- setting up on_attach
-    server_config.opts.on_attach = function(client, bufnr)
-      M.shared_server_on_attach_hook(client, bufnr)
-      if server_config.opts.on_attach_hook then
-        server_config.opts.on_attach_hook(client, bufnr)
-      end
-    end
+    server_config = M.apply_shared_server_config(server_config)
 
     -- setting up server
-    if U.has_value(server_config.tags, LST.AUTO_SETUP) and not U.has_value(server_config.tags, LST.NO_AUTO_SETUP) then
+    if not U.has_value(server_config.tags, LST.NO_AUTO_SETUP) then
       lspconf[server_config.name].setup(server_config.opts)
     end
   end
@@ -227,9 +220,7 @@ M.setup_buf_fmt_on_save = U.Service():new(function(client, bufnr)
 		vim.api.nvim_create_autocmd("BufWritePre", {
 			group = augroup_fmt_on_save,
 			buffer = bufnr,
-			callback = function()
-        vim.lsp.buf.formatting_sync()
-			end,
+			callback = function() vim.lsp.buf.format() end,
 		})
 	end
 end)

@@ -40,11 +40,10 @@ M.configure_servers = U.Service():new(function()
         telemetry = { enable = false },
       }
     },
-    -- on_attach_hook = function(client, bufnr)
+    -- on_attach = function(client, bufnr)
     --   Lsp.setup_buf_fmt_on_save(client, bufnr)
     -- end
   })
-
   M.configure_server("texlab", {},  {
     settings = {
       texlab = {
@@ -71,7 +70,6 @@ M.configure_servers = U.Service():new(function()
       -- },
     }
   })
-
   M.configure_server("svelte", {}, {
     settings = {
       svelte = {
@@ -89,7 +87,6 @@ M.configure_servers = U.Service():new(function()
       }
     }
   })
-
   M.configure_server("rust_analyzer", {}, {
     settings = {
       ["rust-analyzer"] = {
@@ -102,11 +99,9 @@ M.configure_servers = U.Service():new(function()
       }
     }
   })
-
   M.configure_server("emmet_ls", {}, {
     filetypes = { 'html', 'css', 'svelte' },
   })
-
   M.configure_server("jsonls", {}, {
     settings = {
       json = {
@@ -124,7 +119,6 @@ M.configure_servers = U.Service():new(function()
       },
     }
   })
-
   M.configure_server("pylsp", {}, {
     settings = {
       configurationSources = { 'flake8' },
@@ -139,7 +133,6 @@ M.configure_servers = U.Service():new(function()
       }
     }
   })
-
   M.configure_server("gopls", {}, {
     settings = {
       gopls = {
@@ -149,17 +142,14 @@ M.configure_servers = U.Service():new(function()
           useany = true,
         },
       }
-    }
+    },
+    on_attach = function(client, bufnr)
+      Lsp.setup_buf_fmt_on_save(client, bufnr)
+    end
   })
-
 
   -- annoying and up to no good lsp servers:
   M.configure_server("jdtls", { LST.NO_AUTO_SETUP }, {})
-
-  -- M.configure_server("java_language_server", {}, {
-  --   cmd = {'/usr/share/java/java-language-server/lang_server_linux.sh'},
-  -- })
-
   M.configure_server("gdscript", {}, {
     cmd = {'godot-ls'},
     flags = {
@@ -167,36 +157,23 @@ M.configure_servers = U.Service():new(function()
     },
   })
 
-  -- looping over all installed LSPI servers
+  -- configure_server to all unconfigured and installed lspi servers
   local lspi = require 'nvim-lsp-installer'
   for _, server_obj in ipairs(lspi.get_installed_servers()) do
     if (not U.has_key(M.lsp_servers_configs, server_obj.name)) then
-      -- configure unconfigured servers
-      M.configure_server(server_obj.name, { LST.AUTO_SETUP }, {})
-    else
-      -- add LST.AUTO_SETUP tag to configured servers
-      M.lsp_servers_configs[server_obj.name]:tag(LST.AUTO_SETUP)
+      M.configure_server(server_obj.name, {}, {})
     end
   end
 
   -- log configured server names and tags
   -- for _, server_config in pairs(M.lsp_servers_configs) do
-  --   logi(server_config.name)
-  --   logi(server_config.tags)
+  --   log(server_config.name)
+  --   log(server_config.tags)
   -- end
 end)
 
 M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(function()
-  local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
-  -- parser_configs.ron = {
-  --   install_info = {
-  --     url = "https://github.com/zee-editor/tree-sitter-ron",
-  --     files = { "src/parser.c" },
-  --     branch = "main",
-  --   },
-  -- }
-
-  -- if not is_mod_exists('nvim-treesitter.configs') then return end
+  -- local parser_configs = require 'nvim-treesitter.parsers'.get_parser_configs()
   require 'nvim-treesitter.configs'.setup {
     -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
     ensure_installed = {

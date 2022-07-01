@@ -85,7 +85,6 @@ local p = {
   treesitter = 'nvim-treesitter/nvim-treesitter',
   gitsigns = 'lewis6991/gitsigns.nvim',
   nui = 'MunifTanjim/nui.nvim',
-  telescope = 'nvim-telescope/telescope.nvim',
   lspconfig = 'neovim/nvim-lspconfig',
   cmp = 'hrsh7th/nvim-cmp',
   mini = 'echasnovski/mini.nvim',
@@ -101,9 +100,7 @@ PluginManager.plugins = {
   -- LSP:
   p.lspconfig,
   {'lewis6991/hover.nvim'},
-  -- {'smjonas/inc-rename.nvim'},
-  {'smjonas/inc-rename.nvim',                         branch = 'dressing_support'},
-  {'akinsho/bufferline.nvim',                         requires = 'kyazdani42/nvim-web-devicons',  tag = "v2.*" },
+  {'smjonas/inc-rename.nvim'},
 
   -- LANG:
   {p.treesitter,                                      run = ':TSUpdate' },
@@ -129,6 +126,7 @@ PluginManager.plugins = {
   -- {'~/sectors/lua/corn.nvim'},
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
   {'toppair/reach.nvim'},
+  {'akinsho/bufferline.nvim',                         requires = p.devicons,  tag = "v2.*" },
   {'akinsho/nvim-toggleterm.lua'},
   {'ibhagwan/fzf-lua',                                requires = p.devicons },
   {'jghauser/fold-cycle.nvim'},

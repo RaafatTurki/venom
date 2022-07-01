@@ -82,7 +82,7 @@ M.register_plugins = U.Service():new(function()
   if (M.is_bootstraped) then 
     vim.api.nvim_command 'PackerSync'
     -- TODO: convert to an auto group
-    vim.cmd [[autocmd User PackerComplete lua venom.actions.pm_post_complete()]]
+    vim.cmd [[autocmd User PackerComplete lua venom.deligates.pm_post_complete()]]
   else
     venom.deligates.pm_post_complete()
   end

@@ -248,10 +248,10 @@ function M.Deligate()
       commands = {},
       new = function(self) return self end,
       subscribe = function(self, cmd) table.insert(self.commands, cmd) end,
-      invoke = function(self)
+      invoke = function(self, ...)
         for _, cmd in pairs(self.commands) do
           if type(cmd) == 'string' then vim.cmd(cmd)
-          elseif type(cmd) == 'function' then cmd() end
+          elseif type(cmd) == 'function' then cmd(...) end
         end
       end
     },
@@ -311,6 +311,9 @@ function M.LspServerConfig()
     name = "",
     opts = {},
     tags = {},
+    deligates = {
+      on_attach = M.Deligate():new(),
+    },
     tag = function(self, server_tag) table.insert(self.tags, server_tag) return self end,
     new = function(self, name, opts)
       self.name = name

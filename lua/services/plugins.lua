@@ -524,7 +524,19 @@ M.icon_picker = U.Service():require(FT.PLUGIN, 'icon-picker.nvim'):new(function(
   require 'icon-picker'
 end)
 
--- M.fzf_lua = U.Service():require(FT.PLUGIN, 'fzf-lua'):new(function()
--- end)
+M.fzf_lua = U.Service():require(FT.PLUGIN, 'fzf-lua'):new(function()
+  require'fzf-lua'.setup {
+    winopts = {
+      border           = 'single',
+      hl = {
+        border         = 'VertSplit',        -- border color (try 'FloatBorder')
+      },
+      preview = {
+        title          = true,
+        scrollbar      = 'border',
+      },
+    }
+  }
+end)
 
 return M

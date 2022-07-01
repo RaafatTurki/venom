@@ -183,6 +183,8 @@ M.setup_plugins = U.Service():new(function()
   M.key {'<leader>v',         '<CMD>LspHover<CR>'}
   M.key {'<leader>dl',        '<CMD>LspDiagsList<CR>'}
   M.key {'<leader>dv',        '<CMD>LspDiagsHover<CR>'}
+  -- fzf-lus
+  M.key {'<leader>f',         '<CMD>FzfLua files<CR>'}
 end)
 
 return M

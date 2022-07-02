@@ -149,7 +149,7 @@ M.configure_servers = U.Service():new(function()
   })
 
   -- annoying and up to no good lsp servers:
-  M.configure_server("jdtls", { LST.NO_AUTO_SETUP }, {})
+  M.configure_server("jdtls", {}, {})
   M.configure_server("gdscript", {}, {
     cmd = {'godot-ls'},
     flags = {
@@ -157,11 +157,16 @@ M.configure_servers = U.Service():new(function()
     },
   })
 
-  -- configure_server to all unconfigured and installed lspi servers
   local lspi = require 'nvim-lsp-installer'
   for _, server_obj in ipairs(lspi.get_installed_servers()) do
+    -- configure all installed and unconfigured lspi servers
     if (not U.has_key(M.lsp_servers_configs, server_obj.name)) then
       M.configure_server(server_obj.name, {}, {})
+    end
+
+    -- set all configured and installed lspi servers to AUTO_SETUP
+    if (U.has_key(M.lsp_servers_configs, server_obj.name)) then
+      M.lsp_servers_configs[server_obj.name]:tag(LST.AUTO_SETUP)
     end
   end
 

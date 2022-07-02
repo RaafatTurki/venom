@@ -252,8 +252,8 @@ function M.fn()
   }
 end
 --- service invoke wrapper with self
-function M.swrap(service)
-  return function() return service() end
+function M.service_invoker(service)
+  return function(...) return service(...) end
 end
 
 -- local function new(class, ...)

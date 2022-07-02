@@ -7,9 +7,7 @@ M.apply_shared_server_config = U.Service():new(function(server_config)
 
   -- subscribe on_attach to deligates.on_attach and change on_attach to deligates.on_attach invoker
   server_config.deligates.on_attach:subscribe(server_config.opts.on_attach)
-  server_config.opts.on_attach = function(client, bufnr)
-    server_config.deligates.on_attach(client, bufnr)
-  end
+  server_config.opts.on_attach = U.service_invoker(server_config.deligates.on_attach)
 
   -- skip here if NO_SHARED_CONFIG tag exists
   if U.has_value(server_config.tags, LST.NO_SHARED_CONFIG) then
@@ -58,7 +56,7 @@ M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_
     server_config = M.apply_shared_server_config(server_config)
 
     -- setting up server
-    if not U.has_value(server_config.tags, LST.NO_AUTO_SETUP) then
+    if U.has_value(server_config.tags, LST.AUTO_SETUP) then
       lspconf[server_config.name].setup(server_config.opts)
     end
   end
@@ -91,48 +89,40 @@ M.setup = U.Service():provide(FT.LSP, 'setup')
   
 end)
 
-M.progress_spinner_curr_stage_index = 1
--- M.progress_spinner_curr_stage_index = 1
-M.progress_spinner_stages = {
-  -- "⠋",
-  -- "⠙",
-  -- "⠹",
-  -- "⠸",
-  -- "⠼",
-  -- "⠴",
-  -- "⠦",
-  -- "⠧",
-  -- "⠇",
-  -- "⠏",
-  "∙∙∙",
-  "●∙∙",
-  "●∙∙",
-  "∙●∙",
-  "∙●∙",
-  "∙●∙",
-  "∙∙●",
-  "∙∙●",
-  "∙∙∙",
+M.progress_spinner = {
+  time = 0,
+  curr = 1,
+  stages = {
+    -- '⠋',
+    -- '⠙',
+    -- '⠹',
+    -- '⠸',
+    -- '⠼',
+    -- '⠴',
+    -- '⠦',
+    -- '⠧',
+    -- '⠇',
+    -- '⠏',
+    '∙∙∙',
+    '●∙∙',
+    '●∙∙',
+    '∙●∙',
+    '∙●∙',
+    '∙●∙',
+    '∙∙●',
+    '∙∙●',
+    '∙∙∙',
+  },
 }
-M.progress_spinner = U.Service():require(FT.LSP, 'setup'):new(function()
-  if #vim.lsp.buf_get_clients() == 0 then return '' end
-  local prog_msg = vim.lsp.util.get_progress_messages()[1]
-  if prog_msg then
-    -- set current stage
-    local curr_stage = M.progress_spinner_stages[M.progress_spinner_curr_stage_index]
 
-    -- increment
-    M.progress_spinner_curr_stage_index = M.progress_spinner_curr_stage_index + 1
-
-    -- loop back if out of range
-    if (M.progress_spinner_curr_stage_index > #M.progress_spinner_stages) then
-      M.progress_spinner_curr_stage_index = 1
-    end
-
-    return curr_stage
-  else
-    return ''
-  end
+M.get_progress_spinner = U.Service():require(FT.LSP, 'setup'):new(function()
+  local res = ''
+  if #vim.lsp.buf_get_clients() == 0 then return res end
+  if #vim.lsp.util.get_progress_messages() == 0 then return res end
+  res = M.progress_spinner.stages[M.progress_spinner.curr]
+  M.progress_spinner.curr = M.progress_spinner.curr + 1
+  if (M.progress_spinner.curr > #M.progress_spinner.stages) then M.progress_spinner.curr = 1 end
+  return res
 end)
 
 M.rename = U.Service():new(function()

@@ -9,18 +9,13 @@ M.setup = U.Service():require(FT.PLUGIN, "feline.nvim"):new(function()
   local function c(comp)
     if comp == nil then comp = {} end
 
-    -- left and right separators
-    local sep = {
-      str = ' ',
-      hl = 'StatusLine'
-    }
+    -- setting separators
+    local sep = { str = ' ', hl = 'StatusLine' }
     comp.right_sep = sep
     comp.left_sep = sep
 
     -- fixing up highlighting
-
     if type(comp.hl) == 'string' then
-
       comp.hl = {
         -- fg = get_col(comp.hl, 'fg') or get_col('StatusLine', 'fg') or 'NONE',
         -- bg = get_col(comp.hl, 'bg') or get_col('StatusLine', 'bg') or 'NONE',
@@ -71,7 +66,7 @@ M.setup = U.Service():require(FT.PLUGIN, "feline.nvim"):new(function()
         c({ provider = 'diagnostic_warnings', hl = 'DiagnosticSignWarn',  icon = lsp_diag_icons.Warn }),
         c({ provider = 'diagnostic_info',     hl = 'DiagnosticSignInfo',  icon = lsp_diag_icons.Info }),
         c({ provider = 'diagnostic_hints',    hl = 'DiagnosticSignHint',  icon = lsp_diag_icons.Hint }),
-        c({ provider = 'lsp_client_names',    icon = U.swrap(Lsp.progress_spinner) }),
+        c({ provider = 'lsp_client_names',    icon = function() return Lsp.get_progress_spinner()..' ' end }),
 
         c({ provider = '',                   hl = 'WarningMsg',          enabled = function () return (vim.v.this_session ~= "") end }),
         c({ provider = 'file_type' }),
@@ -95,6 +90,8 @@ M.setup = U.Service():require(FT.PLUGIN, "feline.nvim"):new(function()
       bufnames = {}
     },
   }
+
+  -- require('feline').winbar.setup()
 end)
 
 

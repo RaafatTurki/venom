@@ -24,7 +24,7 @@ M.setup = U.Service():provide(FT.SESSION, "setup"):require(FT.PLUGIN, "mini.nvim
       },
       pre = {
         delete = function()
-          os.remove(M.get_persistent_data_file_path())
+          M.delete_data()
         end
       }
     },
@@ -66,6 +66,11 @@ M.delete = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
   require 'mini.sessions'.delete(session_name)
 end)
 
+M.delete_data = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
+  os.remove(M.get_persistent_data_file_path())
+  venom.persistent = {}
+end)
+
 M.select = U.Service():require(FT.SESSION, "setup"):new(function()
   require 'mini.sessions'.select()
 end)
@@ -81,10 +86,11 @@ local function get_all_names()
   return session_names
 end
 
-vim.api.nvim_create_user_command('SessionSave',     function(opts) M.save(opts.fargs[1]) end,   { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionLoad',     function(opts) M.load(opts.fargs[1]) end,   { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionDelete',   function(opts) M.delete(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionLoadLast', function(opts) M.load() end,                {})
-vim.api.nvim_create_user_command('SessionSelect',   function(opts) M.select() end,              {})
+vim.api.nvim_create_user_command('SessionSave',       function(opts) M.save(opts.fargs[1]) end,   { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionLoad',       function(opts) M.load(opts.fargs[1]) end,   { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionDelete',     function(opts) M.delete(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionDeleteData', function(opts) M.delete_data() end,         {})
+vim.api.nvim_create_user_command('SessionLoadLast',   function(opts) M.load() end,                {})
+vim.api.nvim_create_user_command('SessionSelect',     function(opts) M.select() end,              {})
 
 return M

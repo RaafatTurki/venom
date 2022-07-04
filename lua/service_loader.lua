@@ -14,7 +14,7 @@ Statusbar = require 'services.statusbar'
 PluginManager.attempt_bootstrap()
 PluginManager.setup()
 
-venom.deligates.pm_post_complete:subscribe(function()
+PluginManager.event_post_complete:subscribe(function()
   Sessions.setup()
   Bind.setup()
 

@@ -5,9 +5,9 @@ local M = {}
 
 M.apply_shared_server_config = U.Service():new(function(server_config)
 
-  -- subscribe on_attach to deligates.on_attach and change on_attach to deligates.on_attach invoker
-  server_config.deligates.on_attach:subscribe(server_config.opts.on_attach)
-  server_config.opts.on_attach = U.service_invoker(server_config.deligates.on_attach)
+  -- subscribe on_attach to events.on_attach and change on_attach to events.on_attach invoker
+  server_config.events.on_attach:subscribe(server_config.opts.on_attach)
+  server_config.opts.on_attach = U.service_invoker(server_config.events.on_attach)
 
   -- skip here if NO_SHARED_CONFIG tag exists
   if U.has_value(server_config.tags, LST.NO_SHARED_CONFIG) then
@@ -42,7 +42,7 @@ M.apply_shared_server_config = U.Service():new(function(server_config)
     server_config.opts.handlers = shared_handlers
   end
   if not U.has_value(server_config.tags, LST.NO_SHARED_ON_ATTACH) then
-    server_config.deligates.on_attach:subscribe(shared_on_attach)
+    server_config.events.on_attach:subscribe(shared_on_attach)
   end
 
   return server_config
@@ -83,6 +83,7 @@ M.setup = U.Service():provide(FT.LSP, 'setup')
   vim.api.nvim_create_user_command('LspHover', function() M.hover() end, {})
   vim.api.nvim_create_user_command('LspDiagsList', function() M.diags_list() end, {})
   vim.api.nvim_create_user_command('LspDiagsHover', function() M.diags_hover() end, {})
+  vim.api.nvim_create_user_command('LspFormat', function() M.format() end, {})
   -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {})
   
   require 'inc_rename'.setup()
@@ -187,6 +188,10 @@ end)
 M.hover = U.Service():require(FT.PLUGIN, 'hover.nvim'):new(function()
   -- vim.lsp.buf.hover()
   require 'hover'.hover()
+end)
+
+M.format = U.Service():new(function()
+  vim.lsp.buf.format()
 end)
 
 M.diags_list = U.Service():new(function()

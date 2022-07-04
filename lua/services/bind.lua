@@ -71,13 +71,13 @@ M.setup = U.Service():new(function()
   -- M.key {'n',                'nzzzv'}
   -- M.key {'N',                'Nzzzv'}
   -- refresh action
-  venom.deligates.refresh:subscribe [[e]]
-  M.key {'<F5>',              function() venom.deligates.refresh() end}
+  venom.events.refresh:subscribe [[e]]
+  M.key {'<F5>',              function() venom.events.refresh() end}
   -- clear action
   -- venom.actions.clear:subscribe [[let @/ = ""]]
-  venom.deligates.clear:subscribe [[noh]]
-  venom.deligates.clear:subscribe(U.clear_prompt)
-  M.key {'<C-l>',             function() venom.deligates.clear() end}
+  venom.events.clear:subscribe [[noh]]
+  venom.events.clear:subscribe(U.clear_prompt)
+  M.key {'<C-l>',             function() venom.events.clear() end}
   M.key {'<C-l>',             '<ESC>', mode = 'i'}
   -- terminal smart escape
   M.key {'<Esc>',             "v:lua.TermSmartEsc(b:terminal_job_pid, '"..'<Esc>'.."')", mode = 't', opts = { noremap = true, expr = true } }

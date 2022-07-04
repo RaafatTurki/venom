@@ -128,12 +128,11 @@ vim.diagnostic.config {
 venom = {
   -- a table containing key-value pairs to persist per session
   persistent = {},
-  -- deligates are tables that can hold lua functions and vim commands for later execution (when invoked)
-  -- TODO: make it the responsibility of the related service to instantiate a deligate here
-  deligates = {
-    pm_post_complete = U.Deligate():new(),
-    refresh = U.Deligate():new(),
-    clear = U.Deligate():new(),
+  -- events are tables that can hold lua functions and vim commands for later execution (when invoked)
+  -- TODO: make it the responsibility of the related service to instantiate a events here
+  events = {
+    refresh = U.Event():new(),
+    clear = U.Event():new(),
     -- write = U.Deligate():new(),
   },
   -- features is a table that can hold strings representing the availability of said feature for later querying.

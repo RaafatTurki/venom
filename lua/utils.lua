@@ -19,9 +19,12 @@ end
 function M.is_within_range(n, min, max) return ((n >= min) and (n <= max)) end
 --- checks if file exists
 function M.is_file_exists(path)
-  local f = io.open(path, 'rb')
-  if f then io.close(f) end
-  return f ~= nil
+  local ok, err, code = os.rename(path, path)
+  if not ok then
+    -- Permission denied, but it exists
+    if code == 13 then return true end
+  end
+  return ok, err
 end
 --- checks if table has a value
 function M.has_value(tbl, target_value)
@@ -286,7 +289,7 @@ end
 
 -- Class Based Utils (statefull)
 --- action class
-function M.Deligate()
+function M.Event()
   return setmetatable(
     {
       commands = {},
@@ -355,8 +358,8 @@ function M.LspServerConfig()
     name = "",
     opts = {},
     tags = {},
-    deligates = {
-      on_attach = M.Deligate():new(),
+    events = {
+      on_attach = M.Event():new(),
     },
     tag = function(self, server_tag) table.insert(self.tags, server_tag) return self end,
     new = function(self, name, opts)

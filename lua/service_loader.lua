@@ -11,73 +11,7 @@ Lang = require 'services.lang'
 Lsp = require 'services.lsp'
 Statusbar = require 'services.statusbar'
 
-PluginManager.attempt_bootstrap()
 PluginManager.setup()
-
-PluginManager.event_post_complete:subscribe(function()
-  Sessions.setup()
-  Bind.setup()
-
-  Bind.bind_leader()
-
-  Misc.base()
-  Misc.open_uri()
-  -- Misc.color_col()
-  Misc.term_smart_esc()
-  Misc.disable_builtin_plugins()
-  Misc.highlight_yank()
-  Misc.automatic_treesitter()
-  -- Misc.diag_on_hold()
-  Misc.camel()
-  Misc.buffer_edits()
-  -- Misc.tabline_minimal()
-
-  Themes.init({
-    { func = Themes.builtin,  args = {},             name = 'Built-In'},
-    { func = Themes.material, args = 'darker',       name = 'Material Darker'},
-    { func = Themes.material, args = 'lighter',      name = 'Material Lighter'},
-    { func = Themes.material, args = 'deep ocean',   name = 'Material Deep Ocean'},
-    { func = Themes.material, args = 'oceanic',      name = 'Material Oceanic'},
-    { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
-    { func = Themes.default,  args = {},             name = 'Default'},
-  })
-
-  Plugins.impatient()
-  Plugins.devicons()
-  Plugins.dressing()
-  -- Plugins.notify()
-  Plugins.bqf()
-  Plugins.reach()
-  Plugins.fzf_lua()
-  Plugins.gitsigns()
-  Plugins.nvim_tree()
-  Plugins.bufferline()
-  Plugins.cmp_ls()
-  Plugins.toggle_term()
-  -- Plugins.fidget()
-  Plugins.mini_starter()
-  Plugins.mini_surround()
-  Plugins.dirty_talk()
-  Plugins.hover()
-  Plugins.paperplanes()
-  Plugins.trld()
-  Plugins.fold_cycle()
-  Plugins.icon_picker()
-  -- Plugins.corn()
-  -- Plugins.cinnamon()
-  -- Plugins.remember()
-
-  Lang.setup()
-  Lang.configure_servers()
-  Lang.setup_treesitter()
-
-  Lsp.setup()
-  Lsp.setup_servers(Lang.lsp_servers_configs)
-
-  Statusbar.setup()
-
-  Bind.setup_plugins()
-end)
 
 local p = {
   plenary = 'nvim-lua/plenary.nvim',
@@ -89,7 +23,7 @@ local p = {
   cmp = 'hrsh7th/nvim-cmp',
   mini = 'echasnovski/mini.nvim',
 }
-PluginManager.plugins = {
+local plugins = {
   -- PLUGIN_MANAGER:
   {'wbthomason/packer.nvim'},
 
@@ -101,6 +35,7 @@ PluginManager.plugins = {
   p.lspconfig,
   {'lewis6991/hover.nvim'},
   {'smjonas/inc-rename.nvim'},
+  {'RRethy/vim-illuminate'},
 
   -- LANG:
   {p.treesitter,                                      run = ':TSUpdate' },
@@ -122,7 +57,7 @@ PluginManager.plugins = {
   {p.gitsigns,                                        requires = p.plenary },
   {'fedepujol/move.nvim'},
   {'rktjmp/paperplanes.nvim',                         branch = 'rel-0.1.2' },
-  {'Mofiqul/trld.nvim'},
+  'Mofiqul/trld.nvim',
   -- {'~/sectors/lua/corn.nvim'},
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
   {'toppair/reach.nvim'},
@@ -208,4 +143,86 @@ PluginManager.plugins = {
   -- {'p00f/clangd_extensions.nvim'},
 }
 
-PluginManager.register_plugins()
+PluginManager.event_post_complete:subscribe(function()
+  --- register plugins into the feature list
+  for _, entry in pairs(plugins) do
+    -- PluginManager.register_plugin(entry)
+    local M = PluginManager
+
+    local name_split = M.get_plugin_entry_split_name(entry)
+    local name_short = name_split[#name_split]
+
+    if not M.is_plugin_installed(name_short) then
+      log.warn('attempt to feature register a missing plugin "'..name_short..'"')
+    elseif venom.features:has(FT.PLUGIN, name_short) then
+      log.warn('attempt to feature re-register a plugin "'..name_short..'"')
+    else
+      venom.features:add(FT.PLUGIN, name_short)
+    end
+  end
+
+  Sessions.setup()
+  Bind.setup()
+
+  Bind.bind_leader()
+
+  Misc.base()
+  Misc.open_uri()
+  -- Misc.color_col()
+  Misc.term_smart_esc()
+  Misc.disable_builtin_plugins()
+  Misc.highlight_yank()
+  Misc.automatic_treesitter()
+  -- Misc.diag_on_hold()
+  Misc.camel()
+  Misc.buffer_edits()
+  -- Misc.tabline_minimal()
+
+  Themes.init({
+    { func = Themes.builtin,  args = {},             name = 'Built-In'},
+    { func = Themes.material, args = 'darker',       name = 'Material Darker'},
+    { func = Themes.material, args = 'lighter',      name = 'Material Lighter'},
+    { func = Themes.material, args = 'deep ocean',   name = 'Material Deep Ocean'},
+    { func = Themes.material, args = 'oceanic',      name = 'Material Oceanic'},
+    { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
+    { func = Themes.default,  args = {},             name = 'Default'},
+  })
+
+  Plugins.impatient()
+  Plugins.devicons()
+  Plugins.dressing()
+  -- Plugins.notify()
+  Plugins.bqf()
+  Plugins.reach()
+  Plugins.fzf_lua()
+  Plugins.gitsigns()
+  Plugins.nvim_tree()
+  Plugins.bufferline()
+  Plugins.cmp_ls()
+  Plugins.toggle_term()
+  -- Plugins.fidget()
+  Plugins.mini_starter()
+  Plugins.mini_surround()
+  Plugins.dirty_talk()
+  Plugins.hover()
+  Plugins.paperplanes()
+  Plugins.trld()
+  Plugins.fold_cycle()
+  Plugins.icon_picker()
+  -- Plugins.corn()
+  -- Plugins.cinnamon()
+  -- Plugins.remember()
+
+  Lang.setup()
+  Lang.configure_servers()
+  Lang.setup_treesitter()
+
+  Lsp.setup()
+  Lsp.setup_servers(Lang.lsp_servers_configs)
+
+  Statusbar.setup()
+
+  Bind.setup_plugins()
+end)
+
+PluginManager.setup_plugins(plugins)

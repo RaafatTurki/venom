@@ -15,7 +15,11 @@ M.apply_shared_server_config = U.Service():new(function(server_config)
   end
 
   -- shared opts (more at vim.lsp.start_client)
-  local shared_capabilities = require 'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
+  if venom.features:has(FT.PLUGIN, 'nvim-cmp') then
+    shared_capabilities = require 'cmp_nvim_lsp'.update_capabilities(shared_capabilities)
+  end
+
   local shared_handlers = {
     ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
     ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
@@ -23,15 +27,10 @@ M.apply_shared_server_config = U.Service():new(function(server_config)
   local shared_on_attach = function(client, bufnr)
     -- set gq command to use the lsp formatter for this buffer
     vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
+
     -- document highlight on cursor hold if available
-    if client.server_capabilities.document_highlight then
-      vim.cmd [[
-          augroup hover_highlight
-          autocmd!
-          au CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-          au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-          augroup hover_highlight
-          ]]
+    if venom.features:has(FT.PLUGIN, 'vim-illuminate') then
+      require 'illuminate'.on_attach(client)
     end
   end
 

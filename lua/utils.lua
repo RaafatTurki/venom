@@ -341,7 +341,7 @@ function M.Service()
           end
           return return_value
         else
-          log.warn("missing features: "..table.concat(missing_features, ' / '))
+          log.warn("missing features: "..table.concat(missing_features, ' / '), { stack_lvl_off = 1 })
         end
       end,
     },

@@ -6,8 +6,8 @@ local M = {}
 M.apply_shared_server_config = U.Service():new(function(server_config)
 
   -- subscribe on_attach to events.on_attach and change on_attach to events.on_attach invoker
-  server_config.events.on_attach:subscribe(server_config.opts.on_attach)
-  server_config.opts.on_attach = U.service_invoker(server_config.events.on_attach)
+  server_config.events.on_attach:sub(server_config.opts.on_attach)
+  server_config.opts.on_attach = server_config.events.on_attach:wrap()
 
   -- skip here if NO_SHARED_CONFIG tag exists
   if U.has_value(server_config.tags, LST.NO_SHARED_CONFIG) then
@@ -41,7 +41,7 @@ M.apply_shared_server_config = U.Service():new(function(server_config)
     server_config.opts.handlers = shared_handlers
   end
   if not U.has_value(server_config.tags, LST.NO_SHARED_ON_ATTACH) then
-    server_config.events.on_attach:subscribe(shared_on_attach)
+    server_config.events.on_attach:sub_front(shared_on_attach)
   end
 
   return server_config

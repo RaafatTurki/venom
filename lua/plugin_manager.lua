@@ -64,11 +64,23 @@ end)
 --- checks if plugin is installed
 M.is_plugin_installed = U.Service():new(function(short_name)
   for _, path in pairs(M.install_paths) do
+    -- if vim.fn.isdirectory(path..'/'..short_name) == 0 then return true end
     if U.is_file_exists(path..'/'..short_name) then
       return true
     end
   end
   return false
+end)
+
+--- registers a plugin into the feature list as PLUGIN:<plugin short name>
+M.register_plugin = U.Service():new(function(short_name)
+  if not M.is_plugin_installed(short_name) then
+    log.warn('attempt to feature register a missing plugin "'..short_name..'"')
+  elseif venom.features:has(FT.PLUGIN, short_name) then
+    log.warn('attempt to feature re-register a plugin "'..short_name..'"')
+  else
+    venom.features:add(FT.PLUGIN, short_name)
+  end
 end)
 
 --- gets plugin entry split name
@@ -98,11 +110,17 @@ M.detect_missing_plugins = U.Service():new(function(entries)
 end)
 
 --- syncs plugins (updates them regardless of the method)
-M.sync = U.Service():new(function()
+M.sync = U.Service():new(function(opts)
+  opts = opts or {
+    take_snapshot = false
+  }
+
+  if opts.take_snapshot then
+    M.plugin_manager.snapshot('snapshot_'..os.time()..'.json')
+  end
+  
   log("packer syncing...")
-  local time = os.date("!%Y-%m-%dT%TZ")
-  vim.cmd([[PackerSnapshot snapshot_]]..time)
-  vim.cmd [[PackerSync]]
+  M.plugin_manager.sync()
 end)
 
 --- installs plugins
@@ -116,9 +134,20 @@ M.setup_plugins = U.Service():new(function(entries)
   M.missing_plugins = {}
   M.detect_missing_plugins(entries)
 
+  -- register plugins into the feature list
+  M.event_post_complete:sub_front(function()
+    for _, entry in pairs(entries) do
+      local name_split = M.get_plugin_entry_split_name(entry)
+      local name_short = name_split[#name_split]
+      M.register_plugin(name_short)
+    end
+  end)
+
+  -- sync if plugin manager was bootstrapped
   if #M.missing_plugins > 0 and M.is_bootstraping then
     vim.api.nvim_command 'PackerSync'
     vim.cmd [[autocmd User PackerComplete lua PluginManager.event_post_complete()]]
+  -- sync if there are missing plugins
   elseif #M.missing_plugins > 0 then
     log.warn(#M.missing_plugins ..' missing plugins detected')
     vim.api.nvim_command 'PackerSync'

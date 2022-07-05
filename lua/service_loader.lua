@@ -38,7 +38,7 @@ local plugins = {
   {'RRethy/vim-illuminate'},
 
   -- LANG:
-  {p.treesitter,                                      run = ':TSUpdate' },
+  p.treesitter,
   {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
   {'terrortylor/nvim-comment'},
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
@@ -143,24 +143,7 @@ local plugins = {
   -- {'p00f/clangd_extensions.nvim'},
 }
 
-PluginManager.event_post_complete:subscribe(function()
-  --- register plugins into the feature list
-  for _, entry in pairs(plugins) do
-    -- PluginManager.register_plugin(entry)
-    local M = PluginManager
-
-    local name_split = M.get_plugin_entry_split_name(entry)
-    local name_short = name_split[#name_split]
-
-    if not M.is_plugin_installed(name_short) then
-      log.warn('attempt to feature register a missing plugin "'..name_short..'"')
-    elseif venom.features:has(FT.PLUGIN, name_short) then
-      log.warn('attempt to feature re-register a plugin "'..name_short..'"')
-    else
-      venom.features:add(FT.PLUGIN, name_short)
-    end
-  end
-
+PluginManager.event_post_complete:sub(function()
   Sessions.setup()
   Bind.setup()
 

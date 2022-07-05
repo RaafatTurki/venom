@@ -86,6 +86,27 @@ function M.create_augroup(autocmd, name)
   name = name or 'end'
   vim.api.nvim_exec('augroup '..name..' \nautocmd!\n'..autocmd..'\naugroup end', false)
 end
+--- creates an auto command and it's auto group
+function M.create_au(group, event, pattern, cmd_or_fn, extra_auto_cmd_opts, extra_auto_group_opts)
+  if type(group) == 'string' then
+    group = vim.api.nvim_create_augroup(group, extra_auto_group_opts)
+  end
+
+  local auto_cmd_opts = {
+    group = group,
+    pattern = pattern,
+  }
+
+  auto_cmd_opts = vim.tbl_deep_extend('force', extra_auto_cmd_opts or {}, auto_cmd_opts)
+
+  if type(cmd_or_fn) == 'function' then
+    auto_cmd_opts.callback = cmd_or_fn
+  elseif type(cmd_or_fn) == 'string' then
+    auto_cmd_opts.command = cmd_or_fn
+  end
+
+  vim.api.nvim_create_autocmd(event, auto_cmd_opts)
+end
 --- replaces terminal codes with internal representation
 function M.term_codes_esc(str) return vim.api.nvim_replace_termcodes(str, true, true, true) end
 --- inserts text at cursor position. TODO: WIP
@@ -292,15 +313,17 @@ end
 function M.Event()
   return setmetatable(
     {
-      commands = {},
+      listeners = {},
       new = function(self) return self end,
-      subscribe = function(self, cmd) table.insert(self.commands, cmd) end,
+      sub = function(self, listener) table.insert(self.listeners, listener) end,
+      sub_front = function(self, listener) table.insert(self.listeners, 1, listener) end,
       invoke = function(self, ...)
-        for _, cmd in pairs(self.commands) do
-          if type(cmd) == 'string' then vim.cmd(cmd)
-          elseif type(cmd) == 'function' then cmd(...) end
+        for _, listener in pairs(self.listeners) do
+          if type(listener) == 'string' then vim.cmd(listener)
+          elseif type(listener) == 'function' then listener(...) end
         end
-      end
+      end,
+      wrap = function(self) return function(...) return self:invoke(...) end end
     },
     {
       __call = function(self, ...)
@@ -344,6 +367,7 @@ function M.Service()
           log.warn("missing features: "..table.concat(missing_features, ' / '), { stack_lvl_off = 1 })
         end
       end,
+      wrap = function(self) return function(...) return self:invoke(...) end end
     },
     {
       __call = function(self, ...)

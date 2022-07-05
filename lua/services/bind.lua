@@ -71,12 +71,12 @@ M.setup = U.Service():new(function()
   -- M.key {'n',                'nzzzv'}
   -- M.key {'N',                'Nzzzv'}
   -- refresh action
-  venom.events.refresh:subscribe [[e]]
+  venom.events.refresh:sub[[e]]
   M.key {'<F5>',              function() venom.events.refresh() end}
   -- clear action
-  -- venom.actions.clear:subscribe [[let @/ = ""]]
-  venom.events.clear:subscribe [[noh]]
-  venom.events.clear:subscribe(U.clear_prompt)
+  -- venom.actions.clear:sub [[let @/ = ""]]
+  venom.events.clear:sub [[noh]]
+  venom.events.clear:sub(U.clear_prompt)
   M.key {'<C-l>',             function() venom.events.clear() end}
   M.key {'<C-l>',             '<ESC>', mode = 'i'}
   -- terminal smart escape
@@ -121,7 +121,7 @@ M.setup_plugins = U.Service():new(function()
 
   -- PLUGINS
   -- packer sync
-  M.key {'<leader>p',         function() PluginManager.sync () end}
+  M.key {'<leader>p',         function() PluginManager.sync({ take_snapshot = true }) end}
   -- nvim comment
   M.key {'<leader>c',         ':CommentToggle<CR>'}
   M.key {'<leader>c',         ':CommentToggle<CR>',    mode = 'v'}

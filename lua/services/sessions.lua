@@ -75,6 +75,16 @@ M.select = U.Service():require(FT.SESSION, "setup"):new(function()
   require 'mini.sessions'.select()
 end)
 
+M.load_cli = U.Service():new(function(session_name)
+  if venom.features:has(FT.SESSION, 'setup') then
+    M.load(session_name)
+  else
+    PluginManager.event_post_complete:sub(function()
+      M.load(session_name)
+    end)
+  end
+end)
+
 local function get_all_names()
   local sessions_objs = M.get_all()
   local session_names = {}
@@ -86,11 +96,12 @@ local function get_all_names()
   return session_names
 end
 
-vim.api.nvim_create_user_command('SessionSave',       function(opts) M.save(opts.fargs[1]) end,   { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionLoad',       function(opts) M.load(opts.fargs[1]) end,   { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionDelete',     function(opts) M.delete(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
-vim.api.nvim_create_user_command('SessionDeleteData', function(opts) M.delete_data() end,         {})
-vim.api.nvim_create_user_command('SessionLoadLast',   function(opts) M.load() end,                {})
-vim.api.nvim_create_user_command('SessionSelect',     function(opts) M.select() end,              {})
+vim.api.nvim_create_user_command('SessionSave',       function(opts) M.save(opts.fargs[1]) end,     { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionLoad',       function(opts) M.load(opts.fargs[1]) end,     { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionDelete',     function(opts) M.delete(opts.fargs[1]) end,   { nargs = 1, complete = get_all_names })
+vim.api.nvim_create_user_command('SessionDeleteData', function(opts) M.delete_data() end,           {})
+vim.api.nvim_create_user_command('SessionLoadLast',   function(opts) M.load() end,                  {})
+vim.api.nvim_create_user_command('SessionSelect',     function(opts) M.select() end,                {})
+vim.api.nvim_create_user_command('SessionLoadCLI',    function(opts) M.load_cli(opts.fargs[1]) end, { nargs = 1, complete = get_all_names })
 
 return M

@@ -14,7 +14,6 @@ local function gen_shades(col)
 end
 
 local green     = gen_shades(hsl'#1F5E3F')
-
 local white     = gen_shades(hsl'#C0B9DD')
 local pink      = gen_shades(hsl'#E988CF')
 local red       = gen_shades(hsl'#CB4251')
@@ -27,6 +26,19 @@ local purple    = gen_shades(hsl'#4C3889')
 local grey      = gen_shades(hsl'#222A3D')
 local black     = gen_shades(hsl'#0D1017')
 local debug     = gen_shades(hsl'#FF00FF')
+
+-- local white     = gen_shades(hsl'#C0B9DD')
+-- local pink      = gen_shades(hsl'#df81d0')
+-- local red       = gen_shades(hsl'#da5858')
+-- local orange    = gen_shades(hsl'#ed9454')
+-- local yellow    = gen_shades(hsl'#e7c95d')
+-- local lime      = gen_shades(hsl'#3fc660')
+-- local cyan      = gen_shades(hsl'#61d9e6')
+-- local blue      = gen_shades(hsl'#497ee9')
+-- local purple    = gen_shades(hsl'#df81d0')
+-- local grey      = gen_shades(hsl'#2b2b2b')
+-- local black     = gen_shades(hsl'#0a0a0a')
+-- local debug     = gen_shades(hsl'#FF00FF')
 
 local c = {
   bg        = black[1],

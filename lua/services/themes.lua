@@ -13,10 +13,17 @@ function M.test(variant)
 end
 
 function M.builtin()
-  package.loaded['extras/builtin_colors'] = nil
-  local builtin_colors = require 'extras/builtin_colors'
-  local lush = require 'lush'
-  lush(builtin_colors)
+  -- package.loaded['extras/builtin_colors'] = nil
+  -- local builtin_colors = require 'extras/builtin_colors'
+  -- local lush = require 'lush'
+  -- lush(builtin_colors)
+
+  new_color_scheme = require 'extras.color_scheme'
+  new_color_scheme.load()
+
+  -- vim.api.nvim_command [[ hi def link LspReferenceText ErrorMsg ]]
+  -- vim.api.nvim_command [[ hi def link LspReferenceWrite ErrorMsg ]]
+  -- vim.api.nvim_command [[ hi def link LspReferenceRead ErrorMsg ]]
 
   -- local contrast = {
   --   filetypes = {

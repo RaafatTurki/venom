@@ -91,10 +91,10 @@ M.configure_servers = U.Service():new(function()
     settings = {
       ["rust-analyzer"] = {
         diagnostics = {
-          disabled = true
-          -- disabled = {
-          --  "unresolved-import",
-          -- }
+          -- disabled = true
+          disabled = {
+           "unresolved-import",
+          }
         }
       }
     }

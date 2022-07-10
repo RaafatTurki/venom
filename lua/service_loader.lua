@@ -28,8 +28,6 @@ local plugins = {
   {'wbthomason/packer.nvim'},
 
   -- THEMES:
-  {'rktjmp/lush.nvim'},
-  {'marko-cerovac/material.nvim'},
 
   -- LSP:
   p.lspconfig,
@@ -94,7 +92,7 @@ local plugins = {
   {p.mini,                                            branch = 'stable' },
 
   -- DEBUGGING:
-  -- {'nvim-treesitter/playground',                      requires = p.treesitter },
+  {'nvim-treesitter/playground',                      requires = p.treesitter },
 
 
 
@@ -124,6 +122,8 @@ local plugins = {
   {'ron-rs/ron.vim'},
   -- {'tiagovla/scope.nvim'},
 
+  -- {'rktjmp/lush.nvim'},
+  -- {'marko-cerovac/material.nvim'},
   -- {'andymass/vim-matchup'},
   -- {'github/copilot.vim'},
   -- {'floobits/floobits-neovim'},
@@ -163,11 +163,11 @@ PluginManager.event_post_complete:sub(function()
 
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},
-    { func = Themes.material, args = 'darker',       name = 'Material Darker'},
-    { func = Themes.material, args = 'lighter',      name = 'Material Lighter'},
-    { func = Themes.material, args = 'deep ocean',   name = 'Material Deep Ocean'},
-    { func = Themes.material, args = 'oceanic',      name = 'Material Oceanic'},
-    { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
+    -- { func = Themes.material, args = 'darker',       name = 'Material Darker'},
+    -- { func = Themes.material, args = 'lighter',      name = 'Material Lighter'},
+    -- { func = Themes.material, args = 'deep ocean',   name = 'Material Deep Ocean'},
+    -- { func = Themes.material, args = 'oceanic',      name = 'Material Oceanic'},
+    -- { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
     { func = Themes.default,  args = {},             name = 'Default'},
   })
 

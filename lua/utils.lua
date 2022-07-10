@@ -275,38 +275,7 @@ function M.fn()
     end
   }
 end
---- service invoke wrapper with self
-function M.service_invoker(service)
-  return function(...) return service(...) end
-end
 
--- local function new(class, ...)
---   local inst = {}
---   setmetatable(inst, { __index = class }) 
---   if (class.init) then class.init(inst, ...) end
---   return inst
--- end
---
--- ---@class Rect
--- local Rect = {}
---
--- ---@return Rect
--- function Rect:new(...) return new(self, ...) end
---
--- function Rect:init(w, h)
---   self.w = w
---   self.h = h
---   self.points = {}
--- end
---
--- function Rect:getArea()
---   return self.w * self.h
--- end
---
--- r1 = Rect:new(10, 20)
--- print(r1.w)
--- print(r1.h)
--- print(r1:getArea())
 
 -- Class Based Utils (statefull)
 --- action class

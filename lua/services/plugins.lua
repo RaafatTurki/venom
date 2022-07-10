@@ -165,8 +165,8 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
 
       ['<C-n>']       = cmp.mapping.select_next_item(),
       ['<C-p>']       = cmp.mapping.select_prev_item(),
-      ['<Down>']      = cmp.mapping.select_next_item(),
-      ['<Up>']        = cmp.mapping.select_prev_item(),
+      ['<C-Down>']      = cmp.mapping.select_next_item(),
+      ['<C-Up>']        = cmp.mapping.select_prev_item(),
       ['<S-j>']       = cmp.mapping.scroll_docs(4),
       ['<S-k>']       = cmp.mapping.scroll_docs(-4),
       ['<C-Space>']   = cmp.mapping.complete(),
@@ -199,7 +199,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       -- completion = cmp.config.window.bordered(),
       completion = {
         border = 'single',
-        winhighlight = '',
+        winhighlight = 'CursorLine:CursorLineSelect',
       },
       documentation = {
         border = 'single',

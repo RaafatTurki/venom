@@ -118,7 +118,7 @@ local plugins = {
   {'baskerville/vim-sxhkdrc'},
   {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
-  -- {'mfussenegger/nvim-jdtls'},
+  {'mfussenegger/nvim-jdtls'},
   {'ron-rs/ron.vim'},
   -- {'tiagovla/scope.nvim'},
 
@@ -160,6 +160,7 @@ PluginManager.event_post_complete:sub(function()
   Misc.camel()
   Misc.buffer_edits()
   -- Misc.tabline_minimal()
+  Misc.lspinfo_win_fix()
 
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},

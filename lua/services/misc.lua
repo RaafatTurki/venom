@@ -346,6 +346,19 @@ endfunction
 ]]
 end)
 
+--- LSPInfo window border fix
+M.lspinfo_win_fix = U.Service():new(function()
+  local lspconfig_window = require 'lspconfig.ui.windows'
+  local old_defaults = lspconfig_window.default_opts
+
+  function lspconfig_window.default_opts(opts)
+    local win_opts = old_defaults(opts)
+    win_opts.border = 'single'
+    return win_opts
+  end
+end)
+
+
 -- local function parseInt(str)
 --     return str:match("^%-?%d+$")
 -- end

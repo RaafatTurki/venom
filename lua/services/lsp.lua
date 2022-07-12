@@ -32,6 +32,9 @@ M.apply_shared_server_config = U.Service():new(function(server_config)
     if venom.features:has(FT.PLUGIN, 'vim-illuminate') then
       require 'illuminate'.on_attach(client)
     end
+
+    -- context aware breadcrumbs
+    require 'nvim-navic'.attach(client, bufnr)
   end
 
   if not U.has_value(server_config.tags, LST.NO_SHARED_CAPABILITIES) then

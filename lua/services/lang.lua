@@ -16,7 +16,7 @@ end)
 
 M.configure_servers = U.Service():new(function()
 
-  M.configure_server("sumneko_lua", {},  {
+  M.configure_server("sumneko_lua", { LST.LSPI },  {
     settings = {
       Lua = {
         -- runtime = {
@@ -44,7 +44,7 @@ M.configure_servers = U.Service():new(function()
     --   Lsp.setup_buf_fmt_on_save(client, bufnr)
     -- end
   })
-  M.configure_server("texlab", {},  {
+  M.configure_server("texlab", { LST.LSPI },  {
     settings = {
       texlab = {
         build = {
@@ -70,7 +70,7 @@ M.configure_servers = U.Service():new(function()
       -- },
     }
   })
-  M.configure_server("svelte", {}, {
+  M.configure_server("svelte", { LST.LSPI }, {
     settings = {
       svelte = {
         plugin = {
@@ -87,7 +87,7 @@ M.configure_servers = U.Service():new(function()
       }
     }
   })
-  M.configure_server("rust_analyzer", {}, {
+  M.configure_server("rust_analyzer", { LST.LSPI }, {
     settings = {
       ["rust-analyzer"] = {
         diagnostics = {
@@ -99,10 +99,10 @@ M.configure_servers = U.Service():new(function()
       }
     }
   })
-  M.configure_server("emmet_ls", {}, {
+  M.configure_server("emmet_ls", { LST.LSPI }, {
     filetypes = { 'html', 'css', 'svelte' },
   })
-  M.configure_server("jsonls", {}, {
+  M.configure_server("jsonls", { LST.LSPI }, {
     settings = {
       json = {
         schemas = require 'schemastore'.json.schemas(),
@@ -119,7 +119,7 @@ M.configure_servers = U.Service():new(function()
       },
     }
   })
-  M.configure_server("pylsp", {}, {
+  M.configure_server("pylsp", { LST.LSPI }, {
     settings = {
       configurationSources = { 'flake8' },
       formatCommand = { 'black' },
@@ -133,7 +133,7 @@ M.configure_servers = U.Service():new(function()
       }
     }
   })
-  M.configure_server("gopls", {}, {
+  M.configure_server("gopls", { LST.LSPI }, {
     settings = {
       gopls = {
         usePlaceholders = true,
@@ -159,14 +159,12 @@ M.configure_servers = U.Service():new(function()
 
   local lspi = require 'nvim-lsp-installer'
   for _, server_obj in ipairs(lspi.get_installed_servers()) do
-    -- configure all installed and unconfigured lspi servers
-    if (not U.has_key(M.lsp_servers_configs, server_obj.name)) then
-      M.configure_server(server_obj.name, {}, {})
-    end
-
-    -- set all configured and installed lspi servers to AUTO_SETUP
+    
+    -- configure installed lspi servers to auto setup
     if (U.has_key(M.lsp_servers_configs, server_obj.name)) then
       M.lsp_servers_configs[server_obj.name]:tag(LST.AUTO_SETUP)
+    else
+      M.configure_server(server_obj.name, { LST.LSPI, LST.AUTO_SETUP }, {})
     end
   end
 
@@ -241,7 +239,7 @@ M.setup = U.Service()
 :require(FT.PLUGIN, "nvim-comment")
 :require(FT.PLUGIN, "nvim-navic")
 :require(FT.PLUGIN, "spellsitter.nvim")
--- :require(FT.PLUGIN, "nvim-jdtls")
+:require(FT.PLUGIN, "nvim-jdtls")
 :new(function()
   -- lsp-installer
   require 'nvim-lsp-installer'.setup({
@@ -315,46 +313,46 @@ M.setup = U.Service()
   }
 
   -- nvim-jdtls
-  -- function JDTLSSetup()
-  --   local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-  --   local workspace_dir = os.getenv('XDG_CACHE_HOME') .. '/jdtls/workspaces/' .. project_name
-  --
-  --   JDTLS_CONFIG = {
-  --     cmd = {
-  --       'java',
-  --
-  --       '-Declipse.application=org.eclipse.jdt.ls.core.id1',
-  --       '-Dosgi.bundles.defaultStartLevel=4',
-  --       '-Declipse.product=org.eclipse.jdt.ls.core.product',
-  --       '-Dlog.protocol=true',
-  --       '-Dlog.level=ALL',
-  --
-  --       '-javaagent:/home/potato/.local/share/nvim/lsp_servers/jdtls/lombok.jar',
-  --
-  --       '-Xms1g',
-  --       '--add-modules=ALL-SYSTEM',
-  --       '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-  --       '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
-  --
-  --       '-jar', '/home/potato/.local/share/nvim/lsp_servers/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
-  --       '-configuration', '/home/potato/.local/share/nvim/lsp_servers/jdtls/config_linux',
-  --       '-data', workspace_dir,
-  --     },
-  --
-  --     root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
-  --
-  --     -- TODO: extract into a ServerConfig
-  --     settings = {
-  --       java = {}
-  --     },
-  --
-  --     init_options = {
-  --       bundles = {}
-  --     },
-  --   }
-  --
-  --   require('jdtls').start_or_attach(JDTLS_CONFIG)
-  -- end
+  function JDTLSSetup()
+    local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+    local workspace_dir = os.getenv('XDG_CACHE_HOME') .. '/jdtls/workspaces/' .. project_name
+  
+    local jdtls_nvim_configs = {
+      cmd = {
+        'java',
+  
+        '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+        '-Dosgi.bundles.defaultStartLevel=4',
+        '-Declipse.product=org.eclipse.jdt.ls.core.product',
+        '-Dlog.protocol=true',
+        '-Dlog.level=ALL',
+  
+        '-javaagent:/home/potato/.local/share/nvim/lsp_servers/jdtls/lombok.jar',
+  
+        '-Xms1g',
+        '--add-modules=ALL-SYSTEM',
+        '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+        '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+  
+        '-jar', '/home/potato/.local/share/nvim/lsp_servers/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+        '-configuration', '/home/potato/.local/share/nvim/lsp_servers/jdtls/config_linux',
+        '-data', workspace_dir,
+      },
+  
+      root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
+  
+      -- TODO: extract into a ServerConfig
+      settings = {
+        java = {}
+      },
+  
+      init_options = {
+        bundles = {}
+      },
+    }
+  
+    require('jdtls').start_or_attach(jdtls_nvim_configs)
+  end
 
   vim.cmd [[
     augroup java

@@ -294,12 +294,16 @@ FT = {
 
 --- language server tags
 LST = {
-  -- NO_SHARED_CONFIG_SETUP = "NO_SHARED_CONFIG_SETUP",
-  -- NO_AUTO_SETUP = "NO_AUTO_SETUP",
+  -- atempt to auto start
   AUTO_SETUP = "AUTO_SETUP",
-
+  -- add AUTO_SETUP if is listed in lspi installed servers
+  LSPI = "LSPI",
+  -- no shared config on setup
   NO_SHARED_CONFIG = "NO_SHARED_CONFIG",
+  -- no shared capabilities on setup
   NO_SHARED_CAPABILITIES  = "NO_SHARED_CAPABILITIES",
+  -- no shared handlers on setup
   NO_SHARED_HANDLERS  = "NO_SHARED_HANDLERS",
+  -- no shared on_attach on setup
   NO_SHARED_ON_ATTACH = "NO_SHARED_ON_ATTACH",
 }

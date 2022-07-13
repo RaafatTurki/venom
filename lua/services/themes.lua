@@ -18,7 +18,7 @@ function M.builtin()
   -- local lush = require 'lush'
   -- lush(builtin_colors)
 
-  new_color_scheme = require 'extras.color_scheme'
+  new_color_scheme = require 'color_scheme'
   new_color_scheme.load()
 
   -- vim.api.nvim_command [[ hi def link LspReferenceText ErrorMsg ]]

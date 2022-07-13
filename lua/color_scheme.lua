@@ -238,7 +238,7 @@ M.highlights = {
 
 
   ColorColumn	    = { 'CursorLine' },
-Conceal         = { 'Debug' },
+Conceal         = { 'TSDebug' },
   CurSearch       = { bg = c.fg, fg = c.bg, bold = true },
   Cursor          = { }, --
   CursorColumn    = { 'CursorLine' }, --
@@ -266,7 +266,7 @@ Conceal         = { 'Debug' },
   MoreMsg         = { fg = c.info },
   MsgArea         = { fg = c.match },
   MsgSeparator    = { bg = c.bg, fg = c.mg },
-NonText         = { 'Debug' },
+NonText         = { 'TSDebug' },
   Normal          = { bg = c.bg },
   NormalFloat     = { }, --
   NormalNC        = { }, --
@@ -295,7 +295,7 @@ NonText         = { 'Debug' },
   Visual          = { bg = c.fold, bold = true },
   VisualNOS       = { }, --
   WarningMsg      = { fg = c.warn },
-Whitespace      = { 'Debug' },
+Whitespace      = { 'TSDebug' },
   WildMenu        = { 'Pmenu' },
   WinBar          = { }, --
   WinBarNC        = { }, --
@@ -312,7 +312,7 @@ Whitespace      = { 'Debug' },
   LspReferenceWrite           = { bold = true };
 LspCodeLens                 = { 'Debug' },
 LspCodeLensSeparator        = { 'Debug' },
-LspSignatureActiveParameter = { 'Debug' },
+  LspSignatureActiveParameter = { underline = true, bold = true },
 
 
   
@@ -374,7 +374,7 @@ LspSignatureActiveParameter = { 'Debug' },
   Debug          = { 'TSDebug' },
   Underlined     = { 'TSUnderline' },
   Error          = { 'TSError' },
-  Ignore         = { 'TSDebug' },         --
+Ignore         = { 'TSDebug' },         --
   Todo           = { 'TSTodo' },
  
 
@@ -546,7 +546,7 @@ LspSignatureActiveParameter = { 'Debug' },
   ReachHandleTabpage      = { 'TabLineSel' };
   ReachGrayOut            = { 'Comment' };
   ReachMatchExact         = { 'String' };
-  ReachPriority           = { 'Special' };
+  ReachPriority           = { 'WarningMsg' };
   ReachCurrent            = { 'Folded', gui = 'bold' };
 
   NavicIconsFile          = { 'CmpItemKindFile' };

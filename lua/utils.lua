@@ -197,6 +197,24 @@ function M.cut(str, delimiter, field)
     return arr
   end
 end
+--- prompts a multiple choice confirmation prompt
+function M.prompt_confirm(prompt, items, on_choice)
+  vim.ui.select(items, { kind = 'confirmation', prompt = prompt }, on_choice)
+end
+--- prompts a yes/no confirmation prompt
+function M.prompt_ye_no(prompt, default_val, on_accept, on_reject, on_choice)
+  local items = {}
+  local YES = 'Yes'
+  local NO = 'No'
+
+  if default_val == true then items = { YES, NO } elseif default_val == false then items = { NO, YES } end
+  
+  vim.ui.select(items, { kind = 'yes_no', prompt = prompt }, function(c)
+    if on_choice ~= nil then on_choice(c) end
+    if c == YES and on_accept ~= nil then on_accept() end
+    if c == NO and on_reject ~= nil then on_reject() end
+  end)
+end
 
 
 -- Object Based Utils (stateless)

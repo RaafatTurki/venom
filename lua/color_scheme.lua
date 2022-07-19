@@ -156,10 +156,12 @@ M.highlights = {
   -- TS
   TSStrike            = { strikethrough = true },
   TSStrong            = { bold = true },
+  TSTitle             = { bold = true },
   TSURI               = { underline = true, fg = c.link },
   TSTextReference     = { 'TSURI' },
   TSUnderline         = { underline = true },
   TSEmphasis          = { italic = true },
+  TSText              = { fg = c.fg },
 
   TSComment           = { fg = c.comment },
   TSWarning           = { fg = c.warn },
@@ -179,6 +181,7 @@ M.highlights = {
   TSStringSpecial     = { 'TSString' },
   TSCharacter         = { 'TSString' },
   TSCharacterSpecial  = { 'TSString' },
+  TSLiteral           = { 'TSString' },
 
   TSVariable          = { fg = c.variable },
   TSVariableBuiltin   = { 'TSVariable' },
@@ -192,12 +195,14 @@ M.highlights = {
   TSConstant          = { fg = c.constant },
   TSConstBuiltin      = { 'TSConstant' },
   TSConstMacro        = { 'TSConstant' },
+  TSEnvironmentName   = { 'TSConstant' },
 
   TSFunction          = { fg = c.func },
   TSFuncBuiltin       = { 'TSFunction' },
   TSFuncMacro         = { 'TSFunction' },
   TSConstructor       = { 'TSFunction' },
   TSMethod            = { 'TSFunction' },
+  TSEnvironment       = { 'TSFunction' },
 
   TSKeyword           = { fg = c.keyword },
   TSKeywordFunction   = { 'TSKeyword' },
@@ -217,7 +222,6 @@ M.highlights = {
   TSInclude           = { fg = c.include },
   TSPreProc           = { 'TSInclude' },
   TSDefine            = { 'TSInclude' },
-  TSTitle             = { 'TSInclude' },
 
   TSType              = { fg = c.type },
   TSTypeBuiltin       = { 'TSType' },
@@ -226,14 +230,10 @@ M.highlights = {
   TSStorageClass      = { 'TSType' },
   TSNamespace         = { 'TSType' },
 
-  TSEnvironment       = { 'TSDebug' },
-  TSEnvironmentName   = { 'TSDebug' },
-  TSException         = { 'TSDebug' },
-  TSLiteral           = { 'TSDebug' },
-  TSMath              = { 'TSDebug' },
-  TSNone              = { 'TSDebug' },
-  TSParameterReference= { 'TSDebug' },
-  TSText              = { 'TSDebug' },
+TSException         = { 'TSDebug' },
+TSMath              = { 'TSDebug' },
+TSNone              = { 'TSDebug' },
+TSParameterReference= { 'TSDebug' },
 
 
 
@@ -274,7 +274,7 @@ NonText         = { 'TSDebug' },
   PmenuSel        = { bg = c.mg, fg = c.fg },
   PmenuSbar       = { 'Pmenu' },
   PmenuThumb      = { bg = c.fg },
-  Question        = { }, --
+  Question        = { fg = c.fg, bold = true },
   QuickFixLine    = { 'PmenuSel' },
   Search          = { bg = c.match, fg = c.bg, bold = true },
   SignColumn      = { }, --
@@ -291,7 +291,7 @@ NonText         = { 'TSDebug' },
   TabLineSel      = { }, --
   TermCursor      = { underline = true },
   TermCursorNC    = { 'TermCursor' },
-  Title           = { bold = true },
+  Title           = { 'TSTitle' },
   Visual          = { bg = c.fold, bold = true },
   VisualNOS       = { }, --
   WarningMsg      = { fg = c.warn },
@@ -303,6 +303,7 @@ Whitespace      = { 'TSDebug' },
 
   -- DEPRECATED
   VertSplit       = { 'WinSeparator' },
+  FloatTitle      = { 'TSTitle' };
 
 
   
@@ -549,6 +550,7 @@ Ignore         = { 'TSDebug' },         --
   ReachPriority           = { 'WarningMsg' };
   ReachCurrent            = { 'Folded', gui = 'bold' };
 
+  -- navic
   NavicIconsFile          = { 'CmpItemKindFile' };
   NavicIconsModule        = { 'CmpItemKindModule' };
   NavicIconsNamespace     = { 'CmpItemKindModule' };
@@ -586,7 +588,7 @@ Ignore         = { 'TSDebug' },         --
   SnippetPassiveIndicator = { 'Comment' };
   SnippetInsertIndicator  = { fg = c.fg };
   SnippetChoiceIndicator  = { fg = c.hint };
-  CursorLineSelect        = { bg = c.mg };
+  CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
   Camel                   = { 'WarningMsg' };
 
 }

@@ -35,6 +35,21 @@ M.apply_shared_server_config = U.Service():new(function(server_config)
 
     -- context aware breadcrumbs
     require 'nvim-navic'.attach(client, bufnr)
+
+    --- signatureHelper capability
+    if client.server_capabilities.signatureHelpProvider then
+      require 'lsp-overloads'.setup(client, {
+        ui = {
+          border = "single"
+        },
+        keymaps = {
+          next_signature = "<C-Down>",
+          previous_signature = "<C-Up>",
+          next_parameter = "<S-Right>",
+          previous_parameter = "<S-Left>",
+        },
+      })
+    end
   end
 
   if not U.has_value(server_config.tags, LST.NO_SHARED_CAPABILITIES) then

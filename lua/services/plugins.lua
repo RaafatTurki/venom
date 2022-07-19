@@ -23,8 +23,7 @@ end)
 M.dressing = U.Service():require(FT.PLUGIN, "dressing.nvim"):new(function()
   require 'dressing'.setup {
     input = {
-      enabled = true,
-      border = "single",
+      border = 'single',
       winblend = 0,
       override = function(conf)
         conf.col = -1
@@ -33,12 +32,15 @@ M.dressing = U.Service():require(FT.PLUGIN, "dressing.nvim"):new(function()
       end,
     },
     select = {
-      enabled = true,
+      backend = { 'builtin' },
+
       builtin = {
-        border = "single",
+        border = 'single',
         winblend = 0,
-      },
-    },
+        min_height = { 0, 0 },
+        winhighlight = "CursorLine:CursorLineSelect",
+      }
+    }
   }
 end)
 
@@ -252,6 +254,23 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
 
   local NVIMTREE_LSP_DIAG_ICONS = venom.icons.diagnostic_states.cozette
 
+  -- require 'nvim-tree'.setup {
+  --   view = {
+  --     adaptive_size = true,
+  --     hide_root_folder = true,
+  --     centralize_selection = true,
+  --     mappings = {
+  --       custom_only = false,
+  --       list = nvimtree_keybindings
+  --     }
+  --   },
+  --   renderer = {
+  --     indent_markers = {
+  --       enable = true,
+  --     },
+  --   },
+  -- }
+
   require 'nvim-tree'.setup {
     hijack_cursor       = true,
     open_on_tab         = true,
@@ -269,15 +288,17 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
       indent_markers = {
         enable = true,
         icons = {
-          corner = "└ ",
-          item = "├─",
-          edge = "│ ",
-          none = "  ",
+          corner = "└",
+          item   = "├",
+          edge   = "│",
+          none   = " ",
         },
       },
       icons = {
         git_placement = 'after',
-        padding = ' ',
+        show = {
+          folder_arrow = false,
+        },
         glyphs = {
           default = '',
           symlink = '',
@@ -320,7 +341,6 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
     },
     filesystem_watchers = {
       enable = true,
-      interval = 100,
     },
     filters = {
       dotfiles = false,
@@ -359,9 +379,10 @@ M.bufferline = U.Service():require(FT.PLUGIN, 'bufferline.nvim'):new(function()
       show_buffer_close_icons = false,
       show_close_icon = false,
       always_show_bufferline = false,
+      separator_style = {'', ''},
       -- enforce_regular_tabs = true,
       offsets = {
-        { filetype = "NvimTree", },
+        { filetype = "NvimTree" },
       },
     },
   }

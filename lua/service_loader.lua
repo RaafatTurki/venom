@@ -22,6 +22,7 @@ local p = {
   lspconfig = 'neovim/nvim-lspconfig',
   cmp = 'hrsh7th/nvim-cmp',
   mini = 'echasnovski/mini.nvim',
+  fixcusrorhold = 'antoinemadec/FixCursorHold.nvim',
 }
 local plugins = {
   -- PLUGIN_MANAGER:
@@ -43,11 +44,19 @@ local plugins = {
   {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
   {'lewis6991/spellsitter.nvim'},
   {'b0o/schemastore.nvim',                            requires = p.lspconfig },
+  {'nvim-neotest/neotest',                            requires = {
+    p.plenary,
+    p.treesitter,
+    p.fixcusrorhold,
+    {'nvim-neotest/neotest-go'},
+    {'haydenmeade/neotest-jest'},
+  }},
 
   -- PLUGINS:
   -- mini.*
   {'lewis6991/impatient.nvim'},
   p.devicons,
+  p.fixcusrorhold,
   {'stevearc/dressing.nvim'},
   {'kevinhwang91/nvim-bqf'},
   -- {'declancm/cinnamon.nvim'},
@@ -63,6 +72,7 @@ local plugins = {
   {'akinsho/nvim-toggleterm.lua'},
   {'ibhagwan/fzf-lua',                                requires = p.devicons },
   {'jghauser/fold-cycle.nvim'},
+  {'Issafalcon/lsp-overloads.nvim'},
   {'ziontee113/icon-picker.nvim'},
   -- {'kevinhwang91/nvim-ufo',                           requires = 'kevinhwang91/promise-async' },
   -- {'smjonas/snippet-converter.nvim'},
@@ -89,7 +99,7 @@ local plugins = {
   -- mini.sessions
 
   -- MULTI_PURPOSE:
-  {p.mini,                                            branch = 'stable' },
+  {p.mini},
 
   -- DEBUGGING:
   {'nvim-treesitter/playground',                      requires = p.treesitter },
@@ -116,10 +126,10 @@ local plugins = {
 
   -- UNCHARTED:
   {'baskerville/vim-sxhkdrc'},
-  {'antoinemadec/FixCursorHold.nvim'},                  -- https://github.com/neovim/neovim/issues/12587
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   {'mfussenegger/nvim-jdtls'},
   {'ron-rs/ron.vim'},
+  {'RRethy/vim-hexokinase',                           run = 'make hexokinase'},
   -- {'tiagovla/scope.nvim'},
 
   -- {'rktjmp/lush.nvim'},

@@ -2,6 +2,41 @@
 -- @module lang
 local M = {}
 
+M.ts_parsers_ensure_installed = {
+  'bash',
+  'c',
+  'cmake',
+  'comment',
+  'cpp',
+  'c_sharp',
+  'css',
+  'fish',
+  'gdscript',
+  'glsl',
+  'go',
+  'gomod',
+  'godot_resource',
+  'html',
+  'http',
+  'java',
+  'javascript',
+  'jsdoc',
+  'json',
+  'latex',
+  'lua',
+  'markdown',
+  'python',
+  'query',
+  'regex',
+  'rust',
+  'scss',
+  'svelte',
+  'toml',
+  'typescript',
+  'vim',
+  'yaml',
+}
+
 M.lsp_servers_configs = {}
 
 M.configure_server = U.Service():new(function(name, tags, opts)
@@ -179,42 +214,7 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
   -- local parser_configs = require 'nvim-treesitter.parsers'.get_parser_configs()
   require 'nvim-treesitter.configs'.setup {
     -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
-    ensure_installed = {
-      -- 'ron',
-
-      'bash',
-      'c',
-      'cmake',
-      'comment',
-      'cpp',
-      'c_sharp',
-      'css',
-      'fish',
-      'gdscript',
-      'glsl',
-      'go',
-      'gomod',
-      'godot_resource',
-      'html',
-      'http',
-      'java',
-      'javascript',
-      'jsdoc',
-      'json',
-      'latex',
-      'lua',
-      'markdown',
-      'python',
-      'query',
-      'regex',
-      'rust',
-      'scss',
-      'svelte',
-      'toml',
-      'typescript',
-      'vim',
-      'yaml',
-    },
+    ensure_installed = M.ts_parsers_ensure_installed,
     -- playground = { enable = true },
     highlight = { enable = true },
     indent = { enable = true },   -- indentexpr (=)
@@ -239,6 +239,7 @@ M.setup = U.Service()
 :require(FT.PLUGIN, "nvim-comment")
 :require(FT.PLUGIN, "nvim-navic")
 :require(FT.PLUGIN, "spellsitter.nvim")
+:require(FT.PLUGIN, "neotest")
 :require(FT.PLUGIN, "nvim-jdtls")
 :new(function()
   -- lsp-installer
@@ -311,6 +312,17 @@ M.setup = U.Service()
   require 'spellsitter'.setup {
     enable = true,
   }
+
+  -- neotest
+  require 'neotest'.setup {
+    adapters = {
+      require 'neotest-go',
+      require 'neotest-jest',
+    }
+  }
+  vim.api.nvim_create_user_command('NeotestToggleTree',   function() require 'neotest'.summary.toggle() end,              {})
+  vim.api.nvim_create_user_command('NeotestRunNearest',   function() require 'neotest'.run.run() end,                     {})
+  vim.api.nvim_create_user_command('NeotestRunFile',      function() require 'neotest'.run.run(vim.fn.expand("%")) end,   {})
 
   -- nvim-jdtls
   function JDTLSSetup()

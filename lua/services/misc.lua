@@ -17,6 +17,8 @@ M.base = U.Service():new(function()
   -- vim.cmd [[cnoreabbrev Q qall]]
   -- edit config file
   vim.cmd [[cnoreabbrev conf tabnew $VIM_ROOT/init.vim]]
+  -- log
+  vim.cmd [[cnoreabbrev log lua log(]]
 
   --- variables
 
@@ -165,25 +167,22 @@ M.automatic_treesitter = U.Service():new(function()
 
   function EnsureTSParserInstalled()
     local parsers = require 'nvim-treesitter.parsers'
-    local lang = parsers.get_buf_lang()
+    local parser_name = parsers.get_buf_lang()
 
-    if parsers.get_parser_configs()[lang] and not parsers.has_parser(lang) and ask_install[lang] ~= false then
+    -- abort if parser is ensured
+    if U.has_value(Lang.ts_parsers_ensure_installed, parser_name) then return end
+
+    if parsers.get_parser_configs()[parser_name] and not parsers.has_parser(parser_name) and ask_install[parser_name] ~= false then
       vim.schedule_wrap(function()
 
-        local is_confirmed = false
-        -- TODO: implement a Y/n prompt util func
-        print('Install treesitter parser for '..lang.. ' ? Y/n')
-        local res = U.get_char_input()
-        if res:match('\r') then is_confirmed = true end
-        if res:match('y') then is_confirmed = true end
-        if res:match('Y') then is_confirmed = true end
-        U.clear_prompt()
-
-        if (is_confirmed) then
-          vim.cmd('TSInstall '..lang)
-        else
-          ask_install[lang] = false
-        end
+        U.prompt_ye_no('Install treesitter parser for '..parser_name.. '?', true,
+          function()
+            vim.cmd('TSInstall '..parser_name)
+          end,
+          function()
+            ask_install[parser_name] = false
+          end
+        )
       end)()
     end
   end

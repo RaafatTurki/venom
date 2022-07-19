@@ -116,7 +116,7 @@ M.setup_plugins = U.Service():new(function()
   -- open uri under cursor
   M.key {'gx',                OpenURIUnderCursor}
   -- cycle theme
-  M.key {'<leader>t',         Themes.theme_cycle}
+  -- M.key {'<leader>t',         Themes.theme_cycle}
 
 
   -- PLUGINS
@@ -189,6 +189,8 @@ M.setup_plugins = U.Service():new(function()
   M.key {'<leader>dv',        '<CMD>LspDiagsHover<CR>'}
   -- fzf-lus
   M.key {'<leader>f',         '<CMD>FzfLua files<CR>'}
+  -- neotest
+  M.key {'<leader>t',         '<CMD>NeotestToggleTree<CR>'}
 end)
 
 return M

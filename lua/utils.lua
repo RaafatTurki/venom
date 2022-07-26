@@ -366,13 +366,18 @@ end
 --- lsp server config class
 function M.LspServerConfig()
   return {
-    name = "",
+    name = nil,
+    alias_name = nil,
     opts = {},
     tags = {},
     events = {
       on_attach = M.Event():new(),
     },
     tag = function(self, server_tag) table.insert(self.tags, server_tag) return self end,
+    alias = function(self, new_alias_name)
+      self.alias_name = new_alias_name
+      return self
+    end,
     new = function(self, name, opts)
       self.name = name
       self.opts = opts or {}

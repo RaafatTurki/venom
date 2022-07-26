@@ -213,6 +213,7 @@ M.highlights = {
   TSTag               = { 'TSKeyword' },
   TSPunctDelimiter    = { 'TSKeyword' },
   TSLabel             = { 'TSKeyword' },
+  TSException         = { 'TSKeyword' },
 
   TSPunctBracket      = { fg = c.operator },
   TSTagDelimiter      = { 'TSPunctBracket' },
@@ -230,7 +231,6 @@ M.highlights = {
   TSStorageClass      = { 'TSType' },
   TSNamespace         = { 'TSType' },
 
-TSException         = { 'TSDebug' },
 TSMath              = { 'TSDebug' },
 TSNone              = { 'TSDebug' },
 TSParameterReference= { 'TSDebug' },

@@ -178,7 +178,7 @@ M.setup_plugins = U.Service():new(function()
   M.key {'<A-Up>',            ':MoveBlock(-1)<CR>', mode = 'v'}
   M.key {'<A-Down>',          ':MoveBlock(1)<CR>', mode = 'v'}
   -- lsp installer
-  M.key {'<leader>l',         '<CMD>LspInstallInfo<CR>'}
+  M.key {'<leader>l',         '<CMD>Mason<CR>'}
   -- lsp
   M.key {'<leader>r',         '<CMD>LspRename<CR>'}
   M.key {'<leader>R',         '<CMD>LspReferences<CR>'}

@@ -66,21 +66,23 @@ M.apply_shared_server_config = U.Service():new(function(server_config)
 end)
 
 M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_configs)
+  require 'mason-lspconfig'.setup()
   local lspconf = require 'lspconfig'
-
+  
   -- seting up all servers in servers_configs
   for _, server_config in pairs(lsp_servers_configs) do
     server_config = M.apply_shared_server_config(server_config)
-
+  
     -- setting up server
     if U.has_value(server_config.tags, LST.AUTO_SETUP) then
-      lspconf[server_config.name].setup(server_config.opts)
+      local server_name = server_config.alias_name or server_config.name
+      lspconf[server_name].setup(server_config.opts)
     end
   end
 end)
 
 M.setup = U.Service():provide(FT.LSP, 'setup')
-:require(FT.PLUGIN, 'nvim-lsp-installer')
+:require(FT.PLUGIN, 'mason.nvim')
 :require(FT.PLUGIN, 'nvim-lspconfig')
 :require(FT.PLUGIN, 'inc-rename.nvim')
 :new(function()

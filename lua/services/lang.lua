@@ -39,19 +39,21 @@ M.ts_parsers_ensure_installed = {
 
 M.lsp_servers_configs = {}
 
-M.configure_server = U.Service():new(function(name, tags, opts)
+M.configure_server = U.Service():new(function(name, tags, opts, alias_name)
   local server_config = U.LspServerConfig():new(name, opts)
 
   for _, tag in pairs(tags) do
     server_config:tag(tag)
   end
 
+  if alias_name ~= nil then server_config:alias(alias_name) end
+
   M.lsp_servers_configs[server_config.name] = server_config
 end)
 
 M.configure_servers = U.Service():new(function()
 
-  M.configure_server("sumneko_lua", { LST.LSPI },  {
+  M.configure_server("sumneko_lua", { LST.MANAGED },  {
     settings = {
       Lua = {
         -- runtime = {
@@ -79,7 +81,7 @@ M.configure_servers = U.Service():new(function()
     --   Lsp.setup_buf_fmt_on_save(client, bufnr)
     -- end
   })
-  M.configure_server("texlab", { LST.LSPI },  {
+  M.configure_server("texlab", { LST.MANAGED },  {
     settings = {
       texlab = {
         build = {
@@ -105,7 +107,7 @@ M.configure_servers = U.Service():new(function()
       -- },
     }
   })
-  M.configure_server("svelte", { LST.LSPI }, {
+  M.configure_server("svelte", { LST.MANAGED }, {
     settings = {
       svelte = {
         plugin = {
@@ -122,7 +124,7 @@ M.configure_servers = U.Service():new(function()
       }
     }
   })
-  M.configure_server("rust_analyzer", { LST.LSPI }, {
+  M.configure_server("rust_analyzer", { LST.MANAGED }, {
     settings = {
       ["rust-analyzer"] = {
         diagnostics = {
@@ -134,10 +136,10 @@ M.configure_servers = U.Service():new(function()
       }
     }
   })
-  M.configure_server("emmet_ls", { LST.LSPI }, {
+  M.configure_server("emmet_ls", { LST.MANAGED }, {
     filetypes = { 'html', 'css', 'svelte' },
   })
-  M.configure_server("jsonls", { LST.LSPI }, {
+  M.configure_server("jsonls", { LST.MANAGED }, {
     settings = {
       json = {
         schemas = require 'schemastore'.json.schemas(),
@@ -154,7 +156,7 @@ M.configure_servers = U.Service():new(function()
       },
     }
   })
-  M.configure_server("pylsp", { LST.LSPI }, {
+  M.configure_server("pylsp", { LST.MANAGED }, {
     settings = {
       configurationSources = { 'flake8' },
       formatCommand = { 'black' },
@@ -168,7 +170,7 @@ M.configure_servers = U.Service():new(function()
       }
     }
   })
-  M.configure_server("gopls", { LST.LSPI }, {
+  M.configure_server("gopls", { LST.MANAGED }, {
     settings = {
       gopls = {
         usePlaceholders = true,
@@ -184,7 +186,8 @@ M.configure_servers = U.Service():new(function()
   })
 
   -- annoying and up to no good lsp servers:
-  M.configure_server("jdtls", {}, {})
+  M.configure_server("jdtls", {
+  }, {})
   M.configure_server("gdscript", {}, {
     cmd = {'godot-ls'},
     flags = {
@@ -192,22 +195,26 @@ M.configure_servers = U.Service():new(function()
     },
   })
 
-  local lspi = require 'nvim-lsp-installer'
-  for _, server_obj in ipairs(lspi.get_installed_servers()) do
-    
-    -- configure installed lspi servers to auto setup
-    if (U.has_key(M.lsp_servers_configs, server_obj.name)) then
-      M.lsp_servers_configs[server_obj.name]:tag(LST.AUTO_SETUP)
-    else
-      M.configure_server(server_obj.name, { LST.LSPI, LST.AUTO_SETUP }, {})
-    end
-  end
+  local mason_reg = require 'mason-registry'
+  local meson_server_mappings = require "mason-lspconfig.mappings.server"
 
-  -- log configured server names and tags
-  -- for _, server_config in pairs(M.lsp_servers_configs) do
-  --   log(server_config.name)
-  --   log(server_config.tags)
-  -- end
+  for _, pkg in ipairs(mason_reg.get_installed_packages()) do
+    -- check packages is an LSP server
+    if U.has_value(pkg.spec.categories, 'LSP') then
+      local server_name = meson_server_mappings.package_to_lspconfig[pkg.name] or pkg.name
+
+      -- add LST.AUTO_SETUP to installed LST.MANAGED servers
+      if U.has_key(M.lsp_servers_configs, server_name) then
+        if U.has_value(M.lsp_servers_configs[server_name].tags, LST.MANAGED) then
+          M.lsp_servers_configs[server_name]:tag(LST.AUTO_SETUP)
+        end
+
+      -- configure unconfigured and installed servers with LST.MANAGED and LST.AUTO_SETUP
+      else
+        M.configure_server(server_name, { LST.MANAGED, LST.AUTO_SETUP }, {})
+      end
+    end 
+  end
 end)
 
 M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(function()
@@ -235,31 +242,36 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
 end)
 
 M.setup = U.Service()
-:require(FT.PLUGIN, "nvim-lsp-installer")
+:require(FT.PLUGIN, "mason.nvim")
 :require(FT.PLUGIN, "nvim-comment")
 :require(FT.PLUGIN, "nvim-navic")
 :require(FT.PLUGIN, "spellsitter.nvim")
 :require(FT.PLUGIN, "neotest")
 :require(FT.PLUGIN, "nvim-jdtls")
 :new(function()
-  -- lsp-installer
-  require 'nvim-lsp-installer'.setup({
+  -- mason
+  require 'mason'.setup {
     ui = {
       border = 'single',
       icons = {
-        server_installed = " ",
-        server_pending = " ",
-        server_uninstalled = "  ",
+        package_installed = " ",
+        package_pending = " ",
+        package_uninstalled = "  ",
       },
       keymaps = {
-        toggle_server_expand = "<Space>",
-        install_server = "<CR>",
-        update_server = "<CR>",
-        uninstall_server = "<BS>",
+        toggle_package_expand = "<Space>",
+        install_package = "<CR>",
+        update_package = "<CR>",
+        uninstall_package = "<BS>",
+        cancel_installation = "<C-c>",
+        check_package_version = "v",
+        update_all_packages = "u",
+        check_outdated_packages = "o",
+        apply_language_filter = "f",
       },
-    },
-    max_concurrent_installers = 3,
-  })
+    }
+  }
+  
 
   -- nvim comment
   local commentstrings_context_aware = {
@@ -328,7 +340,11 @@ M.setup = U.Service()
   function JDTLSSetup()
     local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
     local workspace_dir = os.getenv('XDG_CACHE_HOME') .. '/jdtls/workspaces/' .. project_name
+    local jdtls_root_dir = vim.fn.stdpath('data') .. '/mason/packages/jdtls'
   
+    --- quit if file does not exist
+    -- if not U.is_file_exists(jdtls_root_dir .. '/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar') then return end
+
     local jdtls_nvim_configs = {
       cmd = {
         'java',
@@ -339,15 +355,18 @@ M.setup = U.Service()
         '-Dlog.protocol=true',
         '-Dlog.level=ALL',
   
-        '-javaagent:/home/potato/.local/share/nvim/lsp_servers/jdtls/lombok.jar',
+        -- '-javaagent:/home/potato/.local/share/nvim/lsp_servers/jdtls/lombok.jar',
+        '-javaagent:' .. jdtls_root_dir .. '/lombok.jar',
   
         '-Xms1g',
         '--add-modules=ALL-SYSTEM',
         '--add-opens', 'java.base/java.util=ALL-UNNAMED',
         '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
   
-        '-jar', '/home/potato/.local/share/nvim/lsp_servers/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
-        '-configuration', '/home/potato/.local/share/nvim/lsp_servers/jdtls/config_linux',
+        -- '-jar', '/home/potato/.local/share/nvim/lsp_servers/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+        -- '-configuration', '/home/potato/.local/share/nvim/lsp_servers/jdtls/config_linux',
+        '-jar', jdtls_root_dir .. '/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+        '-configuration', jdtls_root_dir .. '/config_linux',
         '-data', workspace_dir,
       },
   
@@ -367,10 +386,10 @@ M.setup = U.Service()
   end
 
   vim.cmd [[
-    augroup java
+    augroup jdtls_setup
     autocmd!
     autocmd FileType java lua JDTLSSetup()
-    augroup java
+    augroup jdtls_setup
   ]]
 
 end)

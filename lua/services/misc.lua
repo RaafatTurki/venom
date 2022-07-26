@@ -34,6 +34,7 @@ M.base = U.Service():new(function()
     au BufEnter PKGBUILD.* setlocal ft=PKGBUILD
     au BufEnter README setlocal ft=markdown
     au BufEnter nanorc setlocal ft=nanorc
+    au BufEnter pythonrc setlocal ft=python
 
     " file type
     au FileType lspinfo setlocal nofoldenable

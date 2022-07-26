@@ -38,7 +38,10 @@ local plugins = {
 
   -- LANG:
   p.treesitter,
-  {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
+  {'williamboman/mason.nvim',                         requires = {
+    p.lspconfig,
+    {'williamboman/mason-lspconfig.nvim'},
+  }},
   {'terrortylor/nvim-comment'},
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
@@ -131,7 +134,9 @@ local plugins = {
   {'ron-rs/ron.vim'},
   {'RRethy/vim-hexokinase',                           run = 'make hexokinase'},
   -- {'tiagovla/scope.nvim'},
-
+  
+  -- {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
+  -- {'https://git.sr.ht/~whynothugo/lsp_lines.nvim'},
   -- {'rktjmp/lush.nvim'},
   -- {'marko-cerovac/material.nvim'},
   -- {'andymass/vim-matchup'},
@@ -210,6 +215,13 @@ PluginManager.event_post_complete:sub(function()
   Lang.setup()
   Lang.configure_servers()
   Lang.setup_treesitter()
+
+  -- log configured server names and tags
+  -- for _, server_config in pairs(Lang.lsp_servers_configs) do
+  --   log(server_config.name)
+  --   log(server_config.alias_name)
+  --   log(server_config.tags)
+  -- end
 
   Lsp.setup()
   Lsp.setup_servers(Lang.lsp_servers_configs)

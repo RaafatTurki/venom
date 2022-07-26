@@ -510,14 +510,14 @@ M.hover = U.Service():require(FT.PLUGIN, 'hover.nvim'):new(function()
   require 'hover'.setup {
     init = function()
       require('hover.providers.lsp')
-      require('hover.providers.gh')
-      require('hover.providers.man')
-      require('hover.providers.dictionary')
+      -- require('hover.providers.gh')
+      -- require('hover.providers.man')
+      -- require('hover.providers.dictionary')
     end,
     preview_opts = {
       border = nil
     },
-    title = true
+    title = false
   }
 end)
 

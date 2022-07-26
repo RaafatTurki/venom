@@ -89,9 +89,10 @@ vim.diagnostic.config {
   signs = true,
   update_in_insert = false,
   severity_sort = true,
-  underline = {
-    -- severity = vim.diagnostic.severity.INFO,
-  },
+  -- underline = {
+  --   -- severity = vim.diagnostic.severity.INFO,
+  -- },
+  virtual_lines = false,
   virtual_text = false,
   -- virtual_text = {
   --   spacing = 2,
@@ -297,7 +298,7 @@ LST = {
   -- atempt to auto start
   AUTO_SETUP = "AUTO_SETUP",
   -- add AUTO_SETUP if is listed in lspi installed servers
-  LSPI = "LSPI",
+  MANAGED = "MANAGED",
   -- no shared config on setup
   NO_SHARED_CONFIG = "NO_SHARED_CONFIG",
   -- no shared capabilities on setup

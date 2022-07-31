@@ -35,7 +35,7 @@ M.get_persistent_data_file_path = U.Service():require(FT.SESSION, "setup"):new(f
   local path_arr = U.cut(vim.v.this_session, '/')
   local session_name = table.remove(path_arr, #path_arr)
   
-  --- @diagnostic disable-next-line: undefined-global
+  MiniSessions = MiniSessions
   if (U.join(path_arr, '/') == MiniSessions.config.directory) then
     table.remove(path_arr, #path_arr)
     table.insert(path_arr, #path_arr+1, 'persistent_data')

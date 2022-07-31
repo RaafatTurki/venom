@@ -51,6 +51,7 @@ M.configure_server = U.Service():new(function(name, tags, opts, alias_name)
   M.lsp_servers_configs[server_config.name] = server_config
 end)
 
+-- TODO: make a context menu option that only appears if the following think is valid
 M.configure_servers = U.Service():new(function()
 
   M.configure_server("sumneko_lua", { LST.MANAGED },  {

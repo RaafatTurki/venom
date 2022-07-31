@@ -34,7 +34,6 @@ vim.o.scrolloff         = 4
 vim.o.scroll            = 15
 vim.o.updatetime        = 100
 vim.o.timeoutlen        = 200
-vim.o.mouse             = 'a'
 vim.o.clipboard         = 'unnamedplus'
 -- vim.o.inccommand        = 'split'
 vim.o.signcolumn        = 'yes:2'
@@ -153,7 +152,7 @@ venom = {
     diagnostic_states = {
       outline = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
       full    = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
-      cozette = { Error = " ",   Warn = "⚠ ",  Hint = "🌳",  Info = " "  },
+      cozette = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
       letters = { Error = "E ",   Warn = "W ",  Hint = "H ",  Info = "I "  },
       none    = { Error = "  ",   Warn = "  ",  Hint = "  ",  Info = "  "  },
     },

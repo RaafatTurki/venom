@@ -28,8 +28,6 @@ local plugins = {
   -- PLUGIN_MANAGER:
   {'wbthomason/packer.nvim'},
 
-  -- THEMES:
-
   -- LSP:
   p.lspconfig,
   {'lewis6991/hover.nvim'},
@@ -62,13 +60,10 @@ local plugins = {
   p.fixcusrorhold,
   {'stevearc/dressing.nvim'},
   {'kevinhwang91/nvim-bqf'},
-  -- {'declancm/cinnamon.nvim'},
-  -- {'rcarriga/nvim-notify',                            requires = p.plenary },
   {p.gitsigns,                                        requires = p.plenary },
   {'fedepujol/move.nvim'},
   {'rktjmp/paperplanes.nvim',                         branch = 'rel-0.1.2' },
   'Mofiqul/trld.nvim',
-  -- {'~/sectors/lua/corn.nvim'},
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
   {'toppair/reach.nvim'},
   {'akinsho/bufferline.nvim',                         requires = p.devicons,  tag = "v2.*" },
@@ -77,10 +72,7 @@ local plugins = {
   {'jghauser/fold-cycle.nvim'},
   {'Issafalcon/lsp-overloads.nvim'},
   {'ziontee113/icon-picker.nvim'},
-  -- {'kevinhwang91/nvim-ufo',                           requires = 'kevinhwang91/promise-async' },
-  -- {'smjonas/snippet-converter.nvim'},
-  -- {'j-hui/fidget.nvim'},
-  -- {'vladdoster/remember.nvim'},
+  {'NMAC427/guess-indent.nvim'},
   {p.cmp,                                             requires = {
     {'hrsh7th/cmp-buffer'},
     {'hrsh7th/cmp-path'},
@@ -96,7 +88,7 @@ local plugins = {
   }},
 
   -- STATUSBAR:
-  {'famiu/feline.nvim',                               requires = { p.devicons, p.gitsigns }},
+  {'rebelot/heirline.nvim',                           requires = { p.devicons, p.gitsigns }},
 
   -- SESSIONS:
   -- mini.sessions
@@ -107,16 +99,21 @@ local plugins = {
   -- DEBUGGING:
   {'nvim-treesitter/playground',                      requires = p.treesitter },
 
-
-
-
+  -- UNCHARTED:
+  {'baskerville/vim-sxhkdrc'},
+  {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
+  {'mfussenegger/nvim-jdtls'},
+  {'ron-rs/ron.vim'},
+  {'RRethy/vim-hexokinase',                           run = 'make hexokinase'},
+ 
   -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
-
-  -- zero config
+  -- THEMES:
+  
+  -- {'declancm/cinnamon.nvim'},
+  -- {'rcarriga/nvim-notify',                            requires = p.plenary },
+  -- {'~/sectors/lua/corn.nvim'},
   -- {'iamcco/markdown-preview.nvim',                    config = 'vim.call("mkdp#util#install")'},
   -- {'NTBBloodbath/rest.nvim',                          requires = p.plenary },
-
-  -- config
   -- {'RaafatTurki/vim-quickui'},
   -- {'karb94/neoscroll.nvim'},
   -- {p.telescope,                                       requires = p.plenary },
@@ -124,17 +121,11 @@ local plugins = {
   -- {'dstein64/nvim-scrollview'},
   -- {'rcarriga/vim-ultest',                             requires = 'vim-test/vim-test', run = ':UpdateRemotePlugins' },
   -- {'ThePrimeagen/harpoon',                            requires = p.plenary },
-
-  -- -- ts addons
-
-  -- UNCHARTED:
-  {'baskerville/vim-sxhkdrc'},
-  {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
-  {'mfussenegger/nvim-jdtls'},
-  {'ron-rs/ron.vim'},
-  {'RRethy/vim-hexokinase',                           run = 'make hexokinase'},
   -- {'tiagovla/scope.nvim'},
-  
+  -- {'kevinhwang91/nvim-ufo',                           requires = 'kevinhwang91/promise-async' },
+  -- {'smjonas/snippet-converter.nvim'},
+  -- {'j-hui/fidget.nvim'},
+  -- {'vladdoster/remember.nvim'},
   -- {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
   -- {'https://git.sr.ht/~whynothugo/lsp_lines.nvim'},
   -- {'rktjmp/lush.nvim'},
@@ -208,6 +199,7 @@ PluginManager.event_post_complete:sub(function()
   Plugins.trld()
   Plugins.fold_cycle()
   Plugins.icon_picker()
+  Plugins.guess_indent()
   -- Plugins.corn()
   -- Plugins.cinnamon()
   -- Plugins.remember()

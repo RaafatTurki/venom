@@ -18,7 +18,7 @@ M.base = U.Service():new(function()
   -- edit config file
   vim.cmd [[cnoreabbrev conf tabnew $VIM_ROOT/init.vim]]
   -- log
-  vim.cmd [[cnoreabbrev log lua log(]]
+  vim.cmd [[cnoreabbrev log lua log]]
 
   --- variables
 
@@ -35,6 +35,8 @@ M.base = U.Service():new(function()
     au BufEnter README setlocal ft=markdown
     au BufEnter nanorc setlocal ft=nanorc
     au BufEnter pythonrc setlocal ft=python
+    au BufEnter package.json setlocal nofoldenable
+    au BufEnter tsconfig.json setlocal nofoldenable
 
     " file type
     au FileType lspinfo setlocal nofoldenable
@@ -66,30 +68,44 @@ end)
 
 --- defines OpenURIUnderCursor(), works on urls, uris, vim plugins
 M.open_uri = U.Service():new(function()
+  local open_cmd = nil
+
+  if vim.fn.has("unix") == 1 then
+    open_cmd = 'xdg-open'
+  elseif vim.fn.has("mac") == 1 then
+    open_cmd = 'open'
+  end
+
   function OpenURIUnderCursor()
-    local function open_uri(uri)
-      if type(uri) ~= 'nil' then
-        uri = string.gsub(uri, "#", "\\#") --double escapes any # signs
-        uri = '"'..uri..'"'
-        vim.cmd('!xdg-open '..uri..' > /dev/null')
-        vim.cmd('mode')
-        -- print(uri)
-        return true
-      else
-        return false
-      end
+    if not open_cmd then
+      log.warn("gx is not supported on this OS")
+      return
     end
 
-    local word_under_cursor = vim.fn.expand("<cWORD>")
+    local word_under_cursor = vim.fn.expand("<cfile>")
+    local uri = nil
+
+    -- anything that looks like string/string into a github repo
+    local regex_plugin_url = "[%a%d%-%.%_]*%/[%a%d%-%.%_]*"
+    if string.match(word_under_cursor, regex_plugin_url) then uri = 'https://github.com/'..word_under_cursor end
 
     -- any uri with a protocol segment
     local regex_protocol_uri = "%a*:%/%/[%a%d%#%[%]%-%%+:;!$@/?&=_.,~*()]*"
-    if (open_uri(string.match(word_under_cursor, regex_protocol_uri))) then return end
+    if string.match(word_under_cursor, regex_protocol_uri) then uri = word_under_cursor end
 
-    -- consider anything that looks like string/string a github link
-    local regex_plugin_url = "[%a%d%-%.%_]*%/[%a%d%-%.%_]*"
-    if (open_uri('https://github.com/'..string.match(word_under_cursor, regex_plugin_url))) then return end
+    if not uri then
+      log.warn("unrecognizable URI")
+      return
+    end
+
+    vim.fn.jobstart(open_cmd .. ' "' .. uri .. '"', {
+      detach = true,
+      on_stderr = function (chan_id, data, name)
+        log.err(data)
+      end,
+    })
   end
+
   vim.api.nvim_create_user_command('OpenURIUnderCursor', OpenURIUnderCursor, {})
 end)
 

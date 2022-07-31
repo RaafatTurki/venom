@@ -148,10 +148,10 @@ M.setup_plugins = U.Service():new(function(entries)
     vim.api.nvim_command 'PackerSync'
     vim.cmd [[autocmd User PackerComplete lua PluginManager.event_post_complete()]]
   -- sync if there are missing plugins
-  elseif #M.missing_plugins > 0 then
-    log.warn(#M.missing_plugins ..' missing plugins detected')
-    vim.api.nvim_command 'PackerSync'
-    vim.cmd [[autocmd User PackerComplete lua PluginManager.event_post_complete()]]
+  -- elseif #M.missing_plugins > 0 then
+  --   log.warn(#M.missing_plugins ..' missing plugins detected')
+  --   vim.api.nvim_command 'PackerSync'
+  --   vim.cmd [[autocmd User PackerComplete lua PluginManager.event_post_complete()]]
   else
     M.event_post_complete()
   end

@@ -254,23 +254,6 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
 
   local NVIMTREE_LSP_DIAG_ICONS = venom.icons.diagnostic_states.cozette
 
-  -- require 'nvim-tree'.setup {
-  --   view = {
-  --     adaptive_size = true,
-  --     hide_root_folder = true,
-  --     centralize_selection = true,
-  --     mappings = {
-  --       custom_only = false,
-  --       list = nvimtree_keybindings
-  --     }
-  --   },
-  --   renderer = {
-  --     indent_markers = {
-  --       enable = true,
-  --     },
-  --   },
-  -- }
-
   require 'nvim-tree'.setup {
     hijack_cursor       = true,
     open_on_tab         = true,
@@ -339,9 +322,6 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
         error   = NVIMTREE_LSP_DIAG_ICONS.Error,
       },
     },
-    filesystem_watchers = {
-      enable = true,
-    },
     filters = {
       dotfiles = false,
       custom = {'node_modules', '.cache', '*.import', '__pycache__', 'pnpm-lock.yaml', 'package-lock.json'}
@@ -389,7 +369,7 @@ M.bufferline = U.Service():require(FT.PLUGIN, 'bufferline.nvim'):new(function()
 end)
 
 M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(function()
-  require("toggleterm").setup {
+  require 'toggleterm'.setup {
     open_mapping = [[<C-\>]],
     insert_mappings = true,
 
@@ -558,6 +538,10 @@ M.fzf_lua = U.Service():require(FT.PLUGIN, 'fzf-lua'):new(function()
       },
     }
   }
+end)
+
+M.guess_indent = U.Service():require(FT.PLUGIN, 'guess-indent.nvim'):new(function()
+  require 'guess-indent'.setup {}
 end)
 
 return M

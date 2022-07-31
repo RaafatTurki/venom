@@ -67,6 +67,9 @@ M.setup = U.Service():new(function()
   M.key {'S',                 'T hr<CR>k$'}
   -- open man pages in new tabs
   M.key {'K',                 ':tab Man<CR>'}
+  -- zt and zb with arrows
+  M.key {'z<Up>',             'zt'}
+  M.key {'z<Down>',           'zb'}
   -- center line after n/N
   -- M.key {'n',                'nzzzv'}
   -- M.key {'N',                'Nzzzv'}
@@ -151,6 +154,7 @@ M.setup_plugins = U.Service():new(function()
         enable = false,
       },
       filter = function(bufnr)
+        if vim.api.nvim_buf_get_name(bufnr) == '' then return false end
         return true
       end
     }
@@ -189,6 +193,7 @@ M.setup_plugins = U.Service():new(function()
   M.key {'<leader>dv',        '<CMD>LspDiagsHover<CR>'}
   -- fzf-lus
   M.key {'<leader>f',         '<CMD>FzfLua files<CR>'}
+  M.key {'<leader>g',         '<CMD>FzfLua live_grep_native<CR>'}
   -- neotest
   M.key {'<leader>t',         '<CMD>NeotestToggleTree<CR>'}
 end)

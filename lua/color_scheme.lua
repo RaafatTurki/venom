@@ -10,10 +10,10 @@ M.set_hl = function(group_name, opts)
     bold = opts.bold or false,
     standout = opts.standout or false,
     underline = opts.underline or false,
-    underlineline = opts.underlineline or false,
     undercurl = opts.undercurl or false,
-    underdot = opts.underdot or false,
-    underdash = opts.underdash or false,
+    underdouble = opts.underdouble or false,
+    underdotted = opts.underdotted or false,
+    underdashed = opts.underdashed or false,
     strikethrough = opts.strikethrough or false,
     italic = opts.italic or false,
     reverse = opts.reverse or false,
@@ -283,6 +283,7 @@ NonText         = { 'TSDebug' },
   SpellCap        = { }, --
   SpellLocal      = { }, --
   SpellRare       = { }, --
+-- StatusLine      = { bg = c.debug }, --
   StatusLine      = { }, --
   StatusLineNC    = { reverse = true },
   Substitute      = { 'CurSearch' },
@@ -327,9 +328,9 @@ LspCodeLensSeparator        = { 'Debug' },
   DiagnosticVirtualTextInfo   = { 'DiagnosticInfo' },
   DiagnosticVirtualTextHint   = { 'DiagnosticHint' },
   DiagnosticUnderlineError    = { undercurl = true, sp = c.err },
-  DiagnosticUnderlineWarn     = { undercurl = true, sp = c.err },
-  DiagnosticUnderlineInfo     = { undercurl = true, sp = c.err },
-  DiagnosticUnderlineHint     = { undercurl = true, sp = c.err },
+  DiagnosticUnderlineWarn     = { undercurl = true, sp = c.warn },
+  DiagnosticUnderlineInfo     = { undercurl = true, sp = c.info },
+  DiagnosticUnderlineHint     = { undercurl = true, sp = c.hint },
   DiagnosticFloatingError     = { 'DiagnosticError' },
   DiagnosticFloatingWarn      = { 'DiagnosticWarn' },
   DiagnosticFloatingInfo      = { 'DiagnosticInfo' },
@@ -591,6 +592,12 @@ Ignore         = { 'TSDebug' },         --
   CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
   Camel                   = { 'WarningMsg' };
 
+  ModeNormal              = { fg = c.bg, bg = c.mg, bold = true };
+  ModeInsert              = { fg = c.fg, bg = c.del, bold = true };
+  ModeVisual              = { fg = c.bg, bg = c.add, bold = true };
+  ModeControl             = { fg = c.bg, bg = c.warn, bold = true };
+  ModeSelect              = { fg = c.fg, bg = c.add, bold = true };
+  ModeTerminal            = { fg = c.bg, bg = c.type, bold = true };
 }
 
 return M

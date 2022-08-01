@@ -21,6 +21,12 @@ M.base = U.Service():new(function()
   vim.cmd [[cnoreabbrev log lua log]]
 
   --- variables
+  vim.g.neovide_cursor_vfx_mode = 'pixiedust'
+  -- vim.g.neovide_fullscreen = true
+  -- vim.g.neovide_profiler = true
+  vim.g.gui_font_size = 16
+  vim.g.gui_font_face = "Iosevka"
+  vim.opt.guifont = string.format("%s:h%s",vim.g.gui_font_face, vim.g.gui_font_size)
 
   --- auto groups
   vim.cmd [[

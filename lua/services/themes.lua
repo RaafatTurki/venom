@@ -53,7 +53,7 @@ function M.material(variant)
   require('material').setup({
     async_loading = false
   })
-  U.gvar('material_style'):set(variant)
+  vim.g.material_style = variant
   vim.cmd 'colo material'
 end
 

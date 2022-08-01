@@ -227,17 +227,6 @@ M.setup_treesitter = U.Service():require(FT.PLUGIN, 'nvim-treesitter'):new(funct
     highlight = { enable = true },
     indent = { enable = true },   -- indentexpr (=)
     context_commentstring = { enable = true, enable_autocmd = false },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        -- init_selection = '<CR>',
-        -- scope_incremental = '<CR>',
-        -- node_incremental = '<TAB>',
-        -- node_decremental = '<S-TAB>',
-      },
-    },
     matchup = { enable = true },
   }
 end)
@@ -314,7 +303,7 @@ M.setup = U.Service()
   -- navic
   local navic_icons = {}
   for name, icon in pairs(venom.icons.item_kinds.cozette) do navic_icons[name] = icon..' ' end
-  U.gvar('navic_silence'):set(true)
+  vim.g.navic_silence = true
   require 'nvim-navic'.setup {
     highlight = true,
     separator = ' > ',

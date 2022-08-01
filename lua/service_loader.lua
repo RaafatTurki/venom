@@ -73,6 +73,7 @@ local plugins = {
   {'Issafalcon/lsp-overloads.nvim'},
   {'ziontee113/icon-picker.nvim'},
   {'NMAC427/guess-indent.nvim'},
+  {'j-hui/fidget.nvim'},
   {p.cmp,                                             requires = {
     {'hrsh7th/cmp-buffer'},
     {'hrsh7th/cmp-path'},
@@ -124,7 +125,6 @@ local plugins = {
   -- {'tiagovla/scope.nvim'},
   -- {'kevinhwang91/nvim-ufo',                           requires = 'kevinhwang91/promise-async' },
   -- {'smjonas/snippet-converter.nvim'},
-  -- {'j-hui/fidget.nvim'},
   -- {'vladdoster/remember.nvim'},
   -- {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
   -- {'https://git.sr.ht/~whynothugo/lsp_lines.nvim'},
@@ -190,7 +190,7 @@ PluginManager.event_post_complete:sub(function()
   Plugins.bufferline()
   Plugins.cmp_ls()
   Plugins.toggle_term()
-  -- Plugins.fidget()
+  Plugins.fidget()
   Plugins.mini_starter()
   Plugins.mini_surround()
   Plugins.dirty_talk()

@@ -592,12 +592,12 @@ Ignore         = { 'TSDebug' },         --
   CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
   Camel                   = { 'WarningMsg' };
 
-  ModeNormal              = { fg = c.bg, bg = c.mg, bold = true };
-  ModeInsert              = { fg = c.fg, bg = c.del, bold = true };
-  ModeVisual              = { fg = c.bg, bg = c.add, bold = true };
-  ModeControl             = { fg = c.bg, bg = c.warn, bold = true };
-  ModeSelect              = { fg = c.fg, bg = c.add, bold = true };
-  ModeTerminal            = { fg = c.bg, bg = c.type, bold = true };
+  ModeNormal              = { fg = c.mg, bold = true };
+  ModeInsert              = { fg = c.del, bold = true };
+  ModeVisual              = { fg = c.add, bold = true };
+  ModeControl             = { fg = c.warn, bold = true };
+  ModeSelect              = { fg = c.add, bold = true };
+  ModeTerminal            = { fg = c.type, bold = true };
 }
 
 return M

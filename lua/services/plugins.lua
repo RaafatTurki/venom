@@ -236,7 +236,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
 end)
 
 M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
-  U.gvar('nvim_tree_allow_resize'):set(1)
+  vim.g.nvim_tree_allow_resize = 1
 
   local nvimtree_keybindings = {
     { key = "<C-Up>",     action = 'first_sibling' },

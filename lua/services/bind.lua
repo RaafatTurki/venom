@@ -4,7 +4,7 @@ local M = {}
 
 M.bind_leader = U.Service():new(function()
   M.key({'<Space>', '<Nop>', mode = ''})
-  U.gvar('mapleader'):set(' ')
+  vim.g.mapleader = ' '
 end)
 
 M.keys = {}
@@ -41,10 +41,12 @@ M.setup = U.Service():new(function()
 
   -- BASE
   -- write, undo, quit
-  M.key {'<C-s>',             '<CMD>write<CR><ESC>', mode = 'n v i'}
-  M.key {'<C-z>',             '<CMD>undo<CR>', mode = 'n v i'}
-  M.key {'<C-c>',             '<CMD>quit<CR>', mode = 'n v i'}
-  M.key {'<C-q>',             '<CMD>quitall<CR>', mode = 'n v i'}
+  venom.events.write:sub(vim.cmd.write)
+  venom.events.write:sub(vim.cmd.stopinsert)
+  M.key {'<C-s>',             function() venom.events.write() end, mode = 'n v i'}
+  M.key {'<C-z>',             function() vim.cmd.undo() end, mode = 'n v i'}
+  M.key {'<C-c>',             function() vim.cmd.quit() end, mode = 'n v i'}
+  M.key {'<C-q>',             function() vim.cmd.quitall() end, mode = 'n v i'}
   -- page shift up/down, select all
   M.key {'<C-Up>',            '<C-y>k'}
   M.key {'<C-Down>',          '<C-e>j'}

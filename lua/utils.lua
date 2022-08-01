@@ -91,20 +91,16 @@ function M.create_au(group, event, pattern, cmd_or_fn, extra_auto_cmd_opts, extr
   if type(group) == 'string' then
     group = vim.api.nvim_create_augroup(group, extra_auto_group_opts)
   end
-
   local auto_cmd_opts = {
     group = group,
     pattern = pattern,
   }
-
   auto_cmd_opts = vim.tbl_deep_extend('force', extra_auto_cmd_opts or {}, auto_cmd_opts)
-
   if type(cmd_or_fn) == 'function' then
     auto_cmd_opts.callback = cmd_or_fn
   elseif type(cmd_or_fn) == 'string' then
     auto_cmd_opts.command = cmd_or_fn
   end
-
   vim.api.nvim_create_autocmd(event, auto_cmd_opts)
 end
 --- replaces terminal codes with internal representation
@@ -179,7 +175,7 @@ end
 --- returns a single input char
 function M.get_char_input() return vim.fn.nr2char(vim.fn.getchar()) end
 --- clears the command prompt
-function M.clear_prompt() vim.api.nvim_command('normal! :') end
+function M.clear_prompt() vim.cmd.call "feedkeys(':','nx')" end
 --- returns a string with the current indentation type and width
 function M.get_indent_settings_str()
   local indent_type = vim.o.expandtab and 'S' or 'T'
@@ -206,15 +202,15 @@ function M.prompt_ye_no(prompt, default_val, on_accept, on_reject, on_choice)
   local items = {}
   local YES = 'Yes'
   local NO = 'No'
-
   if default_val == true then items = { YES, NO } elseif default_val == false then items = { NO, YES } end
-  
   vim.ui.select(items, { kind = 'yes_no', prompt = prompt }, function(c)
     if on_choice ~= nil then on_choice(c) end
     if c == YES and on_accept ~= nil then on_accept() end
     if c == NO and on_reject ~= nil then on_reject() end
   end)
 end
+-- TODO: make into a mode switching utility
+-- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, false, true), '', true)
 
 
 -- Object Based Utils (stateless)
@@ -242,13 +238,6 @@ function M.hi(hlname)
   if hl.reverse then t.style = t.style .. "reverse" end
   if hl.nocombine then t.style = t.style .. "nocombine" end
   return t
-end
---- returns a global var object
-function M.gvar(name)
-  return {
-    get = function(self) return vim.g[name] end,
-    set = function(self, val) vim.g[name] = val end,
-  }
 end
 --- retuens a key object
 function M.key(modes, lhs, rhs, opts)

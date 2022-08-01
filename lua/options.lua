@@ -133,7 +133,7 @@ venom = {
   events = {
     refresh = U.Event():new(),
     clear = U.Event():new(),
-    -- write = U.Deligate():new(),
+    write = U.Event():new(),
   },
   -- features is a table that can hold strings representing the availability of said feature for later querying.
   -- each string must be in the form of <TYPE>:<name> where TYPE is one of the FT enum values (for example "PLUGIN:nvim-cmp" means the plugin cmp is available)

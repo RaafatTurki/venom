@@ -39,14 +39,12 @@ M.ts_parsers_ensure_installed = {
 
 M.lsp_servers_configs = {}
 
-M.configure_server = U.Service():new(function(name, tags, opts, alias_name)
+M.configure_server = U.Service():new(function(name, tags, opts)
   local server_config = U.LspServerConfig():new(name, opts)
 
   for _, tag in pairs(tags) do
     server_config:tag(tag)
   end
-
-  if alias_name ~= nil then server_config:alias(alias_name) end
 
   M.lsp_servers_configs[server_config.name] = server_config
 end)
@@ -101,6 +99,10 @@ M.configure_servers = U.Service():new(function()
           executable = "zathura",
           args = {"--synctex-forward", "%l:1:%f", "%p"},
         },
+        chktex = {
+          onOpenAndSave = true,
+          onEdit = true,
+        }
       },
       -- chktex = {
       --  onEdit = true,
@@ -185,10 +187,17 @@ M.configure_servers = U.Service():new(function()
       Lsp.setup_buf_fmt_on_save(client, bufnr)
     end
   })
+  M.configure_server("ltex", { LST.MANAGED }, {
+    settings = {
+      ltex = {
+        completionEnabled = true,
+      }
+    }
+  })
 
   -- annoying and up to no good lsp servers:
-  M.configure_server("jdtls", {
-  }, {})
+  M.configure_server("jdtls", {}, {
+  })
   M.configure_server("gdscript", {}, {
     cmd = {'godot-ls'},
     flags = {
@@ -196,25 +205,17 @@ M.configure_servers = U.Service():new(function()
     },
   })
 
-  local mason_reg = require 'mason-registry'
-  local meson_server_mappings = require "mason-lspconfig.mappings.server"
-
-  for _, pkg in ipairs(mason_reg.get_installed_packages()) do
-    -- check packages is an LSP server
-    if U.has_value(pkg.spec.categories, 'LSP') then
-      local server_name = meson_server_mappings.package_to_lspconfig[pkg.name] or pkg.name
-
-      -- add LST.AUTO_SETUP to installed LST.MANAGED servers
-      if U.has_key(M.lsp_servers_configs, server_name) then
-        if U.has_value(M.lsp_servers_configs[server_name].tags, LST.MANAGED) then
-          M.lsp_servers_configs[server_name]:tag(LST.AUTO_SETUP)
-        end
-
-      -- configure unconfigured and installed servers with LST.MANAGED and LST.AUTO_SETUP
-      else
-        M.configure_server(server_name, { LST.MANAGED, LST.AUTO_SETUP }, {})
+  local mason_lspconfig = require "mason-lspconfig"
+  for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
+    -- add LST.AUTO_SETUP to installed LST.MANAGED servers
+    if U.has_key(M.lsp_servers_configs, server_name) then
+      if U.has_value(M.lsp_servers_configs[server_name].tags, LST.MANAGED) then
+        M.lsp_servers_configs[server_name]:tag(LST.AUTO_SETUP)
       end
-    end 
+    -- configure unconfigured and installed servers with LST.MANAGED and LST.AUTO_SETUP
+    else
+      M.configure_server(server_name, { LST.MANAGED, LST.AUTO_SETUP }, {})
+    end
   end
 end)
 
@@ -233,7 +234,7 @@ end)
 
 M.setup = U.Service()
 :require(FT.PLUGIN, "mason.nvim")
-:require(FT.PLUGIN, "nvim-comment")
+-- :require(FT.PLUGIN, "nvim-comment")
 :require(FT.PLUGIN, "nvim-navic")
 :require(FT.PLUGIN, "spellsitter.nvim")
 :require(FT.PLUGIN, "neotest")
@@ -261,43 +262,34 @@ M.setup = U.Service()
       },
     }
   }
-  
 
   -- nvim comment
-  local commentstrings_context_aware = {
-    vue = {},
-    svelte = {},
-    html = {},
-    javascript = {},
-  }
-  local commentstrings = {
-    gdscript = '#%s',
-    fish = '#%s',
-    c = '//%s',
-    toml = '#%s',
-    samba = '#%s',
-    desktop = '#%s',
-    dosini = '#%s',
-    bc = '#%s',
-    glsl = '//%s',
-    cs = '//%s',
-    sshdconfig = '#%s',
-  }
-  require 'nvim_comment'.setup {
-    create_mappings = false,
-    marker_padding = true,
-    hook = function()
-      for filetype, value in pairs(commentstrings) do
-        if vim.api.nvim_buf_get_option(0, "filetype") == filetype then
-          vim.api.nvim_buf_set_option(0, "commentstring", value)
+  local ts_ctx_cs_filetypes = { 'html', 'svelte' }
+  require 'Comment'.setup {
+    mappings = false,
+    ignore = '^$',
+    pre_hook = function(ctx)
+      if U.has_value(ts_ctx_cs_filetypes, vim.bo.filetype) then
+        local comment_utils = require 'Comment.utils'
+        local ts_ctx_cs_utils = require 'ts_context_commentstring.utils'
+        local ts_ctx_cs_internal = require 'ts_context_commentstring.internal'
+
+        -- determine the location where to calculate commentstring from
+        local cs_pos = nil
+        if ctx.ctype == comment_utils.ctype.block then
+          cs_pos = ts_ctx_cs_utils.get_cursor_location()
+        elseif ctx.cmotion == comment_utils.cmotion.v or ctx.cmotion == comment_utils.cmotion.V then
+          cs_pos = ts_ctx_cs_utils.get_visual_start_location()
         end
+
+        -- return '%s'
+        -- commentstring calculation
+        return ts_ctx_cs_internal.calculate_commentstring({
+          key = ctx.ctype == comment_utils.ctype.line and '__default' or '__multiline',
+          location = cs_pos,
+        })
       end
-      for filetype, value in pairs(commentstrings_context_aware) do
-        if vim.api.nvim_buf_get_option(0, "filetype") == filetype then
-          require("ts_context_commentstring.internal").update_commentstring()
-        end
-      end
-    end
+    end,
   }
 
   -- navic

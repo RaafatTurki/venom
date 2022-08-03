@@ -75,8 +75,7 @@ M.setup_servers = U.Service():require(FT.LSP, 'setup'):new(function(lsp_servers_
   
     -- setting up server
     if U.has_value(server_config.tags, LST.AUTO_SETUP) then
-      local server_name = server_config.alias_name or server_config.name
-      lspconf[server_name].setup(server_config.opts)
+      lspconf[server_config.name].setup(server_config.opts)
     end
   end
 end)
@@ -92,8 +91,6 @@ M.setup = U.Service():provide(FT.LSP, 'setup')
     -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
   end
-
-  -- require("inc_rename").setup {}
 
   vim.api.nvim_create_user_command('LspRename', function() M.rename() end, {})
   vim.api.nvim_create_user_command('LspReferences', function() M.references() end, {})
@@ -113,46 +110,9 @@ M.progress_spinner = {
   time = 0,
   curr = 1,
   stages = {
-    -- '⠋',
-    -- '⠙',
-    -- '⠹',
-    -- '⠸',
-    -- '⠼',
-    -- '⠴',
-    -- '⠦',
-    -- '⠧',
-    -- '⠇',
-    -- '⠏',
-    '∙∙∙',
-    '●∙∙',
-    '●∙∙',
-    '∙●∙',
-    '∙●∙',
-    '∙●∙',
-    '∙∙●',
-    '∙∙●',
-    '∙∙∙',
-    -- '▁',
-    -- '▂',
-    -- '▃',
-    -- '▄',
-    -- '▅',
-    -- '▆',
-    -- '▇',
-    -- '█',
-    -- '▓',
-    -- '▒',
-    -- '░',
-    -- '▒',
-    -- '▓',
-    -- '█',
-    -- '▉',
-    -- '▊',
-    -- '▋',
-    -- '▌',
-    -- '▍',
-    -- '▎',
-    -- '▏',
+    -- '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏',
+    '∙∙∙', '●∙∙', '●∙∙', '∙●∙', '∙●∙', '∙●∙', '∙∙●', '∙∙●', '∙∙∙',
+    -- '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█', '▓', '▒', '░', '▒', '▓', '█', '▉', '▊', '▋', '▌', '▍', '▎', '▏',
   },
 }
 

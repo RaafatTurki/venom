@@ -61,6 +61,8 @@ M.setup = U.Service():new(function()
   -- make x delete without copying
   -- M.key {'x',                '"_x', mode = 'v n'}
   M.key {'X',                 '"_x', mode = 'v n'}
+  -- preserve cursor position after a yank
+  M.key {'y',                 "ygv<ESC>", mode = 'v'}
   -- make Y copy to end of line
   M.key {'Y',                 'y$'}
   -- go to end after a join
@@ -127,14 +129,13 @@ M.setup_plugins = U.Service():new(function()
   -- PLUGINS
   -- packer sync
   M.key {'<leader>p',         function() PluginManager.sync({ take_snapshot = true }) end}
-  -- nvim comment
-  M.key {'<leader>c',         ':CommentToggle<CR>'}
-  M.key {'<leader>c',         ':CommentToggle<CR>',    mode = 'v'}
-  M.key {'Y',                 'ygv:CommentToggle<CR>', mode = 'v'}
+  -- comment
+  M.key{'<leader>c',          '<Plug>(comment_toggle_current_linewise)'}
+  M.key{'<leader>c',          '<Plug>(comment_toggle_linewise_visual)', mode = 'v'}
+  M.key {'Y',                 'ygv<Plug>(comment_toggle_linewise_visual)', mode = 'v'}
+
   -- nvim tree
   M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
-  -- icon picker
-  M.key {'<leader>i',         '<CMD>PickNerd<CR>', mode = 'n'}
   -- reach
   local auto_handles = {
     '1', '2', '3',
@@ -167,6 +168,8 @@ M.setup_plugins = U.Service():new(function()
   end
   -- fold-cycle
   M.key {'za',                function() require 'fold-cycle'.toggle_all() end}
+  -- fold-preview
+  M.key {'zq',                function() require 'fold-preview'.toggle_preview() end}
   -- gitsigns
   M.key {'gr',                '<CMD>Gitsigns reset_hunk<CR>'}
   M.key {'gr',                '<CMD>Gitsigns reset_hunk<CR>', mode = 'v'}
@@ -178,11 +181,16 @@ M.setup_plugins = U.Service():new(function()
   M.key {'gu',                '<CMD>Gitsigns undo_stage_hunk<CR>'}
   M.key {'g<Left>',           '<CMD>Gitsigns prev_hunk<CR>zz'}
   M.key {'g<Right>',          '<CMD>Gitsigns next_hunk<CR>zz'}
-  -- move
-  M.key {'<A-Up>',            '<CMD>MoveLine(-1)<CR>', mode = 'n i'}
-  M.key {'<A-Down>',          '<CMD>MoveLine(1)<CR>', mode = 'n i'}
-  M.key {'<A-Up>',            ':MoveBlock(-1)<CR>', mode = 'v'}
-  M.key {'<A-Down>',          ':MoveBlock(1)<CR>', mode = 'v'}
+  -- gomove
+  M.key {'<A-Left>',          '<Plug>GoNSMLeft', mode = 'n' }
+  M.key {'<A-Down>',          '<Plug>GoNSMDown', mode = 'n' }
+  M.key {'<A-Up>',            '<Plug>GoNSMUp', mode = 'n' }
+  M.key {'<A-Right>',         '<Plug>GoNSMRight', mode = 'n' }
+
+  M.key {'<A-Left>',          '<Plug>GoVSMLeft', mode = 'x' }
+  M.key {'<A-Down>',          '<Plug>GoVSMDown', mode = 'x' }
+  M.key {'<A-Up>',            '<Plug>GoVSMUp', mode = 'x' }
+  M.key {'<A-Right>',         '<Plug>GoVSMRight', mode = 'x' }
   -- lsp installer
   M.key {'<leader>l',         '<CMD>Mason<CR>'}
   -- lsp

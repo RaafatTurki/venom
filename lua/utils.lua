@@ -176,13 +176,6 @@ end
 function M.get_char_input() return vim.fn.nr2char(vim.fn.getchar()) end
 --- clears the command prompt
 function M.clear_prompt() vim.cmd.call "feedkeys(':','nx')" end
---- returns a string with the current indentation type and width
-function M.get_indent_settings_str()
-  local indent_type = vim.o.expandtab and 'S' or 'T'
-  local indent_width = vim.o.shiftwidth..':'..vim.o.tabstop..':'..vim.o.softtabstop
-  if vim.o.shiftwidth == vim.o.tabstop and vim.o.tabstop == vim.o.softtabstop then indent_width = vim.o.shiftwidth end
-  return indent_type..':'..indent_width
-end
 --- returns nth field of a segmented string (much like unix cut) (omit field to return full array, fields <= 0 count from the end)
 function M.cut(str, delimiter, field)
   delimiter = delimiter or ' '
@@ -356,17 +349,12 @@ end
 function M.LspServerConfig()
   return {
     name = nil,
-    alias_name = nil,
     opts = {},
     tags = {},
     events = {
       on_attach = M.Event():new(),
     },
     tag = function(self, server_tag) table.insert(self.tags, server_tag) return self end,
-    alias = function(self, new_alias_name)
-      self.alias_name = new_alias_name
-      return self
-    end,
     new = function(self, name, opts)
       self.name = name
       self.opts = opts or {}

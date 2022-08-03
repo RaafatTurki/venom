@@ -23,6 +23,7 @@ local p = {
   cmp = 'hrsh7th/nvim-cmp',
   mini = 'echasnovski/mini.nvim',
   fixcusrorhold = 'antoinemadec/FixCursorHold.nvim',
+  keymap_amend = 'anuvyklack/keymap-amend.nvim',
 }
 local plugins = {
   -- PLUGIN_MANAGER:
@@ -38,9 +39,9 @@ local plugins = {
   p.treesitter,
   {'williamboman/mason.nvim',                         requires = {
     p.lspconfig,
-    {'williamboman/mason-lspconfig.nvim'},
+    'williamboman/mason-lspconfig.nvim',
   }},
-  {'terrortylor/nvim-comment'},
+  {'numToStr/Comment.nvim'},
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
   {'lewis6991/spellsitter.nvim'},
@@ -61,9 +62,9 @@ local plugins = {
   {'stevearc/dressing.nvim'},
   {'kevinhwang91/nvim-bqf'},
   {p.gitsigns,                                        requires = p.plenary },
-  {'fedepujol/move.nvim'},
+  {'booperlv/nvim-gomove'},
   {'rktjmp/paperplanes.nvim',                         branch = 'rel-0.1.2' },
-  'Mofiqul/trld.nvim',
+  {'Mofiqul/trld.nvim'},
   {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
   {'toppair/reach.nvim'},
   {'akinsho/bufferline.nvim',                         requires = p.devicons,  tag = "v2.*" },
@@ -71,11 +72,11 @@ local plugins = {
   {'ibhagwan/fzf-lua',                                requires = p.devicons },
   {'jghauser/fold-cycle.nvim'},
   {'Issafalcon/lsp-overloads.nvim'},
-  {'ziontee113/icon-picker.nvim'},
+  {'anuvyklack/fold-preview.nvim',                    requires = p.keymap_amend },
   {'NMAC427/guess-indent.nvim'},
   {'j-hui/fidget.nvim'},
   {p.cmp,                                             requires = {
-    {'hrsh7th/cmp-buffer'},
+    {'lukas-reineke/cmp-rg'},
     {'hrsh7th/cmp-path'},
     {'hrsh7th/cmp-nvim-lsp'},
     {'hrsh7th/cmp-nvim-lua'},
@@ -83,7 +84,8 @@ local plugins = {
     {'saadparwaiz1/cmp_luasnip'},
     {'L3MON4D3/LuaSnip'},
     {'hrsh7th/cmp-cmdline'},
-    {'dmitmel/cmp-digraphs'},
+    -- {'hrsh7th/cmp-buffer'},
+    -- {'dmitmel/cmp-digraphss'},
     -- {'hrsh7th/cmp-nvim-lsp-signature-help'},
     -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
   }},
@@ -109,7 +111,8 @@ local plugins = {
  
   -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
   -- THEMES:
-  
+
+  -- {'terrortylor/nvim-comment'}, 
   -- {'declancm/cinnamon.nvim'},
   -- {'rcarriga/nvim-notify',                            requires = p.plenary },
   -- {'~/sectors/lua/corn.nvim'},
@@ -198,8 +201,9 @@ PluginManager.event_post_complete:sub(function()
   Plugins.paperplanes()
   Plugins.trld()
   Plugins.fold_cycle()
-  Plugins.icon_picker()
+  Plugins.fold_preview()
   Plugins.guess_indent()
+  -- Plugins.icon_picker()
   -- Plugins.corn()
   -- Plugins.cinnamon()
   -- Plugins.remember()

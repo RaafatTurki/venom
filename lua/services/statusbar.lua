@@ -118,21 +118,21 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       {
         provider = function(self)
           local count = self.status_dict.added or 0
-          return count > 0 and ("+" .. count) .. ' '
+          return count > 0 and ("+" .. count)
         end,
         hl = "GitSignsAdd",
       },
       {
         provider = function(self)
           local count = self.status_dict.changed or 0
-          return count > 0 and ("~" .. count) .. ' '
+          return count > 0 and ("~" .. count)
         end,
         hl = "GitSignsChange",
       },
       {
         provider = function(self)
           local count = self.status_dict.removed or 0
-          return count > 0 and ("-" .. count) .. ' '
+          return count > 0 and ("-" .. count)
         end,
         hl = "GitSignsDelete",
       },
@@ -142,13 +142,15 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
 
   M.components.navic = U.Service():new(function(opts)
     return {
-      condition = require 'nvim-navic'.is_available,
-      opts.left_pad,
+      condition = function()
+        return require 'nvim-navic'.is_available()
+      end,
+      -- opts.left_pad,
       {
         provider = require 'nvim-navic'.get_location,
         hl = 'Folded',
       },
-      opts.right_pad,
+      -- opts.right_pad,
     }
   end)
 
@@ -245,26 +247,40 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       condition = conditions.lsp_attached,
       opts.left_pad,
       {
-        provider = function()
-          if #vim.lsp.util.get_progress_messages() > 0 then
-            return Lsp.get_progress_spinner()..' '
-          else
-            return ' '
-          end
-        end,
-        update = function ()
-          return true
-        end
-      },
-      {
         provider  = function()
-          local server_names = {}
+          local SERVER_STATES = { IDLE = "IDLE", LOADING = "LOADING" }
+          local attached_servers = {}
+          local res = ''
+
           for i, server in pairs(vim.lsp.buf_get_clients(0)) do
-            table.insert(server_names, server.name)
+            table.insert(attached_servers, {
+              name = server.name,
+              state = SERVER_STATES.IDLE,
+            })
           end
-          return table.concat(server_names, " | ")
+
+          for i, msg in pairs(vim.lsp.util.get_progress_messages()) do
+            for j, attached_server in pairs(attached_servers) do
+              if (msg.name == attached_server.name) then
+                attached_server.state = SERVER_STATES.LOADING
+              end
+            end
+          end
+
+          for i, attached_server in pairs(attached_servers) do
+            state_icon = ''
+            if attached_server.state == SERVER_STATES.IDLE then
+              state_icon = ''
+            elseif attached_server.state == SERVER_STATES.LOADING then
+              state_icon = ''
+            end
+            res = res .. state_icon .. ' ' .. attached_server.name
+            if (i ~= #attached_servers) then res = res .. ' ' end
+          end
+
+          return res
         end,
-        update = {'LspAttach', 'LspDetach'},
+        update = {'LspAttach', 'LspDetach', 'User LspProgressUpdate'},
       },
       opts.right_pad,
     }
@@ -393,7 +409,10 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       opts.left_pad,
       {
         provider = function()
-          return U.get_indent_settings_str()
+          local indent_type = vim.o.expandtab and 'S' or 'T'
+          local indent_width = vim.o.shiftwidth..':'..vim.o.tabstop..':'..vim.o.softtabstop
+          if vim.o.shiftwidth == vim.o.tabstop and vim.o.tabstop == vim.o.softtabstop then indent_width = vim.o.shiftwidth end
+          return indent_type..':'..indent_width
         end,
         hl = 'Folded',
       },
@@ -422,6 +441,25 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     }
   end)
 
+  M.components.test = U.Service():new(function(opts)
+    return {
+      opts.left_pad,
+      {
+        provider = function()
+          messages = vim.lsp.util.get_progress_messages()
+          -- log(messages)
+          -- if (#messages > 0) then
+          --   return 'LOADING'
+          -- else
+          --   return '.......'
+          -- end
+          return ''
+        end,
+        -- update = 'User LspProgressUpdate',
+      },
+      opts.right_pad,
+    }
+  end)
 
   local component_opts = {
     left = {
@@ -500,7 +538,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     terminal_statusline,
   }
 
-  require'heirline'.setup({ statuslines })
+  require'heirline'.setup(statuslines)
 end)
 
 

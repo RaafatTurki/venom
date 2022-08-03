@@ -183,9 +183,10 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
       { name = 'nvim_lua' },
-      { name = 'buffer' },
+      { name = 'rg' },
       { name = 'path' },
       { name = 'spell' },
+      -- { name = 'buffer' },
       -- { name = 'nvim_lsp_signature_help' },
       -- { name = 'digraphs' },
     },
@@ -375,14 +376,13 @@ M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(functi
 
     shade_terminals = false,
 
-    direction = 'vertical',
+    direction = 'horizontal',
 
     size = function(term)
       if term.direction == "horizontal" then
-        return 15
+        return vim.o.lines * 0.6
       elseif term.direction == "vertical" then
-        return 116
-        -- return vim.o.columns * 0.35
+        return vim.o.columns * 0.5
       end
     end,
     -- on_close = fun(t: Terminal), -- function to run when the terminal closes
@@ -521,6 +521,13 @@ M.fold_cycle = U.Service():require(FT.PLUGIN, 'fold-cycle.nvim'):new(function()
   }
 end)
 
+M.fold_preview = U.Service():require(FT.PLUGIN, 'fold-preview.nvim'):new(function()
+  require 'fold-preview'.setup {
+    default_keybindings = false,
+    border = 'single',
+  }
+end)
+
 M.icon_picker = U.Service():require(FT.PLUGIN, 'icon-picker.nvim'):new(function()
   require 'icon-picker'
 end)
@@ -542,6 +549,12 @@ end)
 
 M.guess_indent = U.Service():require(FT.PLUGIN, 'guess-indent.nvim'):new(function()
   require 'guess-indent'.setup {}
+end)
+
+M.gomove = U.Service():require(FT.PLUGIN, 'nvim-gomove'):new(function()
+  require 'gomove'.setup {
+    map_defaults = false,
+  }
 end)
 
 return M

@@ -214,6 +214,7 @@ M.highlights = {
   TSPunctDelimiter    = { 'TSKeyword' },
   TSLabel             = { 'TSKeyword' },
   TSException         = { 'TSKeyword' },
+  TSMath              = { 'TSKeyword' },
 
   TSPunctBracket      = { fg = c.operator },
   TSTagDelimiter      = { 'TSPunctBracket' },
@@ -231,7 +232,6 @@ M.highlights = {
   TSStorageClass      = { 'TSType' },
   TSNamespace         = { 'TSType' },
 
-TSMath              = { 'TSDebug' },
 TSNone              = { 'TSDebug' },
 TSParameterReference= { 'TSDebug' },
 
@@ -580,6 +580,10 @@ Ignore         = { 'TSDebug' },         --
   NavicIconsTypeParameter = { 'CmpItemKindTypeParameter' };
   NavicText               = { 'CmpItemKindText' };
   NavicSeparator          = { 'Folded' };
+
+  -- fidget
+  FidgetTitle             = { 'Folded' },
+  FidgetTask              = { 'Comment' },
 
   -- CUTSOM GROUPS
   -- DebugFg                 = { fg = debug[10] };

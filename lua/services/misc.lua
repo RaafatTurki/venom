@@ -33,7 +33,7 @@ M.base = U.Service():new(function()
     augroup base
     au!
 
-    " buffer type"
+    " file name
     au BufEnter .swcrc setlocal ft=json
     au BufEnter tsconfig.json setlocal ft=jsonc
     au BufEnter mimeapps.list setlocal ft=dosini
@@ -48,8 +48,9 @@ M.base = U.Service():new(function()
     au FileType lspinfo setlocal nofoldenable
     au FileType packer setlocal nocursorline
     au FileType alpha setlocal cursorline
+    au FileType sshdconfig setlocal commentstring=#%s
 
-    " terminal"
+    " terminal
     au FileType terminal setlocal nocursorline
     au TermOpen * setlocal nonumber
 

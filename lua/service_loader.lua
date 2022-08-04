@@ -209,18 +209,9 @@ PluginManager.event_post_complete:sub(function()
   -- Plugins.remember()
 
   Lang.setup()
-  Lang.configure_servers()
-  Lang.setup_treesitter()
-
-  -- log configured server names and tags
-  -- for _, server_config in pairs(Lang.lsp_servers_configs) do
-  --   log(server_config.name)
-  --   log(server_config.alias_name)
-  --   log(server_config.tags)
-  -- end
 
   Lsp.setup()
-  Lsp.setup_servers(Lang.lsp_servers_configs)
+  Lsp.setup_servers()
 
   Statusbar.setup()
 

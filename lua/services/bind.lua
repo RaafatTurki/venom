@@ -98,8 +98,8 @@ M.setup = U.Service():new(function()
   M.key {'d<Right>',          function() vim.diagnostic.goto_next({ float = false }) end}
   -- tabs
   M.key {'<C-t>',             '<CMD>tabnew<CR>'}
-  M.key {'<A-Right>',         '<CMD>tabnext<CR>'}
-  M.key {'<A-Left>',          '<CMD>tabprevious<CR>'}
+  M.key {'<S-Right>',         '<CMD>tabnext<CR>'}
+  M.key {'<S-Left>',          '<CMD>tabprevious<CR>'}
   -- lsp
   M.key {'<leader>r',         '<CMD>LspRename<CR>'}
 
@@ -186,7 +186,6 @@ M.setup_plugins = U.Service():new(function()
   M.key {'<A-Down>',          '<Plug>GoNSMDown', mode = 'n' }
   M.key {'<A-Up>',            '<Plug>GoNSMUp', mode = 'n' }
   M.key {'<A-Right>',         '<Plug>GoNSMRight', mode = 'n' }
-
   M.key {'<A-Left>',          '<Plug>GoVSMLeft', mode = 'x' }
   M.key {'<A-Down>',          '<Plug>GoVSMDown', mode = 'x' }
   M.key {'<A-Up>',            '<Plug>GoVSMUp', mode = 'x' }

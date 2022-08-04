@@ -282,14 +282,14 @@ end
 function M.Event()
   return setmetatable(
     {
-      listeners = {},
+      subscribers = {},
       new = function(self) return self end,
-      sub = function(self, listener) table.insert(self.listeners, listener) end,
-      sub_front = function(self, listener) table.insert(self.listeners, 1, listener) end,
+      sub = function(self, subscriber) table.insert(self.subscribers, subscriber) end,
+      sub_front = function(self, subscriber) table.insert(self.subscribers, 1, subscriber) end,
       invoke = function(self, ...)
-        for _, listener in pairs(self.listeners) do
-          if type(listener) == 'string' then vim.cmd(listener)
-          elseif type(listener) == 'function' then listener(...) end
+        for _, subscribers in pairs(self.subscribers) do
+          if type(subscribers) == 'string' then vim.cmd(subscribers)
+          elseif type(subscribers) == 'function' then subscribers(...) end
         end
       end,
       wrap = function(self) return function(...) return self:invoke(...) end end
@@ -344,23 +344,6 @@ function M.Service()
       end
     }
   )
-end
---- lsp server config class
-function M.LspServerConfig()
-  return {
-    name = nil,
-    opts = {},
-    tags = {},
-    events = {
-      on_attach = M.Event():new(),
-    },
-    tag = function(self, server_tag) table.insert(self.tags, server_tag) return self end,
-    new = function(self, name, opts)
-      self.name = name
-      self.opts = opts or {}
-      return self
-    end,
-  }
 end
 
 return M

@@ -41,7 +41,6 @@ local plugins = {
     p.lspconfig,
     'williamboman/mason-lspconfig.nvim',
   }},
-  {'numToStr/Comment.nvim'},
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
   {'lewis6991/spellsitter.nvim'},
@@ -65,7 +64,14 @@ local plugins = {
   {'booperlv/nvim-gomove'},
   {'rktjmp/paperplanes.nvim',                         branch = 'rel-0.1.2' },
   {'Mofiqul/trld.nvim'},
-  {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
+  -- {'nvim-neo-tree/neo-tree.nvim',                     branch = 'v2.x', requires = {
+  {'~/temp/neo-tree.nvim',                            branch = 'v2.x', requires = {
+      p.plenary,
+      p.devicons,
+      p.nui,
+      { 's1n7ax/nvim-window-picker',                  tag = 'v1.*' },
+    }
+  },
   {'toppair/reach.nvim'},
   {'akinsho/bufferline.nvim',                         requires = p.devicons,  tag = "v2.*" },
   {'akinsho/nvim-toggleterm.lua'},
@@ -84,7 +90,8 @@ local plugins = {
     {'saadparwaiz1/cmp_luasnip'},
     {'L3MON4D3/LuaSnip'},
     {'hrsh7th/cmp-cmdline'},
-    -- {'hrsh7th/cmp-buffer'},
+    {'hrsh7th/cmp-buffer'},
+    {'hrsh7th/cmp-omni'}
     -- {'dmitmel/cmp-digraphss'},
     -- {'hrsh7th/cmp-nvim-lsp-signature-help'},
     -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
@@ -103,7 +110,7 @@ local plugins = {
   {'nvim-treesitter/playground',                      requires = p.treesitter },
 
   -- UNCHARTED:
-  {'baskerville/vim-sxhkdrc'},
+  -- {'baskerville/vim-sxhkdrc'},
   {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   {'mfussenegger/nvim-jdtls'},
   {'ron-rs/ron.vim'},
@@ -111,7 +118,9 @@ local plugins = {
  
   -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
   -- THEMES:
-
+  
+  -- {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
+  -- {'lervag/vimtex'},
   -- {'terrortylor/nvim-comment'}, 
   -- {'declancm/cinnamon.nvim'},
   -- {'rcarriga/nvim-notify',                            requires = p.plenary },
@@ -189,7 +198,8 @@ PluginManager.event_post_complete:sub(function()
   Plugins.reach()
   Plugins.fzf_lua()
   Plugins.gitsigns()
-  Plugins.nvim_tree()
+  -- Plugins.nvim_tree()
+  Plugins.neo_tree()
   Plugins.bufferline()
   Plugins.cmp_ls()
   Plugins.toggle_term()

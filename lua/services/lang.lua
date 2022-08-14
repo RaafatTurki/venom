@@ -67,33 +67,19 @@ M.setup = U.Service()
     }
   }
 
-  -- nvim comment
-  local ts_ctx_cs_filetypes = { 'html', 'svelte' }
-  require 'Comment'.setup {
-    mappings = false,
-    ignore = '^$',
-    pre_hook = function(ctx)
-      if U.has_value(ts_ctx_cs_filetypes, vim.bo.filetype) then
-        local comment_utils = require 'Comment.utils'
-        local ts_ctx_cs_utils = require 'ts_context_commentstring.utils'
-        local ts_ctx_cs_internal = require 'ts_context_commentstring.internal'
-
-        -- determine the location where to calculate commentstring from
-        local cs_pos = nil
-        if ctx.ctype == comment_utils.ctype.block then
-          cs_pos = ts_ctx_cs_utils.get_cursor_location()
-        elseif ctx.cmotion == comment_utils.cmotion.v or ctx.cmotion == comment_utils.cmotion.V then
-          cs_pos = ts_ctx_cs_utils.get_visual_start_location()
-        end
-
-        -- return '%s'
-        -- commentstring calculation
-        return ts_ctx_cs_internal.calculate_commentstring({
-          key = ctx.ctype == comment_utils.ctype.line and '__default' or '__multiline',
-          location = cs_pos,
-        })
-      end
-    end,
+  -- mini.comment
+  require 'mini.comment'.setup {
+    mappings = {
+      comment = '<space>c',
+      comment_line = '<space>c',
+      textobject = '',
+    },
+    hooks = {
+      pre = function()
+        require('ts_context_commentstring.internal').update_commentstring()
+      end,
+      post = function() end,
+    },
   }
 
   -- navic

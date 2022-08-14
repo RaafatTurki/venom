@@ -202,6 +202,20 @@ function M.prompt_ye_no(prompt, default_val, on_accept, on_reject, on_choice)
     if c == NO and on_reject ~= nil then on_reject() end
   end)
 end
+--- returns the basename of a full path to a file
+function M.basename(path) return path:gsub('^.*/','') end
+--- moves cursor position if the jump file is the current buffer if not then print jump location
+-- TODO: abort if jump line or column is out of range
+function M.request_jump(filename, line, col)
+  local jump_basename = M.basename(filename)
+  local buf_basename = M.basename(vim.api.nvim_buf_get_name(0))
+  if (jump_basename == buf_basename) then
+    vim.api.nvim_win_set_cursor(0, { line, col })
+    print('jumping to '..tostring(line)..':'..tostring(col))
+  else
+    print('jump attempt to '..tostring(line)..':'.. tostring(col)..' in '..jump_basename)
+  end
+end
 -- TODO: make into a mode switching utility
 -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, false, true), '', true)
 
@@ -243,7 +257,7 @@ function M.key(modes, lhs, rhs, opts)
     unmap = function(self) end,
   }
 end
---- returns a cursor position object
+--- rturns a cursor position object
 function M.curpos()
   return {
     get = function(self) return M.call('getcurpos') end,

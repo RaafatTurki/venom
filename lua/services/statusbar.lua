@@ -272,7 +272,8 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
             if attached_server.state == SERVER_STATES.IDLE then
               state_icon = ''
             elseif attached_server.state == SERVER_STATES.LOADING then
-              state_icon = ''
+              state_icon = ''
+              -- ⏳
             end
             res = res .. state_icon .. ' ' .. attached_server.name
             if (i ~= #attached_servers) then res = res .. ' ' end
@@ -391,7 +392,8 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       end,
       opts.left_pad,
       {
-        provider = ' ',
+        provider = ' ',
+        -- 
         hl = 'Type'
       },
       {
@@ -434,7 +436,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
           local search = vim.fn.searchcount({ maxcount = 0 })
           local search_current = search.current
           local search_total = search.total
-          return ' ' .. search_current .. '/' .. search_total
+          return ' ' .. search_current .. '/' .. search_total
         end
       },
       opts.right_pad,
@@ -512,6 +514,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     align,
     M.components.rootinfo(component_opts.middle),
     M.components.filetype(component_opts.middle),
+    M.components.searchinfo(component_opts.middle),
     M.components.sessioninfo(component_opts.right),
     -- M.components.ruler,
   }
@@ -528,6 +531,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     align,
     M.components.rootinfo(component_opts.middle),
     M.components.filetype(component_opts.middle),
+    M.components.searchinfo(component_opts.middle),
     M.components.sessioninfo(component_opts.right),
   }
 

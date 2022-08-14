@@ -184,17 +184,27 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       { name = 'luasnip' },
       { name = 'nvim_lua' },
       { name = 'rg' },
+      { name = 'omni' },
       { name = 'path' },
       { name = 'spell' },
-      -- { name = 'buffer' },
+      { name = 'buffer' },
       -- { name = 'nvim_lsp_signature_help' },
       -- { name = 'digraphs' },
     },
     formatting = {
       fields = { "kind", "abbr", "menu" },
       format = function(entry, vim_item)
-        vim_item.kind = venom.icons.item_kinds.cozette[vim_item.kind] or ''
-        -- vim_item.menu = entry.source.name
+        if entry.source.name == 'omni' then
+          if entry.completion_item.documentation == nil then
+            entry.completion_item.documentation = vim_item.menu
+            vim_item.menu = nil
+          end
+          vim_item.kind = 'Ω'
+          vim_item.kind_hl_group = 'CmpItemKindProperty'
+        else
+          vim_item.kind = venom.icons.item_kinds.cozette[vim_item.kind] or ''
+        end
+
         return vim_item
       end
     },
@@ -349,6 +359,124 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
   }
 end)
 
+M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
+  require'window-picker'.setup {
+    autoselect_one = true,
+    include_current = false,
+    filter_rules = {
+      -- filter using buffer options
+      bo = {
+        -- if the file type is one of following, the window will be ignored
+        filetype = { 'neo-tree', "neo-tree-popup", "notify", "quickfix" },
+        -- if the buffer type is one of following, the window will be ignored
+        buftype = { 'terminal' },
+      },
+    },
+    -- other_win_hl_color = '#e35e4f',
+  }
+
+  vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+
+  require 'neo-tree'.setup {
+    close_if_last_window = true,
+    popup_border_style = 'single',
+    default_component_configs = {
+      modified = {
+        symbol = '•',
+      },
+      name = {
+        -- trailing_slash = false,
+        -- use_git_status_colors = true,
+      },
+      git_status = {
+        symbols = {
+          -- Change type
+          added     = '',
+          modified  = '',
+          deleted   = "✖",
+          renamed   = "⭢",
+          -- Status type
+          untracked = "?",
+          ignored   = "☒",
+          unstaged  = "☐",
+          staged    = "☑",
+          conflict  = "",
+        }
+      },
+      window = {
+        mappings = {
+          ["S"] = "split_with_window_picker",
+          ["s"] = "vsplit_with_window_picker",
+          ["t"] = "open_tabnew",
+          ["w"] = "open_with_window_picker",
+          ["C"] = "close_node",
+          ["z"] = "close_all_nodes",
+          -- ["Z"] = "expand_all_nodes",
+          ["a"] = { 
+            "add",
+            -- some commands may take optional config options, see `:h neo-tree-mappings` for details
+            config = {
+              show_path = "none" -- "none", "relative", "absolute"
+            }
+          },
+          ["A"] = "add_directory", -- also accepts the optional config.show_path option like "add".
+          ["d"] = "delete",
+          ["r"] = "rename",
+          ["y"] = "copy_to_clipboard",
+          ["x"] = "cut_to_clipboard",
+          ["p"] = "paste_from_clipboard",
+          ["c"] = "copy", -- takes text input for destination, also accepts the optional config.show_path option like "add":
+          -- ["c"] = {
+          --  "copy",
+          --  config = {
+          --    show_path = "none" -- "none", "relative", "absolute"
+          --  }
+          --}
+          ['m'] = "move", -- takes text input for destination, also accepts the optional config.show_path option like "add".
+          ['q'] = "close_window",
+          ['R'] = "refresh",
+          ['?'] = "show_help",
+          ['<'] = "prev_source",
+          ['>'] = "next_source",
+        }
+      }
+    },
+    nesting_rules = {
+      js = { 'js.map' },
+    },
+    filesystem = {
+      filtered_items = {
+        hide_by_name = {
+          'node_modules',
+          '.cache',
+          '__pycache__',
+          'pnpm-lock.yaml',
+          'package-lock.json',
+        },
+        hide_by_pattern = {
+          "*.import"
+        },
+        never_show = {
+          ".DS_Store",
+        },
+      },
+      commands = {
+        -- delete = function(state)
+        --   local path = state.tree:get_node().path
+        --   vim.fn.system({ "gio", 'trash', vim.fn.fnameescape(path) })
+        --   require('neo-tree.sources.manager').refresh(state.name)
+        -- end,
+      },
+      follow_current_file = true,
+      use_libuv_file_watcher = true,
+    },
+    source_selector = {
+      -- winbar = true,
+      -- statusline = true,
+    }
+  }
+end)
+
 M.bufferline = U.Service():require(FT.PLUGIN, 'bufferline.nvim'):new(function()
   require 'bufferline'.setup {
     options = {
@@ -364,6 +492,7 @@ M.bufferline = U.Service():require(FT.PLUGIN, 'bufferline.nvim'):new(function()
       -- enforce_regular_tabs = true,
       offsets = {
         { filetype = "NvimTree" },
+        { filetype = "neo-tree" },
       },
     },
   }
@@ -371,13 +500,8 @@ end)
 
 M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(function()
   require 'toggleterm'.setup {
-    open_mapping = [[<C-\>]],
-    insert_mappings = true,
-
     shade_terminals = false,
-
     direction = 'horizontal',
-
     size = function(term)
       if term.direction == "horizontal" then
         return vim.o.lines * 0.6
@@ -385,6 +509,13 @@ M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(functi
         return vim.o.columns * 0.5
       end
     end,
+    -- winbar = {
+    --   enabled = true,
+    -- --   name_formatter = function(term)
+    -- --     -- log(term)
+    -- --     return term.name
+    -- --   end
+    -- },
     -- on_close = fun(t: Terminal), -- function to run when the terminal closes
     -- on_stdout = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stdout
     -- on_stderr = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stderr

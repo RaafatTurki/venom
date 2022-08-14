@@ -28,6 +28,9 @@ M.base = U.Service():new(function()
   vim.g.gui_font_face = "Iosevka"
   vim.opt.guifont = string.format("%s:h%s",vim.g.gui_font_face, vim.g.gui_font_size)
 
+
+  -- TODO: use vim.filetype.add
+
   --- auto groups
   vim.cmd [[
     augroup base
@@ -41,6 +44,7 @@ M.base = U.Service():new(function()
     au BufEnter README setlocal ft=markdown
     au BufEnter nanorc setlocal ft=nanorc
     au BufEnter pythonrc setlocal ft=python
+    au BufEnter sxhkdrc,*.sxhkdrc set ft=sxhkdrc
     au BufEnter package.json setlocal nofoldenable
     au BufEnter tsconfig.json setlocal nofoldenable
 

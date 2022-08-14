@@ -63,8 +63,10 @@ M.setup = U.Service():new(function()
   M.key {'X',                 '"_x', mode = 'v n'}
   -- preserve cursor position after a yank
   M.key {'y',                 "ygv<ESC>", mode = 'v'}
-  -- make Y copy to end of line
+  -- make Y copy to end of line in normal mode
   M.key {'Y',                 'y$'}
+  -- copy and retain visual selection in visual mode
+  M.key {'Y',                 'ygv', mode = 'v'}
   -- go to end after a join
   M.key {'J',                 'J$'}
   -- split (opposite of J)
@@ -129,13 +131,12 @@ M.setup_plugins = U.Service():new(function()
   -- PLUGINS
   -- packer sync
   M.key {'<leader>p',         function() PluginManager.sync({ take_snapshot = true }) end}
-  -- comment
-  M.key{'<leader>c',          '<Plug>(comment_toggle_current_linewise)'}
-  M.key{'<leader>c',          '<Plug>(comment_toggle_linewise_visual)', mode = 'v'}
-  M.key {'Y',                 'ygv<Plug>(comment_toggle_linewise_visual)', mode = 'v'}
-
+  -- toggle term
+  M.key {[[<C-\>]],           '<CMD>ToggleTerm<CR>', mode = 'n'}
+  M.key {[[<C-\>]],           [[<C-\><C-n><CMD>ToggleTerm<CR>]], mode = 't'}
   -- nvim tree
-  M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
+  -- M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
+  M.key {'<C-e>',             '<CMD>Neotree toggle<CR>', mode = 'i n'}
   -- reach
   local auto_handles = {
     '1', '2', '3',
@@ -156,10 +157,10 @@ M.setup_plugins = U.Service():new(function()
       previous = {
         enable = false,
       },
-      filter = function(bufnr)
-        if vim.api.nvim_buf_get_name(bufnr) == '' then return false end
-        return true
-      end
+      -- filter = function(bufnr)
+      --   if vim.api.nvim_buf_get_name(bufnr) == '' then return false end
+      --   return true
+      -- end
     }
   end}
   for i, char in ipairs(auto_handles) do

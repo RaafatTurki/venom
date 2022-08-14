@@ -124,7 +124,7 @@ local c = {
   mod_alt   = cyan[1],
 
   -- vsc
-  dirty     = green[1],
+  dirty     = orange[4],
   staged    = white[1],
   merge     = purple[1],
   renamed   = orange[1],
@@ -472,6 +472,44 @@ Ignore         = { 'TSDebug' },         --
   NvimTreeLspDiagnosticsWarning     = { 'DiagnosticSignWarn' };
   NvimTreeLspDiagnosticsInformation = { 'DiagnosticSignInfo' };
   NvimTreeLspDiagnosticsHint        = { 'DiagnosticSignHint' };
+
+  -- neo-tree
+  NeoTreeBufferNumber     = { 'Comment' };
+  NeoTreeCursorLine       = {};
+  NeoTreeDirectoryIcon    = {};
+  NeoTreeDirectoryName    = {};
+  NeoTreeDimText          = { 'Comment' };
+  NeoTreeDotfile          = {};
+  NeoTreeFileIcon         = { 'NvimTreeFileIcon' };
+  NeoTreeModified         = { 'ReachModifiedIndicator' };
+  NeoTreeFileName         = {};
+  NeoTreeFileNameOpened   = { bold = true };
+  NeoTreeFilterTerm       = {};
+  NeoTreeFloatBorder      = {};
+  NeoTreeFloatTitle       = { 'Title' };
+  NeoTreeGitAdded         = { 'NvimTreeGit' };
+  NeoTreeGitConflict      = { 'NvimTreeGitMerge' };
+  NeoTreeGitDeleted       = { 'NvimTreeGitDeleted' };
+  NeoTreeGitIgnored       = { fg = c.mg };
+  NeoTreeGitModified      = { 'NeoTreeModified' };
+  NeoTreeGitUnstaged      = {};
+  NeoTreeGitUntracked     = {};
+  NeoTreeGitStaged        = { 'NvimTreeGitStaged' };
+  NeoTreeHiddenByName     = {};
+  NeoTreeIndentMarker     = { 'NvimTreeIndentMarker' };
+  NeoTreeExpander         = { 'NvimTreeIndentMarker' };
+  NeoTreeNormal           = {};
+  NeoTreeNormalNC         = {};
+  NeoTreeSignColumn       = {};
+  NeoTreeStatusLine       = {};
+  NeoTreeStatusLineNC     = {};
+  NeoTreeVertSplit        = {};
+  NeoTreeWinSeparator     = {};
+  NeoTreeEndOfBuffer      = {};
+  NeoTreeRootName         = {};
+  NeoTreeSymbolicLinkTarget = {};
+  NeoTreeTitleBar         = { 'Title' };
+  NeoTreeWindowsHidden    = {};
 
   -- vim-quickui
   QuickBG                 = { bg = c.bg, fg = c.fg };

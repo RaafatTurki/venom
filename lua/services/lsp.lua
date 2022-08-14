@@ -73,13 +73,14 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
             -- },
             diagnostics = {
               disable = { 'lowercase-global', 'trailing-space', 'unused-local' },
-              globals = { 'vim' },
+              -- globals = { 'vim' },
             },
             workspace = {
-              library = {
-                [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-                [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-              },
+              -- checkThirdParty = false,
+              -- library = {
+              --   [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+              --   [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+              -- },
             },
             completion= {
               keywordSnippet="Replace",
@@ -103,13 +104,21 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
               args = vim.split('%f --synctex', ' '),
             },
             forwardSearch = {
-              executable = "zathura",
-              args = {"--synctex-forward", "%l:1:%f", "%p"},
+              executable = 'zathura',
+              args = {
+                '--synctex-forward',
+                '%l:1:%f',
+
+                '--synctex-editor-command',
+                [[nvim --server ]]..vim.v.servername..[[ --remote-send "<CMD>lua U.request_jump('%{input}', %{line}, 1)<CR>"]],
+
+                '%p',
+              },
             },
-            chktex = {
-              onOpenAndSave = true,
-              onEdit = true,
-            }
+            -- chktex = {
+            --   onOpenAndSave = true,
+            --   onEdit = true,
+            -- }
           }
         }
       })

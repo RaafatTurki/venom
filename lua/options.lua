@@ -1,4 +1,4 @@
---- defines various settings, options, constants, enums and global variables.
+--- defines vanialla options, constants, enums and global variables.
 -- @module options
 
 -- use filetype.lua instead of filetype.vim
@@ -293,17 +293,17 @@ FT = {
 }
 
 --- language server tags
-LST = {
-  -- atempt to auto start
-  AUTO_SETUP = "AUTO_SETUP",
-  -- add AUTO_SETUP if is listed in lspi installed servers
-  MANAGED = "MANAGED",
-  -- no shared config on setup
-  NO_SHARED_CONFIG = "NO_SHARED_CONFIG",
-  -- no shared capabilities on setup
-  NO_SHARED_CAPABILITIES  = "NO_SHARED_CAPABILITIES",
-  -- no shared handlers on setup
-  NO_SHARED_HANDLERS  = "NO_SHARED_HANDLERS",
-  -- no shared on_attach on setup
-  NO_SHARED_ON_ATTACH = "NO_SHARED_ON_ATTACH",
-}
+-- LST = {
+--   -- atempt to auto start
+--   AUTO_SETUP = "AUTO_SETUP",
+--   -- add AUTO_SETUP if is listed in lspi installed servers
+--   MANAGED = "MANAGED",
+--   -- no shared config on setup
+--   NO_SHARED_CONFIG = "NO_SHARED_CONFIG",
+--   -- no shared capabilities on setup
+--   NO_SHARED_CAPABILITIES  = "NO_SHARED_CAPABILITIES",
+--   -- no shared handlers on setup
+--   NO_SHARED_HANDLERS  = "NO_SHARED_HANDLERS",
+--   -- no shared on_attach on setup
+--   NO_SHARED_ON_ATTACH = "NO_SHARED_ON_ATTACH",
+-- }

@@ -1,4 +1,4 @@
---- defines how language servers are installed and setup
+--- defines language servers setup and install mechanisms.
 -- @module lsp
 
 local M = {}

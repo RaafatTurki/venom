@@ -1,5 +1,5 @@
 --- defines plugins configurations.
--- @module configs
+-- @module plugins
 local M = {}
 
 M.impatient = U.Service():require(FT.PLUGIN, "impatient.nvim"):new(function()

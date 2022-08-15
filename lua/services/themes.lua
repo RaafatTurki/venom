@@ -1,4 +1,4 @@
---- defines the theme functions and how their setting mechanisms.
+--- defines theme setting mechanisms.
 -- @module themes
 -- TODO: convert to a services based module
 local M = {}

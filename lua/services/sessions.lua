@@ -1,5 +1,5 @@
---- defines session managment
--- @module configs
+--- defines session managment.
+-- @module sessions
 local M = {}
 
 M.setup = U.Service():provide(FT.SESSION, "setup"):require(FT.PLUGIN, "mini.nvim"):new(function()

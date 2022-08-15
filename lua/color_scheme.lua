@@ -1,3 +1,5 @@
+--- defines builtin colorscheme.
+-- @module color_scheme
 local M = {}
 
 M.set_hl = function(group_name, opts)

@@ -1,4 +1,4 @@
---- defines various utility functions used throughout the entire codebase.
+--- defines various utility functions and classes.
 -- @module utils
 local M = {}
 

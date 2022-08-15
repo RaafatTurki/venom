@@ -1,4 +1,4 @@
---- defines commands, autocommands and keybinds
+--- defines vanilla and (a much as possible) plugin keybinds
 -- @module bind
 local M = {}
 

@@ -1,4 +1,4 @@
---- invokes various services
+--- invokes various services in order.
 -- @module service_loader
 
 PluginManager = require 'plugin_manager'

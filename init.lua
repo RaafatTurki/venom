@@ -1,4 +1,4 @@
---- the entry point, calls all other modules.
+--- entry point.
 -- @module init
 
 -- Loading Modules

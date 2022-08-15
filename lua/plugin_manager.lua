@@ -1,4 +1,4 @@
---- implements a plugin manager according to the plugin manager interface.
+--- defines plugin managment mechanism.
 -- @module plugin_manager
 local M = {}
 

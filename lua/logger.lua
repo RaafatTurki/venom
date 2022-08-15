@@ -1,3 +1,5 @@
+--- defines logging mechanism.
+-- @module logger
 local M = {}
 
 M.last_log_msg = ""

@@ -292,7 +292,7 @@ end
 
 
 -- Class Based Utils (statefull)
---- action class
+--- event class
 function M.Event()
   return setmetatable(
     {

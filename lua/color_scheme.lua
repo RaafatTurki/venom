@@ -232,13 +232,13 @@ M.highlights = {
   TSStorageClass      = { 'TSType' },
   TSNamespace         = { 'TSType' },
 
-TSNone              = { 'TSDebug' },
-TSParameterReference= { 'TSDebug' },
+TSNone              = { 'Debug' },
+TSParameterReference= { 'Debug' },
 
 
 
   ColorColumn	    = { 'CursorLine' },
-Conceal         = { 'TSDebug' },
+Conceal         = { 'Debug' },
   CurSearch       = { bg = c.fg, fg = c.bg, bold = true },
   Cursor          = { }, --
   CursorColumn    = { 'CursorLine' }, --
@@ -266,7 +266,7 @@ Conceal         = { 'TSDebug' },
   MoreMsg         = { fg = c.info },
   MsgArea         = { fg = c.match },
   MsgSeparator    = { bg = c.bg, fg = c.mg },
-NonText         = { 'TSDebug' },
+NonText         = { 'Debug' },
   Normal          = { bg = c.bg },
   NormalFloat     = { }, --
   NormalNC        = { }, --
@@ -296,7 +296,7 @@ NonText         = { 'TSDebug' },
   Visual          = { bg = c.fold, bold = true },
   VisualNOS       = { }, --
   WarningMsg      = { fg = c.warn },
-Whitespace      = { 'TSDebug' },
+Whitespace      = { 'Debug' },
   WildMenu        = { 'Pmenu' },
   WinBar          = { }, --
   WinBarNC        = { }, --
@@ -343,41 +343,41 @@ LspCodeLensSeparator        = { 'Debug' },
 
 
   -- Vim
-  Comment        = { 'TSComment' },
-  Constant       = { 'TSConstant' },
-  String         = { 'TSString' },
-  Character      = { 'TSCharacter' },
-  Number         = { 'TSNumber' },
-  Boolean        = { 'TSBoolean' },
-  Float          = { 'TSFloat' },
-  Identifier     = { 'TSVariable' },
-  Function       = { 'TSFunction' },
-  Statement      = { 'TSKeyword' },
-  Keyword        = { 'TSKeyword' },
-  Conditional    = { 'TSConditional' },
-  Repeat         = { 'TSRepeat' },
-  Label          = { 'TSLabel' },
-  Operator       = { 'TSOperator' },
-  Exception      = { 'TSException' },     --
-  Include        = { 'TSInclude' },
-  PreProc        = { 'TSPreProc' },
-  Macro          = { 'TSPreProc' },       --
-  PreCondit      = { 'TSPreProc' },
-  Define         = { 'TSDefine' },
-  Type           = { 'TSType' },
-  StorageClass   = { 'TSStorageClass' },
-  Structure      = { 'TSTypeBuiltin' },   --
-  Typedef        = { 'TSTypeDefinition' },
-  Special        = { 'TSStringSpecial' },
-  SpecialChar    = { 'TSCharacterSpecial' },
-  Tag            = { 'TSTag' },
-  Delimiter      = { 'TSPunctDelimiter' },
-  SpecialComment = { 'TSNote' },
-  Debug          = { 'TSDebug' },
-  Underlined     = { 'TSUnderline' },
-  Error          = { 'TSError' },
-Ignore         = { 'TSDebug' },         --
-  Todo           = { 'TSTodo' },
+  Comment                 = { 'TSComment' },
+  Constant                = { 'TSConstant' },
+  String                  = { 'TSString' },
+  Character               = { 'TSCharacter' },
+  Number                  = { 'TSNumber' },
+  Boolean                 = { 'TSBoolean' },
+  Float                   = { 'TSFloat' },
+  Identifier              = { 'TSVariable' },
+  Function                = { 'TSFunction' },
+  Statement               = { 'TSKeyword' },
+  Keyword                 = { 'TSKeyword' },
+  Conditional             = { 'TSConditional' },
+  Repeat                  = { 'TSRepeat' },
+  Label                   = { 'TSLabel' },
+  Operator                = { 'TSOperator' },
+  Exception               = { 'TSException' }, --
+  Include                 = { 'TSInclude' },
+  PreProc                 = { 'TSPreProc' },
+  Macro                   = { 'TSPreProc' }, --
+  PreCondit               = { 'TSPreProc' },
+  Define                  = { 'TSDefine' },
+  Type                    = { 'TSType' },
+  StorageClass            = { 'TSStorageClass' },
+  Structure               = { 'TSTypeBuiltin' }, --
+  Typedef                 = { 'TSTypeDefinition' },
+  Special                 = { 'TSStringSpecial' },
+  SpecialChar             = { 'TSCharacterSpecial' },
+  Tag                     = { 'TSTag' },
+  Delimiter               = { 'TSPunctDelimiter' },
+  SpecialComment          = { 'TSNote' },
+  Debug                   = { 'TSDebug' },
+  Underlined              = { 'TSUnderline' },
+  Error                   = { 'TSError' },
+  Ignore                  = { fg = c.bg };
+  Todo                    = { 'TSTodo' },
  
 
 
@@ -474,42 +474,46 @@ Ignore         = { 'TSDebug' },         --
   NvimTreeLspDiagnosticsHint        = { 'DiagnosticSignHint' };
 
   -- neo-tree
-  NeoTreeBufferNumber     = { 'Comment' };
-  NeoTreeCursorLine       = {};
-  NeoTreeDirectoryIcon    = {};
-  NeoTreeDirectoryName    = {};
-  NeoTreeDimText          = { 'Comment' };
-  NeoTreeDotfile          = {};
-  NeoTreeFileIcon         = { 'NvimTreeFileIcon' };
-  NeoTreeModified         = { 'ReachModifiedIndicator' };
-  NeoTreeFileName         = {};
-  NeoTreeFileNameOpened   = { bold = true };
-  NeoTreeFilterTerm       = {};
-  NeoTreeFloatBorder      = {};
-  NeoTreeFloatTitle       = { 'Title' };
-  NeoTreeGitAdded         = { 'NvimTreeGit' };
-  NeoTreeGitConflict      = { 'NvimTreeGitMerge' };
-  NeoTreeGitDeleted       = { 'NvimTreeGitDeleted' };
-  NeoTreeGitIgnored       = { fg = c.mg };
-  NeoTreeGitModified      = { 'NeoTreeModified' };
-  NeoTreeGitUnstaged      = {};
-  NeoTreeGitUntracked     = {};
-  NeoTreeGitStaged        = { 'NvimTreeGitStaged' };
-  NeoTreeHiddenByName     = {};
-  NeoTreeIndentMarker     = { 'NvimTreeIndentMarker' };
-  NeoTreeExpander         = { 'NvimTreeIndentMarker' };
-  NeoTreeNormal           = {};
-  NeoTreeNormalNC         = {};
-  NeoTreeSignColumn       = {};
-  NeoTreeStatusLine       = {};
-  NeoTreeStatusLineNC     = {};
-  NeoTreeVertSplit        = {};
-  NeoTreeWinSeparator     = {};
-  NeoTreeEndOfBuffer      = {};
-  NeoTreeRootName         = {};
-  NeoTreeSymbolicLinkTarget = {};
-  NeoTreeTitleBar         = { 'Title' };
-  NeoTreeWindowsHidden    = {};
+  NeoTreeBufferNumber         = { 'Comment' };
+  NeoTreeCursorLine           = { 'Normal' };
+  NeoTreeDirectoryIcon        = {}; --
+  NeoTreeDirectoryName        = {}; --
+  NeoTreeDimText              = { 'Folded' };
+  NeoTreeDotfile              = { 'Comment' };
+  NeoTreeFileIcon             = { 'NvimTreeFileIcon' };
+  NeoTreeModified             = { 'ReachModifiedIndicator' };
+  NeoTreeFileName             = {}; --
+  NeoTreeFileNameOpened       = { bold = true };
+  NeoTreeFilterTerm           = {};
+  NeoTreeFloatBorder          = {}; --
+  NeoTreeFloatTitle           = { 'Title' };
+  NeoTreeGitAdded             = { 'NvimTreeGit' };
+  NeoTreeGitConflict          = { 'NvimTreeGitMerge' };
+  NeoTreeGitDeleted           = { 'NvimTreeGitDeleted' };
+  NeoTreeGitIgnored           = { fg = c.mg };
+  NeoTreeGitModified          = { 'NeoTreeModified' };
+  NeoTreeGitUnstaged          = { fg = c.dirty };
+  NeoTreeGitUntracked         = { fg = c.dirty };
+  NeoTreeGitStaged            = { 'NvimTreeGitStaged' };
+NeoTreeHiddenByName         = { 'Debug' };
+  NeoTreeIndentMarker         = { 'NvimTreeIndentMarker' };
+  NeoTreeExpander             = { 'NvimTreeIndentMarker' };
+  NeoTreeNormal               = {}; --
+  NeoTreeNormalNC             = {}; --
+  NeoTreeSignColumn           = {}; --
+  NeoTreeStatusLine           = {}; --
+  NeoTreeStatusLineNC         = {}; --
+  NeoTreeVertSplit            = {}; --
+  NeoTreeWinSeparator         = {}; --
+NeoTreeEndOfBuffer          = { 'Debug' };
+  NeoTreeRootName             = { 'Title' };
+NeoTreeSymbolicLinkTarget   = { 'Debug' };
+NeoTreeTitleBar             = { 'Debug' };
+NeoTreeWindowsHidden        = { 'Debug' };
+  NeoTreeTabActive            = { 'Normal' };
+  NeoTreeTabInactive          = { 'Comment' };
+  NeoTreeTabSeparatorActive   = { 'Ignore' };
+  NeoTreeTabSeparatorInactive = { 'Ignore' };
 
   -- vim-quickui
   QuickBG                 = { bg = c.bg, fg = c.fg };

@@ -52,13 +52,20 @@ M.base = U.Service():new(function()
     au FileType lspinfo setlocal nofoldenable
     au FileType packer setlocal nocursorline
     au FileType alpha setlocal cursorline
+
+    " comment strings
     au FileType sshdconfig setlocal commentstring=#%s
+    au FileType c setlocal commentstring=//%s
+    au FileType cs setlocal commentstring=//%s
+    au FileType gdscript setlocal commentstring=#%s
+    au FileType fish setlocal commentstring=#%s
 
     " terminal
     au FileType terminal setlocal nocursorline
     au TermOpen * setlocal nonumber
 
-    au InsertLeave,TextChanged * set foldmethod=expr
+    " au InsertLeave,TextChanged * set foldmethod=expr
+    " au BufWritePost * set foldmethod=expr
 
     augroup base
     ]]

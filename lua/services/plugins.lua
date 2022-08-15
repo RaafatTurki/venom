@@ -439,7 +439,13 @@ M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
           ['<'] = "prev_source",
           ['>'] = "next_source",
         }
-      }
+      },
+      indent = {
+        with_expanders = true,
+        expander_collapsed = '>',
+        expander_expanded = 'v',
+        expander_highlight = 'NeoTreeExpander',
+      },
     },
     nesting_rules = {
       js = { 'js.map' },
@@ -471,7 +477,7 @@ M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
       use_libuv_file_watcher = true,
     },
     source_selector = {
-      -- winbar = true,
+      winbar = true,
       -- statusline = true,
     }
   }

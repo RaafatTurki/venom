@@ -36,22 +36,14 @@ local plugins = {
   {'RRethy/vim-illuminate'},
 
   -- LANG:
-  p.treesitter,
+  {p.treesitter,                                      run = ':TSUpdate' },
   {'williamboman/mason.nvim',                         requires = {
     p.lspconfig,
     'williamboman/mason-lspconfig.nvim',
   }},
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
-  {'lewis6991/spellsitter.nvim'},
   {'b0o/schemastore.nvim',                            requires = p.lspconfig },
-  {'nvim-neotest/neotest',                            requires = {
-    p.plenary,
-    p.treesitter,
-    p.fixcusrorhold,
-    {'nvim-neotest/neotest-go'},
-    {'haydenmeade/neotest-jest'},
-  }},
 
   -- PLUGINS:
   -- mini.*
@@ -64,18 +56,10 @@ local plugins = {
   {'booperlv/nvim-gomove'},
   {'rktjmp/paperplanes.nvim',                         branch = 'rel-0.1.2' },
   {'Mofiqul/trld.nvim'},
-  -- {'nvim-neo-tree/neo-tree.nvim',                     branch = 'v2.x', requires = {
-  {'~/temp/neo-tree.nvim',                            branch = 'v2.x', requires = {
-      p.plenary,
-      p.devicons,
-      p.nui,
-      { 's1n7ax/nvim-window-picker',                  tag = 'v1.*' },
-    }
-  },
+  {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
   {'toppair/reach.nvim'},
-  {'akinsho/bufferline.nvim',                         requires = p.devicons,  tag = "v2.*" },
   {'akinsho/nvim-toggleterm.lua'},
-  {'ibhagwan/fzf-lua',                                requires = p.devicons },
+  {'nvim-telescope/telescope.nvim',                   branch = '0.1.x', requires = { p.plenary }},
   {'jghauser/fold-cycle.nvim'},
   {'Issafalcon/lsp-overloads.nvim'},
   {'anuvyklack/fold-preview.nvim',                    requires = p.keymap_amend },
@@ -86,12 +70,12 @@ local plugins = {
     {'hrsh7th/cmp-path'},
     {'hrsh7th/cmp-nvim-lsp'},
     {'hrsh7th/cmp-nvim-lua'},
-    {'f3fora/cmp-spell',                              requires = p.plenary },
     {'saadparwaiz1/cmp_luasnip'},
     {'L3MON4D3/LuaSnip'},
     {'hrsh7th/cmp-cmdline'},
     {'hrsh7th/cmp-buffer'},
     {'hrsh7th/cmp-omni'}
+    -- {'f3fora/cmp-spell',                              requires = p.plenary },
     -- {'dmitmel/cmp-digraphss'},
     -- {'hrsh7th/cmp-nvim-lsp-signature-help'},
     -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
@@ -110,15 +94,32 @@ local plugins = {
   {'nvim-treesitter/playground',                      requires = p.treesitter },
 
   -- UNCHARTED:
-  -- {'baskerville/vim-sxhkdrc'},
-  {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   {'mfussenegger/nvim-jdtls'},
-  {'ron-rs/ron.vim'},
   {'RRethy/vim-hexokinase',                           run = 'make hexokinase'},
  
   -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
   -- THEMES:
-  
+ 
+  -- {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
+  -- {'nvim-neo-tree/neo-tree.nvim',                     branch = 'v2.x', requires = {
+  -- -- {'~/temp/neo-tree.nvim',                            branch = 'v2.x', requires = {
+  --     p.plenary,
+  --     p.devicons,
+  --     p.nui,
+  --     { 's1n7ax/nvim-window-picker',                  tag = 'v1.*' },
+  --   }
+  -- },
+  -- {'akinsho/bufferline.nvim',                         requires = p.devicons,  tag = "v2.*" },
+  -- {'nvim-neotest/neotest',                            requires = {
+  --   p.plenary,
+  --   p.treesitter,
+  --   p.fixcusrorhold,
+  --   {'nvim-neotest/neotest-go'},
+  --   {'haydenmeade/neotest-jest'},
+  -- }},
+  -- {'ibhagwan/fzf-lua',                                requires = p.devicons },
+  -- {'baskerville/vim-sxhkdrc'},
+  -- {'ron-rs/ron.vim'},
   -- {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
   -- {'lervag/vimtex'},
   -- {'terrortylor/nvim-comment'}, 
@@ -196,23 +197,23 @@ PluginManager.event_post_complete:sub(function()
   -- Plugins.notify()
   Plugins.bqf()
   Plugins.reach()
-  Plugins.fzf_lua()
   Plugins.gitsigns()
-  -- Plugins.nvim_tree()
-  Plugins.neo_tree()
-  Plugins.bufferline()
   Plugins.cmp_ls()
   Plugins.toggle_term()
   Plugins.fidget()
   Plugins.mini_starter()
   Plugins.mini_surround()
-  Plugins.dirty_talk()
   Plugins.hover()
   Plugins.paperplanes()
   Plugins.trld()
   Plugins.fold_cycle()
   Plugins.fold_preview()
   Plugins.guess_indent()
+  Plugins.nvim_tree()
+  -- Plugins.fzf_lua()
+  -- Plugins.neo_tree()
+  -- Plugins.bufferline()
+  -- Plugins.dirty_talk()
   -- Plugins.icon_picker()
   -- Plugins.corn()
   -- Plugins.cinnamon()

@@ -54,8 +54,11 @@ M.setup = U.Service():new(function()
   -- indent
   M.key {'<Tab>',             '>>_'}
   M.key {'<S-Tab>',           '<<_'}
-  M.key {'<Tab>',             '>gv', mode = 'v'}
-  M.key {'<S-Tab>',           '<gv', mode = 'v'}
+  M.key {'<Tab>',             '>gv_', mode = 'v'}
+  M.key {'<S-Tab>',           '<gv_', mode = 'v'}
+  -- filter
+  M.key {'==',                '==_'}
+  M.key {'=',                 '=gv_', mode = 'v'}
   -- switch between last 2 windows
   M.key {'<A-Tab>',           '<C-w>p'}
   -- make x delete without copying
@@ -135,8 +138,8 @@ M.setup_plugins = U.Service():new(function()
   M.key {[[<C-\>]],           '<CMD>ToggleTerm<CR>', mode = 'n'}
   M.key {[[<C-\>]],           [[<C-\><C-n><CMD>ToggleTerm<CR>]], mode = 't'}
   -- nvim tree
-  -- M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
-  M.key {'<C-e>',             '<CMD>Neotree toggle<CR>', mode = 'i n'}
+  M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
+  -- M.key {'<C-e>',             '<CMD>Neotree toggle<CR>', mode = 'i n'}
   -- reach
   local auto_handles = {
     '1', '2', '3',
@@ -202,10 +205,14 @@ M.setup_plugins = U.Service():new(function()
   M.key {'<leader>dl',        '<CMD>LspDiagsList<CR>'}
   M.key {'<leader>dv',        '<CMD>LspDiagsHover<CR>'}
   -- fzf-lus
-  M.key {'<leader>f',         '<CMD>FzfLua files<CR>'}
-  M.key {'<leader>g',         '<CMD>FzfLua live_grep_native<CR>'}
+  M.key {'<leader>f',         '<CMD>Telescope find_files<CR>'}
+  M.key {'<leader>g',         '<CMD>Telescope live_grep<CR>'}
   -- neotest
-  M.key {'<leader>t',         '<CMD>NeotestToggleTree<CR>'}
+  -- M.key {'<leader>t',         '<CMD>NeotestToggleTree<CR>'}
+  -- illuminate
+  M.key {'r<Right>',          function() require('illuminate').goto_next_reference() end}
+  M.key {'r<Left>',           function() require('illuminate').goto_prev_reference() end}
+
 end)
 
 return M

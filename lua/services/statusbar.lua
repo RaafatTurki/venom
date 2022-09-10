@@ -9,6 +9,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   local conditions = require 'heirline/conditions'
 
   local align = { provider = "%=" }
+  local space = { provider = " " }
 
   M.components.vimode = U.Service():new(function(opts)
     return {
@@ -354,12 +355,16 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       opts.left_pad,
       {
         provider = function(self)
+          -- local curr_line = vim.api.nvim_win_get_cursor(0)[1]
+          -- local total_lines = vim.api.nvim_buf_line_count(0)
+          -- local percentage = math.floor(((curr_line-1) / (total_lines-1)) * 100)
+          -- return string.format("%5s", percentage..'%%')
           local curr_line = vim.api.nvim_win_get_cursor(0)[1]
-          local total_lines = vim.api.nvim_buf_line_count(0)
-          local percentage = math.floor(((curr_line-1) / (total_lines-1)) * 100)
-          return string.format("%5s", percentage..'%%')
+          local curr_col = vim.api.nvim_win_get_cursor(0)[2]
+          return string.format("%s:%s", curr_line, curr_col)
         end,
         hl = 'Folded',
+        update = 'CursorMoved',
       },
       opts.right_pad,
     }
@@ -425,18 +430,23 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   M.components.searchinfo = U.Service():new(function(opts)
     return {
       condition = function()
-        if vim.fn.getreg("/") ~= '' then
-          return true
-        end
-        return false
+        return vim.v.hlsearch == 1
       end,
       opts.left_pad,
       {
         provider = function()
           local search = vim.fn.searchcount({ maxcount = 0 })
-          local search_current = search.current
-          local search_total = search.total
-          return ' ' .. search_current .. '/' .. search_total
+          local current, total
+
+          if search.incomplete > 0 then
+            current = '?'
+            total = '?'
+          else
+            current = search.current
+            total = search.total
+          end
+
+          return ' ' .. current .. '/' .. total
         end
       },
       opts.right_pad,
@@ -458,6 +468,33 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
           return ''
         end,
         -- update = 'User LspProgressUpdate',
+      },
+      opts.right_pad,
+    }
+  end)
+ 
+  -- TODO: abstract into a generic build state system
+  M.components.texlab_status = U.Service():new(function(opts)
+    return {
+      condition = function()
+        local util = require 'lspconfig.util'
+        local client = util.get_active_client_by_name(0, 'texlab')
+        return client ~= nil
+      end,
+      opts.left_pad,
+      {
+        provider = function()
+          return '' 
+        end,
+        hl = function()
+          local build_status_hls = vim.tbl_add_reverse_lookup {
+            DiffAdd = 0,
+            ErrorMsg = 1,
+            WarningMsg = 2,
+            Folded = 3,
+          }
+          return build_status_hls[Lang.texab_build_status]
+        end
       },
       opts.right_pad,
     }
@@ -486,8 +523,9 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     M.components.vimode(component_opts.left),
     M.components.fileinfo(component_opts.middle),
     M.components.gitinfo(component_opts.middle),
-    M.components.navic(component_opts.middle),
+    -- M.components.navic(component_opts.middle),
     align,
+    M.components.texlab_status(component_opts.middle),
     M.components.snippetinfo(component_opts.middle),
     M.components.spellinfo(component_opts.middle),
     M.components.rootinfo(component_opts.middle),
@@ -536,13 +574,122 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   }
 
   local statuslines = {
-    init = utils.pick_child_on_condition,
+    fallthrough = false,
     default_statusline,
     special_statusline,
     terminal_statusline,
   }
 
-  require'heirline'.setup(statuslines)
+
+  local default_winbar = {
+    condition = function()
+      return vim.bo.buftype == ''
+    end,
+    space,
+    M.components.navic(component_opts.middle),
+    align,
+    -- M.components.gitinfo(component_opts.middle),
+  }
+
+  local special_winbar = {
+    condition = function()
+      return conditions.buffer_matches({
+        buftype = { "nofile", "prompt", "help", "quickfix" },
+        filetype = { "^git.*", "fugitive", "NvimTree" },
+      })
+    end,
+    space,
+    align,
+  }
+
+  local terminal_winbar = {
+    condition = function()
+      return conditions.buffer_matches {
+        buftype = { "terminal" },
+        filetype = { "toggleterm" },
+      }
+    end,
+    space,
+    align,
+  }
+
+  local winbars = {
+    fallthrough = false,
+    default_winbar,
+    special_winbar,
+    terminal_winbar,
+  }
+
+
+  local tabpage_abstract = {
+    provider = function(self)
+      return "%" .. self.tabnr .. "T " .. self.tabnr .. " %T"
+    end,
+    hl = function(self)
+      if not self.is_active then
+        return "TabLine"
+      else
+        return "TabLineSel"
+      end
+    end,
+  }
+
+  local tabpage_close_btn = {
+    provider = "%999X  %X",
+    hl = "ErrorMsg",
+  }
+
+  local tabpages = {
+    condition = function()
+      return #vim.api.nvim_list_tabpages() >= 2
+    end,
+    align,
+    utils.make_tablist(tabpage_abstract),
+    tabpage_close_btn,
+  }
+
+  local tabline_offset = {
+    condition = function(self)
+      local win = vim.api.nvim_tabpage_list_wins(0)[1]
+      local bufnr = vim.api.nvim_win_get_buf(win)
+      self.winid = win
+
+      local ft_to_title = {
+        ['neo-tree'] = "File Explorer",
+        ['NvimTree'] = "File Explorer",
+      }
+
+      for ft, title in pairs(ft_to_title) do
+        if vim.bo[bufnr].filetype == ft then
+          self.title = title
+          return true
+        end
+      end
+    end,
+    provider = function(self)
+      local title = self.title
+      local width = vim.api.nvim_win_get_width(self.winid)
+      local pad = math.ceil((width - #title) / 2)
+      return string.rep(" ", pad) .. title .. string.rep(" ", pad)
+    end,
+    hl = function(self)
+      if vim.api.nvim_get_current_win() == self.winid then
+        return "TablineSel"
+      else
+        return "Tabline"
+      end
+    end,
+  }
+
+  local tabline = { tabline_offset, tabpages }
+
+  vim.cmd [[
+    au FileType * if index(['wipe', 'delete', 'unload'], &bufhidden) >= 0 | set nobuflisted | endif
+  ]]
+
+
+  require 'heirline'.setup(statuslines, winbars, tabline)
+
 end)
 
 

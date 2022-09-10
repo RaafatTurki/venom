@@ -21,11 +21,6 @@ M.setup_lspconfig_server = U.Service():require(FT.PLUGIN, 'nvim-lspconfig'):new(
       -- set gq command to use the lsp formatter for this buffer
       vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
 
-      -- illuminate
-      if venom.features:has(FT.PLUGIN, 'vim-illuminate') then
-        require 'illuminate'.on_attach(client)
-      end
-
       -- navic
       if venom.features:has(FT.PLUGIN, 'nvim-navic') then
         require 'nvim-navic'.attach(client, bufnr)
@@ -99,7 +94,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
         settings = {
           texlab = {
             build = {
-              onSave = true,
+              -- onSave = true,
               executable = 'tectonic',
               args = vim.split('%f --synctex', ' '),
             },
@@ -122,6 +117,13 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
           }
         }
       })
+
+      vim.cmd [[
+      augroup texlab_build
+      autocmd!
+      autocmd BufWritePost *.tex lua Lang.builders.texlab(0)
+      augroup texlab_build
+      ]]
     end,
     svelte = function()
       M.setup_lspconfig_server('svelte', {
@@ -314,14 +316,13 @@ M.setup = U.Service():provide(FT.LSP, 'setup')
   vim.api.nvim_create_user_command('LspFormat', function() M.format() end, {})
   -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {})
   
-  require 'inc_rename'.setup()
-  
+  require("inc_rename").setup {
+    input_buffer_type = "dressing",
+  }
 end)
 
 M.rename = U.Service():new(function()
-  require 'inc_rename'.rename {
-    default = vim.fn.expand("<cword>")
-  }
+  vim.api.nvim_feedkeys(":IncRename " .. vim.fn.expand("<cword>"), "n", false)
 end)
 
 M.references = U.Service():new(function()

@@ -242,7 +242,7 @@ TSParameterReference= { 'Debug' },
   ColorColumn	    = { 'CursorLine' },
 Conceal         = { 'Debug' },
   CurSearch       = { bg = c.fg, fg = c.bg, bold = true },
-  Cursor          = { }, --
+  Cursor          = { bg = c.fg },
   CursorColumn    = { 'CursorLine' }, --
   CursorIM        = { }, --
   CursorLine      = { bg = c.line },
@@ -290,8 +290,8 @@ NonText         = { 'Debug' },
   StatusLineNC    = { reverse = true },
   Substitute      = { 'CurSearch' },
   TabLine         = { fg = c.fold },
-  TabLineFill     = { bg = c.bg_alt },
-  TabLineSel      = { }, --
+  TabLineFill     = { bg = c.bg },
+  TabLineSel      = { fg = c.fg, bold = true },
   TermCursor      = { underline = true },
   TermCursorNC    = { 'TermCursor' },
   Title           = { 'TSTitle' },
@@ -319,7 +319,7 @@ LspCodeLensSeparator        = { 'Debug' },
   LspSignatureActiveParameter = { underline = true, bold = true },
 
 
-  
+
   -- Diagnostics
   DiagnosticError             = { fg = c.err },
   DiagnosticWarn              = { fg = c.warn },
@@ -380,6 +380,15 @@ LspCodeLensSeparator        = { 'Debug' },
   Error                   = { 'TSError' },
   Ignore                  = { fg = c.bg };
   Todo                    = { 'TSTodo' },
+
+
+
+  -- TS Filetype Specific
+  healthSuccess           = { fg = c.add, bold = true };
+  healthWarning           = { fg = c.warn, bold = true };
+  healthError             = { fg = c.err, bold = true };
+  healthHelp              = { 'TSTextReference' };
+healthBar               = { 'Debug' };
  
 
 
@@ -497,7 +506,7 @@ LspCodeLensSeparator        = { 'Debug' },
   NeoTreeGitUnstaged          = { fg = c.dirty };
   NeoTreeGitUntracked         = { fg = c.dirty };
   NeoTreeGitStaged            = { 'NvimTreeGitStaged' };
-NeoTreeHiddenByName         = { 'Debug' };
+  NeoTreeHiddenByName         = { 'Comment' };
   NeoTreeIndentMarker         = { 'NvimTreeIndentMarker' };
   NeoTreeExpander             = { 'NvimTreeIndentMarker' };
   NeoTreeNormal               = {}; --
@@ -628,6 +637,11 @@ NeoTreeWindowsHidden        = { 'Debug' };
   -- fidget
   FidgetTitle             = { 'Folded' },
   FidgetTask              = { 'Comment' },
+
+  -- illuminate
+  IlluminatedWordText     = { 'LspReferenceText' };
+  IlluminatedWordRead     = { 'LspReferenceRead' };
+  IlluminatedWordWrite    = { 'LspReferenceWrite' };
 
   -- CUTSOM GROUPS
   -- DebugFg                 = { fg = debug[10] };

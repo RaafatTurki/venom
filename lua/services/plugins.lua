@@ -27,7 +27,6 @@ M.dressing = U.Service():require(FT.PLUGIN, "dressing.nvim"):new(function()
       winblend = 0,
       override = function(conf)
         conf.col = -1
-        conf.row = 0
         return conf
       end,
     },
@@ -37,7 +36,6 @@ M.dressing = U.Service():require(FT.PLUGIN, "dressing.nvim"):new(function()
       builtin = {
         border = 'single',
         winblend = 0,
-        min_height = { 0, 0 },
         winhighlight = "CursorLine:CursorLineSelect",
       }
     }
@@ -186,8 +184,8 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       { name = 'rg' },
       { name = 'omni' },
       { name = 'path' },
-      { name = 'spell' },
       { name = 'buffer' },
+      -- { name = 'spell' },
       -- { name = 'nvim_lsp_signature_help' },
       -- { name = 'digraphs' },
     },
@@ -220,6 +218,17 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       },
       -- scrollbar = '║',
     },
+    completion = {
+      get_trigger_characters = function(trigger_chars)
+        local new_trigger_chars = {}
+        for _, char in ipairs(trigger_chars) do
+          if char ~= '>' then
+            table.insert(new_trigger_chars, char)
+          end
+        end
+        return new_trigger_chars
+      end
+    }
     -- sorting = {
     --   priority_weight = 0,
     -- },
@@ -364,11 +373,8 @@ M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
     autoselect_one = true,
     include_current = false,
     filter_rules = {
-      -- filter using buffer options
       bo = {
-        -- if the file type is one of following, the window will be ignored
         filetype = { 'neo-tree', "neo-tree-popup", "notify", "quickfix" },
-        -- if the buffer type is one of following, the window will be ignored
         buftype = { 'terminal' },
       },
     },
@@ -379,7 +385,8 @@ M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
 
   require 'neo-tree'.setup {
     close_if_last_window = true,
-    popup_border_style = 'single',
+    -- use_popups_for_input = false,
+    -- popup_border_style = 'single',
     default_component_configs = {
       modified = {
         symbol = '•',
@@ -411,7 +418,7 @@ M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
           ["w"] = "open_with_window_picker",
           ["C"] = "close_node",
           ["z"] = "close_all_nodes",
-          -- ["Z"] = "expand_all_nodes",
+      -- ["Z"] = "expand_all_nodes",
           ["a"] = { 
             "add",
             -- some commands may take optional config options, see `:h neo-tree-mappings` for details
@@ -448,13 +455,12 @@ M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
       },
     },
     nesting_rules = {
-      js = { 'js.map' },
+      js = { 'js.map', 'd.ts' },
     },
     filesystem = {
       filtered_items = {
         hide_by_name = {
           'node_modules',
-          '.cache',
           '__pycache__',
           'pnpm-lock.yaml',
           'package-lock.json',
@@ -463,7 +469,6 @@ M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
           "*.import"
         },
         never_show = {
-          ".DS_Store",
         },
       },
       commands = {
@@ -487,7 +492,9 @@ M.bufferline = U.Service():require(FT.PLUGIN, 'bufferline.nvim'):new(function()
   require 'bufferline'.setup {
     options = {
       mode = 'tabs',
-      indicator_icon = ' ',
+      indicator = {
+        style = 'none',
+      },
       modified_icon = '●',
       left_trunc_marker = '←',
       right_trunc_marker = '→',
@@ -515,13 +522,13 @@ M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(functi
         return vim.o.columns * 0.5
       end
     end,
-    -- winbar = {
-    --   enabled = true,
-    -- --   name_formatter = function(term)
-    -- --     -- log(term)
-    -- --     return term.name
-    -- --   end
-    -- },
+    winbar = {
+      enabled = true,
+      -- name_formatter = function(term)
+      --   -- log(term)
+      --   return term.name
+      -- end
+    },
     -- on_close = fun(t: Terminal), -- function to run when the terminal closes
     -- on_stdout = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stdout
     -- on_stderr = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stderr

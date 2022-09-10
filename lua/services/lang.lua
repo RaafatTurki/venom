@@ -35,13 +35,13 @@ M.ts_parsers_ensure_installed = {
   'typescript',
   'vim',
   'yaml',
+  'sxhkdrc',
 }
 
 M.setup = U.Service()
 :require(FT.PLUGIN, "mason.nvim")
 :require(FT.PLUGIN, "nvim-navic")
-:require(FT.PLUGIN, "spellsitter.nvim")
-:require(FT.PLUGIN, "neotest")
+-- :require(FT.PLUGIN, "neotest")
 :require(FT.PLUGIN, 'nvim-treesitter')
 :new(function()
   -- mason
@@ -92,21 +92,16 @@ M.setup = U.Service()
     icons = navic_icons,
   }
 
-  -- spellsitter
-  require 'spellsitter'.setup {
-    enable = true,
-  }
-
   -- neotest
-  require 'neotest'.setup {
-    adapters = {
-      require 'neotest-go',
-      require 'neotest-jest',
-    }
-  }
-  vim.api.nvim_create_user_command('NeotestToggleTree',   function() require 'neotest'.summary.toggle() end,              {})
-  vim.api.nvim_create_user_command('NeotestRunNearest',   function() require 'neotest'.run.run() end,                     {})
-  vim.api.nvim_create_user_command('NeotestRunFile',      function() require 'neotest'.run.run(vim.fn.expand("%")) end,   {})
+  -- require 'neotest'.setup {
+  --   adapters = {
+  --     require 'neotest-go',
+  --     require 'neotest-jest',
+  --   }
+  -- }
+  -- vim.api.nvim_create_user_command('NeotestToggleTree',   function() require 'neotest'.summary.toggle() end,              {})
+  -- vim.api.nvim_create_user_command('NeotestRunNearest',   function() require 'neotest'.run.run() end,                     {})
+  -- vim.api.nvim_create_user_command('NeotestRunFile',      function() require 'neotest'.run.run(vim.fn.expand("%")) end,   {})
 
   -- treesitter
   -- local parser_configs = require 'nvim-treesitter.parsers'.get_parser_configs()
@@ -120,5 +115,28 @@ M.setup = U.Service()
     -- playground = { enable = true },
   }
 end)
+
+-- TODO: abstract into a generic build state system
+M.texab_build_status = 0
+
+M.builders = {
+  texlab = U.Service():new(function(bufnr)
+    -- local build_status = vim.tbl_add_reverse_lookup { Success = 0, Error = 1, Failure = 2, Cancelled = 3, }
+    local util = require 'lspconfig.util'
+    bufnr = util.validate_bufnr(bufnr)
+    local client = util.get_active_client_by_name(bufnr, 'texlab')
+    local params = {
+      textDocument = { uri = vim.uri_from_bufnr(bufnr) },
+    }
+    if client then
+      client.request('textDocument/build', params, function(err, result)
+        if err then error(tostring(err)) end
+        M.texab_build_status = result.status
+      end, bufnr)
+    else
+      print 'method textDocument/build is not supported by any servers active on the current buffer'
+    end
+  end)
+}
 
 return M

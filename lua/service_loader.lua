@@ -180,6 +180,7 @@ PluginManager.event_post_complete:sub(function()
   Misc.buffer_edits()
   -- Misc.tabline_minimal()
   Misc.lspinfo_win_fix()
+  Misc.auto_create_dir()
 
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},

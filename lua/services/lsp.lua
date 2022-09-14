@@ -53,6 +53,7 @@ end)
 
 -- TODO: require mason-lspconfig.nvim instead once PM registers deps
 M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_servers_configs)
+  -- lsp servers
   require 'mason-lspconfig'.setup()
   require 'mason-lspconfig'.setup_handlers {
     function(server_name)
@@ -283,15 +284,28 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
       -- end
     end
   }
-end)
 
--- TODO figure out how to setup custom mason packages for the following
--- M.configure_server("gdscript", {}, {
---   cmd = {'godot-ls'},
---   flags = {
---     debounce_text_changes = 150,
---   },
--- })
+  -- lsp servers with no mason-lspconfig support
+  vim.api.nvim_create_autocmd('BufEnter', {
+    group = vim.api.nvim_create_augroup('auto_create_dir', { clear = true }),
+    pattern = {"*.dart"},
+    callback = function(ctx)
+      M.setup_lspconfig_server('dartls', {})
+    end
+  })
+  vim.api.nvim_create_autocmd('BufEnter', {
+    group = vim.api.nvim_create_augroup('auto_create_dir', { clear = true }),
+    pattern = {"*.gd"},
+    callback = function(ctx)
+      M.setup_lspconfig_server('gdscript', {
+        cmd = {'godot-ls'},
+        flags = {
+          debounce_text_changes = 150,
+        },
+      })
+    end
+  })
+end)
 
 
 M.setup = U.Service():provide(FT.LSP, 'setup')

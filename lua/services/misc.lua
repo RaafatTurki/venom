@@ -61,6 +61,7 @@ M.base = U.Service():new(function()
     au FileType fish setlocal commentstring=#%s
     au FileType prisma setlocal commentstring=//%s
     au FileType sxhkdrc setlocal commentstring=#%s
+    au FileType dart setlocal commentstring=//%s
 
     " terminal
     au FileType terminal setlocal nocursorline

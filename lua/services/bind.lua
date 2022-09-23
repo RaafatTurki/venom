@@ -176,12 +176,20 @@ M.setup_plugins = U.Service():new(function()
   M.key {'zq',                function() require 'fold-preview'.toggle_preview() end}
   -- gitsigns
   M.key {'gr',                '<CMD>Gitsigns reset_hunk<CR>'}
-  M.key {'gr',                '<CMD>Gitsigns reset_hunk<CR>', mode = 'v'}
+  M.key {'gr',                function()
+    require 'gitsigns'.reset_hunk({ vim.fn.line('v'), vim.fn.getpos('.')[2] })
+    -- TODO: find a better way to switch back to normal mode
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 't', false)
+  end, mode = 'v'}
   M.key {'gp',                '<CMD>Gitsigns preview_hunk<CR>'}
   M.key {'gb',                '<CMD>Gitsigns blame_line<CR>'}
   M.key {'gd',                '<CMD>Gitsigns diffthis<CR>'}
   M.key {'gs',                '<CMD>Gitsigns stage_hunk<CR>'}
-  M.key {'gs',                '<CMD>Gitsigns stage_hunk<CR>', mode = 'v'}
+  M.key {'gs',                function()
+    require 'gitsigns'.stage_hunk({ vim.fn.line('v'), vim.fn.getpos('.')[2] })
+    -- TODO: find a better way to switch back to normal mode
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 't', false)
+  end, mode = 'v' }
   M.key {'gu',                '<CMD>Gitsigns undo_stage_hunk<CR>'}
   M.key {'g<Left>',           '<CMD>Gitsigns prev_hunk<CR>zz'}
   M.key {'g<Right>',          '<CMD>Gitsigns next_hunk<CR>zz'}

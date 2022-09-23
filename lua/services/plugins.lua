@@ -724,4 +724,8 @@ M.vim_markdown_composer = U.Service():require(FT.PLUGIN, 'vim-markdown-composer'
   vim.g.markdown_composer_browser = 'qutebrowser'
 end)
 
+M.overseer = U.Service():require(FT.PLUGIN, 'overseer.nvim'):new(function()
+  require 'overseer'.setup {}
+end)
+
 return M

@@ -719,4 +719,9 @@ M.colorizer = U.Service():require(FT.PLUGIN, 'nvim-colorizer.lua'):new(function(
   }
 end)
 
+M.vim_markdown_composer = U.Service():require(FT.PLUGIN, 'vim-markdown-composer'):new(function()
+  vim.g.markdown_composer_autostart = 0
+  vim.g.markdown_composer_browser = 'qutebrowser'
+end)
+
 return M

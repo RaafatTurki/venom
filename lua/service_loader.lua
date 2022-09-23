@@ -98,6 +98,7 @@ local plugins = {
   -- UNCHARTED:
   {'mfussenegger/nvim-jdtls'},
   {'NvChad/nvim-colorizer.lua'},
+  {'euclio/vim-markdown-composer',                    run = 'cargo build --release'},
  
   -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
   -- THEMES:
@@ -217,6 +218,7 @@ PluginManager.event_post_complete:sub(function()
   Plugins.guess_indent()
   Plugins.nvim_tree()
   Plugins.colorizer()
+  Plugins.vim_markdown_composer()
   -- Plugins.fzf_lua()
   -- Plugins.neo_tree()
   -- Plugins.bufferline()

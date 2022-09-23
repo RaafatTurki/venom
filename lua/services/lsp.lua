@@ -298,13 +298,21 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
     pattern = {"*.gd"},
     callback = function(ctx)
       M.setup_lspconfig_server('gdscript', {
-        cmd = {'godot-ls'},
-        flags = {
-          debounce_text_changes = 150,
-        },
-      })
+  -- null-ls servers
+  local null_ls = require 'null-ls'
+  require 'mason-null-ls'.setup()
+  require 'mason-null-ls'.setup_handlers {
+    function(source_name)
+      log('the null-ls source '..source_name..' is installed but unused!')
+    end,
+    stylua = function()
+      null_ls.register(null_ls.builtins.formatting.stylua)
+    end,
+    jq = function()
+      null_ls.register(null_ls.builtins.formatting.jq)
     end
-  })
+  }
+  null_ls.setup()
 end)
 
 

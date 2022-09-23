@@ -34,12 +34,14 @@ local plugins = {
   {'lewis6991/hover.nvim'},
   {'smjonas/inc-rename.nvim'},
   {'RRethy/vim-illuminate'},
+  {'jose-elias-alvarez/null-ls.nvim',                 requires = p.plenary },
 
   -- LANG:
   {p.treesitter,                                      run = ':TSUpdate' },
   {'williamboman/mason.nvim',                         requires = {
     p.lspconfig,
     'williamboman/mason-lspconfig.nvim',
+    'jayp0521/mason-null-ls.nvim',
   }},
   {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
   {'SmiteshP/nvim-navic',                             requires = p.lspconfig },

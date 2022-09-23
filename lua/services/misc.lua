@@ -95,24 +95,30 @@ M.open_uri = U.Service():new(function()
     open_cmd = 'xdg-open'
   elseif vim.fn.has("mac") == 1 then
     open_cmd = 'open'
+  elseif vim.fn.has("win64") == 1 or vim.fn.has("win32") then
+    open_cmd = 'start'
   end
 
   function OpenURIUnderCursor()
     if not open_cmd then
-      log.warn("gx is not supported on this OS")
+      log.warn("OpenURIUnderCursor is not supported on this OS")
       return
     end
 
     local word_under_cursor = vim.fn.expand("<cfile>")
     local uri = nil
 
-    -- anything that looks like string/string into a github repo
-    local regex_plugin_url = "[%a%d%-%.%_]*%/[%a%d%-%.%_]*"
-    if string.match(word_under_cursor, regex_plugin_url) then uri = 'https://github.com/'..word_under_cursor end
-
     -- any uri with a protocol segment
     local regex_protocol_uri = "%a*:%/%/[%a%d%#%[%]%-%%+:;!$@/?&=_.,~*()]*"
     if string.match(word_under_cursor, regex_protocol_uri) then uri = word_under_cursor end
+
+    -- anything that looks like string/string into a github repo
+    local regex_plugin_url = "[%a%d%-%.%_]+%/[%a%d%-%.%_]+"
+    if not uri and string.match(word_under_cursor, regex_plugin_url) then uri = 'https://github.com/'..word_under_cursor end
+    
+    -- anything that looks like string-number into a jira link
+    local regex_jira_url = "[%a%_]+%-[%d]+"
+    if not uri and string.match(word_under_cursor, regex_jira_url) then uri = 'https://jira.example.com/browse/'..word_under_cursor end
 
     if not uri then
       log.warn("unrecognizable URI")
@@ -121,8 +127,8 @@ M.open_uri = U.Service():new(function()
 
     vim.fn.jobstart(open_cmd .. ' "' .. uri .. '"', {
       detach = true,
-      on_stderr = function (chan_id, data, name)
-        log.err(data)
+      on_exit = function (chan_id, data, name)
+        log.info("URI opened")
       end,
     })
   end
@@ -150,24 +156,28 @@ end)
 --- disables some of the builtin neovim plugins
 M.disable_builtin_plugins = U.Service():new(function()
   local disabled_built_ins = {
-    "2html_plugin",
+    "gzip",
+    "tar",
+    "tarPlugin",
+    "zip",
+    "zipPlugin",
+
     "getscript",
     "getscriptPlugin",
-    "gzip",
+    "vimball",
+    "vimballPlugin",
+
+    "2html_plugin",
     "logipat",
+    "rrhelper",
+
+    "spellfile_plugin",
+    -- "matchit",
+
     "netrw",
     "netrwPlugin",
     "netrwSettings",
     "netrwFileHandlers",
-    -- "matchit",
-    "tar",
-    "tarPlugin",
-    "rrhelper",
-    "spellfile_plugin",
-    "vimball",
-    "vimballPlugin",
-    "zip",
-    "zipPlugin",
   }
 
   for _, plugin in pairs(disabled_built_ins) do
@@ -200,33 +210,27 @@ M.term_smart_esc = U.Service():new(function()
 end)
 
 --- prompts to install ts parsers upon opening new file types with available ones.
-M.automatic_treesitter = U.Service():new(function()
-  local ask_install = {}
+M.auto_install_ts_parser = U.Service():new(function()
+  local blacklist = {}
 
-  function EnsureTSParserInstalled()
-    local parsers = require 'nvim-treesitter.parsers'
-    local parser_name = parsers.get_buf_lang()
+  vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('auto_install_ts_parser', { clear = true }),
+    callback = function(ctx)
+      local parsers = require 'nvim-treesitter.parsers'
+      local parser_name = parsers.get_buf_lang()
 
-    -- abort if parser is ensured
-    if U.has_value(Lang.ts_parsers_ensure_installed, parser_name) then return end
+      -- abort if parser is ensured
+      if U.has_value(Lang.ts_parsers_ensure_installed, parser_name) then return end
 
-    if parsers.get_parser_configs()[parser_name] and not parsers.has_parser(parser_name) and ask_install[parser_name] ~= false then
-      vim.schedule_wrap(function()
-
-        U.prompt_ye_no('Install treesitter parser for '..parser_name.. '?', true,
-          function()
-            vim.cmd('TSInstall '..parser_name)
-          end,
-          function()
-            ask_install[parser_name] = false
+      if parsers.get_parser_configs()[parser_name] and not parsers.has_parser(parser_name) and not blacklist[parser_name] then
+          local answer = U.confirm_yes_no('Install TS parser for '..parser_name..'?')
+          if answer then
+            vim.cmd([[TSInstall ]] .. parser_name)
           end
-        )
-      end)()
+          blacklist[parser_name] = true
+      end
     end
-  end
-
-  -- TODO: convert to auto group
-  vim.cmd [[au FileType * :lua EnsureTSParserInstalled()]]
+  })
 end)
 
 --- camel!
@@ -405,31 +409,77 @@ M.auto_create_dir = U.Service():new(function()
   })
 end)
 
--- local function parseInt(str)
---     return str:match("^%-?%d+$")
--- end
---
--- function appendLoremPicsumUrl()
---     local width = parseInt(vim.fn.input("width: "))
---     local height = parseInt(vim.fn.input("height: "))
---
---     if width and height then
---         local curl = require("plenary.curl")
---
---         local res = curl.get("https://picsum.photos/" .. width .. "/" .. height, {})
---         local url = res.headers[3]:sub(11)
---        
---         local cursor = vim.api.nvim_win_get_cursor(0)
---         local line = vim.api.nvim_get_current_line()
---         local nline = line:sub(0, cursor[2] + 1) .. url .. line:sub(cursor[2] + 2)
---
---         vim.api.nvim_set_current_line(nline)
---         vim.api.nvim_win_set_cursor(0, { cursor[1], cursor[2] + url:len() })
---     end
--- end
---
--- vim.cmd("command LoremPicsum silent lua appendLoremPicsumUrl()")
+--- defines LoremPicsum(), inserts a random image with prompted dimensions
+-- TODO: add :require(FT.PLUGIN, 'plenary.nvim')
+M.lorem_picsum = U.Service():new(function()
+  local curl = require 'plenary.curl'
 
+  local function parse_int(str) return str:match("^%-?%d+$") end
+
+  function LoremPicsum()
+    local width = parse_int(vim.fn.input("width: "))
+    local height = parse_int(vim.fn.input("height: "))
+
+    if width and height then
+      local res = curl.get("https://picsum.photos/" .. width .. "/" .. height, {})
+      local url = res.headers[3]:sub(11)
+
+      local cursor = vim.api.nvim_win_get_cursor(0)
+      local line = vim.api.nvim_get_current_line()
+      local nline = line:sub(0, cursor[2] + 1) .. url .. line:sub(cursor[2] + 2)
+
+      vim.api.nvim_set_current_line(nline)
+      vim.api.nvim_win_set_cursor(0, { cursor[1], cursor[2] + url:len() })
+    end
+  end
+
+  vim.api.nvim_create_user_command('LoremPicsum', LoremPicsum, {})
+end)
+
+--- defines GitIgnoreFill(), prompts for a gitignore template and inserts it
+-- TODO: add :require(FT.PLUGIN, 'plenary.nvim')
+M.auto_gitignore_io = U.Service():new(function()
+  local curl = require 'plenary.curl'
+  local is_in_progress = false
+
+  function GitIgnoreFill()
+    is_in_progress = true
+    local res_list = curl.get("https://www.toptal.com/developers/gitignore/api/list", {})
+
+    if res_list.status == 200 then
+      available_gitignores = vim.split(res_list.body, '\n')
+      available_gitignores = U.join(available_gitignores, ',')
+      available_gitignores = vim.split(available_gitignores, ',')
+
+      vim.ui.select(available_gitignores, { prompt = 'select a gitignore template' }, function(template_name)
+        local res_template = curl.get("https://www.toptal.com/developers/gitignore/api/" .. template_name, {})
+        if res_template.status == 200 then
+          local pos = vim.api.nvim_win_get_cursor(0)
+          vim.api.nvim_buf_set_lines(0, pos[1]-1, pos[1], false, vim.split(res_template.body, '\n'))
+        end
+        is_in_progress = false
+      end)
+    end
+  end
+
+  vim.api.nvim_create_user_command('GitIgnoreFill', GitIgnoreFill, {})
+
+  vim.api.nvim_create_autocmd('BufEnter', {
+    pattern = {'.gitignore'},
+    group = vim.api.nvim_create_augroup('gitignore_io', { clear = true }),
+    callback = function(ctx)
+      if is_in_progress then return end
+      local line_count = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+      if line_count == 1 then
+        local answer = U.confirm_yes_no('Fill with a gitignore.io template?')
+        if answer then
+          GitIgnoreFill()
+        end
+      end
+    end
+  })
+end)
 
 --- (Linux) makes neovim support hex editing
 -- function M.binary_editor()

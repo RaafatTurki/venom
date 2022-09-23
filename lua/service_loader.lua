@@ -174,13 +174,15 @@ PluginManager.event_post_complete:sub(function()
   Misc.term_smart_esc()
   Misc.disable_builtin_plugins()
   Misc.highlight_yank()
-  Misc.automatic_treesitter()
+  Misc.auto_install_ts_parser()
   -- Misc.diag_on_hold()
   Misc.camel()
   Misc.buffer_edits()
   -- Misc.tabline_minimal()
   Misc.lspinfo_win_fix()
   Misc.auto_create_dir()
+  Misc.lorem_picsum()
+  Misc.auto_gitignore_io()
 
   Themes.init({
     { func = Themes.builtin,  args = {},             name = 'Built-In'},

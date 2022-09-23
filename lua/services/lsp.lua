@@ -225,7 +225,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
       })
     end,
     jdtls = function()
-      -- if venom.features:has(FT.PLUGIN, 'nvim-jdtls') then
+      if venom.features:has(FT.PLUGIN, 'nvim-jdtls') then
         function JDTLSSetup()
           local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
           local workspace_dir = os.getenv('XDG_CACHE_HOME') .. '/jdtls/workspaces/' .. project_name
@@ -233,7 +233,8 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
 
           --- quit if file does not exist
           -- if not U.is_file_exists(jdtls_root_dir .. '/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar') then return end
-
+          
+          -- for more details visit https://github.com/mfussenegger/nvim-jdtls
           local jdtls_nvim_configs = {
             cmd = {
               'java',
@@ -244,8 +245,8 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
               '-Dlog.protocol=true',
               '-Dlog.level=ALL',
 
-              -- '-javaagent:/home/potato/.local/share/nvim/lsp_servers/jdtls/lombok.jar',
-              '-javaagent:' .. jdtls_root_dir .. '/lombok.jar',
+              -- TODO: put back once lombok gets added into mason
+              -- '-javaagent:' .. jdtls_root_dir .. '/lombok.jar',
 
               '-Xms1g',
               '--add-modules=ALL-SYSTEM',
@@ -280,24 +281,25 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
         autocmd FileType java lua JDTLSSetup()
         augroup jdtls_setup
         ]]
-      -- else
-      -- end
+      else
+        M.setup_lspconfig_server('jdtls', {})
+      end
     end
   }
 
   -- lsp servers with no mason-lspconfig support
-  vim.api.nvim_create_autocmd('BufEnter', {
-    group = vim.api.nvim_create_augroup('auto_create_dir', { clear = true }),
-    pattern = {"*.dart"},
-    callback = function(ctx)
-      M.setup_lspconfig_server('dartls', {})
-    end
-  })
-  vim.api.nvim_create_autocmd('BufEnter', {
-    group = vim.api.nvim_create_augroup('auto_create_dir', { clear = true }),
-    pattern = {"*.gd"},
-    callback = function(ctx)
-      M.setup_lspconfig_server('gdscript', {
+  if vim.fn.executable('dart') == 1 then
+    M.setup_lspconfig_server('dartls', {})
+  end
+  if vim.fn.executable('godot-ls') == 1 then
+    M.setup_lspconfig_server('gdscript', {
+      cmd = {'godot-ls'},
+      flags = {
+        debounce_text_changes = 150,
+      },
+    })
+  end
+
   -- null-ls servers
   local null_ls = require 'null-ls'
   require 'mason-null-ls'.setup()

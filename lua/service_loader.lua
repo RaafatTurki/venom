@@ -97,11 +97,12 @@ local plugins = {
 
   -- UNCHARTED:
   {'mfussenegger/nvim-jdtls'},
-  {'RRethy/vim-hexokinase',                           run = 'make hexokinase'},
+  {'NvChad/nvim-colorizer.lua'},
  
   -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
   -- THEMES:
  
+  -- {'RRethy/vim-hexokinase',                           run = 'make hexokinase'},
   -- {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
   -- {'nvim-neo-tree/neo-tree.nvim',                     branch = 'v2.x', requires = {
   -- -- {'~/temp/neo-tree.nvim',                            branch = 'v2.x', requires = {
@@ -215,6 +216,7 @@ PluginManager.event_post_complete:sub(function()
   Plugins.fold_preview()
   Plugins.guess_indent()
   Plugins.nvim_tree()
+  Plugins.colorizer()
   -- Plugins.fzf_lua()
   -- Plugins.neo_tree()
   -- Plugins.bufferline()

@@ -701,4 +701,22 @@ M.gomove = U.Service():require(FT.PLUGIN, 'nvim-gomove'):new(function()
   }
 end)
 
+M.colorizer = U.Service():require(FT.PLUGIN, 'nvim-colorizer.lua'):new(function()
+  require 'colorizer'.setup {
+    filetypes = { 'scss', 'sass', 'css', 'svelte' },
+    user_default_options = {
+      RGB = true,
+      RRGGBB = true,
+      names = true,
+      RRGGBBAA = true,
+      AARRGGBB = true,
+      rgb_fn = true,
+      hsl_fn = true,
+      mode = "background", -- Set the display mode.
+      tailwind = false, -- Enable tailwind colors
+      sass = { enable = false, parsers = { 'css' }, },
+    },
+  }
+end)
+
 return M

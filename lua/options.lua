@@ -129,7 +129,7 @@ venom = {
   -- a table containing key-value pairs to persist per session
   persistent = {},
   -- events are tables that can hold lua functions and vim commands for later execution (when invoked)
-  -- TODO: make it the responsibility of the related service to instantiate a events here
+  -- TODO: make it the responsibility of the related service to instantiate events here
   events = {
     refresh = U.Event():new(),
     clear = U.Event():new(),
@@ -137,13 +137,7 @@ venom = {
   },
   -- features is a table that can hold strings representing the availability of said feature for later querying.
   -- each string must be in the form of <TYPE>:<name> where TYPE is one of the FT enum values (for example "PLUGIN:nvim-cmp" means the plugin cmp is available)
-  features = {
-    list = {},
-    add = function(self, feature_type, feature_name) table.insert(self.list, feature_type..":"..feature_name) end,
-    add_str = function(self, feature_str) table.insert(self.list, feature_str) end,
-    has = function(self, feature_type, feature_name) return U.has_value(self.list, feature_type..":"..feature_name) end,
-    has_str = function(self, feature_str) return U.has_value(self.list, feature_str) end,
-  },
+  features = U.FeatureList():new(),
   vals = {
     is_disagnostics_visible = true,
   },

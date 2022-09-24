@@ -11,14 +11,8 @@ M.base = U.Service():new(function()
   vim.cmd [[cnoreabbrev w!! w !sudo tee > /dev/null %]]
   -- new tab help page
   vim.cmd [[cnoreabbrev h tab help]]
-  -- new tab
-  vim.cmd [[cnoreabbrev nt tabnew]]
-  -- quit all
-  -- vim.cmd [[cnoreabbrev Q qall]]
-  -- edit config file
-  vim.cmd [[cnoreabbrev conf tabnew $VIM_ROOT/init.vim]]
   -- log
-  vim.cmd [[cnoreabbrev log lua log]]
+  vim.cmd [[cnoreabbrev l lua log]]
 
   --- variables
   vim.g.neovide_cursor_vfx_mode = 'pixiedust'
@@ -139,8 +133,7 @@ end)
 --- sets color colorcolumn on the below filetypes
 M.color_col = U.Service():new(function()
   local seq_str = U.seq(120, 999, ',', 1)
-  local ft = '*'
-  U.create_augroup('autocmd FileType '..ft..' setlocal colorcolumn='..seq_str, 'color_col')
+  vim.wo.colorcolumn = seq_str
 end)
 
 --- highlights yanked text for a period of time
@@ -148,9 +141,12 @@ M.highlight_yank = U.Service():new(function()
   local timeout = 150
   local hl = 'Search'
 
-  U.create_augroup([[
-    au TextYankPost * silent! lua vim.highlight.on_yank { higroup=']]..hl..[[', timeout=]]..timeout..[[ }
-  ]], 'highlight_yank')
+  vim.api.nvim_create_autocmd('TextYankPost', {
+    group = vim.api.nvim_create_augroup('highlight_yank', { clear = true }),
+    callback = function(ctx)
+      vim.highlight.on_yank({ higroup=hl, timeout=timeout })
+    end
+  })
 end)
 
 --- disables some of the builtin neovim plugins
@@ -202,9 +198,9 @@ M.term_smart_esc = U.Service():new(function()
       return false
     end
     if find_process(term_pid) then
-      return U.term_codes_esc(fallback_key)
+      return vim.api.nvim_replace_termcodes(fallback_key, true, true, true)
     else
-      return U.term_codes_esc [[<C-\><C-n>]]
+      return vim.api.nvim_replace_termcodes([[<C-\><C-n>]], true, true, true)
     end
   end
 end)
@@ -220,7 +216,7 @@ M.auto_install_ts_parser = U.Service():new(function()
       local parser_name = parsers.get_buf_lang()
 
       -- abort if parser is ensured
-      if U.has_value(Lang.ts_parsers_ensure_installed, parser_name) then return end
+      if vim.tbl_contains(Lang.ts_parsers_ensure_installed, parser_name) then return end
 
       if parsers.get_parser_configs()[parser_name] and not parsers.has_parser(parser_name) and not blacklist[parser_name] then
           local answer = U.confirm_yes_no('Install TS parser for '..parser_name..'?')

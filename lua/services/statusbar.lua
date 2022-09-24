@@ -186,8 +186,8 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
 
   M.components.rootinfo = U.Service():new(function(opts)
     return {
-      condition = function ()
-        return U.user():is_root()
+      condition = function()
+        return vim.env['USER'] == 'root'
       end,
       opts.left_pad,
       {

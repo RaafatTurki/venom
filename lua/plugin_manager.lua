@@ -64,8 +64,7 @@ end)
 --- checks if plugin is installed
 M.is_plugin_installed = U.Service():new(function(short_name)
   for _, path in pairs(M.install_paths) do
-    -- if vim.fn.isdirectory(path..'/'..short_name) == 0 then return true end
-    if U.is_file_exists(path..'/'..short_name) then
+    if vim.fn.isdirectory(path..'/'..short_name) == 1 then
       return true
     end
   end

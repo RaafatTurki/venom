@@ -6,7 +6,7 @@ M.setup = U.Service():provide(FT.SESSION, "setup"):require(FT.PLUGIN, "mini.nvim
   require 'mini.sessions'.setup {
     autoread = false,
     autowrite = true,
-    directory = os.getenv('XDG_DATA_HOME')..'/nvim_data/sessions',
+    directory = vim.env['XDG_DATA_HOME']..'/nvim_data/sessions',
     file = 'session.vim',
     force = { read = true, write = true, delete = true },
     verbose = { read = false, write = false, delete = false },
@@ -14,7 +14,7 @@ M.setup = U.Service():provide(FT.SESSION, "setup"):require(FT.PLUGIN, "mini.nvim
       post = {
         read = function()
           local json_file_path = M.get_persistent_data_file_path()
-          if (not U.is_file_exists(json_file_path)) then return end
+          if vim.fn.filereadable(vim.fs.normalize(json_file_path)) == 0 then return end
           venom.persistent = vim.json.decode(U.file_read(json_file_path))
         end,
         write = function()
@@ -32,7 +32,7 @@ M.setup = U.Service():provide(FT.SESSION, "setup"):require(FT.PLUGIN, "mini.nvim
 end)
 
 M.get_persistent_data_file_path = U.Service():require(FT.SESSION, "setup"):new(function()
-  local path_arr = U.cut(vim.v.this_session, '/')
+  local path_arr = vim.split(vim.v.this_session, '/')
   local session_name = table.remove(path_arr, #path_arr)
   
   MiniSessions = MiniSessions

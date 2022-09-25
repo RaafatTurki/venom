@@ -87,7 +87,7 @@ local plugins = {
   {'rebelot/heirline.nvim',                           requires = { p.devicons, p.gitsigns }},
 
   -- SESSIONS:
-  -- mini.sessions
+  {'stevearc/resession.nvim'},
 
   -- MULTI_PURPOSE:
   {p.mini},

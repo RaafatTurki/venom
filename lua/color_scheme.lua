@@ -155,92 +155,139 @@ local c = {
 
 M.highlights = {
 
-  -- TS
-  TSStrike            = { strikethrough = true },
-  TSStrong            = { bold = true },
-  TSTitle             = { bold = true },
-  TSURI               = { underline = true, fg = c.link },
-  TSTextReference     = { 'TSURI' },
-  TSUnderline         = { underline = true },
-  TSEmphasis          = { italic = true },
-  TSText              = { fg = c.fg },
+  -- TreeSitter
+  -- for more visit https://github.com/nvim-treesitter/nvim-treesitter/blob/master/CONTRIBUTING.md
 
-  TSComment           = { fg = c.comment },
-  TSWarning           = { fg = c.warn },
-  TSNote              = { fg = c.note },
-  TSTodo              = { fg = c.note },
-  TSError             = { fg = c.err },
-  TSDanger            = { bg = c.err, fg = c.bg },
-  TSDebug             = { fg = c.debug },
+  -- Misc
+  ['@comment']           = { fg = c.comment },
+  ['@error']             = { fg = c.err },
+  ['@none']              = { fg = c.include },
+  ['@preproc']           = { fg = c.include },
+  ['@define']            = { '@preproc' },
+  ['@operator']          = { fg = c.operator },
 
-  TSNumber            = { fg = c.value },
-  TSBoolean           = { 'TSNumber' },
-  TSFloat             = { 'TSNumber' },
+  -- Punctuation
+  ['@punctuation.bracket']    = { '@operator' },
+  ['@punctuation.delimiter']  = { '@operator' },
+  ['@punctuation.special']    = { '@operator' },
 
-  TSString            = { fg = c.string },
-  TSStringEscape      = { 'TSString' },
-  TSStringRegex       = { 'TSString' },
-  TSStringSpecial     = { 'TSString' },
-  TSCharacter         = { 'TSString' },
-  TSCharacterSpecial  = { 'TSString' },
-  TSLiteral           = { 'TSString' },
+  -- Literals
+  ['@string']             = { fg = c.string },
+  ['@string.regex']       = { '@string' },
+  ['@string.escape']      = { '@string' },
+  ['@string.special']     = { '@string' },
 
-  TSVariable          = { fg = c.variable },
-  TSVariableBuiltin   = { 'TSVariable' },
-  TSAttribute         = { 'TSVariable' },
-  TSField             = { 'TSVariable' },
-  TSProperty          = { 'TSVariable' },
-  TSTagAttribute      = { 'TSVariable' },
-  TSParameter         = { 'TSVariable' },
-  TSSymbol            = { 'TSVariable' },
+  ['character']           = { '@string' },
+  ['character.special']   = { '@string' },
 
-  TSConstant          = { fg = c.constant },
-  TSConstBuiltin      = { 'TSConstant' },
-  TSConstMacro        = { 'TSConstant' },
-  TSEnvironmentName   = { 'TSConstant' },
+  ['@number']             = { fg = c.value },
+  ['@boolean']            = { '@number' },
+  ['@float']              = { '@number' },
 
-  TSFunction          = { fg = c.func },
-  TSFuncBuiltin       = { 'TSFunction' },
-  TSFuncMacro         = { 'TSFunction' },
-  TSConstructor       = { 'TSFunction' },
-  TSMethod            = { 'TSFunction' },
-  TSEnvironment       = { 'TSFunction' },
+  -- Functions
+  ['@function']           = { fg = c.func },
+  ['@function.builtin']   = { '@function' },
+  ['@function.call']      = { '@function' },
+  ['@function.macro']     = { '@function' },
 
-  TSKeyword           = { fg = c.keyword },
-  TSKeywordFunction   = { 'TSKeyword' },
-  TSKeywordOperator   = { 'TSKeyword' },
-  TSKeywordReturn     = { 'TSKeyword' },
-  TSConditional       = { 'TSKeyword' },
-  TSRepeat            = { 'TSKeyword' },
-  TSTag               = { 'TSKeyword' },
-  TSPunctDelimiter    = { 'TSKeyword' },
-  TSLabel             = { 'TSKeyword' },
-  TSException         = { 'TSKeyword' },
-  TSMath              = { 'TSKeyword' },
+  ['@method']             = { '@function' },
+  ['@method.call']        = { '@function' },
 
-  TSPunctBracket      = { fg = c.operator },
-  TSTagDelimiter      = { 'TSPunctBracket' },
-  TSOperator          = { 'TSPunctBracket' },
-  TSPunctSpecial      = { 'TSPunctBracket' },
+  ['@constructor']        = { '@function' },
+  ['@parameter']          = { '@variable' },
 
-  TSInclude           = { fg = c.include },
-  TSPreProc           = { 'TSInclude' },
-  TSDefine            = { 'TSInclude' },
+  -- Keywords
+  ['@keyword']            = { fg = c.keyword },
+  ['@keyword.function']   = { '@keyword' },
+  ['@keyword.operator']   = { '@keyword' },
+  ['@keyword.return']     = { '@keyword' },
 
-  TSType              = { fg = c.type },
-  TSTypeBuiltin       = { 'TSType' },
-  TSTypeDefinition    = { 'TSType' },
-  TSTypeQualifier     = { 'TSType' },
-  TSStorageClass      = { 'TSType' },
-  TSNamespace         = { 'TSType' },
+  ['@conditional']        = { '@keyword' },
+  ['@repeat']             = { '@keyword' },
+  ['@debug']              = { fg = c.debug },
+  ['@label']              = { '@keyword' },
+  ['@include']            = { fg = c.include },
+  ['@exception']          = { '@keyword' },
 
-TSNone              = { 'Debug' },
-TSParameterReference= { 'Debug' },
+  -- Types
+  ['@type']               = { fg = c.type },
+  ['@type.builtin']       = { '@type' },
+  ['@type.definition']    = { '@type' },
+  ['@type.qualifier']     = { '@type' },
 
+  ['@storageclass']       = { '@type' },
+  ['@attribute']          = { '@variable' },
+  ['@field']              = { '@variable' },
+  ['@property']           = { '@variable' },
+
+  -- Identifiers
+  ['@variable']           = { fg = c.fg }, -- c.variable,
+  ['@variable.builtin']   = { '@variable' },
+
+  ['@constant']           = { fg = c.constant },
+  ['@constant.builtin']   = { '@constant' },
+  ['@constant.macro']     = { '@constant' },
+
+  ['@namespace']          = { '@type' },
+  ['@symbol']             = { '@variable' },
+
+  -- Text
+  ['@text']                   = { fg = c.fg },
+  ['@text.strong']            = { bold = true },
+  ['@text.emphasis']          = { italic = true },
+  ['@text.underline']         = { underline = true },
+  ['@text.strike']            = { strikethrough = true },
+  ['@text.title']             = { bold = true },
+  ['@text.literal']           = { '@string' },
+  ['@text.uri']               = { underline = true, fg = c.link },
+  ['@text.math']              = { '@keyword' },
+  ['@text.environment']       = { '@function' },
+  ['@text.environment.name']  = { '@constant' },
+  ['@text.reference']         = { '@text.uri' },
+
+  ['@text.todo']              = { fg = c.note },
+  ['@text.note']              = { fg = c.note },
+  ['@text.warning']           = { fg = c.warn },
+  ['@text.danger']            = { bg = c.err, fg = c.bg },
+
+  ['@text.diff.add']          = { fg = c.add },
+  ['@text.diff.delete']       = { fg = c.del },
+  
+  -- Tags
+  ['@tag']                = { '@keyword' },
+  ['@tag.attribute']      = { '@variable' },
+  ['@tag.delimiter']      = { '@variable' },
+
+  -- Conceal
+  -- ['@conceal']         = {},
+
+  -- Spell
+  -- ['@spell']           = {},
+
+  -- Non-standard (optional)
+  -- ['@variable.global'] = {}
+
+  -- Locals
+  -- ['@definition']
+  -- ['@definition.constant']
+  -- ['@definition.function']
+  -- ['@definition.method']
+  -- ['@definition.var']
+  -- ['@definition.parameter']
+  -- ['@definition.macro']
+  -- ['@definition.type']
+  -- ['@definition.field']
+  -- ['@definition.enum']
+  -- ['@definition.namespace']
+  -- ['@definition.import']
+  -- ['@definition.associated']
+  --
+  -- ['@scope']
+  -- ['@reference']
 
 
   ColorColumn	    = { 'CursorLine' },
-Conceal         = { 'Debug' },
+Conceal         = { '@debug' },
   CurSearch       = { bg = c.fg, fg = c.bg, bold = true },
   Cursor          = { bg = c.fg },
   CursorColumn    = { 'CursorLine' }, --
@@ -268,7 +315,7 @@ Conceal         = { 'Debug' },
   MoreMsg         = { fg = c.info },
   MsgArea         = { fg = c.match },
   MsgSeparator    = { bg = c.bg, fg = c.mg },
-NonText         = { 'Debug' },
+  NonText         = { fg = c.comment, bold = true },
   Normal          = { bg = c.bg },
   NormalFloat     = { }, --
   NormalNC        = { }, --
@@ -294,7 +341,7 @@ NonText         = { 'Debug' },
   TabLineSel      = { fg = c.fg, bold = true },
   TermCursor      = { underline = true },
   TermCursorNC    = { 'TermCursor' },
-  Title           = { 'TSTitle' },
+  Title           = { '@text.title' },
   Visual          = { bg = c.fold, bold = true },
   VisualNOS       = { }, --
   WarningMsg      = { fg = c.warn },
@@ -306,18 +353,16 @@ Whitespace      = { 'Debug' },
 
   -- DEPRECATED
   VertSplit       = { 'WinSeparator' },
-  FloatTitle      = { 'TSTitle' };
+  FloatTitle      = { '@text.title' };
 
 
-  
   -- LSP
   LspReferenceText            = { bold = true };
   LspReferenceRead            = { bold = true };
   LspReferenceWrite           = { bold = true };
-LspCodeLens                 = { 'Debug' },
-LspCodeLensSeparator        = { 'Debug' },
+LspCodeLens                 = { '@debug' },
+LspCodeLensSeparator        = { '@debug' },
   LspSignatureActiveParameter = { underline = true, bold = true },
-
 
 
   -- Diagnostics
@@ -343,53 +388,51 @@ LspCodeLensSeparator        = { 'Debug' },
   DiagnosticSignHint          = { 'DiagnosticHint' },
 
 
-
   -- Vim
-  Comment                 = { 'TSComment' },
-  Constant                = { 'TSConstant' },
-  String                  = { 'TSString' },
-  Character               = { 'TSCharacter' },
-  Number                  = { 'TSNumber' },
-  Boolean                 = { 'TSBoolean' },
-  Float                   = { 'TSFloat' },
-  Identifier              = { 'TSVariable' },
-  Function                = { 'TSFunction' },
-  Statement               = { 'TSKeyword' },
-  Keyword                 = { 'TSKeyword' },
-  Conditional             = { 'TSConditional' },
-  Repeat                  = { 'TSRepeat' },
-  Label                   = { 'TSLabel' },
-  Operator                = { 'TSOperator' },
-  Exception               = { 'TSException' }, --
-  Include                 = { 'TSInclude' },
-  PreProc                 = { 'TSPreProc' },
-  Macro                   = { 'TSPreProc' }, --
-  PreCondit               = { 'TSPreProc' },
-  Define                  = { 'TSDefine' },
-  Type                    = { 'TSType' },
-  StorageClass            = { 'TSStorageClass' },
-  Structure               = { 'TSTypeBuiltin' }, --
-  Typedef                 = { 'TSTypeDefinition' },
-  Special                 = { 'TSStringSpecial' },
-  SpecialChar             = { 'TSCharacterSpecial' },
-  Tag                     = { 'TSTag' },
-  Delimiter               = { 'TSPunctDelimiter' },
-  SpecialComment          = { 'TSNote' },
-  Debug                   = { 'TSDebug' },
-  Underlined              = { 'TSUnderline' },
-  Error                   = { 'TSError' },
+  -- those are no longer used for syntax highlighting, they server as fallbacks for plugins
+  Comment                 = { '@comment' },
+  Constant                = { '@constant' },
+  String                  = { '@string' },
+  Character               = { '@character' },
+  Number                  = { '@number' },
+  Boolean                 = { '@boolean' },
+  Float                   = { '@float' },
+  Identifier              = { '@variable' },
+  Function                = { '@function' },
+  Statement               = { '@keyword' },
+  Keyword                 = { '@keyword' },
+  Conditional             = { '@conditional' },
+  Repeat                  = { '@repeat' },
+  Label                   = { '@label' },
+  Operator                = { '@operator' },
+  Exception               = { '@exception' },
+  Include                 = { '@include' },
+  PreProc                 = { '@preProc' },
+  Macro                   = { '@preProc' },
+  PreCondit               = { '@preProc' },
+  Define                  = { '@define' },
+  Type                    = { '@type' },
+  StorageClass            = { '@storageclass' },
+  Structure               = { '@type.builtin' },
+  Typedef                 = { '@type.definition' },
+  Special                 = { '@string.special' },
+  SpecialChar             = { '@character.special' },
+  Tag                     = { '@tag' },
+  Delimiter               = { '@punctuation.delimiter' },
+  SpecialComment          = { '@text.note' },
+  Debug                   = { '@debug' },
+  Underlined              = { '@underline' },
+  Error                   = { '@error' },
   Ignore                  = { fg = c.bg };
-  Todo                    = { 'TSTodo' },
-
+  Todo                    = { '@text.todo' },
 
 
   -- TS Filetype Specific
   healthSuccess           = { fg = c.add, bold = true };
   healthWarning           = { fg = c.warn, bold = true };
   healthError             = { fg = c.err, bold = true };
-  healthHelp              = { 'TSTextReference' };
-healthBar               = { 'Debug' };
- 
+  healthHelp              = { '@text.reference' };
+healthBar               = { '@debug' };
 
 
   -- Plugins
@@ -516,11 +559,11 @@ healthBar               = { 'Debug' };
   NeoTreeStatusLineNC         = {}; --
   NeoTreeVertSplit            = {}; --
   NeoTreeWinSeparator         = {}; --
-NeoTreeEndOfBuffer          = { 'Debug' };
+NeoTreeEndOfBuffer          = { '@debug' };
   NeoTreeRootName             = { 'Title' };
-NeoTreeSymbolicLinkTarget   = { 'Debug' };
-NeoTreeTitleBar             = { 'Debug' };
-NeoTreeWindowsHidden        = { 'Debug' };
+NeoTreeSymbolicLinkTarget   = { '@debug' };
+NeoTreeTitleBar             = { '@debug' };
+NeoTreeWindowsHidden        = { '@debug' };
   NeoTreeTabActive            = { 'Normal' };
   NeoTreeTabInactive          = { 'Comment' };
   NeoTreeTabSeparatorActive   = { 'Ignore' };
@@ -661,5 +704,26 @@ NeoTreeWindowsHidden        = { 'Debug' };
   ModeSelect              = { fg = c.add, bold = true };
   ModeTerminal            = { fg = c.type, bold = true };
 }
+
+-- vim.cmd [[
+--   augroup misc_highlighs
+--   au!
+--
+--   autocmd BufEnter log,*.log call SetLogHighlights()
+--   function SetLogHighlights()
+--     syn region logHead start=/^\[/ end=/\]/ contains=logInfo,logWarn,logError
+--
+--     syn keyword logInfo INFO
+--     syn keyword logWarn WARN START
+--     syn keyword logError ERROR
+--
+--     hi link logInfo DiagnosticInfo
+--     hi link logWarn DiagnosticWarn
+--     hi link logError DiagnosticError
+--
+--     hi link logHead Comment
+--   endfunction
+--   augroup misc_highlighs
+-- ]]
 
 return M

@@ -1,5 +1,8 @@
 --- defines various miscellanous features.
 -- @module misc
+log = require 'logger'.log
+U = require 'utils'
+
 local M = {}
 
 -- TODO: add required and provided features
@@ -9,8 +12,13 @@ M.base = U.Service():new(function()
   --- commands
   -- write as sudo
   vim.cmd [[cnoreabbrev w!! w !sudo tee > /dev/null %]]
-  -- new tab help page
-  vim.cmd [[cnoreabbrev h tab help]]
+  -- vert split help page
+  -- vim.cmd [[cnoreabbrev h vert help]]
+  -- vim.cmd [[autocmd FileType help wincmd L]]
+
+  -- new tab Man page
+  -- vim.cmd [[cnoreabbrev m tab Man]]
+
   -- log
   vim.cmd [[cnoreabbrev l lua log]]
 
@@ -35,17 +43,19 @@ M.base = U.Service():new(function()
     au BufEnter tsconfig.json setlocal ft=jsonc
     au BufEnter mimeapps.list setlocal ft=dosini
     au BufEnter PKGBUILD.* setlocal ft=PKGBUILD
-    au BufEnter README setlocal ft=markdown
+    " au BufEnter README setlocal ft=markdown
     au BufEnter nanorc setlocal ft=nanorc
     au BufEnter pythonrc setlocal ft=python
     au BufEnter sxhkdrc,*.sxhkdrc set ft=sxhkdrc
+    au BufEnter .classpath setlocal ft=xml
+    au BufEnter .env* setlocal ft=sh
     au BufEnter package.json setlocal nofoldenable
     au BufEnter tsconfig.json setlocal nofoldenable
 
     " file type
     au FileType lspinfo setlocal nofoldenable
-    au FileType packer setlocal nocursorline
     au FileType alpha setlocal cursorline
+    au FileType lazy setlocal cursorline
 
     " comment strings
     au FileType sshdconfig setlocal commentstring=#%s
@@ -66,7 +76,6 @@ M.base = U.Service():new(function()
 
     augroup base
     ]]
-
 end)
 
 --- shows diagnostics on cursor hold
@@ -231,13 +240,13 @@ end)
 
 --- camel!
 M.camel = U.Service():new(function()
-  CamelsList = {}
+  local camels = {}
   local conf = { character="", winblend=100, speed=1, width=2 }
 
   local waddle = function(camel)
     local timer = vim.loop.new_timer()
     local new_camel = { name = camel, timer = timer }
-    table.insert(CamelsList, new_camel)
+    table.insert(camels, new_camel)
 
     local speed = math.abs(100 - (conf.speed or 1))
     vim.loop.timer_start(timer, 1000, speed , vim.schedule_wrap(function()
@@ -261,9 +270,9 @@ M.camel = U.Service():new(function()
     end))
   end
 
-  CamelPut = function(character)
+  local function spawn(char)
     local buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_lines(buf , 0, 1, true , {character or conf.character})
+    vim.api.nvim_buf_set_lines(buf , 0, 1, true , {char or conf.character})
 
     local camel = vim.api.nvim_open_win(buf, false, {
       relative='cursor', style='minimal', row=1, col=1, width=conf.width or 2, height=1
@@ -274,15 +283,21 @@ M.camel = U.Service():new(function()
     waddle(camel)
   end
 
-  CamelKill = function()
-    local last_camel = CamelsList[#CamelsList]
+  local function kill_all()
+    local last_camel = camels[#camels]
     local camel = last_camel['name']
     local timer = last_camel['timer']
-    table.remove(CamelsList, #CamelsList)
+    table.remove(camels, #camels)
     timer:stop()
     timer:close()
     vim.api.nvim_win_close(camel, true)
   end
+
+  function CamelSpawn() spawn() end
+  function CamelKill() kill_all() end
+
+  vim.api.nvim_create_user_command('CamelSpawn', CamelSpawn, {})
+  vim.api.nvim_create_user_command('CamelKill', CamelKill, {})
 end)
 
 --- buffer edits (remove trailing spaces, EOLs)
@@ -383,18 +398,6 @@ endfunction
 ]]
 end)
 
---- LSPInfo window border fix
-M.lspinfo_win_fix = U.Service():new(function()
-  local lspconfig_window = require 'lspconfig.ui.windows'
-  local old_defaults = lspconfig_window.default_opts
-
-  function lspconfig_window.default_opts(opts)
-    local win_opts = old_defaults(opts)
-    win_opts.border = 'single'
-    return win_opts
-  end
-end)
-
 --- automatically create missing directories in the file path
 M.auto_create_dir = U.Service():new(function()
   vim.api.nvim_create_autocmd('BufWritePre', {
@@ -436,10 +439,10 @@ end)
 -- TODO: add :require(FT.PLUGIN, 'plenary.nvim')
 M.auto_gitignore_io = U.Service():new(function()
   local curl = require 'plenary.curl'
-  local is_in_progress = false
+  -- local is_in_progress = false
 
   function GitIgnoreFill()
-    is_in_progress = true
+    -- is_in_progress = true
     local res_list = curl.get("https://www.toptal.com/developers/gitignore/api/list", {})
 
     if res_list.status == 200 then
@@ -447,59 +450,130 @@ M.auto_gitignore_io = U.Service():new(function()
       available_gitignores = U.join(available_gitignores, ',')
       available_gitignores = vim.split(available_gitignores, ',')
 
-      vim.ui.select(available_gitignores, { prompt = 'select a gitignore template' }, function(template_name)
+      vim.ui.select(available_gitignores, { prompt = 'Select a gitignore template' }, function(template_name)
         local res_template = curl.get("https://www.toptal.com/developers/gitignore/api/" .. template_name, {})
         if res_template.status == 200 then
           local pos = vim.api.nvim_win_get_cursor(0)
           vim.api.nvim_buf_set_lines(0, pos[1]-1, pos[1], false, vim.split(res_template.body, '\n'))
         end
-        is_in_progress = false
       end)
     end
+    -- is_in_progress = false
   end
 
   vim.api.nvim_create_user_command('GitIgnoreFill', GitIgnoreFill, {})
 
-  vim.api.nvim_create_autocmd('BufEnter', {
-    pattern = {'.gitignore'},
-    group = vim.api.nvim_create_augroup('gitignore_io', { clear = true }),
-    callback = function(ctx)
-      if is_in_progress then return end
-      local line_count = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-      if line_count == 1 then
-        local answer = U.confirm_yes_no('Fill with a gitignore.io template?')
-        if answer then
-          GitIgnoreFill()
-        end
-      end
-    end
-  })
+  -- vim.api.nvim_create_autocmd('BufEnter', {
+  --   pattern = {'.gitignore'},
+  --   group = vim.api.nvim_create_augroup('gitignore_io', { clear = true }),
+  --   callback = function(ctx)
+  --     if is_in_progress then return end
+  --     local line_count = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  --
+  --     if line_count == 1 then
+  --       local answer = U.confirm_yes_no('Fill with a gitignore.io template?')
+  --       if answer then
+  --         GitIgnoreFill()
+  --       end
+  --     end
+  --   end
+  -- })
 end)
 
 --- (Linux) makes neovim support hex editing
--- function M.binary_editor()
---   -- this is achievable through a piece of software that resides within vim called xxd, one must either:
---   -- install vim
---   -- install xxd-standalone (aur)
---   -- sit back and let the scripts system do the work
+M.hex_editor = U.Service():new(function()
+  local xxd_dump_cmd = 'xxd -g 1 -u'
 
---   -- install xxd if it doesn't exist
---   if (not IsBinInstalled('xxd')) then ScriptLaunchInstaller('install_xxd.sh') end
+  local function is_binary_file()
+    local filename = vim.fn.expand('%:t')
+    -- local basename = string.match(filename, "^[a-z]*$")
+    local binary_ext = { 'png', 'jpg', 'jpeg', 'out' }
+    local ext = string.match(filename, "%.([^%.]+)$")
 
---   -- file extensions to treat as binaries
---   local ft = '*.bin,*.out'
+    if ext == nil and not string.match(filename, '%u') then return true end
+    if vim.tbl_contains(binary_ext, ext) then return true end
 
---   augroup([[
---     au BufReadPre  ]]..ft..[[ let &bin=1
---     au BufReadPost ]]..ft..[[ if &bin | %!xxd
---     au BufReadPost ]]..ft..[[ set ft=xxd | endif
---     au BufWritePre ]]..ft..[[ if &bin | %!xxd -r
---     au BufWritePre ]]..ft..[[ endif
---     au BufWritePost ]]..ft..[[ if &bin | %!xxd
---     au BufWritePost ]]..ft..[[ set nomod | endif
---   ]], 'binary_edit')
--- end
+    return false
+  end
+
+  local function drop_undo_history()
+    local undolevels = vim.o.undolevels
+    vim.o.undolevels = -1
+    vim.cmd [[exe "normal a \<BS>\<Esc>"]]
+    vim.o.undolevels = undolevels
+  end
+
+  local function convert_to_hex()
+    vim.cmd([[%! ]]..xxd_dump_cmd)
+    vim.b.hex_ft = vim.bo.ft
+    vim.bo.ft = 'xxd'
+    drop_undo_history()
+    vim.cmd [[LspStop]]
+    vim.bo.mod = false
+  end
+
+  local function assemble_from_hex()
+    vim.cmd [[%! xxd -r]]
+    vim.bo.ft = vim.b.hex_ft
+    drop_undo_history()
+    vim.bo.mod = false
+  end
+
+  local function begin_patch_from_hex()
+    vim.b.hex_cur_pos = vim.fn.getcurpos()
+    vim.cmd [[%! xxd -r]]
+  end
+
+  local function finish_patch_from_hex()
+    vim.cmd([[%! ]]..xxd_dump_cmd)
+    vim.fn.setpos('.', vim.b.hex_cur_pos)
+    vim.bo.mod = true
+  end
+
+
+
+  local function buf_read_pre()
+    if is_binary_file() then 
+      vim.bo.bin = true
+    end
+  end
+
+  local function buf_read_post()
+    if vim.bo.bin then
+      convert_to_hex()
+    end
+  end
+
+  local function buf_write_pre()
+    if vim.bo.bin then
+      begin_patch_from_hex()
+    end
+  end
+
+  local function buf_write_post()
+    if vim.bo.bin then
+      finish_patch_from_hex()
+    end
+  end
+
+  local function toggle_hex()
+    if not vim.bo.bin then
+      vim.bo.bin = true
+      convert_to_hex()
+    else
+      assemble_from_hex()
+      vim.bo.bin = false
+    end
+  end
+
+  local augroup_hex_editor = vim.api.nvim_create_augroup('hex_editor', { clear = true })
+  vim.api.nvim_create_autocmd({'BufReadPre'},   { group = augroup_hex_editor, callback = buf_read_pre })
+  vim.api.nvim_create_autocmd({'BufReadPost'},  { group = augroup_hex_editor, callback = buf_read_post })
+  vim.api.nvim_create_autocmd({'BufWritePre'},  { group = augroup_hex_editor, callback = buf_write_pre })
+  vim.api.nvim_create_autocmd({'BufWritePost'}, { group = augroup_hex_editor, callback = buf_write_post })
+
+  vim.api.nvim_create_user_command('Hex', toggle_hex, {})
+end)
 
 --- (Linux x86_64) sets up tectonic for latex compiling
 -- function M.latex_tectonic()

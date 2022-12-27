@@ -1,10 +1,31 @@
 --- defines plugins configurations.
 -- @module plugins
+log = require 'logger'.log
+U = require 'utils'
+
 local M = {}
 
 M.impatient = U.Service():require(FT.PLUGIN, "impatient.nvim"):new(function()
   require 'impatient'
   require 'impatient'.enable_profile()
+end)
+
+M.illuminate = U.Service():require(FT.PLUGIN, 'vim-illuminate'):new(function()
+  -- default configuration
+  require('illuminate').configure {
+    filetypes_denylist = {
+      'dirvish',
+      'fugitive',
+      'NvimTree',
+      'mason',
+    },
+    modes_allowlist = { 'n' },
+    -- large_file_cutoff = 3000,
+    -- large_file_overrides = {
+    --   'treesitter',
+    --   under_cursor = true,
+    -- },
+  }
 end)
 
 M.devicons = U.Service():require(FT.PLUGIN, "nvim-web-devicons"):new(function()
@@ -24,22 +45,53 @@ M.dressing = U.Service():require(FT.PLUGIN, "dressing.nvim"):new(function()
   require 'dressing'.setup {
     input = {
       border = 'single',
-      winblend = 0,
+      win_options = {
+        winblend = 0,
+      },
       override = function(conf)
         conf.col = -1
         return conf
       end,
     },
     select = {
-      backend = { 'builtin' },
+      backend = { 'telescope' },
 
       builtin = {
         border = 'single',
-        winblend = 0,
-        winhighlight = "CursorLine:CursorLineSelect",
+        win_options = {
+          winblend = 0,
+          winhighlight = "CursorLine:Normal",
+        },
       }
     }
   }
+end)
+
+M.telescope = U.Service():require(FT.PLUGIN, 'telescope.nvim'):require(FT.PLUGIN, 'telescope-fzf-native.nvim'):new(function()
+  require('telescope').setup {
+    extensions = {
+      fzf = {
+        fuzzy = true, -- false will only do exact matching
+        override_generic_sorter = true, -- override the generic sorter
+        override_file_sorter = true, -- override the file sorter
+        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+        -- the default case_mode is "smart_case"
+      }
+    },
+    defaults = {
+      mappings = {
+        i = {
+          -- NOTE: fixes the folds not applying issue
+          ["<CR>"] = function()
+            vim.cmd [[:stopinsert]]
+            vim.cmd [[call feedkeys("\<CR>")]]
+          end
+        }
+      }
+    }
+  }
+
+  require('telescope').load_extension('fzf')
 end)
 
 M.notify = U.Service():require(FT.PLUGIN, "nvim-notify"):new(function()
@@ -49,7 +101,6 @@ M.notify = U.Service():require(FT.PLUGIN, "nvim-notify"):new(function()
     timeout = 1000,
     render = 'minimal',
     -- stages = 'static',
-    stages = require 'extras.notify_stages',
   }
 
   vim.notify = notify
@@ -60,7 +111,7 @@ M.bqf = U.Service():require(FT.PLUGIN, 'nvim-bqf'):new(function()
     -- magic_window = false,
     -- auto_resize_height = true,
     preview = {
-      border_chars = {'│', '│', '─', '─', '┌', '┐', '└', '┘', '█'},
+      border_chars = { '│', '│', '─', '─', '┌', '┐', '└', '┘', '█' },
       -- win_height = 15,
 
       -- win_vheight = {
@@ -86,14 +137,19 @@ M.reach = U.Service():require(FT.PLUGIN, 'reach.nvim'):new(function()
   }
 end)
 
+M.grapple = U.Service():require(FT.PLUGIN, 'grapple.nvim'):new(function()
+  require 'grapple'.setup {
+  }
+end)
+
 M.gitsigns = U.Service():require(FT.PLUGIN, "gitsigns.nvim"):new(function()
   require 'gitsigns'.setup {
     signs = {
-      add             = {text = '│'},
-      change          = {text = '│'},
-      delete          = {text = '_'},
-      topdelete       = {text = '‾'},
-      changedelete    = {text = '~'},
+      add          = { text = '│' },
+      change       = { text = '│' },
+      delete       = { text = '_' },
+      topdelete    = { text = '‾' },
+      changedelete = { text = '~' },
     },
     keymaps = {},
     sign_priority = 9, -- because nvim diagnostic signs are 10
@@ -105,22 +161,21 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   local ls = require 'luasnip'
   local ls_types = require 'luasnip.util.types'
 
-  require'luasnip'.config.setup({
+  require 'luasnip'.config.setup({
     ext_opts = {
       [ls_types.choiceNode] = {
-        active = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetChoiceIndicator'}} },
-        passive = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetPassiveIndicator'}} }
+        active = { virt_text = { { venom.icons.item_kinds.Snippet, 'SnippetChoiceIndicator' } } },
+        passive = { virt_text = { { venom.icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
       },
       [ls_types.insertNode] = {
-        active = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetInsertIndicator'}} },
-        passive = { virt_text = {{venom.icons.item_kinds.cozette.Snippet, 'SnippetPassiveIndicator'}} }
+        active = { virt_text = { { venom.icons.item_kinds.Snippet, 'SnippetInsertIndicator' } } },
+        passive = { virt_text = { { venom.icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
       }
     },
   })
 
-  -- TODO: lazy load vscode format snippets (lang.lua)
-  ls.add_snippets(nil, require 'extras.lua_snips')
-
+  -- require("luasnip.loaders.from_snipmate").lazy_load({paths = "~/.config/nvim/snips"})
+  require("luasnip.loaders.from_snipmate").load()
 
   local cmp = require 'cmp'
 
@@ -140,11 +195,13 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
     -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
     snippet = { expand = function(args) ls.lsp_expand(args.body) end },
 
-    mapping = {
+    mapping = cmp.mapping.preset.insert({
       -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
+      -- ["<Tab>"]   = function(fb) tab(fb) end,
+      -- ["<S-Tab>"] = function(fb) s_tab(fb) end,
+
       ["<Tab>"]     = cmp.mapping({
         i = function(fb) tab(fb) end,
-        s = function(fb) tab(fb) end,
         c = function(fb)
           if cmp.visible() then cmp.select_next_item()
           else cmp.complete() end
@@ -154,7 +211,6 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       }),
       ["<S-Tab>"]     = cmp.mapping({
         i = function(fb) s_tab(fb) end,
-        s = function(fb) s_tab(fb) end,
         c = function(fb)
           if cmp.visible() then cmp.select_prev_item()
           else cmp.complete() end
@@ -163,28 +219,21 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
         end
       }),
 
-      ['<C-n>']       = cmp.mapping.select_next_item(),
-      ['<C-p>']       = cmp.mapping.select_prev_item(),
-      ['<C-Down>']      = cmp.mapping.select_next_item(),
-      ['<C-Up>']        = cmp.mapping.select_prev_item(),
-      ['<S-j>']       = cmp.mapping.scroll_docs(4),
-      ['<S-k>']       = cmp.mapping.scroll_docs(-4),
-      ['<C-Space>']   = cmp.mapping.complete(),
-      ['<C-e>']       = cmp.mapping.abort(),
-      ['<Esc>']       = cmp.mapping.close(),
-      ['<CR>']        = cmp.mapping.confirm({
-        select = false,
-        behavior = cmp.ConfirmBehavior.Replace,
-      }),
-    },
+      ['<PageDown>'] = cmp.mapping.scroll_docs(4),
+      ['<PageUp>']   = cmp.mapping.scroll_docs(-4),
+      ['<C-Space>']  = cmp.mapping.complete(),
+      ['<C-e>']      = cmp.mapping.abort(),
+      ['<Esc>']      = cmp.mapping.close(),
+      ['<CR>']       = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace }),
+    }),
     sources = {
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
-      { name = 'nvim_lua' },
-      { name = 'rg' },
-      { name = 'omni' },
-      { name = 'path' },
+      -- { name = 'nvim_lua' },
       { name = 'buffer' },
+      -- { name = 'rg', option = { additional_arguments = '--smart-case --hidden', }},
+      { name = 'path' },
+      -- { name = 'omni' },
       -- { name = 'spell' },
       -- { name = 'nvim_lsp_signature_help' },
       -- { name = 'digraphs' },
@@ -192,17 +241,16 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
     formatting = {
       fields = { "kind", "abbr", "menu" },
       format = function(entry, vim_item)
-        if entry.source.name == 'omni' then
-          if entry.completion_item.documentation == nil then
-            entry.completion_item.documentation = vim_item.menu
-            vim_item.menu = nil
-          end
-          vim_item.kind = 'Ω'
-          vim_item.kind_hl_group = 'CmpItemKindProperty'
-        else
-          vim_item.kind = venom.icons.item_kinds.cozette[vim_item.kind] or ''
-        end
-
+        -- if entry.source.name == 'omni' then
+        --   if entry.completion_item.documentation == nil then
+        --     entry.completion_item.documentation = vim_item.menu
+        --     vim_item.menu = nil
+        --   end
+        --   vim_item.kind = 'Ω'
+        --   vim_item.kind_hl_group = 'CmpItemKindProperty'
+        -- else
+        vim_item.kind = venom.icons.item_kinds[vim_item.kind] or ''
+        -- end
         return vim_item
       end
     },
@@ -210,7 +258,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       -- completion = cmp.config.window.bordered(),
       completion = {
         border = 'single',
-        winhighlight = 'CursorLine:CursorLineSelect',
+        winhighlight = 'CursorLine:Normal',
       },
       documentation = {
         border = 'single',
@@ -228,19 +276,14 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
         end
         return new_trigger_chars
       end
+    },
+    experimental = {
+      ghost_text = { hl_group = 'LspCodeLens' },
     }
-    -- sorting = {
-    --   priority_weight = 0,
-    -- },
-    -- view = {
-    --   entries = 'native',
-    -- },
-    -- experimental = {
-    --   ghost_text = false,
-    -- }
   }
 
-  cmp.setup.cmdline('/', {
+  cmp.setup.cmdline({ '/', '?' }, {
+    -- mapping = cmp.mapping.preset.cmdline(),
     sources = {
       { name = 'buffer' },
       -- { name = 'nvim_lsp_document_symbol' },
@@ -248,6 +291,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   })
 
   cmp.setup.cmdline(':', {
+    -- mapping = cmp.mapping.preset.cmdline(),
     sources = {
       { name = 'path' },
       { name = 'cmdline' },
@@ -259,26 +303,24 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
   vim.g.nvim_tree_allow_resize = 1
 
   local nvimtree_keybindings = {
-    { key = "<C-Up>",     action = 'first_sibling' },
-    { key = "<C-Down>",   action = 'last_sibling' },
-    { key = "d",          action = 'trash' },
-    { key = "D",          action = 'remove' },
-    { key = "t",          action = 'tabnew' },
-    { key = "h",          action = 'toggle_help' },
-    { key = "<space>",    action = 'cd' },
-    { key = "<BS>",       action = 'dir_up' },
+    { key = "<C-Up>", action = 'first_sibling' },
+    { key = "<C-Down>", action = 'last_sibling' },
+    { key = "d", action = 'trash' },
+    { key = "D", action = 'remove' },
+    { key = "t", action = 'tabnew' },
+    { key = "?", action = 'toggle_help' },
+    { key = "<space>", action = 'cd' },
+    { key = "<BS>", action = 'dir_up' },
 
-    { key = "<C-e>",      action = '' },
-    { key = "g?",         action = '' },
+    { key = "<C-e>", action = '' },
+    { key = "g?", action = '' },
   }
-
-  local NVIMTREE_LSP_DIAG_ICONS = venom.icons.diagnostic_states.cozette
 
   require 'nvim-tree'.setup {
     hijack_cursor       = true,
     open_on_tab         = true,
     update_cwd          = true,
-    view = {
+    view                = {
       adaptive_size = true,
       hide_root_folder = true,
       centralize_selection = true,
@@ -287,7 +329,8 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
         list = nvimtree_keybindings
       }
     },
-    renderer = {
+    renderer            = {
+      group_empty = true,
       indent_markers = {
         enable = true,
         icons = {
@@ -325,31 +368,32 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
             ignored = "i",
           },
         }
-      }
+      },
+      symlink_destination = false,
     },
     update_focused_file = {
       enable      = true,
       update_cwd  = false,
       ignore_list = {}
     },
-    ignore_ft_on_setup = { 'startify', 'dashboard' },
-    diagnostics = {
+    ignore_ft_on_setup  = { 'startify', 'dashboard' },
+    diagnostics         = {
       enable = true,
       icons = {
-        hint    = NVIMTREE_LSP_DIAG_ICONS.Hint,
-        info    = NVIMTREE_LSP_DIAG_ICONS.Info,
-        warning = NVIMTREE_LSP_DIAG_ICONS.Warn,
-        error   = NVIMTREE_LSP_DIAG_ICONS.Error,
+        hint    = venom.icons.diagnostic_states.Hint,
+        info    = venom.icons.diagnostic_states.Info,
+        warning = venom.icons.diagnostic_states.Warn,
+        error   = venom.icons.diagnostic_states.Error,
       },
     },
-    filters = {
+    filters             = {
       dotfiles = false,
-      custom = {'node_modules', '.cache', '*.import', '__pycache__', 'pnpm-lock.yaml', 'package-lock.json'}
+      custom = { 'node_modules', '.cache', '*.import', '__pycache__', 'pnpm-lock.yaml', 'package-lock.json' }
     },
-    git = {
+    git                 = {
       ignore = true
     },
-    actions = {
+    actions             = {
       change_dir = {
         enable = true,
         global = true,
@@ -369,7 +413,7 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
 end)
 
 M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
-  require'window-picker'.setup {
+  require 'window-picker'.setup {
     autoselect_one = true,
     include_current = false,
     filter_rules = {
@@ -418,8 +462,8 @@ M.neo_tree = U.Service():require(FT.PLUGIN, "neo-tree.nvim"):new(function()
           ["w"] = "open_with_window_picker",
           ["C"] = "close_node",
           ["z"] = "close_all_nodes",
-      -- ["Z"] = "expand_all_nodes",
-          ["a"] = { 
+          -- ["Z"] = "expand_all_nodes",
+          ["a"] = {
             "add",
             -- some commands may take optional config options, see `:h neo-tree-mappings` for details
             config = {
@@ -501,7 +545,7 @@ M.bufferline = U.Service():require(FT.PLUGIN, 'bufferline.nvim'):new(function()
       show_buffer_close_icons = false,
       show_close_icon = false,
       always_show_bufferline = false,
-      separator_style = {'', ''},
+      separator_style = { '', '' },
       -- enforce_regular_tabs = true,
       offsets = {
         { filetype = "NvimTree" },
@@ -522,17 +566,13 @@ M.toggle_term = U.Service():require(FT.PLUGIN, "nvim-toggleterm.lua"):new(functi
         return vim.o.columns * 0.5
       end
     end,
-    winbar = {
-      enabled = true,
-      -- name_formatter = function(term)
-      --   -- log(term)
-      --   return term.name
-      -- end
-    },
-    -- on_close = fun(t: Terminal), -- function to run when the terminal closes
-    -- on_stdout = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stdout
-    -- on_stderr = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stderr
-    -- on_exit = fun(t: Terminal, job: number, exit_code: number, name: string) -- function to run when terminal process exits
+    -- winbar = {
+    --   enabled = true,
+    --   -- name_formatter = function(term)
+    --   --   -- log(term)
+    --   --   return term.name
+    --   -- end
+    -- }
   }
 end)
 
@@ -547,33 +587,97 @@ end)
 M.mini_starter = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   local starter = require 'mini.starter'
 
-  local header_art = [[
-┬  ┬┬─╮╭╮╭╭─╮╭┬╮
-╰┐┌╯├┤ ││││ ││││
- ╰╯ ╰─╯╯╰╯╰─╯┴ ┴
-]]
---   local header_art = [[
--- ╭╮╭┬─╮╭─╮┬  ┬┬╭┬╮
--- │││├┤ │ │╰┐┌╯││││
--- ╯╰╯╰─╯╰─╯ ╰╯ ┴┴ ┴
--- ]]
+  local new_item = function(section, key, title, action)
+    return {
+      action  = action,
+      section = section,
+      name    = string.format('%s  %s', key, title)
+    }
+  end
+
+  items = {
+    new_item('Common', 'a', 'New file', vim.cmd.enew),
+    new_item('Common', 'q', 'Quit', vim.cmd.qall),
+
+    new_item('Update', 'p', 'Update plugins', function() PluginManager.sync() end),
+    new_item('Update', 'l', 'Update tools', 'Mason'),
+
+    new_item('Browse', 'e', 'Explorer', 'NvimTreeOpen'),
+    new_item('Browse', 'f', 'Find', 'Telescope live_grep'),
+    new_item('Browse', 'r', 'Recent', 'Telescope oldfiles'),
+  }
+
+  if venom.features:has(FT.SESSION, 'setup') then
+    -- last session
+    table.insert(items, new_item('Session', 'x', 'Last session', function() Sessions.load_last() end))
+    -- all other sessions
+    for i, session_name in pairs(Sessions.get_all()) do
+      if session_name ~= Sessions.last_session_name then
+        table.insert(items, new_item('Session', 's' .. i, session_name, function()
+          Sessions.load(session_name)
+        end))
+      end
+    end
+  end
 
   starter.setup {
     autoopen = true,
     evaluate_single = true,
-    header = header_art,
-    footer = "",
-    -- content_hooks = nil,
+    header = table.concat({
+      '              Neovim',
+      '───────────────────────────────────'
+    }, '\n'),
+    footer = table.concat({
+      '───────────────────────────────────'
+    }, '\n'),
     content_hooks = {
-      starter.gen_hook.adding_bullet(),
+      starter.gen_hook.adding_bullet('', false),
       starter.gen_hook.aligning('center', 'center'),
     },
     query_updaters = [[abcdefghijklmnopqrstuvwxyz0123456789_-.]],
+    items = items,
   }
 end)
 
 M.mini_surround = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   require 'mini.surround'.setup()
+end)
+
+M.mini_map = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
+  local map = require('mini.map')
+
+  require 'mini.map'.setup {
+    window = {
+      width = 1,
+      winblend = 0,
+      show_integration_count = false,
+    }
+  }
+
+  -- open on vim enter
+  vim.api.nvim_create_autocmd('VimEnter', {
+    callback = function(ctx)
+      map.open()
+    end
+  })
+
+  -- refresh on window resize
+  vim.api.nvim_create_autocmd('VimResized', {
+    callback = function(ctx)
+      map.refresh()
+    end
+  })
+
+  -- refresh on folding/unfolding
+  venom.events.folding:sub(map.refresh)
+end)
+
+M.mini_bufremove = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
+  require 'mini.bufremove'.setup()
+end)
+
+M.mini_pairs = U.Service():require(FT.PLUGIN, 'mini.nvim'):new(function()
+  require 'mini.pairs'.setup {}
 end)
 
 M.corn = U.Service():require(FT.PLUGIN, "corn.nvim"):new(function()
@@ -583,17 +687,17 @@ M.corn = U.Service():require(FT.PLUGIN, "corn.nvim"):new(function()
   --   --   anchor = 'NE',
   --   -- },
   --   icons = {
-  --     error = venom.icons.diagnostic_states.cozette.Error,
-  --     warn = venom.icons.diagnostic_states.cozette.Warn,
-  --     hint = venom.icons.diagnostic_states.cozette.Hint,
-  --     info = venom.icons.diagnostic_states.cozette.Info,
+  --     error = venom.icons.diagnostic_states.Error,
+  --     warn = venom.icons.diagnostic_states.Warn,
+  --     hint = venom.icons.diagnostic_states.Hint,
+  --     info = venom.icons.diagnostic_states.Info,
   --   },
   -- }
 end)
 
 M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()
   local function get_icon_by_severity(severity)
-    local icon_set = venom.icons.diagnostic_states.cozette
+    local icon_set = venom.icons.diagnostic_states
     local icons = {
       icon_set.Error,
       icon_set.Warn,
@@ -616,8 +720,9 @@ M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()
       local lines = {}
       for _, diag_line in ipairs(diag_lines) do
         table.insert(lines, {
-          { diag_line..' ', u.get_hl_by_serverity(diag.severity) },
-          { get_icon_by_severity(diag.severity), u.get_hl_by_serverity(diag.severity) },
+          -- { diag_line..' ', u.get_hl_by_serverity(diag.severity) },
+          { diag_line .. ' ', u.get_hl_by_serverity(diag.severity) },
+          { get_icon_by_severity(diag.severity) .. ' ', u.get_hl_by_serverity(diag.severity) },
         })
       end
 
@@ -659,8 +764,8 @@ end)
 
 M.fold_cycle = U.Service():require(FT.PLUGIN, 'fold-cycle.nvim'):new(function()
   require 'fold-cycle'.setup {
-    open_if_max_closed = true,
-    close_if_max_opened = true,
+    open_if_max_closed = false,
+    close_if_max_opened = false,
     softwrap_movement_fix = false,
   }
 end)
@@ -668,7 +773,7 @@ end)
 M.fold_preview = U.Service():require(FT.PLUGIN, 'fold-preview.nvim'):new(function()
   require 'fold-preview'.setup {
     default_keybindings = false,
-    border = 'single',
+    border = 'none',
   }
 end)
 
@@ -677,15 +782,15 @@ M.icon_picker = U.Service():require(FT.PLUGIN, 'icon-picker.nvim'):new(function(
 end)
 
 M.fzf_lua = U.Service():require(FT.PLUGIN, 'fzf-lua'):new(function()
-  require'fzf-lua'.setup {
+  require 'fzf-lua'.setup {
     winopts = {
-      border           = 'single',
-      hl = {
-        border         = 'VertSplit',        -- border color (try 'FloatBorder')
+      border  = 'single',
+      hl      = {
+        border = 'VertSplit', -- border color (try 'FloatBorder')
       },
       preview = {
-        title          = true,
-        scrollbar      = 'border',
+        title     = true,
+        scrollbar = 'border',
       },
     }
   }
@@ -703,11 +808,15 @@ end)
 
 M.colorizer = U.Service():require(FT.PLUGIN, 'nvim-colorizer.lua'):new(function()
   require 'colorizer'.setup {
-    filetypes = { 'scss', 'sass', 'css', 'svelte' },
+    filetypes = {
+      '*',
+      '!lazy',
+      '!packer',
+    },
     user_default_options = {
       RGB = true,
       RRGGBB = true,
-      names = true,
+      names = false,
       RRGGBBAA = true,
       AARRGGBB = true,
       rgb_fn = true,
@@ -721,11 +830,84 @@ end)
 
 M.vim_markdown_composer = U.Service():require(FT.PLUGIN, 'vim-markdown-composer'):new(function()
   vim.g.markdown_composer_autostart = 0
-  vim.g.markdown_composer_browser = 'qutebrowser'
+  -- vim.g.markdown_composer_browser = 'qutebrowser'
 end)
 
 M.overseer = U.Service():require(FT.PLUGIN, 'overseer.nvim'):new(function()
   require 'overseer'.setup {}
+end)
+
+M.rest = U.Service():require(FT.PLUGIN, 'rest.nvim'):new(function()
+  require 'rest-nvim'.setup {
+    -- skip_ssl_verification = false,
+    -- result = {
+    --   show_url = true,
+    --   show_http_info = true,
+    --   show_headers = true,
+    -- },
+    -- jump_to_request = false,
+    env_file = '.env.development',
+    -- custom_dynamic_variables = {},
+    -- yank_dry_run = true,
+  }
+end)
+
+M.paint = U.Service():require(FT.PLUGIN, 'paint.nvim'):new(function()
+  require 'paint'.setup {
+    highlights = {
+      -- snippets
+      {
+        filter = { filetype = 'snippets' },
+        pattern = "snippet",
+        hl = "Keyword",
+      },
+      {
+        filter = { filetype = 'snippets' },
+        pattern = "extends",
+        hl = "Keyword",
+      },
+      {
+        filter = { filetype = 'snippets' },
+        pattern = "snippet%s%w+%s(.*)",
+        hl = "Comment",
+      },
+      -- license files
+      {
+        filter = function()
+          local file_name = vim.fn.fnamemodify(vim.fn.bufname(), ':t')
+          return string.match(file_name, "LICENSE.*")
+        end,
+        pattern = "[Cc][Oo][Pp][Yy][Rr][Ii][Gg][Hh][Tt]%s+%(?[Cc]%)?%s+(.+)",
+        hl = "Label",
+      },
+      -- TODOs, FIXMEs .. etc
+      -- {
+      --   filter = { filetype = 'xxd' },
+      --   -- pattern = "%s00%s",
+      --   -- pattern = "%s(%x%x)%s",
+      --   pattern = "%s(00)%s",
+      --   hl = "Comment",
+      -- },
+    },
+  }
+end)
+
+M.noice = U.Service():require(FT.PLUGIN, 'noice.nvim'):new(function()
+  require 'noice'.setup {
+    lsp = {
+      override = {
+        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+        ["vim.lsp.util.stylize_markdown"] = true,
+      },
+    },
+    presets = {
+      bottom_search = true,
+      command_palette = true,
+      long_message_to_split = true,
+      inc_rename = true
+      -- lsp_doc_border = true, -- add a border to hover docs and signature help
+    },
+  }
 end)
 
 return M

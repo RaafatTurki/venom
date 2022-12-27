@@ -1,5 +1,7 @@
 --- defines various utility functions and classes.
 -- @module utils
+log = require 'logger'.log
+
 local M = {}
 
 -- Lua Utils
@@ -17,7 +19,7 @@ function M.seq(min, max, sep, step)
 end
 --- checks if number is within min - max range
 function M.is_within_range(n, min, max) return ((n >= min) and (n <= max)) end
--- returns joined array into string
+--- returns joined array into string
 function M.join(arr, delimiter)
   if (delimiter == nil) then delimiter = ' ' end
   local str = ""
@@ -43,7 +45,50 @@ function M.file_read(path)
   fh:close()
   return content
 end
+--- returns array of file_names within a path
+function M.scan_dir(path)
+  local res = {}
+  handle, _ = vim.loop.fs_scandir(path)
+  if not handle then return {} end
+  file_name, _ = vim.loop.fs_scandir_next(handle)
+  while file_name do
+    table.insert(res, file_name)
+    file_name, _ = vim.loop.fs_scandir_next(handle)
+  end
+  return res
+end
+--- returns the intersection of 2 flat tables
+function M.tbl_intersect(tbl1, tbl2)
+  local intersection = {}
 
+  for _, v1 in pairs(tbl1) do
+    for _, v2 in pairs(tbl2) do
+      if v1 == v2 then table.insert(intersection, v1) end
+    end
+  end
+  return intersection
+end
+--- returns the union of 2 flat tables with not repeats
+function M.tbl_union(tbl1, tbl2)
+  local result = {}
+  local hash = {}
+
+  for _, v in pairs(tbl1) do
+    if not hash[v] then
+      table.insert(result, v)
+      hash[v] = true
+    end
+  end
+
+  for _, v in pairs(tbl2) do
+    if not hash[v] then
+      table.insert(result, v)
+      hash[v] = true
+    end
+  end
+
+  return result
+end
 
 
 -- Neovim Utils
@@ -104,7 +149,7 @@ function M.count_lsp_res_changes(lsp_res)
   return count
 end
 --- clears the command prompt
-function M.clear_prompt() vim.cmd.call "feedkeys(':','nx')" end
+function M.clear_prompt() vim.cmd([[echo '' | redraw]]) end
 --- returns nth field of a segmented string (much like unix cut) (omit field to return full array, fields <= 0 count from the end)
 function M.cut(str, delimiter, field)
   delimiter = delimiter or ' '
@@ -215,7 +260,9 @@ function M.Service()
           end
           return return_value
         else
-          log.warn("missing features: "..table.concat(missing_features, ' / '), { stack_lvl_off = 1 })
+          for _, missing_feature in pairs(missing_features) do
+            log.warn("missing feature: "..table.concat(missing_feature, ' / '), { stack_lvl_off = 1 })
+          end
         end
       end,
       wrap = function(self) return function(...) return self:invoke(...) end end

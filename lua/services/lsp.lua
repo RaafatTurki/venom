@@ -1,6 +1,9 @@
 --- defines language servers setup and install mechanisms.
 -- @module lsp
 
+log = require 'logger'.log
+U = require 'utils'
+
 local M = {}
 
 M.setup_lspconfig_server = U.Service():require(FT.PLUGIN, 'nvim-lspconfig'):new(function(server_name, opts)
@@ -8,7 +11,7 @@ M.setup_lspconfig_server = U.Service():require(FT.PLUGIN, 'nvim-lspconfig'):new(
 
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
   if venom.features:has(FT.PLUGIN, 'nvim-cmp') then
-    shared_capabilities = require 'cmp_nvim_lsp'.update_capabilities(shared_capabilities)
+    shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities()
   end
 
   local shared_opts = {
@@ -60,27 +63,20 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
       M.setup_lspconfig_server(server_name, {})
     end,
     sumneko_lua = function()
+      -- require("neodev").setup {}
       M.setup_lspconfig_server('sumneko_lua', {
         settings = {
           Lua = {
-            -- runtime = {
-            --  version = 'LuaJIT',
-            --  path = vim.split(package.path, ';'),
-            -- },
             diagnostics = {
               disable = { 'lowercase-global', 'trailing-space', 'unused-local' },
-              -- globals = { 'vim' },
             },
-            workspace = {
-              -- checkThirdParty = false,
-              -- library = {
-              --   [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-              --   [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-              -- },
-            },
+            -- workspace = {
+            --   checkThirdParty = false,
+            -- },
             completion= {
-              keywordSnippet="Replace",
-              callSnippet="Replace",
+              -- keywordSnippet="Disable",
+              -- keywordSnippet="Replace",
+              -- callSnippet="Replace",
             },
             telemetry = { enable = false },
           }
@@ -97,7 +93,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
             build = {
               -- onSave = true,
               executable = 'tectonic',
-              args = vim.split('%f --synctex', ' '),
+              args = {'%f', '--synctex', '-k'},
             },
             forwardSearch = {
               executable = 'zathura',
@@ -169,6 +165,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
         settings = {
           json = {
             schemas = require 'schemastore'.json.schemas(),
+            validate = { enable = true },
 
             -- visit https://www.schemastore.org/json/ for more schemas
             -- schemas = {
@@ -228,7 +225,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
       if venom.features:has(FT.PLUGIN, 'nvim-jdtls') then
         function JDTLSSetup()
           local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-          local workspace_dir = os.getenv('XDG_CACHE_HOME') .. '/jdtls/workspaces/' .. project_name
+          local workspace_dir = vim.env['XDG_CACHE_HOME'] .. '/jdtls/workspaces/' .. project_name
           local jdtls_root_dir = vim.fn.stdpath('data') .. '/mason/packages/jdtls'
 
           --- quit if file does not exist
@@ -246,7 +243,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
               '-Dlog.level=ALL',
 
               -- TODO: put back once lombok gets added into mason
-              -- '-javaagent:' .. jdtls_root_dir .. '/lombok.jar',
+              '-javaagent:' .. jdtls_root_dir .. '/lombok.jar',
 
               '-Xms1g',
               '--add-modules=ALL-SYSTEM',
@@ -272,7 +269,14 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
             },
           }
 
-          require('jdtls').start_or_attach(jdtls_nvim_configs)
+          local jdtls = require('jdtls')
+          jdtls.start_or_attach(jdtls_nvim_configs)
+
+          vim.cmd [[
+            " let g:jdtls_java_home = expand('$ANDROID_HOME/platforms/android-*/android.jar')
+            let g:jdtls_java_home = expand('$ANDROID_HOME/platforms/android-30/android.jar')
+            let g:jdtls_java_config_path = ''
+          ]]
         end
 
         vim.cmd [[
@@ -284,6 +288,20 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
       else
         M.setup_lspconfig_server('jdtls', {})
       end
+    end,
+    omnisharp = function()
+      M.setup_lspconfig_server('omnisharp', {
+        -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#omnisharp
+      })
+    end,
+    html = function()
+      M.setup_lspconfig_server('html', {
+        -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#html
+        -- filetypes = { 'html', 'svelte' },
+      })
+    end,
+    yamlls = function()
+      M.setup_lspconfig_server('yamlls', {})
     end
   }
 
@@ -293,6 +311,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
   end
   if vim.fn.executable('godot-ls') == 1 then
     M.setup_lspconfig_server('gdscript', {
+      -- cmd = vim.lsp.rpc.connect('127.0.0.1', 6008),
       cmd = {'godot-ls'},
       flags = {
         debounce_text_changes = 150,
@@ -302,17 +321,19 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
 
   -- null-ls servers
   local null_ls = require 'null-ls'
-  require 'mason-null-ls'.setup()
+  require 'mason-null-ls'.setup {
+    automatic_setup = true,
+  }
   require 'mason-null-ls'.setup_handlers {
-    function(source_name)
-      log('the null-ls source '..source_name..' is installed but unused!')
-    end,
-    stylua = function()
-      null_ls.register(null_ls.builtins.formatting.stylua)
-    end,
-    jq = function()
-      null_ls.register(null_ls.builtins.formatting.jq)
-    end
+  --   function(source_name)
+  --     -- log('the null-ls source '..source_name..' is installed but unused!')
+  --   end,
+  --   stylua = function()
+  --     null_ls.register(null_ls.builtins.formatting.stylua)
+  --   end,
+  --   jq = function()
+  --     null_ls.register(null_ls.builtins.formatting.jq)
+  --   end
   }
   null_ls.setup()
 end)
@@ -321,10 +342,11 @@ end)
 M.setup = U.Service():provide(FT.LSP, 'setup')
 :require(FT.PLUGIN, 'mason.nvim')
 :require(FT.PLUGIN, 'nvim-lspconfig')
-:require(FT.PLUGIN, 'inc-rename.nvim')
 :new(function()
+  require('lspconfig.ui.windows').default_options.border = 'single'
+
   -- per line nvim diagnostics
-  for type, icon in pairs(venom.icons.diagnostic_states.cozette) do
+  for type, icon in pairs(venom.icons.diagnostic_states) do
     local hl = "DiagnosticSign" .. type
     -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -338,32 +360,82 @@ M.setup = U.Service():provide(FT.LSP, 'setup')
   vim.api.nvim_create_user_command('LspDiagsList', function() M.diags_list() end, {})
   vim.api.nvim_create_user_command('LspDiagsHover', function() M.diags_hover() end, {})
   vim.api.nvim_create_user_command('LspFormat', function() M.format() end, {})
-  -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {})
-  
-  require("inc_rename").setup {
-    input_buffer_type = "dressing",
-  }
+  -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {}) 
+
+  -- inc-rename
+  if venom.features:has(FT.PLUGIN, 'inc-rename.nvim') then
+    require 'inc_rename'.setup()
+  end
 end)
 
 M.rename = U.Service():new(function()
-  vim.api.nvim_feedkeys(":IncRename " .. vim.fn.expand("<cword>"), "n", false)
+  if venom.features:has(FT.PLUGIN, 'inc-rename.nvim') then
+    vim.api.nvim_feedkeys(':IncRename ' .. vim.fn.expand('<cword>'), '', false)
+    -- require 'inc_rename'.setup()
+    -- inc-rename.nvim
+  else
+    local curr_name = vim.fn.expand("<cword>")
+    local input_opts = {
+      prompt = 'LSP Rename: ',
+      default = curr_name
+    }
+    -- ask user input
+    vim.ui.input(input_opts, function(new_name)
+      -- check new_name is valid
+      if not new_name or #new_name == 0 or curr_name == new_name then return end
+
+      -- request lsp rename
+      local params = vim.lsp.util.make_position_params()
+      params.newName = new_name
+
+      vim.lsp.buf_request(0, "textDocument/rename", params, function(err, res, ctx, _)
+        if err then
+          if err.message then log.err(err.message) end
+          return
+        end
+        if not res then return end
+
+        -- apply renames
+        local client = vim.lsp.get_client_by_id(ctx.client_id)
+        vim.lsp.util.apply_workspace_edit(res, client.offset_encoding)
+
+        -- display a message
+        local changes = U.count_lsp_res_changes(res)
+        local message = string.format("renamed %s instance%s in %s file%s. %s",
+          changes.instances,
+          changes.instances== 1 and '' or 's',
+          changes.files,
+          changes.files == 1 and '' or 's',
+          changes.files > 1 and "To save them run ':wa'" or ''
+        )
+        vim.notify(message)
+      end)
+    end)
+  end
 end)
 
 M.references = U.Service():new(function()
-  vim.lsp.buf.references()
+  if venom.features:has(FT.PLUGIN, 'telescope.nvim') then
+    vim.cmd [[Telescope lsp_references]]
+  else
+    vim.lsp.buf.references()
+  end
 end)
 
 M.definition = U.Service():new(function()
-  vim.lsp.buf.definition()
+  if venom.features:has(FT.PLUGIN, 'telescope.nvim') then
+    vim.cmd [[Telescope lsp_definitions]]
+  else
+    vim.lsp.buf.definition()
+  end
 end)
 
 M.code_action = U.Service():new(function()
   vim.lsp.buf.code_action()
 end)
 
-M.hover = U.Service():require(FT.PLUGIN, 'hover.nvim'):new(function()
-  -- vim.lsp.buf.hover()
-  require 'hover'.hover()
+M.hover = U.Service():new(function()
+  vim.lsp.buf.hover()
 end)
 
 M.format = U.Service():new(function()
@@ -378,11 +450,6 @@ end)
 M.diags_hover = U.Service():new(function()
   vim.diagnostic.open_float()
 end)
-
--- M.diags_toggle = U.Service():new(function()
---   venom.vals.is_disagnostics_visible = not venom.vals.is_disagnostics_visible
---   if venom.vals.is_disagnostics_visible then vim.diagnostic.show() else vim.diagnostic.hide() end
--- end)
 
 M.setup_buf_fmt_on_save = U.Service():new(function(client, bufnr)
   local augroup_fmt_on_save = vim.api.nvim_create_augroup('format_on_save', {})

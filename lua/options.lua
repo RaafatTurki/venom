@@ -1,9 +1,13 @@
 --- defines vanialla options, constants, enums and global variables.
 -- @module options
+log = require 'logger'.log
+U = require 'utils'
 
 -- use filetype.lua instead of filetype.vim
 -- vim.g.did_load_filetypes = 0
 -- vim.g.do_filetype_lua   = 1
+
+vim.cmd.colorscheme 'venom'
 
 -- vim builtin options
 vim.o.number            = true
@@ -28,20 +32,22 @@ vim.o.list              = false
 vim.o.secure            = true
 vim.o.pumheight         = 16
 vim.o.cmdheight         = 1
-vim.o.showtabline       = 1
+vim.o.showtabline       = 2
 vim.o.laststatus        = 3
 vim.o.scrolloff         = 4
 vim.o.scroll            = 15
 vim.o.updatetime        = 100
 vim.o.timeoutlen        = 200
+vim.o.wildmenu          = false
 vim.o.clipboard         = 'unnamedplus'
 -- vim.o.inccommand        = 'split'
-vim.o.signcolumn        = 'yes:2'
+vim.o.signcolumn        = 'yes:3'
 vim.o.encoding          = 'utf-8'
 vim.o.fileencoding      = 'utf-8'
 vim.o.guicursor         = 'a:hor25,v:block,i:ver25'
 vim.o.complete          = ''
 vim.o.completeopt       = ''
+-- vim.o.completeopt       = 'menu,menuone,preview,noinsert'
 vim.o.backspace         = 'indent,eol,nostop'
 vim.o.listchars         = 'trail:_,tab:  │'
 vim.o.shell             = '/usr/bin/fish'
@@ -56,7 +62,7 @@ vim.o.foldtext          = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabs
 vim.o.foldnestmax       = 10                            -- Maximum amount of nested folds
 vim.o.foldminlines      = 1                             -- Minimum amount of lines per fold
 
-vim.o.sessionoptions    = 'buffers,curdir,folds,help,tabpages,winsize'
+vim.o.sessionoptions    = 'blank,buffers,curdir,folds,help,tabpages,winsize'
 
 -- indenting
 vim.o.shiftwidth        = 2                             -- How many whitespaces is an indent
@@ -107,7 +113,7 @@ vim.diagnostic.config {
     --   local msg = diag.message
     --   local src = diag.source
     --   local code = diag.user_data.lsp.code
-    --   local icon = venom.icons.diagnostic_states.cozette[venom.severity_names[diag.severity]]
+    --   local icon = venom.icons.diagnostic_states[venom.severity_names[diag.severity]]
     --
     --   -- remove dots
     --   msg = msg:gsub('%.', '')
@@ -124,146 +130,158 @@ vim.diagnostic.config {
   }
 }
 
+-- icons collection
+icon_sets = {
+  --   
+  diagnostic_states = {
+    outline = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
+    full    = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
+    cozette = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
+    letters = { Error = "E ",   Warn = "W ",  Hint = "H ",  Info = "I "  },
+    none    = { Error = "  ",   Warn = "  ",  Hint = "  ",  Info = "  "  },
+  },
+  item_kinds = {
+    -- ⌂ θ ғ  Ω
+    cozette = {
+      Text            = '',
+      Method          = '',
+      Function        = '',
+      Constructor     = '',
+      Field           = 'ﴲ',
+      Variable        = '',
+      Class           = '',
+      Interface       = 'ﰮ',
+      Module          = '',
+      Property        = '',
+      Unit            = '',
+      Value           = '',
+      Enum            = '',
+      Keyword         = '',
+      Snippet         = '',
+      Color           = '',
+      File            = '',
+      Reference       = '',
+      Folder          = '',
+      EnumMember      = '',
+      Constant        = '',
+      Struct          = 'ﳤ',
+      Event           = '',
+      Operator        = '',
+      TypeParameter   = '',
+
+      Namespace       = '',
+      Package         = '',
+      String          = '',
+      Number          = '',
+      Boolean         = '✓',
+      Array           = '',
+      Object          = '',
+      Key             = '',
+      Null            = '⌀',
+    },
+    codicons = {
+      Text            = ' ',
+      Method          = ' ',
+      Function        = ' ',
+      Constructor     = ' ',
+      Field           = ' ',
+      Variable        = ' ',
+      Class           = ' ',
+      Interface       = ' ',
+      Module          = ' ',
+      Property        = ' ',
+      Unit            = ' ',
+      Value           = ' ',
+      Enum            = ' ',
+      Keyword         = ' ',
+      Snippet         = ' ',
+      Color           = ' ',
+      File            = ' ',
+      Reference       = ' ',
+      Folder          = ' ',
+      EnumMember      = ' ',
+      Constant        = ' ',
+      Struct          = ' ',
+      Event           = ' ',
+      Operator        = ' ',
+      TypeParameter   = ' ',
+
+      Namespace       = '',
+      Package         = '',
+      String          = '',
+      Number          = '',
+      Boolean         = '',
+      Array           = '',
+      Object          = '',
+      Key             = '',
+      Null            = '',
+    },
+    nerdfont = {
+      Text            = '',
+      Method          = '',
+      Function        = '',
+      Constructor     = '',
+      Field           = 'ﴲ',
+      Variable        = '',
+      Class           = '',
+      Interface       = 'ﰮ',
+      Module          = '',
+      Property        = '襁',
+      Unit            = '',
+      Value           = '',
+      Enum            = '',
+      Keyword         = '',
+      Snippet         = '',
+      Color           = '',
+      File            = '',
+      Reference       = '',
+      Folder          = '',
+      EnumMember      = '',
+      Constant        = '',
+      Struct          = 'ﳤ',
+      Event           = '',
+      Operator        = '',
+      TypeParameter   = '',
+
+      Namespace     = '',
+      Package       = '',
+      String        = '',
+      Number        = '',
+      Boolean       = '◩',
+      Array         = '',
+      Object        = '',
+      Key           = '',
+      Null          = 'ﳠ',
+    },
+  },
+  ui = {
+    codicons = {
+      breakpoint = '',
+      expanded = '',
+      collapsed = '',
+    }
+  },
+}
+
 -- venom options
 venom = {
   -- a table containing key-value pairs to persist per session
-  persistent = {},
+  -- persistent = {},
   -- events are tables that can hold lua functions and vim commands for later execution (when invoked)
   -- TODO: make it the responsibility of the related service to instantiate events here
   events = {
     refresh = U.Event():new(),
     clear = U.Event():new(),
     write = U.Event():new(),
+    folding = U.Event():new(),
   },
   -- features is a table that can hold strings representing the availability of said feature for later querying.
   -- each string must be in the form of <TYPE>:<name> where TYPE is one of the FT enum values (for example "PLUGIN:nvim-cmp" means the plugin cmp is available)
   features = U.FeatureList():new(),
-  vals = {
-    is_disagnostics_visible = true,
-  },
   icons = {
-    --   
-    diagnostic_states = {
-      outline = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
-      full    = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
-      cozette = { Error = " ",   Warn = " ",  Hint = " ",  Info = " "  },
-      letters = { Error = "E ",   Warn = "W ",  Hint = "H ",  Info = "I "  },
-      none    = { Error = "  ",   Warn = "  ",  Hint = "  ",  Info = "  "  },
-    },
-    item_kinds = {
-      -- ⌂ θ ғ  Ω
-      cozette = {
-        Text            = '',
-        Method          = '',
-        Function        = '',
-        Constructor     = '',
-        Field           = 'ﴲ',
-        Variable        = '',
-        Class           = '',
-        Interface       = 'ﰮ',
-        Module          = '',
-        Property        = '',
-        Unit            = '',
-        Value           = '',
-        Enum            = '',
-        Keyword         = '',
-        Snippet         = '',
-        Color           = '',
-        File            = '',
-        Reference       = '',
-        Folder          = '',
-        EnumMember      = '',
-        Constant        = '',
-        Struct          = 'ﳤ',
-        Event           = '',
-        Operator        = '',
-        TypeParameter   = '',
-
-        Namespace       = '',
-        Package         = '',
-        String          = '',
-        Number          = '',
-        Boolean         = '✓',
-        Array           = '',
-        Object          = '',
-        Key             = '',
-        Null            = '⌀',
-      },
-      codeicons = {
-        Text            = ' ',
-        Method          = ' ',
-        Function        = ' ',
-        Constructor     = ' ',
-        Field           = ' ',
-        Variable        = ' ',
-        Class           = ' ',
-        Interface       = ' ',
-        Module          = ' ',
-        Property        = ' ',
-        Unit            = ' ',
-        Value           = ' ',
-        Enum            = ' ',
-        Keyword         = ' ',
-        Snippet         = '⛶ ',
-        Color           = ' ',
-        File            = ' ',
-        Reference       = ' ',
-        Folder          = ' ',
-        EnumMember      = ' ',
-        Constant        = ' ',
-        Struct          = ' ',
-        Event           = ' ',
-        Operator        = ' ',
-        TypeParameter   = ' ',
-
-        Namespace       = '',
-        Package         = '',
-        String          = '',
-        Number          = '',
-        Boolean         = '',
-        Array           = '',
-        Object          = '',
-        Key             = '',
-        Null            = '',
-      },
-      nerdfont = {
-        Text            = '',
-        Method          = '',
-        Function        = '',
-        Constructor     = '',
-        Field           = 'ﴲ',
-        Variable        = '',
-        Class           = '',
-        Interface       = 'ﰮ',
-        Module          = '',
-        Property        = '襁',
-        Unit            = '',
-        Value           = '',
-        Enum            = '',
-        Keyword         = '',
-        Snippet         = '',
-        Color           = '',
-        File            = '',
-        Reference       = '',
-        Folder          = '',
-        EnumMember      = '',
-        Constant        = '',
-        Struct          = 'ﳤ',
-        Event           = '',
-        Operator        = '',
-        TypeParameter   = '',
-
-        Namespace     = '',
-        Package       = '',
-        String        = '',
-        Number        = '',
-        Boolean       = '◩',
-        Array         = '',
-        Object        = '',
-        Key           = '',
-        Null          = 'ﳠ',
-      },
-    },
+    diagnostic_states = icon_sets.diagnostic_states.full,
+    item_kinds = icon_sets.item_kinds.codicons,
+    debugging = icon_sets.ui.codicons,
   },
   severity_names = {
     [vim.diagnostic.severity.ERROR] = 'Error',
@@ -273,7 +291,7 @@ venom = {
   }
 }
 
---- feature types
+--- feature types enum
 FT = {
   PLUGIN = "PLUGIN",
   KEY = "KEY",

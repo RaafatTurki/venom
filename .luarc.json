@@ -1,11 +1,23 @@
 {
-  "workspace": {
-    "library": [
-      "/usr/share/nvim/runtime/lua",
-      "/usr/share/nvim/runtime/lua/vim/lsp"
+  "Lua.workspace.checkThirdParty": false,
+  "diagnostics": {
+    "disable": [
+      "lowercase-global",
+      "trailing-space",
+      "unused-local"
+    ],
+    "globals": [
+      "vim"
     ]
   },
-  "diagnostics": {
-    "globals": [ "vim" ],
+  "runtime": {
+    "version": "LuaJIT"
+  },
+  "workspace": {
+    "library": [
+      "~/.local/share/nvim/lazy/neodev.nvim/types/stable"
+    ],
+    "maxPreload": 5000,
+    "preloadFileSize": 10000
   }
 }

@@ -1,41 +1,54 @@
 --- defines language specific configurations
 -- @module lang
+log = require 'logger'.log
+U = require 'utils'
+
 local M = {}
 
 M.ts_parsers_ensure_installed = {
   'bash',
   'c',
-  'cmake',
-  'comment',
-  'cpp',
   'c_sharp',
+  'cmake',
+  -- 'comment',
+  'cpp',
   'css',
+  'elm',
   'fish',
   'gdscript',
+  'gitcommit',
+  'gitignore',
   'glsl',
   'go',
-  'gomod',
   'godot_resource',
+  'gomod',
   'html',
   'http',
   'java',
   'javascript',
   'jsdoc',
   'json',
+  'jsonc',
   'latex',
   'lua',
+  'make',
   'markdown',
+  'meson',
+  'nix',
+  'org',
+  'php',
   'python',
   'query',
   'regex',
   'rust',
   'scss',
   'svelte',
+  'sql',
+  'sxhkdrc',
   'toml',
   'typescript',
   'vim',
   'yaml',
-  'sxhkdrc',
 }
 
 M.setup = U.Service()
@@ -84,7 +97,7 @@ M.setup = U.Service()
 
   -- navic
   local navic_icons = {}
-  for name, icon in pairs(venom.icons.item_kinds.cozette) do navic_icons[name] = icon..' ' end
+  for name, icon in pairs(venom.icons.item_kinds) do navic_icons[name] = icon..' ' end
   vim.g.navic_silence = true
   require 'nvim-navic'.setup {
     highlight = true,

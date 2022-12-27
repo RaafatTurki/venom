@@ -1,173 +1,92 @@
 --- invokes various services in order.
 -- @module service_loader
+log = require 'logger'.log
+U = require 'utils'
 
+Buffers = require 'services.buffers'
 PluginManager = require 'plugin_manager'
 Sessions = require 'services.sessions'
 Bind = require 'services.bind'
 Misc = require 'services.misc'
-Themes = require 'services.themes'
 Plugins = require 'services.plugins'
 Lang = require 'services.lang'
 Lsp = require 'services.lsp'
 Statusbar = require 'services.statusbar'
 
-PluginManager.setup()
-
 local p = {
   plenary = 'nvim-lua/plenary.nvim',
   devicons = 'kyazdani42/nvim-web-devicons',
   treesitter = 'nvim-treesitter/nvim-treesitter',
+  dap = 'mfussenegger/nvim-dap',
   gitsigns = 'lewis6991/gitsigns.nvim',
   nui = 'MunifTanjim/nui.nvim',
   lspconfig = 'neovim/nvim-lspconfig',
   cmp = 'hrsh7th/nvim-cmp',
   mini = 'echasnovski/mini.nvim',
-  fixcusrorhold = 'antoinemadec/FixCursorHold.nvim',
   keymap_amend = 'anuvyklack/keymap-amend.nvim',
 }
 local plugins = {
-  -- PLUGIN_MANAGER:
-  {'wbthomason/packer.nvim'},
-
   -- LSP:
   p.lspconfig,
-  {'lewis6991/hover.nvim'},
-  {'smjonas/inc-rename.nvim'},
-  {'RRethy/vim-illuminate'},
-  {'jose-elias-alvarez/null-ls.nvim',                 requires = p.plenary },
-
+  { 'jose-elias-alvarez/null-ls.nvim', dependencies = p.plenary },
   -- LANG:
-  {p.treesitter,                                      run = ':TSUpdate' },
-  {'williamboman/mason.nvim',                         requires = {
+  { p.treesitter, build = ':TSUpdate' },
+  { 'williamboman/mason.nvim', dependencies = {
     p.lspconfig,
     'williamboman/mason-lspconfig.nvim',
     'jayp0521/mason-null-ls.nvim',
-  }},
-  {'JoosepAlviste/nvim-ts-context-commentstring',     requires = p.treesitter },
-  {'SmiteshP/nvim-navic',                             requires = p.lspconfig },
-  {'b0o/schemastore.nvim',                            requires = p.lspconfig },
-
+  } },
+  { 'JoosepAlviste/nvim-ts-context-commentstring', dependencies = p.treesitter },
+  { 'SmiteshP/nvim-navic', dependencies = p.lspconfig },
+  { 'b0o/schemastore.nvim', dependencies = p.lspconfig },
+  { 'folke/neodev.nvim', dependencies = p.lspconfig },
+  -- p.dap,
+  -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
   -- PLUGINS:
   -- mini.*
-  {'lewis6991/impatient.nvim'},
+  { 'RRethy/vim-illuminate' },
   p.devicons,
-  p.fixcusrorhold,
-  {'stevearc/dressing.nvim'},
-  {'kevinhwang91/nvim-bqf'},
-  {p.gitsigns,                                        requires = p.plenary },
-  {'booperlv/nvim-gomove'},
-  {'rktjmp/paperplanes.nvim',                         branch = 'rel-0.1.2' },
-  {'Mofiqul/trld.nvim'},
-  {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
-  {'toppair/reach.nvim'},
-  {'akinsho/nvim-toggleterm.lua'},
-  {'nvim-telescope/telescope.nvim',                   branch = '0.1.x', requires = { p.plenary }},
-  {'jghauser/fold-cycle.nvim'},
-  {'Issafalcon/lsp-overloads.nvim'},
-  {'anuvyklack/fold-preview.nvim',                    requires = p.keymap_amend },
-  {'NMAC427/guess-indent.nvim'},
-  {'j-hui/fidget.nvim'},
-  {p.cmp,                                             requires = {
-    {'lukas-reineke/cmp-rg'},
-    {'hrsh7th/cmp-path'},
-    {'hrsh7th/cmp-nvim-lsp'},
-    {'hrsh7th/cmp-nvim-lua'},
-    {'saadparwaiz1/cmp_luasnip'},
-    {'L3MON4D3/LuaSnip'},
-    {'hrsh7th/cmp-cmdline'},
-    {'hrsh7th/cmp-buffer'},
-    {'hrsh7th/cmp-omni'}
-    -- {'f3fora/cmp-spell',                              requires = p.plenary },
-    -- {'dmitmel/cmp-digraphss'},
-    -- {'hrsh7th/cmp-nvim-lsp-signature-help'},
-    -- {'hrsh7th/cmp-nvim-lsp-document-symbol'},
-  }},
-
+  { p.gitsigns, dependencies = p.plenary },
+  { 'booperlv/nvim-gomove' },
+  { 'Mofiqul/trld.nvim' },
+  { 'kyazdani42/nvim-tree.lua', dependencies = p.devicons },
+  { 'akinsho/nvim-toggleterm.lua' },
+  { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = {
+    p.plenary,
+    { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  } },
+  { 'jghauser/fold-cycle.nvim' },
+  { 'Issafalcon/lsp-overloads.nvim' },
+  { 'anuvyklack/fold-preview.nvim', dependencies = p.keymap_amend },
+  { 'NvChad/nvim-colorizer.lua' },
+  { 'folke/noice.nvim', dependencies = p.nui },
+  { p.cmp, dependencies = {
+    { 'lukas-reineke/cmp-rg' },
+    { 'hrsh7th/cmp-path' },
+    { 'hrsh7th/cmp-nvim-lsp' },
+    { 'hrsh7th/cmp-nvim-lua' },
+    { 'saadparwaiz1/cmp_luasnip' },
+    { 'L3MON4D3/LuaSnip' },
+    { 'hrsh7th/cmp-cmdline' },
+    { 'hrsh7th/cmp-buffer' },
+  } },
   -- STATUSBAR:
-  {'rebelot/heirline.nvim',                           requires = { p.devicons, p.gitsigns }},
-
-  -- SESSIONS:
-  {'stevearc/resession.nvim'},
-
-  -- MULTI_PURPOSE:
-  {p.mini},
-
-  -- DEBUGGING:
-  {'nvim-treesitter/playground',                      requires = p.treesitter },
-
+  { 'rebelot/heirline.nvim', dependencies = { p.devicons, p.gitsigns } },
   -- UNCHARTED:
-  {'mfussenegger/nvim-jdtls'},
-  {'NvChad/nvim-colorizer.lua'},
-  {'euclio/vim-markdown-composer',                    run = 'cargo build --release'},
-  {'stevearc/overseer.nvim'},
- 
-  -- themes -- for more ts supported colorschemes https://github.com/rockerBOO/awesome-neovim#colorscheme
-  -- THEMES:
- 
-  -- {'RRethy/vim-hexokinase',                           run = 'make hexokinase'},
-  -- {'psliwka/vim-dirtytalk',                           run = ':DirtytalkUpdate'},
-  -- {'nvim-neo-tree/neo-tree.nvim',                     branch = 'v2.x', requires = {
-  -- -- {'~/temp/neo-tree.nvim',                            branch = 'v2.x', requires = {
-  --     p.plenary,
-  --     p.devicons,
-  --     p.nui,
-  --     { 's1n7ax/nvim-window-picker',                  tag = 'v1.*' },
-  --   }
-  -- },
-  -- {'akinsho/bufferline.nvim',                         requires = p.devicons,  tag = "v2.*" },
-  -- {'nvim-neotest/neotest',                            requires = {
-  --   p.plenary,
-  --   p.treesitter,
-  --   p.fixcusrorhold,
-  --   {'nvim-neotest/neotest-go'},
-  --   {'haydenmeade/neotest-jest'},
-  -- }},
-  -- {'ibhagwan/fzf-lua',                                requires = p.devicons },
-  -- {'baskerville/vim-sxhkdrc'},
-  -- {'ron-rs/ron.vim'},
-  -- {'kyazdani42/nvim-tree.lua',                        requires = p.devicons },
-  -- {'lervag/vimtex'},
-  -- {'terrortylor/nvim-comment'}, 
-  -- {'declancm/cinnamon.nvim'},
-  -- {'rcarriga/nvim-notify',                            requires = p.plenary },
-  -- {'~/sectors/lua/corn.nvim'},
-  -- {'iamcco/markdown-preview.nvim',                    config = 'vim.call("mkdp#util#install")'},
-  -- {'NTBBloodbath/rest.nvim',                          requires = p.plenary },
-  -- {'RaafatTurki/vim-quickui'},
-  -- {'karb94/neoscroll.nvim'},
-  -- {p.telescope,                                       requires = p.plenary },
-  -- {'kosayoda/nvim-lightbulb'},
-  -- {'dstein64/nvim-scrollview'},
-  -- {'rcarriga/vim-ultest',                             requires = 'vim-test/vim-test', run = ':UpdateRemotePlugins' },
-  -- {'ThePrimeagen/harpoon',                            requires = p.plenary },
-  -- {'tiagovla/scope.nvim'},
-  -- {'kevinhwang91/nvim-ufo',                           requires = 'kevinhwang91/promise-async' },
-  -- {'smjonas/snippet-converter.nvim'},
-  -- {'vladdoster/remember.nvim'},
-  -- {'williamboman/nvim-lsp-installer',                 requires = p.lspconfig },
-  -- {'https://git.sr.ht/~whynothugo/lsp_lines.nvim'},
-  -- {'rktjmp/lush.nvim'},
-  -- {'marko-cerovac/material.nvim'},
-  -- {'andymass/vim-matchup'},
-  -- {'github/copilot.vim'},
-  -- {'floobits/floobits-neovim'},
-  -- {'jbyuki/nabla.nvim'},
-  -- {'Mofiqul/trld.nvim'},
-  -- {'goolord/alpha-nvim',                              requires = p.devicons },
-  -- {'folke/lua-dev.nvim'},
-  -- {'farmergreg/vim-lastplace'},
-  -- {'lambdalisue/suda.vim'},
-  -- {'icatalina/vim-case-change'},
-  -- {'Shatur/neovim-session-manager',                   requires = p.plenary },
-  -- {'norcalli/nvim-colorizer.lua'},
-  -- {'weilbith/nvim-code-action-menu'},
-  -- {'dstein64/vim-startuptime'},
-  -- {'vuki656/package-info.nvim',                       requires = p.nui },
-  -- {'gelguy/wilder.nvim'},
-  -- {'p00f/clangd_extensions.nvim'},
+  p.mini,
+  { 'nvim-treesitter/playground', dependencies = p.treesitter },
+  { 'mfussenegger/nvim-jdtls' },
+  { 'euclio/vim-markdown-composer', build = 'cargo build --release' },
+  -- {'rafamadriz/friendly-snippets'},
+  { 'rest-nvim/rest.nvim', dependencies = p.plenary },
+  { 'folke/paint.nvim' },
+  { 'RaafatTurki/hex.nvim', dev = true },
+  -- { 'monaqa/dial.nvim' },
+  -- { 'stevearc/oil.nvim' },
 }
 
 PluginManager.event_post_complete:sub(function()
+  Buffers.setup()
   Sessions.setup()
   Bind.setup()
 
@@ -181,46 +100,45 @@ PluginManager.event_post_complete:sub(function()
   Misc.highlight_yank()
   Misc.auto_install_ts_parser()
   -- Misc.diag_on_hold()
-  Misc.camel()
+  -- Misc.camel()
   Misc.buffer_edits()
-  -- Misc.tabline_minimal()
-  Misc.lspinfo_win_fix()
+  Misc.tabline_minimal()
   Misc.auto_create_dir()
   Misc.lorem_picsum()
   Misc.auto_gitignore_io()
+  -- Misc.hex_editor()
 
-  Themes.init({
-    { func = Themes.builtin,  args = {},             name = 'Built-In'},
-    -- { func = Themes.material, args = 'darker',       name = 'Material Darker'},
-    -- { func = Themes.material, args = 'lighter',      name = 'Material Lighter'},
-    -- { func = Themes.material, args = 'deep ocean',   name = 'Material Deep Ocean'},
-    -- { func = Themes.material, args = 'oceanic',      name = 'Material Oceanic'},
-    -- { func = Themes.material, args = 'palenight',    name = 'Material Pale Night'},
-    { func = Themes.default,  args = {},             name = 'Default'},
-  })
-
-  Plugins.impatient()
   Plugins.devicons()
-  Plugins.dressing()
-  -- Plugins.notify()
-  Plugins.bqf()
-  Plugins.reach()
+  Plugins.illuminate()
+  Plugins.telescope()
   Plugins.gitsigns()
   Plugins.cmp_ls()
   Plugins.toggle_term()
-  Plugins.fidget()
   Plugins.mini_starter()
   Plugins.mini_surround()
-  Plugins.hover()
-  Plugins.paperplanes()
+  Plugins.mini_map()
+  Plugins.mini_bufremove()
+  -- Plugins.mini_pairs()
   Plugins.trld()
   Plugins.fold_cycle()
   Plugins.fold_preview()
-  Plugins.guess_indent()
   Plugins.nvim_tree()
   Plugins.colorizer()
   Plugins.vim_markdown_composer()
-  Plugins.overseer()
+  Plugins.rest()
+  Plugins.paint()
+  Plugins.noice()
+  -- Plugins.dressing()
+  -- Plugins.fidget()
+  -- Plugins.reach()
+  -- Plugins.hover()
+  -- Plugins.guess_indent()
+  -- Plugins.impatient()
+  -- Plugins.notify()
+  -- Plugins.bqf()
+  -- Plugins.grapple()
+  -- Plugins.paperplanes()
+  -- Plugins.overseer()
   -- Plugins.fzf_lua()
   -- Plugins.neo_tree()
   -- Plugins.bufferline()
@@ -238,6 +156,29 @@ PluginManager.event_post_complete:sub(function()
   Statusbar.setup()
 
   Bind.setup_plugins()
+
+  function LspDocumentSymbols()
+    require("telescope.builtin")["lsp_document_symbols"]({
+      symbols = {
+        "Class",
+        "Function",
+        "Method",
+        "Constructor",
+        "Interface",
+        "Module",
+        "Struct",
+        "Trait",
+        "Field",
+        "Property",
+      }
+    })
+  end
+
+  hex = U.Service():require(FT.PLUGIN, 'hex.nvim'):new(function()
+    require 'hex'.setup {}
+  end)()
+
+  -- require("oil").setup()
 end)
 
-PluginManager.setup_plugins(plugins)
+PluginManager.setup(plugins)

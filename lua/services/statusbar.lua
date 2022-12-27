@@ -1,5 +1,8 @@
 --- defines statusbar and winbar components.
 -- @module statusbar
+log = require 'logger'.log
+U = require 'utils'
+
 local M = {}
 
 M.components = {}
@@ -89,7 +92,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       },
       {
         provider = function() if vim.bo.modified then return ' •' end end,
-        hl = 'Normal'
+        hl = 'DiffAdd'
       },
       {
         -- 
@@ -141,7 +144,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     }
   end)
 
-  M.components.navic = U.Service():new(function(opts)
+  M.components.navic_simple = U.Service():new(function(opts)
     return {
       condition = function()
         return require 'nvim-navic'.is_available()
@@ -150,8 +153,111 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       {
         provider = require 'nvim-navic'.get_location,
         hl = 'Folded',
+        update = 'CursorMoved'
       },
       -- opts.right_pad,
+    }
+  end)
+
+  M.components.navic = U.Service():new(function(opts)
+    return {
+      condition = function() return require 'nvim-navic'.is_available() end,
+      opts.left_pad,
+      {
+        condition = require("nvim-navic").is_available,
+        static = {
+          -- create a type highlight map
+          type_hl = {
+            File = "Directory",
+            Module = "@include",
+            Namespace = "@namespace",
+            Package = "@include",
+            Class = "@structure",
+            Method = "@method",
+            Property = "@property",
+            Field = "@field",
+            Constructor = "@constructor",
+            Enum = "@field",
+            Interface = "@type",
+            Function = "@function",
+            Variable = "@variable",
+            Constant = "@constant",
+            String = "@string",
+            Number = "@number",
+            Boolean = "@boolean",
+            Array = "@field",
+            Object = "@type",
+            Key = "@keyword",
+            Null = "@comment",
+            EnumMember = "@field",
+            Struct = "@structure",
+            Event = "@keyword",
+            Operator = "@operator",
+            TypeParameter = "@type",
+          },
+          -- bit operation dark magic, see below...
+          enc = function(line, col, winnr)
+            return bit.bor(bit.lshift(line, 16), bit.lshift(col, 6), winnr)
+          end,
+          -- line: 16 bit (65535); col: 10 bit (1023); winnr: 6 bit (63)
+          dec = function(c)
+            local line = bit.rshift(c, 16)
+            local col = bit.band(bit.rshift(c, 6), 1023)
+            local winnr = bit.band(c,  63)
+            return line, col, winnr
+          end
+        },
+        init = function(self)
+          local data = require("nvim-navic").get_data() or {}
+          local children = {}
+          -- create a child for each level
+          for i, d in ipairs(data) do
+            -- encode line and column numbers into a single integer
+            local pos = self.enc(d.scope.start.line, d.scope.start.character, self.winnr)
+            local child = {
+              {
+                provider = d.icon,
+                hl = self.type_hl[d.type],
+              },
+              {
+                -- escape `%`s (elixir) and buggy default separators
+                provider = d.name:gsub("%%", "%%%%"):gsub("%s*->%s*", ''),
+                -- highlight icon only or location name as well
+                -- hl = self.type_hl[d.type],
+
+                on_click = {
+                  -- pass the encoded position through minwid
+                  minwid = pos,
+                  callback = function(_, minwid)
+                    -- decode
+                    local line, col, winnr = self.dec(minwid)
+                    vim.api.nvim_win_set_cursor(vim.fn.win_getid(winnr), {line, col})
+                  end,
+                  name = "heirline_navic",
+                },
+              },
+            }
+            -- add a separator only if needed
+            if #data > 1 and i < #data then
+              table.insert(child, {
+                provider = " > ",
+                -- hl = { fg = 'bright_fg' },
+                hl = 'Folded',
+              })
+            end
+            table.insert(children, child)
+          end
+          -- instantiate the new child, overwriting the previous one
+          self.child = self:new(children, 1)
+        end,
+        -- evaluate the children containing navic components
+        provider = function(self)
+          return self.child:eval()
+        end,
+        hl = 'NonText',
+        update = 'CursorMoved'
+      },
+      opts.right_pad,
     }
   end)
 
@@ -163,7 +269,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
         provider = function()
           local forward = require 'luasnip'.jumpable(1) and '' or ''
           local backward = require 'luasnip'.jumpable(-1) and '' or ''
-          return backward..venom.icons.item_kinds.cozette.Snippet..forward
+          return backward..venom.icons.item_kinds.Snippet..forward
         end,
         hl = 'CmpItemKindSnippet',
       },
@@ -178,7 +284,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       end,
       opts.right_pad,
       {
-        provider = venom.icons.item_kinds.cozette.Text,
+        provider = venom.icons.item_kinds.Text,
       },
       opts.left_pad,
     }
@@ -249,40 +355,34 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       opts.left_pad,
       {
         provider  = function()
-          local SERVER_STATES = { IDLE = "IDLE", LOADING = "LOADING" }
-          local attached_servers = {}
-          local res = ''
+          local servers = {}
+          local res = ''
 
           for i, server in pairs(vim.lsp.buf_get_clients(0)) do
-            table.insert(attached_servers, {
-              name = server.name,
-              state = SERVER_STATES.IDLE,
-            })
-          end
-
-          for i, msg in pairs(vim.lsp.util.get_progress_messages()) do
-            for j, attached_server in pairs(attached_servers) do
-              if (msg.name == attached_server.name) then
-                attached_server.state = SERVER_STATES.LOADING
-              end
+            if servers[server.name] == nil then
+              servers[server.name] = {
+                count = 1
+              }
+            else
+              local count = servers[server.name].count
+              servers[server.name].count = count + 1
             end
           end
 
-          for i, attached_server in pairs(attached_servers) do
-            state_icon = ''
-            if attached_server.state == SERVER_STATES.IDLE then
-              state_icon = ''
-            elseif attached_server.state == SERVER_STATES.LOADING then
-              state_icon = ''
-              -- ⏳
+          for server_name, server in pairs(servers) do
+            -- state_icon = ''
+            -- ⏳ 
+            if server.count > 1 then
+              res = res .. '  ' .. server.count
             end
-            res = res .. state_icon .. ' ' .. attached_server.name
-            if (i ~= #attached_servers) then res = res .. ' ' end
+            res = res .. ' ' .. server_name
+            -- if (i ~= #servers) then res = res .. ' ' end
           end
 
           return res
         end,
-        update = {'LspAttach', 'LspDetach', 'User LspProgressUpdate'},
+        -- update = {'LspAttach', 'LspDetach', 'User LspProgressUpdate'},
+        hl = 'Folded',
       },
       opts.right_pad,
     }
@@ -290,10 +390,12 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
 
   M.components.sessioninfo = U.Service():new(function(opts)
     return {
-      condition = function () return (vim.v.this_session ~= '') end,
+      condition = function () return Sessions.get_current() end,
       opts.left_pad,
       {
-        provider = '',
+        provider = function()
+          return ' ' .. Sessions.get_current()
+        end,
         hl = 'WarningMsg',
       },
       opts.right_pad
@@ -308,7 +410,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
           -- return string.upper(vim.bo.filetype)
           return vim.bo.filetype
         end,
-        hl = 'Folded'
+        hl = 'Comment'
       },
       opts.right_pad,
     }
@@ -363,7 +465,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
           local curr_col = vim.api.nvim_win_get_cursor(0)[2]
           return string.format("%s:%s", curr_line, curr_col)
         end,
-        hl = 'Folded',
+        hl = 'Comment',
         update = 'CursorMoved',
       },
       opts.right_pad,
@@ -418,10 +520,10 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
         provider = function()
           local indent_type = vim.o.expandtab and 'S' or 'T'
           local indent_width = vim.o.shiftwidth..':'..vim.o.tabstop..':'..vim.o.softtabstop
-          if vim.o.shiftwidth == vim.o.tabstop and vim.o.tabstop == vim.o.softtabstop then indent_width = vim.o.shiftwidth end
+          if vim.o.shiftwidth == vim.o.tabstop and vim.o.tabstop == vim.o.softtabstop then indent_width = tostring(vim.o.shiftwidth) end
           return indent_type..':'..indent_width
         end,
-        hl = 'Folded',
+        hl = 'Comment',
       },
       opts.right_pad,
     }
@@ -473,7 +575,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     }
   end)
  
-  -- TODO: abstract into a generic build state system
+  -- TODO: abstract into a generic indicators system
   M.components.texlab_status = U.Service():new(function(opts)
     return {
       condition = function()
@@ -621,33 +723,6 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   }
 
 
-  local tabpage_abstract = {
-    provider = function(self)
-      return "%" .. self.tabnr .. "T " .. self.tabnr .. " %T"
-    end,
-    hl = function(self)
-      if not self.is_active then
-        return "TabLine"
-      else
-        return "TabLineSel"
-      end
-    end,
-  }
-
-  local tabpage_close_btn = {
-    provider = "%999X  %X",
-    hl = "ErrorMsg",
-  }
-
-  local tabpages = {
-    condition = function()
-      return #vim.api.nvim_list_tabpages() >= 2
-    end,
-    align,
-    utils.make_tablist(tabpage_abstract),
-    tabpage_close_btn,
-  }
-
   local tabline_offset = {
     condition = function(self)
       local win = vim.api.nvim_tabpage_list_wins(0)[1]
@@ -681,14 +756,118 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     end,
   }
 
-  local tabline = { tabline_offset, tabpages }
+  local buffer_abstract = {
+    init = function(self)
+      self.filename = vim.api.nvim_buf_get_name(self.bufnr)
+      self.is_loaded = vim.api.nvim_buf_is_loaded(self.bufnr)
+    end,
+    hl = function(self)
+      return self.is_active and 'TablineSel' or 'Tabline'
+    end,
+    on_click = {
+      callback = function(_, minwid, _, button)
+        if (button == "m") then -- close on mouse middle click
+          vim.api.nvim_buf_delete(minwid, {force = false})
+        else
+          vim.api.nvim_win_set_buf(0, minwid)
+        end
+      end,
+      minwid = function(self)
+        return self.bufnr
+      end,
+      name = "heirline_tabline_buffer_callback",
+    },
+    -- buffer label
+    {
+      provider = function(self)
+        if self.bufnr == nil then return end
+        -- return tostring(self.bufnr) .. ". "
+        return (Buffers.buf_get_label_from_bufnr(self.bufnr) or '') .. ' '
+      end,
+      hl = "ErrorMsg",
+    },
+    -- icon
+    {
+      init = function(self)
+        if vim.api.nvim_buf_get_option(self.bufnr, 'buftype') == 'terminal' then
+          self.icon = ' '
+          self.icon_color = utils.get_highlight('Type').fg
+        else
+          local filename = self.filename
+          local extension = vim.fn.fnamemodify(filename, ':e')
+          self.icon, self.icon_color = require 'nvim-web-devicons'.get_icon_color(filename, extension, { default = true })
+        end
+      end,
+      provider = function(self)
+        return self.icon and (self.icon .. ' ')
+      end,
+      hl = function(self)
+        return { fg = self.icon_color }
+      end
+    },
+    -- buffer name
+    {
+      provider = function(self)
+        -- self.filename will be defined later, just keep looking at the example!
+        local filename = self.filename
+        filename = filename == "" and "[No Name]" or vim.fn.fnamemodify(filename, ":t")
+        return filename
+      end,
+      hl = function(self)
+        return { underline = self.is_active or self.is_visible, strikethrough = not self.is_loaded }
+      end,
+    },
+    -- indicators
+    {
+      {
+        condition = function(self) return vim.api.nvim_buf_get_option(self.bufnr, 'modified') end,
+        provider = ' •',
+        hl = 'DiffAdd',
+      },
+      {
+        condition = function(self)
+          -- return (not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or vim.api.nvim_buf_get_option(self.bufnr, "readonly")) and not vim.api.nvim_buf_get_option(self.bufnr, 'buftype') == 'terminal'
+          return not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or vim.api.nvim_buf_get_option(self.bufnr, "readonly")
+        end,
+        provider = ' ',
+        hl = 'ErrorMsg',
+      },
+    },
+  }
 
-  vim.cmd [[
-    au FileType * if index(['wipe', 'delete', 'unload'], &bufhidden) >= 0 | set nobuflisted | endif
-  ]]
+  local bufferline = {
+    utils.make_buflist(utils.surround({ ' ', ' ' }, nil, buffer_abstract), { provider = '' }, { provider = '' })
+  }
 
+  local tabpage_abstract = {
+    provider = function(self)
+      return "%" .. self.tabnr .. "T " .. self.tabnr .. " %T"
+    end,
+    hl = function(self)
+      if not self.is_active then
+        return "TabLine"
+      else
+        return "TabLineSel"
+      end
+    end,
+  }
 
-  require 'heirline'.setup(statuslines, winbars, tabline)
+  local tabpages = {
+    condition = function()
+      return #vim.api.nvim_list_tabpages() >= 2
+    end,
+    align,
+    utils.make_tablist(tabpage_abstract),
+  }
+
+  local tabline = { tabline_offset, bufferline, tabpages }
+
+  require 'heirline'.setup {
+    statusline = statuslines,
+    tabline = tabline,
+    winbar = winbars,
+    -- statuscolumn = {}
+  }
 
 end)
 

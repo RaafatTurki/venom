@@ -1,5 +1,8 @@
 --- defines vanilla and (a much as possible) plugin keybinds
 -- @module bind
+log = require 'logger'.log
+U = require 'utils'
+
 local M = {}
 
 M.bind_leader = U.Service():new(function()
@@ -9,7 +12,7 @@ end)
 
 M.keys = {}
 
--- a keymap object is {string, string, opts = {}, mode = string}
+-- a keymap object is {lhs, rhs, opts = {}, mode = string}
 M.key = U.Service():new(function(keymap)
   keymap.opts = keymap.opts or { noremap = true, silent = true }
   keymap.mode = keymap.mode and vim.split(keymap.mode, ' ') or 'n'
@@ -46,6 +49,7 @@ M.setup = U.Service():new(function()
   M.key {'<C-s>',             function() venom.events.write() end, mode = 'n v i'}
   M.key {'<C-z>',             function() vim.cmd.undo() end, mode = 'n v i'}
   M.key {'<C-c>',             function() vim.cmd.quit() end, mode = 'n v i'}
+  -- M.key {'<A-c>',             function() vim.cmd.bdelete() end, mode = 'n v i'}
   M.key {'<C-q>',             function() vim.cmd.quitall() end, mode = 'n v i'}
   -- page shift up/down, select all
   M.key {'<C-Up>',            '<C-y>k'}
@@ -75,16 +79,18 @@ M.setup = U.Service():new(function()
   -- split (opposite of J)
   M.key {'S',                 'T hr<CR>k$'}
   -- open man pages in new tabs
-  M.key {'K',                 ':tab Man<CR>'}
+  -- M.key {'K',                 ':tab Man<CR>'}
   -- zt and zb with arrows
-  M.key {'z<Up>',             'zt'}
-  M.key {'z<Down>',           'zb'}
+  -- M.key {'z<Up>',             'zt'}
+  -- M.key {'z<Down>',           'zb'}
   -- center line after n/N
   -- M.key {'n',                'nzzzv'}
   -- M.key {'N',                'Nzzzv'}
   -- refresh action
-  venom.events.refresh:sub[[e]]
-  M.key {'<F5>',              function() venom.events.refresh() end}
+  -- venom.events.refresh:sub('mkview')
+  -- venom.events.refresh:sub('e')
+  -- venom.events.refresh:sub('loadview')
+  -- M.key {'<F5>',              function() venom.events.refresh() end}
   -- clear action
   -- venom.actions.clear:sub [[let @/ = ""]]
   venom.events.clear:sub [[noh]]
@@ -102,12 +108,15 @@ M.setup = U.Service():new(function()
   M.key {'d<Left>',           function() vim.diagnostic.goto_prev({ float = false }) end}
   M.key {'d<Right>',          function() vim.diagnostic.goto_next({ float = false }) end}
   -- tabs
-  M.key {'<C-t>',             '<CMD>tabnew<CR>'}
-  M.key {'<S-Right>',         '<CMD>tabnext<CR>'}
-  M.key {'<S-Left>',          '<CMD>tabprevious<CR>'}
-  -- lsp
-  M.key {'<leader>r',         '<CMD>LspRename<CR>'}
-
+  M.key {'<C-t>',             vim.cmd.tabnew}
+  M.key {'<S-Right>',         vim.cmd.tabnext}
+  M.key {'<S-Left>',          vim.cmd.tabprevious}
+  -- buffers
+  M.key {'<A-Right>',         vim.cmd.bnext}
+  M.key {'<A-Left>',          vim.cmd.bprevious}
+  for i, label in ipairs(Buffers.labels) do
+    M.key {'<A-'..label..'>',      function() Buffers.buf_switch_by_label(label) end}
+  end
 
   -- MOTIONS
   M.key {'aa',                ':<c-u>normal! ggVG<CR>', mode = 'o'}
@@ -132,46 +141,21 @@ M.setup_plugins = U.Service():new(function()
 
 
   -- PLUGINS
+  M.key {'<A-c>',             function() require 'mini.bufremove'.delete() end, mode = 'n v i'}
   -- packer sync
-  M.key {'<leader>p',         function() PluginManager.sync({ take_snapshot = true }) end}
+  M.key {'<leader>p',         function() PluginManager.sync() end}
   -- toggle term
   M.key {[[<C-\>]],           '<CMD>ToggleTerm<CR>', mode = 'n'}
   M.key {[[<C-\>]],           [[<C-\><C-n><CMD>ToggleTerm<CR>]], mode = 't'}
   -- nvim tree
   M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
   -- M.key {'<C-e>',             '<CMD>Neotree toggle<CR>', mode = 'i n'}
-  -- reach
-  local auto_handles = {
-    '1', '2', '3',
-    'q', 'w', 'e',
-    'a', 's', 'd',
-    'z', 'x', 'c',
-    'Q', 'W', 'E',
-    'A', 'S', 'D',
-    'Z', 'X', 'C'
-  }
-  local auto_handles_bind_count = 8
-  M.key {'<C-p>',            function()
-    require 'reach'.buffers {
-      show_current = true,
-      grayout_current = false,
-      modified_icon = '•',
-      auto_handles = auto_handles,
-      previous = {
-        enable = false,
-      },
-      -- filter = function(bufnr)
-      --   if vim.api.nvim_buf_get_name(bufnr) == '' then return false end
-      --   return true
-      -- end
-    }
-  end}
-  for i, char in ipairs(auto_handles) do
-    if (i > auto_handles_bind_count) then break end
-    M.key {'<A-'..char..'>',      function() require 'reach'.switch_to_buffer(i) end}
-  end
   -- fold-cycle
-  M.key {'za',                function() require 'fold-cycle'.toggle_all() end}
+  M.key {'za',                function() require 'fold-cycle'.toggle_all() venom.events.folding() end}
+  M.key {'z<Right>',          function() require 'fold-cycle'.open() venom.events.folding() end}
+  M.key {'z<Left>',           function() require 'fold-cycle'.close() venom.events.folding() end}
+  M.key {'z<Down>',           function() require 'fold-cycle'.open_all() venom.events.folding() end}
+  M.key {'z<Up>',             function() require 'fold-cycle'.close_all() venom.events.folding() end}
   -- fold-preview
   M.key {'zq',                function() require 'fold-preview'.toggle_preview() end}
   -- gitsigns
@@ -194,14 +178,14 @@ M.setup_plugins = U.Service():new(function()
   M.key {'g<Left>',           '<CMD>Gitsigns prev_hunk<CR>zz'}
   M.key {'g<Right>',          '<CMD>Gitsigns next_hunk<CR>zz'}
   -- gomove
-  M.key {'<A-Left>',          '<Plug>GoNSMLeft', mode = 'n' }
   M.key {'<A-Down>',          '<Plug>GoNSMDown', mode = 'n' }
   M.key {'<A-Up>',            '<Plug>GoNSMUp', mode = 'n' }
-  M.key {'<A-Right>',         '<Plug>GoNSMRight', mode = 'n' }
-  M.key {'<A-Left>',          '<Plug>GoVSMLeft', mode = 'x' }
+  -- M.key {'<A-Left>',       '<Plug>GoNSMLeft', mode = 'n' }
+  -- M.key {'<A-Right>',      '<Plug>GoNSMRight', mode = 'n' }
   M.key {'<A-Down>',          '<Plug>GoVSMDown', mode = 'x' }
   M.key {'<A-Up>',            '<Plug>GoVSMUp', mode = 'x' }
-  M.key {'<A-Right>',         '<Plug>GoVSMRight', mode = 'x' }
+  -- M.key {'<A-Left>',       '<Plug>GoVSMLeft', mode = 'x' }
+  -- M.key {'<A-Right>',      '<Plug>GoVSMRight', mode = 'x' }
   -- lsp installer
   M.key {'<leader>l',         '<CMD>Mason<CR>'}
   -- lsp
@@ -212,7 +196,8 @@ M.setup_plugins = U.Service():new(function()
   M.key {'<leader>v',         '<CMD>LspHover<CR>'}
   M.key {'<leader>dl',        '<CMD>LspDiagsList<CR>'}
   M.key {'<leader>dv',        '<CMD>LspDiagsHover<CR>'}
-  -- fzf-lus
+  -- telescope
+  M.key {'<leader><CR>',      '<CMD>Telescope resume<CR>'}
   M.key {'<leader>f',         '<CMD>Telescope find_files<CR>'}
   M.key {'<leader>g',         '<CMD>Telescope live_grep<CR>'}
   -- neotest
@@ -220,6 +205,19 @@ M.setup_plugins = U.Service():new(function()
   -- illuminate
   M.key {'r<Right>',          function() require('illuminate').goto_next_reference() end}
   M.key {'r<Left>',           function() require('illuminate').goto_prev_reference() end}
+  -- rest
+  M.key {'h<CR>',             '<Plug>RestNvim'}
+  -- dial
+  -- M.key {'<C-a>',             require 'dial.map'.inc_normal, mode = 'n'}
+  -- M.key {'<C-x>',             require 'dial.map'.dec_normal, mode = 'n'}
+  -- M.key {'<C-a>',             require 'dial.map'.inc_visual, mode = 'v'}
+  -- M.key {'<C-x>',             require 'dial.map'.dec_visual, mode = 'v'}
+  -- M.key {'g<C-a>',            require 'dial.map'.inc_gvisual, mode = 'v'}
+  -- M.key {'g<C-x>',            require 'dial.map'.dec_gvisual, mode = 'v'}
+
+  -- M.key {'<C-Right>', '<Plug>luasnip-next-choice'}
+  -- imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+  -- smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
 
 end)
 

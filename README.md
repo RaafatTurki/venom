@@ -12,13 +12,17 @@ Hence the introduction of the following mechanisims in order to stabilize workin
 
 
 ### 1. Features
-This is a simple table of strings `venom.features.list` that each represents the existence of a single feature.
+(N)vim already provides `:help has()` and this is it's equivalent for user defined features.
+At the end of the day it's just a table that can store strings that each represent the availability of a specific feature.
+Currently they're implemented as a LUA utility "class" (`U.FeatureList`) and are generally stored in `venom.features.list`
 
 Usage:
 ```lua
-venom.features.add_str("PLUGIN:nvim-jdtls") -- plugin_manager automatically registers all installed plugins as such
+local features = U.FeatureList():new()
 
-if venom.features.has_str("PLUGIN:nvim-jdtls") then
+features:add_str("PLUGIN:nvim-jdtls") -- plugin_manager automatically registers all installed plugins as such
+
+if features:has_str("PLUGIN:nvim-jdtls") then
   -- setup nvim jdtls and what not
 end
 ```
@@ -32,9 +36,11 @@ FT = {
   MISC = "MISC", -- miscellanous stuff
 }
 
-venom.features.list -- table of features
-venom.features.add(FT.PLUGIN, "nvim-jdtls") -- same as add_str but uses FT
-venom.features.has(FT.PLUGIN, "nvim-jdtls") -- same as has_str but uses FT
+features:list -- table of features
+features:add(FT.PLUGIN, "nvim-jdtls") -- same as add_str but uses FT
+features:has(FT.PLUGIN, "nvim-jdtls") -- same as has_str but uses FT
+features:stitch(FT.PLUGIN, "nvim-jdtls") -- returns "PLUGIN:nvim-jdtls"
+features:unstitch("PLUGIN:nvim-jdtls") -- { FT.PLUGIN, "nvim-jdtls" }
 ```
 
 

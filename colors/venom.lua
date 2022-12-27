@@ -1,5 +1,8 @@
 --- defines builtin colorscheme.
 -- @module color_scheme
+log = require 'logger'.log
+U = require 'utils'
+
 local M = {}
 
 M.set_hl = function(group_name, opts)
@@ -154,10 +157,8 @@ local c = {
 }
 
 M.highlights = {
-
-  -- TreeSitter
+  -- TREESITTER:
   -- for more visit https://github.com/nvim-treesitter/nvim-treesitter/blob/master/CONTRIBUTING.md
-
   -- Misc
   ['@comment']           = { fg = c.comment },
   ['@error']             = { fg = c.err },
@@ -165,72 +166,57 @@ M.highlights = {
   ['@preproc']           = { fg = c.include },
   ['@define']            = { '@preproc' },
   ['@operator']          = { fg = c.operator },
-
   -- Punctuation
   ['@punctuation.bracket']    = { '@operator' },
   ['@punctuation.delimiter']  = { '@operator' },
   ['@punctuation.special']    = { '@operator' },
-
   -- Literals
   ['@string']             = { fg = c.string },
   ['@string.regex']       = { '@string' },
   ['@string.escape']      = { '@string' },
   ['@string.special']     = { '@string' },
-
   ['character']           = { '@string' },
   ['character.special']   = { '@string' },
-
   ['@number']             = { fg = c.value },
   ['@boolean']            = { '@number' },
   ['@float']              = { '@number' },
-
   -- Functions
   ['@function']           = { fg = c.func },
   ['@function.builtin']   = { '@function' },
   ['@function.call']      = { '@function' },
   ['@function.macro']     = { '@function' },
-
   ['@method']             = { '@function' },
   ['@method.call']        = { '@function' },
-
   ['@constructor']        = { '@function' },
   ['@parameter']          = { '@variable' },
-
   -- Keywords
   ['@keyword']            = { fg = c.keyword },
   ['@keyword.function']   = { '@keyword' },
   ['@keyword.operator']   = { '@keyword' },
   ['@keyword.return']     = { '@keyword' },
-
   ['@conditional']        = { '@keyword' },
   ['@repeat']             = { '@keyword' },
   ['@debug']              = { fg = c.debug },
   ['@label']              = { '@keyword' },
   ['@include']            = { fg = c.include },
   ['@exception']          = { '@keyword' },
-
   -- Types
   ['@type']               = { fg = c.type },
   ['@type.builtin']       = { '@type' },
   ['@type.definition']    = { '@type' },
   ['@type.qualifier']     = { '@type' },
-
   ['@storageclass']       = { '@type' },
   ['@attribute']          = { '@variable' },
   ['@field']              = { '@variable' },
   ['@property']           = { '@variable' },
-
   -- Identifiers
   ['@variable']           = { fg = c.fg }, -- c.variable,
   ['@variable.builtin']   = { '@variable' },
-
   ['@constant']           = { fg = c.constant },
   ['@constant.builtin']   = { '@constant' },
   ['@constant.macro']     = { '@constant' },
-
   ['@namespace']          = { '@type' },
   ['@symbol']             = { '@variable' },
-
   -- Text
   ['@text']                   = { fg = c.fg },
   ['@text.strong']            = { bold = true },
@@ -244,15 +230,12 @@ M.highlights = {
   ['@text.environment']       = { '@function' },
   ['@text.environment.name']  = { '@constant' },
   ['@text.reference']         = { '@text.uri' },
-
   ['@text.todo']              = { fg = c.note },
   ['@text.note']              = { fg = c.note },
   ['@text.warning']           = { fg = c.warn },
   ['@text.danger']            = { bg = c.err, fg = c.bg },
-
   ['@text.diff.add']          = { fg = c.add },
   ['@text.diff.delete']       = { fg = c.del },
-  
   -- Tags
   ['@tag']                = { '@keyword' },
   ['@tag.attribute']      = { '@variable' },
@@ -307,7 +290,7 @@ Conceal         = { '@debug' },
   Folded          = { fg = c.fold, bold = true },
   lCursor         = { }, --
   IncSearch       = { 'Search' },
-  LineNr          = { fg = c.comment },
+  LineNr          = { fg = c.comment, italic = true },
   LineNrAbove     = { }, --
   LineNrBelow     = { }, --
   MatchParen      = { bold = true },
@@ -316,13 +299,14 @@ Conceal         = { '@debug' },
   MsgArea         = { fg = c.match },
   MsgSeparator    = { bg = c.bg, fg = c.mg },
   NonText         = { fg = c.comment, bold = true },
-  Normal          = { bg = c.bg },
-  NormalFloat     = { }, --
+  Normal          = { bg = c.bg_alt },
+  NormalFloat     = { bg = c.bg },
+  FloatBorder     = { bg = c.bg, fg = c.bg },
   NormalNC        = { }, --
   Pmenu           = { bg = c.line, fg = c.fg },
   PmenuSel        = { bg = c.mg, fg = c.fg },
   PmenuSbar       = { 'Pmenu' },
-  PmenuThumb      = { bg = c.fg },
+  PmenuThumb      = { bg = c.mg },
   Question        = { fg = c.fg, bold = true },
   QuickFixLine    = { 'PmenuSel' },
   Search          = { bg = c.match, fg = c.bg, bold = true },
@@ -357,10 +341,10 @@ Whitespace      = { 'Debug' },
 
 
   -- LSP
-  LspReferenceText            = { bold = true };
-  LspReferenceRead            = { bold = true };
-  LspReferenceWrite           = { bold = true };
-LspCodeLens                 = { '@debug' },
+  LspReferenceText            = { underline = true };
+  LspReferenceRead            = { underline = true };
+  LspReferenceWrite           = { underline = true };
+  LspCodeLens                 = { 'Comment' },
 LspCodeLensSeparator        = { '@debug' },
   LspSignatureActiveParameter = { underline = true, bold = true },
 
@@ -436,6 +420,12 @@ healthBar               = { '@debug' };
 
 
   -- Plugins
+  LspInfoTitle            = { 'Label' };
+  LspInfoList             = { 'Label' };
+  LspInfoFiletype         = { 'Type' };
+  LspInfoTip              = { 'Comment' };
+  LspInfoBorder           = { 'FloatBorder' };
+
   -- diff
   diffAdded               = { fg = c.add };
   diffChanged             = { fg = c.mod };
@@ -518,7 +508,7 @@ healthBar               = { '@debug' };
   NvimTreeIndentMarker    = { fg = c.mg };
   NvimTreeOpenedFile      = { fg = c.fg };
   NvimTreeGitDirty        = { fg = c.dirty };
-  NvimTreeGitStaged       = { fg = c.staged, gui = 'bold' };
+  NvimTreeGitStaged       = { fg = c.staged, bold = true };
   NvimTreeGitMerge        = { fg = c.merge };
   NvimTreeGitRenamed      = { fg = c.renamed };
   NvimTreeGitDeleted      = { fg = c.deleted };
@@ -539,7 +529,7 @@ healthBar               = { '@debug' };
   NeoTreeFileName             = {}; --
   NeoTreeFileNameOpened       = { bold = true };
   NeoTreeFilterTerm           = {};
-  NeoTreeFloatBorder          = {}; --
+  NeoTreeFloatBorder          = { 'FloatBorder' };
   NeoTreeFloatTitle           = { 'Title' };
   NeoTreeGitAdded             = { 'NvimTreeGit' };
   NeoTreeGitConflict          = { 'NvimTreeGitMerge' };
@@ -581,9 +571,18 @@ NeoTreeWindowsHidden        = { '@debug' };
   SymbolsOutlineConnector = { fg = c.mg };
 
   -- telescope
-  TelescopeBorder         = { fg = c.mg };
-  TelescopeTitle          = { 'Title' };
-  TelescopeMatching       = { 'Search' };
+  TelescopeBorder         = { 'FloatBorder' };
+  TelescopeMatching       = { fg = c.fg, bold = true };
+  TelescopeSelectionCaret = { fg = c.fg, bold = true },
+  TelescopeNormal         = { bg = c.bg, fg = c.fold },
+  TelescopeSelection      = { 'CursorLine' },
+  TelescopeMultiSelection = { 'Type' },
+  TelescopeTitle          = { fg = c.fg };
+  TelescopePreviewTitle   = { fg = c.fg },
+  TelescopePreviewNormal  = { },
+  TelescopePromptTitle    = { fg = c.fg },
+  TelescopePromptNormal   = { },
+  TelescopePromptBorder   = { 'FloatBorder' },
 
   -- harpoon
   HarpoonBorder           = { 'WinSeparator' };
@@ -624,19 +623,19 @@ NeoTreeWindowsHidden        = { '@debug' };
   UltestPass              = { fg = c.add };
   UltestFail              = { fg = c.err };
   UltestRunning           = { fg = c.warn };
-  UltestBorder            = { fg = c.mg };
+  UltestBorder            = { 'FloatBorder' };
   UltestSummaryInfo       = { fg = c.fold };
-  UltestSummaryFile       = { 'UltestSummaryInfo', gui = 'bold'};
+  UltestSummaryFile       = { 'UltestSummaryInfo', bold = true};
   UltestSummaryNamespace  = { 'UltestSummaryFile' };
 
   -- reach
-  ReachBorder             = { 'WinSeparator' };
+  ReachBorder             = { 'FloatBorder' };
   ReachDirectory          = { 'Directory' };
   ReachModifiedIndicator  = { 'String' };
   ReachHandleBuffer       = { 'String' };
   ReachHandleDelete       = { 'Error' };
   ReachHandleSplit        = { 'Directory' };
-  ReachTail               = { 'Normal' };
+  ReachTail               = { fg = c.fold };
   ReachHandleMarkLocal    = { 'Type' };
   ReachHandleMarkGlobal   = { 'Number' };
   ReachMark               = { 'Normal' };
@@ -645,7 +644,7 @@ NeoTreeWindowsHidden        = { '@debug' };
   ReachGrayOut            = { 'Comment' };
   ReachMatchExact         = { 'String' };
   ReachPriority           = { 'WarningMsg' };
-  ReachCurrent            = { 'Folded', gui = 'bold' };
+  ReachCurrent            = { fg = c.fg, bold = true};
 
   -- navic
   NavicIconsFile          = { 'CmpItemKindFile' };
@@ -686,6 +685,19 @@ NeoTreeWindowsHidden        = { '@debug' };
   IlluminatedWordRead     = { 'LspReferenceRead' };
   IlluminatedWordWrite    = { 'LspReferenceWrite' };
 
+  MiniStarterHeader       = { 'Label' };
+  MiniStarterFooter       = { 'Label' };
+  MiniStarterSection      = { 'Label' };
+  -- MiniStarterCurrent      = { 'Title' };
+  -- MiniStarterItem         = { 'Normal' };
+
+  MiniMapNormal           = { 'Normal' };
+  -- MiniMapSymbolCount      = { '' };
+  MiniMapSymbolLine       = { 'Normal' };
+  MiniMapSymbolView       = { 'Comment' };
+  MiniAnimateCursor       = { bg = c.fg };
+
+
   -- CUTSOM GROUPS
   -- DebugFg                 = { fg = debug[10] };
   -- DebugBg                 = { bg = debug[1] };
@@ -694,7 +706,7 @@ NeoTreeWindowsHidden        = { '@debug' };
   SnippetPassiveIndicator = { 'Comment' };
   SnippetInsertIndicator  = { fg = c.fg };
   SnippetChoiceIndicator  = { fg = c.hint };
-  CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
+  -- CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
   Camel                   = { 'WarningMsg' };
 
   ModeNormal              = { fg = c.mg, bold = true };
@@ -726,4 +738,5 @@ NeoTreeWindowsHidden        = { '@debug' };
 --   augroup misc_highlighs
 -- ]]
 
-return M
+-- return M
+M.load()

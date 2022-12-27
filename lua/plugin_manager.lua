@@ -1,160 +1,111 @@
 --- defines plugin managment mechanism.
 -- @module plugin_manager
+log = require 'logger'.log
+U = require 'utils'
+
 local M = {}
 
-M.plugin_manager_name = 'packer.nvim'
-M.plugin_manager = nil
-M.install_paths = {
-  vim.fn.stdpath('data')..'/site/pack/packer/start',
-  vim.fn.stdpath('data')..'/site/pack/packer/opt'
-}
-M.is_bootstraping = false
-M.missing_plugins = {}
+M.plugin_manager_name = 'lazy.nvim'
+M.install_path = vim.fn.stdpath("data") .. '/lazy/'
 M.event_post_complete = U.Event():new()
 
 --- bootstraps the plugin manager if not installed
 M.bootstrap = U.Service():new(function()
-  vim.fn.system { 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', M.install_paths[1]..'/'..M.plugin_manager_name }
-  log('bootstrapping plugin manager...')
-  vim.api.nvim_command 'packadd packer.nvim'
+  local plugin_manager_path = M.install_path .. M.plugin_manager_name
+
+  if not vim.loop.fs_stat(plugin_manager_path) then
+    vim.fn.system({
+      "git",
+      "clone",
+      "--filter=blob:none",
+      "--single-branch",
+      "https://github.com/folke/lazy.nvim.git",
+      plugin_manager_path,
+    })
+  end
+
+  vim.opt.runtimepath:prepend(plugin_manager_path)
 end)
 
 --- initializes and configures the plugin manager
-M.setup = U.Service():new(function()
-  -- bootstrap if no pm detected
-  if not M.is_plugin_installed(M.plugin_manager_name) then
-    M.bootstrap()
-    M.is_bootstraping = true
+M.setup = U.Service():new(function(plugins)
+
+  M.bootstrap()
+
+  require 'lazy'.setup(plugins, {
+    root = M.install_path,
+    dev = {
+      path = '~/sectors/nvim/',
+    },
+    install = {
+      colorscheme = { 'venom' }
+    },
+  })
+ 
+
+  -- registering plugins that are both installed and listed
+  local instaled_plugins = U.scan_dir(M.install_path)
+  local listed_plugins = M.get_short_plugin_names_from_plugin_spec_tree(plugins)
+
+  for _, v in ipairs(U.tbl_intersect(instaled_plugins, listed_plugins)) do
+    M.register_plugin(v)
   end
 
-  -- loading
-  local ok, packer = pcall(require, 'packer')
-  if not ok then
-    log.err("could not require packer")
-    return
-  end
-  M.plugin_manager = packer
-
-  -- settings
-  packer.init {
-    compile_path = vim.fn.stdpath("data")..'/plugin/packer_compiled.vim',
-    git = {
-      clone_timeout = 100,
-    },
-    profile = {
-      enable = true,
-      -- threshold = 1 -- the amount in ms that a plugins load time must be over for it to be included in the profile
-      threshold = 0
-    },
-    display = {
-      open_fn = function() return require'packer.util'.float({ border = 'single' }) end,
-      open_cmd = '100vnew \\[packer\\]',
-      working_sym = ' ',
-      error_sym = ' ',
-      done_sym = ' ',
-      removed_sym = ' ',
-      moved_sym = ' ',
-      header_sym = ' ',
-      prompt_border = 'single', -- Border style of prompt popups.
-    }
-  }
-  packer.reset()
+  M.event_post_complete()
 end)
 
---- checks if plugin is installed
-M.is_plugin_installed = U.Service():new(function(short_name)
-  for _, path in pairs(M.install_paths) do
-    if vim.fn.isdirectory(path..'/'..short_name) == 1 then
-      return true
+--- returns plugin short name from a single plugin spec
+M.get_short_name_from_plugin_spec = function(spec)
+  local name = nil
+
+  if type(spec) == 'string' then
+    name = spec
+  elseif type(spec) == 'table' and spec[1] ~= nil then
+    name = spec[1]
+  end
+
+  local name_arr = vim.split(name, '/')
+  return name_arr[#name_arr]
+end
+
+--- recurses through the plugin spec tree to extract plugin short names
+M.get_short_plugin_names_from_plugin_spec_tree = function(specs)
+  local names = {}
+
+  if type(specs) == 'string' then
+    table.insert(names, M.get_short_name_from_plugin_spec(specs))
+  else
+    for _, spec in ipairs(specs) do
+      table.insert(names, M.get_short_name_from_plugin_spec(spec))
+      if spec.dependencies ~= nil then
+        names = U.tbl_union(names, M.get_short_plugin_names_from_plugin_spec_tree(spec.dependencies))
+      end
     end
   end
-  return false
-end)
+
+  return names
+end
 
 --- registers a plugin into the feature list as PLUGIN:<plugin short name>
 M.register_plugin = U.Service():new(function(short_name)
-  if not M.is_plugin_installed(short_name) then
-    log.warn('attempt to feature register a missing plugin "'..short_name..'"')
-  elseif venom.features:has(FT.PLUGIN, short_name) then
+  if venom.features:has(FT.PLUGIN, short_name) then
     log.warn('attempt to feature re-register a plugin "'..short_name..'"')
   else
     venom.features:add(FT.PLUGIN, short_name)
   end
 end)
 
---- gets plugin entry split name
-M.get_plugin_entry_split_name = U.Service():new(function(entry)
-  local full_name = nil
-  if type(entry) == 'string' then
-    full_name = entry
-  elseif type(entry) == 'table' then
-    full_name = entry[1]
-  end
-  return vim.split(full_name, '/')
-end)
-
---- detects if a plugin is missing
-M.detect_missing_plugins = U.Service():new(function(entries)
-  -- local deps = entry.requires or {}
-  for _, entry in pairs(entries) do
-    --- extract short name
-    local name_split = M.get_plugin_entry_split_name(entry)
-    local name_short = name_split[#name_split]
-
-    --- detect if plugin is not installed
-    if not M.is_plugin_installed(name_short) then
-      table.insert(M.missing_plugins, name_short)
-    end
-  end
-end)
-
 --- syncs plugins (updates them regardless of the method)
 M.sync = U.Service():new(function(opts)
-  opts = opts or {
-    take_snapshot = false
-  }
-
-  if opts.take_snapshot then
-    M.plugin_manager.snapshot('snapshot_'..os.time()..'.json')
-  end
-  
-  log("packer syncing...")
-  M.plugin_manager.sync()
-end)
-
---- installs plugins
-M.setup_plugins = U.Service():new(function(entries)
-  -- setup plugins
-  for _, entry in pairs(entries) do
-    M.plugin_manager.use(entry)
-  end
-
-  -- detect missing plugins and sync if needed
-  M.missing_plugins = {}
-  M.detect_missing_plugins(entries)
-
-  -- register plugins into the feature list
-  M.event_post_complete:sub_front(function()
-    for _, entry in pairs(entries) do
-      local name_split = M.get_plugin_entry_split_name(entry)
-      local name_short = name_split[#name_split]
-      M.register_plugin(name_short)
-    end
-  end)
-
-  -- sync if plugin manager was bootstrapped
-  if #M.missing_plugins > 0 and M.is_bootstraping then
-    vim.api.nvim_command 'PackerSync'
-    vim.cmd [[autocmd User PackerComplete lua PluginManager.event_post_complete()]]
-  -- sync if there are missing plugins
-  -- elseif #M.missing_plugins > 0 then
-  --   log.warn(#M.missing_plugins ..' missing plugins detected')
-  --   vim.api.nvim_command 'PackerSync'
-  --   vim.cmd [[autocmd User PackerComplete lua PluginManager.event_post_complete()]]
-  else
-    M.event_post_complete()
-  end
-
+  -- opts = opts or {
+  --   take_snapshot = true
+  -- }
+  --
+  -- if opts.take_snapshot then
+  --   M.plugin_manager.snapshot('snapshot_'..os.time()..'.json')
+  -- end
+  --
+  vim.cmd [[Lazy update]]
 end)
 
 return M

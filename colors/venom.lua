@@ -1,11 +1,42 @@
---- defines builtin colorscheme.
--- @module color_scheme
-log = require 'logger'.log
-U = require 'utils'
 
-local M = {}
+-- utils
+local clamp = function(n, min, max)
+  return math.min(math.max(n, min), max)
+end
 
-M.set_hl = function(group_name, opts)
+local mod = function(hex, amt)
+  hex = hex:sub(2)
+  local hex_r = hex:sub(1, 2)
+  local hex_g = hex:sub(3, 4)
+  local hex_b = hex:sub(5, 6)
+
+  local r = tonumber(hex_r, 16)
+  local g = tonumber(hex_g, 16)
+  local b = tonumber(hex_b, 16)
+
+  r = r + amt
+  g = g + amt
+  b = b + amt
+
+  r = clamp(r, 0, 255)
+  g = clamp(g, 0, 255)
+  b = clamp(b, 0, 255)
+
+  local rgb = (r * 0x10000) + (g * 0x100) + b
+  return string.format("#%06x", rgb)
+end
+
+local gen_shades = function(col)
+  local shades = {}
+  for i = 0, 9 do
+    local new_col = mod(col, i*3)
+    table.insert(shades, new_col)
+  end
+  return shades
+end
+
+
+local set_hl = function(group_name, opts)
 
   local hl_opts = {
     fg = opts.fg,
@@ -25,7 +56,7 @@ M.set_hl = function(group_name, opts)
     nocombine = opts.nocombine or false,
   }
 
-  if opts.blend ~= nil then hl_opts.blend = M.clamp(opts.blend, 0, 100) end
+  if opts.blend ~= nil then hl_opts.blend = clamp(opts.blend, 0, 100) end
 
   if opts[1] ~= nil then hl_opts.link = opts[1] end
 
@@ -46,66 +77,24 @@ M.set_hl = function(group_name, opts)
   vim.api.nvim_set_hl(0, group_name, hl_opts)
 end
 
-M.set_hls = function(hl_table)
+local set_hls = function(hl_table)
   for hl_group, opts in pairs(hl_table) do
-    M.set_hl(hl_group, opts)
+    set_hl(hl_group, opts)
   end
 end
 
-
-M.clamp = function(n, min, max)
-  return math.min(math.max(n, min), max)
-end
-
-M.mod = function(hex, amt)
-  hex = hex:sub(2)
-  local hex_r = hex:sub(1, 2)
-  local hex_g = hex:sub(3, 4)
-  local hex_b = hex:sub(5, 6)
-
-  local r = tonumber(hex_r, 16)
-  local g = tonumber(hex_g, 16)
-  local b = tonumber(hex_b, 16)
-
-  r = r + amt
-  g = g + amt
-  b = b + amt
-
-  r = M.clamp(r, 0, 255)
-  g = M.clamp(g, 0, 255)
-  b = M.clamp(b, 0, 255)
-
-  local rgb = (r * 0x10000) + (g * 0x100) + b
-  return string.format("#%06x", rgb)
-end
-
-M.gen_shades = function(col)
-  local shades = {}
-  for i = 0, 9 do
-    local new_col = M.mod(col, i*3)
-    table.insert(shades, new_col)
-  end
-  return shades
-end
-
-M.load = function()
-  M.set_hls(M.highlights)
-end
-
-local green     = M.gen_shades '#1F5E3F'
-local white     = M.gen_shades '#C0B9DD'
--- local pink      = M.gen_shades '#E988CF'
-local red       = M.gen_shades '#CB4251'
-local orange    = M.gen_shades '#F37A2E'
-local yellow    = M.gen_shades '#FFBE34'
-local lime      = M.gen_shades '#AAD94C'
-local cyan      = M.gen_shades '#409FFF'
-local blue      = M.gen_shades '#3C4879'
-local purple    = M.gen_shades '#4C3889'
-local grey      = M.gen_shades '#222A3D'
--- local black     = M.gen_shades '#0D1017'
-local black     = M.gen_shades '#07080f'
-local debug     = M.gen_shades '#FF00FF'
+local green     = gen_shades '#1F5E3F'
+local white     = gen_shades '#C0B9DD'
+local red       = gen_shades '#CB4251'
+local orange    = gen_shades '#F37A2E'
+local yellow    = gen_shades '#FFBE34'
+local lime      = gen_shades '#AAD94C'
+local cyan      = gen_shades '#409FFF'
+local blue      = gen_shades '#3C4879'
+local purple    = gen_shades '#4C3889'
+local grey      = gen_shades '#222A3D'
+local black     = gen_shades '#07080f'
+local debug     = gen_shades '#FF00FF'
 
 local c = {
   -- ui
@@ -156,7 +145,7 @@ local c = {
   debug     = debug[1]
 }
 
-M.highlights = {
+local highlights = {
   -- TREESITTER:
   -- for more visit https://github.com/nvim-treesitter/nvim-treesitter/blob/master/CONTRIBUTING.md
   -- Misc
@@ -738,5 +727,4 @@ NeoTreeWindowsHidden        = { '@debug' };
 --   augroup misc_highlighs
 -- ]]
 
--- return M
-M.load()
+set_hls(highlights)

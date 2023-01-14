@@ -8,31 +8,32 @@ it breaks one too many times and you get a Toyota, Which is the emacs of cars.
 I dislike over-engineering, Keeping things simple is its own reward.
 However some safety nets must be put in place to ensure our code won't break under unexpected conditions.
 
-Hence the introduction of the following mechanisims in order to stabilize working in such a volitile environment:
+Hence the introduction of the following mechanisims:
 
 
-### 1. Features
+## 1. Features
 (N)vim already provides `:help has()` and this is it's equivalent for user defined features.
-At the end of the day it's just a table that can store strings that each represent the availability of a specific feature.
-Currently they're implemented as a LUA utility "class" (`U.FeatureList`) and are generally stored in `venom.features.list`
+At the end of the day it's just a table of strings and each represents the availability of a certain feature.
+Implemented as the LUA class `FeatureList`
 
-Usage:
+**Usage:**
 ```lua
-local features = U.FeatureList():new()
+local features = FeatureList():new()
 
-features:add_str("PLUGIN:nvim-jdtls") -- plugin_manager automatically registers all installed plugins as such
+-- plugin_manager.lua automatically registers all installed plugins
+features:add_str("PLUGIN:nvim-jdtls")
 
 if features:has_str("PLUGIN:nvim-jdtls") then
   -- setup nvim jdtls and what not
 end
 ```
-Extras:
+**Extras:**
 ```lua
 --- an "enum" of feature types
 FT = {
   PLUGIN = "PLUGIN", -- installed plugins
   LSP = "LSP", -- lsp module
-  BIN = "BIN", -- binaries present on system (rg, find, wget, curl ... etc)
+  BIN = "BIN", -- binaries present on system (rg, find, wget, curl, xxd, rg ... etc)
   MISC = "MISC", -- miscellanous stuff
 }
 
@@ -44,12 +45,11 @@ features:unstitch("PLUGIN:nvim-jdtls") -- { FT.PLUGIN, "nvim-jdtls" }
 ```
 
 
-
-### 2. Events
+## 2. Events
 Much like C# events/delegates events are invokable and subscribable (accepts lua funcs and vim cmds).
-Currently they're implemented as a LUA utility "class" (`U.Event`) and are generally stored in `venom.events`
+Implemented as the LUA class `Event`
 
-Usage:
+**Usage:**
 ```lua
 local clear = U.Event():new()
 
@@ -60,25 +60,24 @@ clear:sub(function() print("cleared highlights") end)
 
 clear() -- calls all subscribers in order
 ```
-Extras:
+**Extras:**
 ```lua
 clear:front_sub() -- puts a subsriber infront of all the others
 clear:subscribers -- table of subscribers
 clear:invoke() -- same as clear()
-clear:wrap() -- returns `function() return clear() end`
+clear:wrap() -- returns `function() return invoke() end`
 
 -- clear()/clear:invoke() are variadic and passes everything to all lua func subs (vim cmds are WIP)
 ```
 
-With the recent introduction of LUA autocmds the implementation can be further simplified.
+> With the recent introduction of LUA autocmds the implementation can be further simplified.
 
 
-
-### 3. Services
+## 3. Services
 Subscribing events conditionally based on features is not enough,
 we need functions that conditionally execute depending on what features they require
 and register the features they provide once executed.
-Currently they're implemented as a LUA utility "class" (`U.Service`)
+Implemented as the LUA class `Service`
 
 Usage:
 ```lua
@@ -95,18 +94,17 @@ impatient:required_features -- table of features this service requires
 impatient:provided_features -- 
 impatient:callback -- the callback to be executed once service called all requirments are met
 impatient:provide() -- a feature that gets registered once service is finished excuting
-impatient:invoke(...) -- same as impatient(...)
-impatient:wrap() -- returns `function() return clear() end`
+impatient:invoke() -- same as impatient()
+impatient:wrap() -- returns `function() return invoke() end`
 ```
-
 
 
 ## Notes
 - The rest of the config is just normal nvim/lua stuff that utilize the above machanisms.
-- Currently this config requires nvim nightly.
 - Some parts of the config aren't utilizing the above mechanisms yet.
 - There's a builtin colorscheme that's built around `vim.api.nvim_set_hl()`
-- Lazy loading is not present (yet)
+- Lazy loading is not a priority
+
 
 ## Final Thoughts:
 As featurful as one might want to make their nvim,

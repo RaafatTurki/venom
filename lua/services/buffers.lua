@@ -21,10 +21,9 @@ M.setup = U.Service():new(function()
 
   vim.api.nvim_create_autocmd('VimEnter', {
     callback = function()
-      -- loop over all buffers and add the ones that don't have buftype = 'nofile'
       for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_valid(bufnr) then
-          if vim.api.nvim_buf_get_option(bufnr, 'buftype') ~= 'nofile' then M.buf_add(bufnr) end
+        if M.is_buf_listable(bufnr) then
+          M.buf_add(bufnr)
         end
       end
     end
@@ -32,7 +31,10 @@ M.setup = U.Service():new(function()
 
   vim.api.nvim_create_autocmd('BufAdd', {
     callback = function()
-      M.buf_add(tonumber(vim.fn.expand('<abuf>')))
+      local bufnr = tonumber(vim.fn.expand('<abuf>'))
+      if M.is_buf_listable(bufnr) then
+        M.buf_add(bufnr)
+      end
     end
   })
 
@@ -58,6 +60,17 @@ M.setup = U.Service():new(function()
   vim.cmd [[cnoreabbrev hc HelpClose]]
   vim.cmd [[cnoreabbrev m ManOpen]]
 end)
+
+M.is_buf_listable = function (bufnr)
+  local buftype = vim.api.nvim_buf_get_option(bufnr, 'buftype')
+
+  if vim.api.nvim_buf_is_valid(bufnr)
+    and (buftype == '' or buftype == 'terminal')
+    and not vim.tbl_contains(M.buflist, bufnr)
+  then
+    M.buf_add(bufnr)
+  end
+end
 
 
 M.buf_get_index_from_bufnr = function(bufnr)

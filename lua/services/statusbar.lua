@@ -556,6 +556,25 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     }
   end)
 
+  M.components.macros = U.Service():new(function (opts)
+    return {
+      init = function(self)
+        self.reg_recording = vim.fn.reg_recording()
+      end,
+      condition = function()
+        return vim.fn.reg_recording() ~= ''
+      end,
+      opts.left_pad,
+      {
+        provider = function (self)
+          return '' .. ' ' .. self.reg_recording
+        end,
+        hl = 'Error',
+      },
+      opts.right_pad,
+    }
+  end)
+
   M.components.test = U.Service():new(function(opts)
     return {
       opts.left_pad,
@@ -640,6 +659,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     M.components.indentinfo(component_opts.middle),
     M.components.searchinfo(component_opts.middle),
     M.components.sessioninfo(component_opts.middle),
+    M.components.macros(component_opts.middle),
     M.components.ruler(component_opts.right),
   }
 

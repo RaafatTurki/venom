@@ -79,7 +79,7 @@ M.buf_get_index_from_label = function(label)
 end
 
 M.buf_get_label_from_bufnr = function(bufnr)
-local i = M.buf_get_index_from_bufnr(bufnr)
+  local i = M.buf_get_index_from_bufnr(bufnr)
   if i then return M.labels[i] end
   return ''
 end

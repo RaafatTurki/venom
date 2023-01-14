@@ -28,61 +28,98 @@ local p = {
 local plugins = {
   -- LSP:
   p.lspconfig,
-  { 'jose-elias-alvarez/null-ls.nvim', dependencies = p.plenary },
+  { 'jose-elias-alvarez/null-ls.nvim',
+    dependencies = p.plenary,
+  },
   -- LANG:
-  { p.treesitter, build = ':TSUpdate' },
-  { 'williamboman/mason.nvim', dependencies = {
-    p.lspconfig,
-    'williamboman/mason-lspconfig.nvim',
-    'jayp0521/mason-null-ls.nvim',
-  } },
-  { 'JoosepAlviste/nvim-ts-context-commentstring', dependencies = p.treesitter },
-  { 'SmiteshP/nvim-navic', dependencies = p.lspconfig },
-  { 'b0o/schemastore.nvim', dependencies = p.lspconfig },
-  { 'folke/neodev.nvim', dependencies = p.lspconfig },
+  { p.treesitter,
+    build = ':TSUpdate',
+  },
+  { 'williamboman/mason.nvim',
+    dependencies = {
+      p.lspconfig,
+      'williamboman/mason-lspconfig.nvim',
+      'jayp0521/mason-null-ls.nvim',
+    },
+  },
+  { 'JoosepAlviste/nvim-ts-context-commentstring',
+    dependencies = p.treesitter,
+  },
+  { 'SmiteshP/nvim-navic',
+    dependencies = p.lspconfig,
+  },
+  { 'b0o/schemastore.nvim',
+    dependencies = p.lspconfig,
+  },
+  { 'folke/neodev.nvim',
+    dependencies = p.lspconfig,
+  },
   -- p.dap,
   -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
   -- PLUGINS:
   -- mini.*
   { 'RRethy/vim-illuminate' },
   p.devicons,
-  { p.gitsigns, dependencies = p.plenary },
+  { p.gitsigns,
+    dependencies = p.plenary,
+  },
   { 'booperlv/nvim-gomove' },
   { 'Mofiqul/trld.nvim' },
-  { 'kyazdani42/nvim-tree.lua', dependencies = p.devicons },
+  { 'kyazdani42/nvim-tree.lua',
+    dependencies = p.devicons,
+  },
   { 'akinsho/nvim-toggleterm.lua' },
-  { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = {
-    p.plenary,
-    { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-  } },
+  { 'nvim-telescope/telescope.nvim',
+    branch = '0.1.x',
+    dependencies = {
+      p.plenary,
+      { 'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make',
+      },
+    }
+  },
   { 'jghauser/fold-cycle.nvim' },
   { 'Issafalcon/lsp-overloads.nvim' },
-  { 'anuvyklack/fold-preview.nvim', dependencies = p.keymap_amend },
+  { 'anuvyklack/fold-preview.nvim',
+    dependencies = p.keymap_amend,
+  },
   { 'NvChad/nvim-colorizer.lua' },
-  { 'folke/noice.nvim', dependencies = p.nui },
-  { p.cmp, dependencies = {
-    { 'lukas-reineke/cmp-rg' },
-    { 'hrsh7th/cmp-path' },
-    { 'hrsh7th/cmp-nvim-lsp' },
-    { 'hrsh7th/cmp-nvim-lua' },
-    { 'saadparwaiz1/cmp_luasnip' },
-    { 'L3MON4D3/LuaSnip' },
-    { 'hrsh7th/cmp-cmdline' },
-    { 'hrsh7th/cmp-buffer' },
-  } },
+  { 'folke/noice.nvim',
+    dependencies = p.nui,
+  },
+  { p.cmp,
+    dependencies = {
+      'lukas-reineke/cmp-rg',
+      'hrsh7th/cmp-path',
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-nvim-lua',
+      'saadparwaiz1/cmp_luasnip',
+      'L3MON4D3/LuaSnip',
+      'hrsh7th/cmp-cmdline',
+      'hrsh7th/cmp-buffer',
+    },
+  },
   -- STATUSBAR:
-  { 'rebelot/heirline.nvim', dependencies = { p.devicons, p.gitsigns } },
+  { 'rebelot/heirline.nvim',
+    dependencies = {
+      p.devicons,
+      p.gitsigns
+    },
+  },
   -- UNCHARTED:
   p.mini,
-  { 'nvim-treesitter/playground', dependencies = p.treesitter },
+  { 'nvim-treesitter/playground',
+    dependencies = p.treesitter
+  },
   { 'mfussenegger/nvim-jdtls' },
-  { 'euclio/vim-markdown-composer', build = 'cargo build --release' },
-  -- {'rafamadriz/friendly-snippets'},
-  { 'rest-nvim/rest.nvim', dependencies = p.plenary },
+  { 'euclio/vim-markdown-composer',
+    build = 'cargo build --release'
+  },
+  { 'rest-nvim/rest.nvim',
+    dependencies = p.plenary
+  },
   { 'folke/paint.nvim' },
   { 'RaafatTurki/hex.nvim', dev = true },
-  -- { 'monaqa/dial.nvim' },
-  -- { 'stevearc/oil.nvim' },
 }
 
 PluginManager.event_post_complete:sub(function()
@@ -118,7 +155,6 @@ PluginManager.event_post_complete:sub(function()
   Plugins.mini_surround()
   Plugins.mini_map()
   Plugins.mini_bufremove()
-  -- Plugins.mini_pairs()
   Plugins.trld()
   Plugins.fold_cycle()
   Plugins.fold_preview()
@@ -128,25 +164,7 @@ PluginManager.event_post_complete:sub(function()
   Plugins.rest()
   Plugins.paint()
   Plugins.noice()
-  -- Plugins.dressing()
-  -- Plugins.fidget()
-  -- Plugins.reach()
-  -- Plugins.hover()
-  -- Plugins.guess_indent()
-  -- Plugins.impatient()
-  -- Plugins.notify()
-  -- Plugins.bqf()
-  -- Plugins.grapple()
-  -- Plugins.paperplanes()
-  -- Plugins.overseer()
-  -- Plugins.fzf_lua()
-  -- Plugins.neo_tree()
-  -- Plugins.bufferline()
-  -- Plugins.dirty_talk()
-  -- Plugins.icon_picker()
-  -- Plugins.corn()
-  -- Plugins.cinnamon()
-  -- Plugins.remember()
+  Plugins.hex()
 
   Lang.setup()
 
@@ -156,29 +174,6 @@ PluginManager.event_post_complete:sub(function()
   Statusbar.setup()
 
   Bind.setup_plugins()
-
-  function LspDocumentSymbols()
-    require("telescope.builtin")["lsp_document_symbols"]({
-      symbols = {
-        "Class",
-        "Function",
-        "Method",
-        "Constructor",
-        "Interface",
-        "Module",
-        "Struct",
-        "Trait",
-        "Field",
-        "Property",
-      }
-    })
-  end
-
-  hex = U.Service():require(FT.PLUGIN, 'hex.nvim'):new(function()
-    require 'hex'.setup {}
-  end)()
-
-  -- require("oil").setup()
 end)
 
 PluginManager.setup(plugins)

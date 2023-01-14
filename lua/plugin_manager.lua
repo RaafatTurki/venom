@@ -29,7 +29,6 @@ end)
 
 --- initializes and configures the plugin manager
 M.setup = U.Service():new(function(plugins)
-
   M.bootstrap()
 
   require 'lazy'.setup(plugins, {
@@ -41,7 +40,7 @@ M.setup = U.Service():new(function(plugins)
       colorscheme = { 'venom' }
     },
   })
- 
+
 
   -- registering plugins that are both installed and listed
   local instaled_plugins = U.scan_dir(M.install_path)
@@ -89,7 +88,7 @@ end
 --- registers a plugin into the feature list as PLUGIN:<plugin short name>
 M.register_plugin = U.Service():new(function(short_name)
   if venom.features:has(FT.PLUGIN, short_name) then
-    log.warn('attempt to feature re-register a plugin "'..short_name..'"')
+    log.warn('attempt to feature re-register a plugin "' .. short_name .. '"')
   else
     venom.features:add(FT.PLUGIN, short_name)
   end
@@ -97,14 +96,6 @@ end)
 
 --- syncs plugins (updates them regardless of the method)
 M.sync = U.Service():new(function(opts)
-  -- opts = opts or {
-  --   take_snapshot = true
-  -- }
-  --
-  -- if opts.take_snapshot then
-  --   M.plugin_manager.snapshot('snapshot_'..os.time()..'.json')
-  -- end
-  --
   vim.cmd [[Lazy update]]
 end)
 

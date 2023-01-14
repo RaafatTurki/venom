@@ -203,7 +203,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
           dec = function(c)
             local line = bit.rshift(c, 16)
             local col = bit.band(bit.rshift(c, 6), 1023)
-            local winnr = bit.band(c,  63)
+            local winnr = bit.band(c, 63)
             return line, col, winnr
           end
         },
@@ -231,7 +231,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
                   callback = function(_, minwid)
                     -- decode
                     local line, col, winnr = self.dec(minwid)
-                    vim.api.nvim_win_set_cursor(vim.fn.win_getid(winnr), {line, col})
+                    vim.api.nvim_win_set_cursor(vim.fn.win_getid(winnr), { line, col })
                   end,
                   name = "heirline_navic",
                 },
@@ -269,7 +269,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
         provider = function()
           local forward = require 'luasnip'.jumpable(1) and '' or ''
           local backward = require 'luasnip'.jumpable(-1) and '' or ''
-          return backward..venom.icons.item_kinds.Snippet..forward
+          return backward .. venom.icons.item_kinds.Snippet .. forward
         end,
         hl = 'CmpItemKindSnippet',
       },
@@ -306,55 +306,55 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
 
   M.components.diaginfo = U.Service():new(function(opts)
     return {
-        init = function(self)
-          self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-          self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-          self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
-          self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+      init = function(self)
+        self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+        self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+        self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+        self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+      end,
+      static = {
+        error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
+        warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
+        info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
+        hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
+      },
+      update = { "DiagnosticChanged", "BufEnter" },
+      condition = conditions.has_diagnostics,
+      opts.left_pad,
+      {
+        provider = function(self)
+          return self.errors > 0 and (self.error_icon .. self.errors .. " ")
         end,
-        static = {
-          error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
-          warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
-          info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
-          hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
-        },
-        update = { "DiagnosticChanged", "BufEnter" },
-        condition = conditions.has_diagnostics,
-        opts.left_pad,
-        {
-          provider = function(self)
-            return self.errors > 0 and (self.error_icon .. self.errors .. " ")
-          end,
-          hl = 'DiagnosticError',
-        },
-        {
-          provider = function(self)
-            return self.warnings > 0 and (self.warn_icon .. self.warnings .. " ")
-          end,
-          hl = 'DiagnosticWarn',
-        },
-        {
-          provider = function(self)
-            return self.info > 0 and (self.info_icon .. self.info .. " ")
-          end,
-          hl = 'DiagnosticInfo',
-        },
-        {
-          provider = function(self)
-            return self.hints > 0 and (self.hint_icon .. self.hints)
-          end,
-          hl = 'DiagnosticHint',
-        },
-        opts.right_pad,
-      }
+        hl = 'DiagnosticError',
+      },
+      {
+        provider = function(self)
+          return self.warnings > 0 and (self.warn_icon .. self.warnings .. " ")
+        end,
+        hl = 'DiagnosticWarn',
+      },
+      {
+        provider = function(self)
+          return self.info > 0 and (self.info_icon .. self.info .. " ")
+        end,
+        hl = 'DiagnosticInfo',
+      },
+      {
+        provider = function(self)
+          return self.hints > 0 and (self.hint_icon .. self.hints)
+        end,
+        hl = 'DiagnosticHint',
+      },
+      opts.right_pad,
+    }
   end)
-  
+
   M.components.lspinfo = U.Service():new(function(opts)
     return {
       condition = conditions.lsp_attached,
       opts.left_pad,
       {
-        provider  = function()
+        provider = function()
           local servers = {}
           local res = ''
 
@@ -382,7 +382,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
           return res
         end,
         -- update = {'LspAttach', 'LspDetach', 'User LspProgressUpdate'},
-        hl = 'Folded',
+        hl       = 'Folded',
       },
       opts.right_pad,
     }
@@ -390,7 +390,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
 
   M.components.sessioninfo = U.Service():new(function(opts)
     return {
-      condition = function () return Sessions.get_current() end,
+      condition = function() return Sessions.get_current() end,
       opts.left_pad,
       {
         provider = function()
@@ -471,7 +471,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       opts.right_pad,
     }
   end)
-  
+
   M.components.helpfilename = U.Service():new(function(opts)
     return {
       condition = function()
@@ -519,9 +519,10 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       {
         provider = function()
           local indent_type = vim.o.expandtab and 'S' or 'T'
-          local indent_width = vim.o.shiftwidth..':'..vim.o.tabstop..':'..vim.o.softtabstop
-          if vim.o.shiftwidth == vim.o.tabstop and vim.o.tabstop == vim.o.softtabstop then indent_width = tostring(vim.o.shiftwidth) end
-          return indent_type..':'..indent_width
+          local indent_width = vim.o.shiftwidth .. ':' .. vim.o.tabstop .. ':' .. vim.o.softtabstop
+          if vim.o.shiftwidth == vim.o.tabstop and vim.o.tabstop == vim.o.softtabstop then indent_width = tostring(vim.o
+            .shiftwidth) end
+          return indent_type .. ':' .. indent_width
         end,
         hl = 'Comment',
       },
@@ -574,7 +575,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       opts.right_pad,
     }
   end)
- 
+
   -- TODO: abstract into a generic indicators system
   M.components.texlab_status = U.Service():new(function(opts)
     return {
@@ -586,7 +587,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       opts.left_pad,
       {
         provider = function()
-          return '' 
+          return ''
         end,
         hl = function()
           local build_status_hls = vim.tbl_add_reverse_lookup {
@@ -767,7 +768,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     on_click = {
       callback = function(_, minwid, _, button)
         if (button == "m") then -- close on mouse middle click
-          vim.api.nvim_buf_delete(minwid, {force = false})
+          vim.api.nvim_buf_delete(minwid, { force = false })
         else
           vim.api.nvim_win_set_buf(0, minwid)
         end
@@ -827,7 +828,8 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       {
         condition = function(self)
           -- return (not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or vim.api.nvim_buf_get_option(self.bufnr, "readonly")) and not vim.api.nvim_buf_get_option(self.bufnr, 'buftype') == 'terminal'
-          return not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or vim.api.nvim_buf_get_option(self.bufnr, "readonly")
+          return not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or
+              vim.api.nvim_buf_get_option(self.bufnr, "readonly")
         end,
         provider = ' ',
         hl = 'ErrorMsg',
@@ -870,27 +872,5 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   }
 
 end)
-
-
--- au User LspProgressUpdate redrawstatus
--- au User LspRequest redrawstatus
-
--- TODO: divide up into related services
--- M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
---   require 'mini.statusline'.setup {
---     -- Content of statusline as functions which return statusline string. See
---     -- `:h statusline` and code of default contents (used instead of `nil`).
---     content = {
---       inactive = nil,
---       active = nil
---     },
---
---     -- Whether to set Vim's settings for statusline (make it always shown with
---     -- 'laststatus' set to 2). To use global statusline in Neovim>=0.7.0, set
---     -- this to `false` and 'laststatus' to 3.
---     set_vim_settings = true,
---   }
--- end)
-
 
 return M

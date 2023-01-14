@@ -51,12 +51,7 @@ M.ts_parsers_ensure_installed = {
   'yaml',
 }
 
-M.setup = U.Service()
-:require(FT.PLUGIN, "mason.nvim")
-:require(FT.PLUGIN, "nvim-navic")
--- :require(FT.PLUGIN, "neotest")
-:require(FT.PLUGIN, 'nvim-treesitter')
-:new(function()
+M.setup = U.Service():require(FT.PLUGIN, "mason.nvim"):require(FT.PLUGIN, "nvim-navic"):require(FT.PLUGIN, 'nvim-treesitter'):new(function()
   -- mason
   require 'mason'.setup {
     ui = {
@@ -97,7 +92,7 @@ M.setup = U.Service()
 
   -- navic
   local navic_icons = {}
-  for name, icon in pairs(venom.icons.item_kinds) do navic_icons[name] = icon..' ' end
+  for name, icon in pairs(venom.icons.item_kinds) do navic_icons[name] = icon .. ' ' end
   vim.g.navic_silence = true
   require 'nvim-navic'.setup {
     highlight = true,
@@ -122,7 +117,7 @@ M.setup = U.Service()
     -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
     ensure_installed = M.ts_parsers_ensure_installed,
     highlight = { enable = true },
-    indent = { enable = true },   -- indentexpr (=)
+    indent = { enable = true }, -- indentexpr (=)
     context_commentstring = { enable = true, enable_autocmd = false },
     matchup = { enable = true },
     -- playground = { enable = true },

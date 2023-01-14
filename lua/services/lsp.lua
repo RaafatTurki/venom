@@ -73,7 +73,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
             -- workspace = {
             --   checkThirdParty = false,
             -- },
-            completion= {
+            completion = {
               -- keywordSnippet="Disable",
               -- keywordSnippet="Replace",
               -- callSnippet="Replace",
@@ -93,7 +93,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
             build = {
               -- onSave = true,
               executable = 'tectonic',
-              args = {'%f', '--synctex', '-k'},
+              args = { '%f', '--synctex', '-k' },
             },
             forwardSearch = {
               executable = 'zathura',
@@ -102,7 +102,8 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
                 '%l:1:%f',
 
                 '--synctex-editor-command',
-                [[nvim --server ]]..vim.v.servername..[[ --remote-send "<CMD>lua U.request_jump('%{input}', %{line}, 1)<CR>"]],
+                [[nvim --server ]] ..
+                    vim.v.servername .. [[ --remote-send "<CMD>lua U.request_jump('%{input}', %{line}, 1)<CR>"]],
 
                 '%p',
               },
@@ -189,7 +190,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
             plugins = {
               pycodestyle = {
                 enabled = true,
-                ignore=  {'E501', 'E231', 'E305', 'W391', 'W191'},
+                ignore = { 'E501', 'E231', 'E305', 'W391', 'W191' },
               },
             }
           }
@@ -230,7 +231,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
 
           --- quit if file does not exist
           -- if not U.is_file_exists(jdtls_root_dir .. '/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar') then return end
-          
+
           -- for more details visit https://github.com/mfussenegger/nvim-jdtls
           local jdtls_nvim_configs = {
             cmd = {
@@ -257,7 +258,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
               '-data', workspace_dir,
             },
 
-            root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
+            root_dir = require('jdtls.setup').find_root({ '.git', 'mvnw', 'gradlew' }),
 
             -- TODO: extract into a ServerConfig
             settings = {
@@ -312,7 +313,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
   if vim.fn.executable('godot-ls') == 1 then
     M.setup_lspconfig_server('gdscript', {
       -- cmd = vim.lsp.rpc.connect('127.0.0.1', 6008),
-      cmd = {'godot-ls'},
+      cmd = { 'godot-ls' },
       flags = {
         debounce_text_changes = 150,
       },
@@ -325,24 +326,21 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
     automatic_setup = true,
   }
   require 'mason-null-ls'.setup_handlers {
-  --   function(source_name)
-  --     -- log('the null-ls source '..source_name..' is installed but unused!')
-  --   end,
-  --   stylua = function()
-  --     null_ls.register(null_ls.builtins.formatting.stylua)
-  --   end,
-  --   jq = function()
-  --     null_ls.register(null_ls.builtins.formatting.jq)
-  --   end
+    --   function(source_name)
+    --     -- log('the null-ls source '..source_name..' is installed but unused!')
+    --   end,
+    --   stylua = function()
+    --     null_ls.register(null_ls.builtins.formatting.stylua)
+    --   end,
+    --   jq = function()
+    --     null_ls.register(null_ls.builtins.formatting.jq)
+    --   end
   }
   null_ls.setup()
 end)
 
 
-M.setup = U.Service():provide(FT.LSP, 'setup')
-:require(FT.PLUGIN, 'mason.nvim')
-:require(FT.PLUGIN, 'nvim-lspconfig')
-:new(function()
+M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'mason.nvim'):require(FT.PLUGIN, 'nvim-lspconfig'):new(function()
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- per line nvim diagnostics
@@ -360,7 +358,7 @@ M.setup = U.Service():provide(FT.LSP, 'setup')
   vim.api.nvim_create_user_command('LspDiagsList', function() M.diags_list() end, {})
   vim.api.nvim_create_user_command('LspDiagsHover', function() M.diags_hover() end, {})
   vim.api.nvim_create_user_command('LspFormat', function() M.format() end, {})
-  -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {}) 
+  -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {})
 
   -- inc-rename
   if venom.features:has(FT.PLUGIN, 'inc-rename.nvim') then
@@ -403,7 +401,7 @@ M.rename = U.Service():new(function()
         local changes = U.count_lsp_res_changes(res)
         local message = string.format("renamed %s instance%s in %s file%s. %s",
           changes.instances,
-          changes.instances== 1 and '' or 's',
+          changes.instances == 1 and '' or 's',
           changes.files,
           changes.files == 1 and '' or 's',
           changes.files > 1 and "To save them run ':wa'" or ''
@@ -453,14 +451,14 @@ end)
 
 M.setup_buf_fmt_on_save = U.Service():new(function(client, bufnr)
   local augroup_fmt_on_save = vim.api.nvim_create_augroup('format_on_save', {})
-	if client.supports_method("textDocument/formatting") then
-		vim.api.nvim_clear_autocmds({ group = augroup_fmt_on_save, buffer = bufnr })
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = augroup_fmt_on_save,
-			buffer = bufnr,
-			callback = function() vim.lsp.buf.format() end,
-		})
-	end
+  if client.supports_method("textDocument/formatting") then
+    vim.api.nvim_clear_autocmds({ group = augroup_fmt_on_save, buffer = bufnr })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = augroup_fmt_on_save,
+      buffer = bufnr,
+      callback = function() vim.lsp.buf.format() end,
+    })
+  end
 end)
 
 return M

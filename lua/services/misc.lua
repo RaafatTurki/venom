@@ -28,7 +28,7 @@ M.base = U.Service():new(function()
   -- vim.g.neovide_profiler = true
   vim.g.gui_font_size = 16
   vim.g.gui_font_face = "Iosevka"
-  vim.opt.guifont = string.format("%s:h%s",vim.g.gui_font_face, vim.g.gui_font_size)
+  vim.opt.guifont = string.format("%s:h%s", vim.g.gui_font_face, vim.g.gui_font_size)
 
 
   -- TODO: use vim.filetype.add
@@ -117,11 +117,13 @@ M.open_uri = U.Service():new(function()
 
     -- anything that looks like string/string into a github repo
     local regex_plugin_url = "[%a%d%-%.%_]+%/[%a%d%-%.%_]+"
-    if not uri and string.match(word_under_cursor, regex_plugin_url) then uri = 'https://github.com/'..word_under_cursor end
-    
+    if not uri and string.match(word_under_cursor, regex_plugin_url) then uri = 'https://github.com/' ..
+        word_under_cursor end
+
     -- anything that looks like string-number into a jira link
     local regex_jira_url = "[%a%_]+%-[%d]+"
-    if not uri and string.match(word_under_cursor, regex_jira_url) then uri = 'https://jira.example.com/browse/'..word_under_cursor end
+    if not uri and string.match(word_under_cursor, regex_jira_url) then uri = 'https://jira.example.com/browse/' ..
+        word_under_cursor end
 
     if not uri then
       log.warn("unrecognizable URI")
@@ -130,7 +132,7 @@ M.open_uri = U.Service():new(function()
 
     vim.fn.jobstart(open_cmd .. ' "' .. uri .. '"', {
       detach = true,
-      on_exit = function (chan_id, data, name)
+      on_exit = function(chan_id, data, name)
         log.info("URI opened")
       end,
     })
@@ -153,7 +155,7 @@ M.highlight_yank = U.Service():new(function()
   vim.api.nvim_create_autocmd('TextYankPost', {
     group = vim.api.nvim_create_augroup('highlight_yank', { clear = true }),
     callback = function(ctx)
-      vim.highlight.on_yank({ higroup=hl, timeout=timeout })
+      vim.highlight.on_yank({ higroup = hl, timeout = timeout })
     end
   })
 end)
@@ -201,11 +203,12 @@ M.term_smart_esc = U.Service():new(function()
     local function find_process(pid)
       local p = vim.api.nvim_get_proc(pid)
       if exclude_process_names[p.name] then return true end
-      for _,v in ipairs(vim.api.nvim_get_proc_children(pid)) do
+      for _, v in ipairs(vim.api.nvim_get_proc_children(pid)) do
         if find_process(v) then return true end
       end
       return false
     end
+
     if find_process(term_pid) then
       return vim.api.nvim_replace_termcodes(fallback_key, true, true, true)
     else
@@ -227,12 +230,13 @@ M.auto_install_ts_parser = U.Service():new(function()
       -- abort if parser is ensured
       if vim.tbl_contains(Lang.ts_parsers_ensure_installed, parser_name) then return end
 
-      if parsers.get_parser_configs()[parser_name] and not parsers.has_parser(parser_name) and not blacklist[parser_name] then
-          local answer = U.confirm_yes_no('Install TS parser for '..parser_name..'?')
-          if answer then
-            vim.cmd([[TSInstall ]] .. parser_name)
-          end
-          blacklist[parser_name] = true
+      if parsers.get_parser_configs()[parser_name] and not parsers.has_parser(parser_name) and not blacklist[parser_name
+          ] then
+        local answer = U.confirm_yes_no('Install TS parser for ' .. parser_name .. '?')
+        if answer then
+          vim.cmd([[TSInstall ]] .. parser_name)
+        end
+        blacklist[parser_name] = true
       end
     end
   })
@@ -241,7 +245,7 @@ end)
 --- camel!
 M.camel = U.Service():new(function()
   local camels = {}
-  local conf = { character="", winblend=100, speed=1, width=2 }
+  local conf = { character = "", winblend = 100, speed = 1, width = 2 }
 
   local waddle = function(camel)
     local timer = vim.loop.new_timer()
@@ -249,20 +253,20 @@ M.camel = U.Service():new(function()
     table.insert(camels, new_camel)
 
     local speed = math.abs(100 - (conf.speed or 1))
-    vim.loop.timer_start(timer, 1000, speed , vim.schedule_wrap(function()
+    vim.loop.timer_start(timer, 1000, speed, vim.schedule_wrap(function()
       if vim.api.nvim_win_is_valid(camel) then
         local config = vim.api.nvim_win_get_config(camel)
         local col, row = config["col"][false], config["row"][false]
 
-        math.randomseed(os.time()*camel)
-        local movement = math.ceil(math.random()*4)
+        math.randomseed(os.time() * camel)
+        local movement = math.ceil(math.random() * 4)
         if movement == 1 or row <= 0 then
           config["row"] = row + 1
-        elseif movement == 2 or row >= vim.o.lines-1 then
+        elseif movement == 2 or row >= vim.o.lines - 1 then
           config["row"] = row - 1
         elseif movement == 3 or col <= 0 then
           config["col"] = col + 1
-        elseif movement == 4 or col >= vim.o.columns-2 then
+        elseif movement == 4 or col >= vim.o.columns - 2 then
           config["col"] = col - 1
         end
         vim.api.nvim_win_set_config(camel, config)
@@ -272,10 +276,10 @@ M.camel = U.Service():new(function()
 
   local function spawn(char)
     local buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_lines(buf , 0, 1, true , {char or conf.character})
+    vim.api.nvim_buf_set_lines(buf, 0, 1, true, { char or conf.character })
 
     local camel = vim.api.nvim_open_win(buf, false, {
-      relative='cursor', style='minimal', row=1, col=1, width=conf.width or 2, height=1
+      relative = 'cursor', style = 'minimal', row = 1, col = 1, width = conf.width or 2, height = 1
     })
     -- vim.api.nvim_win_set_option(camel, 'winblend', conf.winblend or 100)
     vim.api.nvim_win_set_option(camel, 'winhighlight', 'Normal:Camel')
@@ -294,6 +298,7 @@ M.camel = U.Service():new(function()
   end
 
   function CamelSpawn() spawn() end
+
   function CamelKill() kill_all() end
 
   vim.api.nvim_create_user_command('CamelSpawn', CamelSpawn, {})
@@ -310,6 +315,7 @@ M.buffer_edits = U.Service():new(function()
     vim.cmd([[keeppatterns %s/\s\+$//e]])
     vim.api.nvim_win_set_cursor(0, curpos)
   end
+
   vim.api.nvim_create_user_command('RemoveTrailingWS', RemoveTrailingWS, {})
 
   function FixEOLs()
@@ -320,12 +326,13 @@ M.buffer_edits = U.Service():new(function()
     vim.cmd([[keeppatterns %s/\r\+$//e]])
     vim.api.nvim_win_set_cursor(0, curpos)
   end
+
   vim.api.nvim_create_user_command('FixEOLs', FixEOLs, {})
 end)
 
 --- minimal tabline
 M.tabline_minimal = U.Service():new(function()
-vim.cmd [[
+  vim.cmd [[
 set tabline=%!MyTabLine()
 
 function! MyTabLine()
@@ -454,7 +461,7 @@ M.auto_gitignore_io = U.Service():new(function()
         local res_template = curl.get("https://www.toptal.com/developers/gitignore/api/" .. template_name, {})
         if res_template.status == 200 then
           local pos = vim.api.nvim_win_get_cursor(0)
-          vim.api.nvim_buf_set_lines(0, pos[1]-1, pos[1], false, vim.split(res_template.body, '\n'))
+          vim.api.nvim_buf_set_lines(0, pos[1] - 1, pos[1], false, vim.split(res_template.body, '\n'))
         end
       end)
     end
@@ -478,101 +485,6 @@ M.auto_gitignore_io = U.Service():new(function()
   --     end
   --   end
   -- })
-end)
-
---- (Linux) makes neovim support hex editing
-M.hex_editor = U.Service():new(function()
-  local xxd_dump_cmd = 'xxd -g 1 -u'
-
-  local function is_binary_file()
-    local filename = vim.fn.expand('%:t')
-    -- local basename = string.match(filename, "^[a-z]*$")
-    local binary_ext = { 'png', 'jpg', 'jpeg', 'out' }
-    local ext = string.match(filename, "%.([^%.]+)$")
-
-    if ext == nil and not string.match(filename, '%u') then return true end
-    if vim.tbl_contains(binary_ext, ext) then return true end
-
-    return false
-  end
-
-  local function drop_undo_history()
-    local undolevels = vim.o.undolevels
-    vim.o.undolevels = -1
-    vim.cmd [[exe "normal a \<BS>\<Esc>"]]
-    vim.o.undolevels = undolevels
-  end
-
-  local function convert_to_hex()
-    vim.cmd([[%! ]]..xxd_dump_cmd)
-    vim.b.hex_ft = vim.bo.ft
-    vim.bo.ft = 'xxd'
-    drop_undo_history()
-    vim.cmd [[LspStop]]
-    vim.bo.mod = false
-  end
-
-  local function assemble_from_hex()
-    vim.cmd [[%! xxd -r]]
-    vim.bo.ft = vim.b.hex_ft
-    drop_undo_history()
-    vim.bo.mod = false
-  end
-
-  local function begin_patch_from_hex()
-    vim.b.hex_cur_pos = vim.fn.getcurpos()
-    vim.cmd [[%! xxd -r]]
-  end
-
-  local function finish_patch_from_hex()
-    vim.cmd([[%! ]]..xxd_dump_cmd)
-    vim.fn.setpos('.', vim.b.hex_cur_pos)
-    vim.bo.mod = true
-  end
-
-
-
-  local function buf_read_pre()
-    if is_binary_file() then 
-      vim.bo.bin = true
-    end
-  end
-
-  local function buf_read_post()
-    if vim.bo.bin then
-      convert_to_hex()
-    end
-  end
-
-  local function buf_write_pre()
-    if vim.bo.bin then
-      begin_patch_from_hex()
-    end
-  end
-
-  local function buf_write_post()
-    if vim.bo.bin then
-      finish_patch_from_hex()
-    end
-  end
-
-  local function toggle_hex()
-    if not vim.bo.bin then
-      vim.bo.bin = true
-      convert_to_hex()
-    else
-      assemble_from_hex()
-      vim.bo.bin = false
-    end
-  end
-
-  local augroup_hex_editor = vim.api.nvim_create_augroup('hex_editor', { clear = true })
-  vim.api.nvim_create_autocmd({'BufReadPre'},   { group = augroup_hex_editor, callback = buf_read_pre })
-  vim.api.nvim_create_autocmd({'BufReadPost'},  { group = augroup_hex_editor, callback = buf_read_post })
-  vim.api.nvim_create_autocmd({'BufWritePre'},  { group = augroup_hex_editor, callback = buf_write_pre })
-  vim.api.nvim_create_autocmd({'BufWritePost'}, { group = augroup_hex_editor, callback = buf_write_post })
-
-  vim.api.nvim_create_user_command('Hex', toggle_hex, {})
 end)
 
 --- (Linux x86_64) sets up tectonic for latex compiling

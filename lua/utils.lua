@@ -7,28 +7,32 @@ local M = {}
 -- Lua Utils
 --- converts argument to hex format.
 function M.to_hex(n) if n then return string.format("#%06x", n) end end
+
 --- generates a sequence
 function M.seq(min, max, sep, step)
   step = step or 1
   local res = ""
   for i = min, max, step do
-    res = res..i
-    if (i ~= max) then res = res..sep end
+    res = res .. i
+    if (i ~= max) then res = res .. sep end
   end
   return res
 end
+
 --- checks if number is within min - max range
 function M.is_within_range(n, min, max) return ((n >= min) and (n <= max)) end
+
 --- returns joined array into string
 function M.join(arr, delimiter)
   if (delimiter == nil) then delimiter = ' ' end
   local str = ""
   for i, v in ipairs(arr) do
-    str = str..arr[i]
-    if (i < #arr) then str = str..delimiter end
+    str = str .. arr[i]
+    if (i < #arr) then str = str .. delimiter end
   end
   return str
 end
+
 --- writes content to file
 function M.file_write(path, content)
   path = vim.fs.normalize(path)
@@ -37,6 +41,7 @@ function M.file_write(path, content)
   fh:flush()
   fh:close()
 end
+
 --- reads file content
 function M.file_read(path)
   path = vim.fs.normalize(path)
@@ -45,6 +50,7 @@ function M.file_read(path)
   fh:close()
   return content
 end
+
 --- returns array of file_names within a path
 function M.scan_dir(path)
   local res = {}
@@ -57,6 +63,7 @@ function M.scan_dir(path)
   end
   return res
 end
+
 --- returns the intersection of 2 flat tables
 function M.tbl_intersect(tbl1, tbl2)
   local intersection = {}
@@ -68,6 +75,7 @@ function M.tbl_intersect(tbl1, tbl2)
   end
   return intersection
 end
+
 --- returns the union of 2 flat tables with not repeats
 function M.tbl_union(tbl1, tbl2)
   local result = {}
@@ -89,7 +97,6 @@ function M.tbl_union(tbl1, tbl2)
 
   return result
 end
-
 
 -- Neovim Utils
 --- returns current vim mode name
@@ -132,6 +139,7 @@ function M.get_mode_name()
   }
   return mode_names[vim.fn.mode()]
 end
+
 --- returns a table containing the lsp changes counts from an lsp result
 function M.count_lsp_res_changes(lsp_res)
   local count = { instances = 0, files = 0 }
@@ -148,8 +156,10 @@ function M.count_lsp_res_changes(lsp_res)
   end
   return count
 end
+
 --- clears the command prompt
 function M.clear_prompt() vim.cmd([[echo '' | redraw]]) end
+
 --- returns nth field of a segmented string (much like unix cut) (omit field to return full array, fields <= 0 count from the end)
 function M.cut(str, delimiter, field)
   delimiter = delimiter or ' '
@@ -160,16 +170,19 @@ function M.cut(str, delimiter, field)
     return arr
   end
 end
+
 --- prompts a multiple choice confirmation prompt
 function M.confirm(msg, choices)
   choices = M.join(choices, '\n')
   local ok, answer = pcall(vim.fn.confirm, msg, choices)
   if ok then return answer end
 end
+
 --- prompts a yes/no confirmation prompt
 function M.confirm_yes_no(msg)
-  return true and M.confirm(msg, {'Yes', 'No'}) == 1 or false
+  return true and M.confirm(msg, { 'Yes', 'No' }) == 1 or false
 end
+
 --- moves cursor position if the jump file is the current buffer if not then print jump location
 -- TODO: abort if jump line or column is out of range
 function M.request_jump(target_path, line, col)
@@ -177,15 +190,11 @@ function M.request_jump(target_path, line, col)
   local buf_path = vim.fs.normalize(vim.fn.expand('%:p'))
   if (target_path == buf_path) then
     vim.api.nvim_win_set_cursor(0, { line, col })
-    print('jumping to '..tostring(line)..':'..tostring(col))
+    print('jumping to ' .. tostring(line) .. ':' .. tostring(col))
   else
-    print('jump attempt to '..tostring(line)..':'.. tostring(col)..' in '..vim.fs.basename(target_path))
+    print('jump attempt to ' .. tostring(line) .. ':' .. tostring(col) .. ' in ' .. vim.fs.basename(target_path))
   end
 end
--- TODO: make into a mode switching utility
--- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, false, true), '', true)
-
-
 
 -- Class Based Utils (statefull)
 function M.FeatureList()
@@ -193,9 +202,11 @@ function M.FeatureList()
     {
       list = {},
       new = function(self) return self end,
-      add = function(self, feature_type, feature_name) table.insert(self.list, feature_type..":"..feature_name) end,
+      add = function(self, feature_type, feature_name) table.insert(self.list, feature_type .. ":" .. feature_name) end,
       add_str = function(self, feature_str) table.insert(self.list, feature_str) end,
-      has = function(self, feature_type, feature_name) return vim.tbl_contains(self.list, feature_type..":"..feature_name) end,
+      has = function(self, feature_type, feature_name) return vim.tbl_contains(self.list, feature_type ..
+          ":" .. feature_name)
+      end,
       has_str = function(self, feature_str) return vim.tbl_contains(self.list, feature_str) end,
       stitch = function(self, feature_type, feature_name) return feature_type .. ':' .. feature_name end,
       unstitch = function(self, feature)
@@ -206,6 +217,7 @@ function M.FeatureList()
     {}
   )
 end
+
 --- event class
 function M.Event()
   return setmetatable(
@@ -229,6 +241,7 @@ function M.Event()
     }
   )
 end
+
 --- service class
 function M.Service()
   return setmetatable(
@@ -240,8 +253,14 @@ function M.Service()
         self.callback = cb
         return self
       end,
-      require = function(self, feature_type, feature_name) table.insert(self.required_features, { feature_type, feature_name }) return self end,
-      provide = function(self, feature_type, feature_name) table.insert(self.provided_features, { feature_type, feature_name }) return self end,
+      require = function(self, feature_type, feature_name) table.insert(self.required_features,
+          { feature_type, feature_name })
+        return self
+      end,
+      provide = function(self, feature_type, feature_name) table.insert(self.provided_features,
+          { feature_type, feature_name })
+        return self
+      end,
       invoke = function(self, ...)
         local can_be_invoked = true
         local missing_features = {}
@@ -261,7 +280,7 @@ function M.Service()
           return return_value
         else
           for _, missing_feature in pairs(missing_features) do
-            log.warn("missing feature: "..table.concat(missing_feature, ' / '), { stack_lvl_off = 1 })
+            log.warn("missing feature: " .. table.concat(missing_feature, ' / '), { stack_lvl_off = 1 })
           end
         end
       end,

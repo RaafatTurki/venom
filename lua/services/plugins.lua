@@ -200,7 +200,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
       -- ["<Tab>"]   = function(fb) tab(fb) end,
       -- ["<S-Tab>"] = function(fb) s_tab(fb) end,
 
-      ["<Tab>"]     = cmp.mapping({
+      ["<Tab>"]   = cmp.mapping({
         i = function(fb) tab(fb) end,
         c = function(fb)
           if cmp.visible() then cmp.select_next_item()
@@ -209,7 +209,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
           -- complete_or_next(fb)
         end
       }),
-      ["<S-Tab>"]     = cmp.mapping({
+      ["<S-Tab>"] = cmp.mapping({
         i = function(fb) s_tab(fb) end,
         c = function(fb)
           if cmp.visible() then cmp.select_prev_item()
@@ -908,6 +908,10 @@ M.noice = U.Service():require(FT.PLUGIN, 'noice.nvim'):new(function()
       -- lsp_doc_border = true, -- add a border to hover docs and signature help
     },
   }
+end)
+
+M.hex = U.Service():require(FT.PLUGIN, 'hex.nvim'):new(function()
+  require 'hex'.setup {}
 end)
 
 return M

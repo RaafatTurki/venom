@@ -56,10 +56,10 @@ M.setup = U.Service():new(function()
   M.key {'<C-Down>',          '<C-e>j'}
   -- M.key {'<C-a>',            ':%'}
   -- indent
-  M.key {'<Tab>',             '>>_'}
-  M.key {'<S-Tab>',           '<<_'}
-  M.key {'<Tab>',             '>gv_', mode = 'v'}
-  M.key {'<S-Tab>',           '<gv_', mode = 'v'}
+  -- M.key {'<Tab>',             '>>_'}
+  -- M.key {'<S-Tab>',           '<<_'}
+  -- M.key {'<Tab>',             '>gv_', mode = 'v'}
+  -- M.key {'<S-Tab>',           '<gv_', mode = 'v'}
   -- filter
   M.key {'==',                '==_'}
   M.key {'=',                 '=gv_', mode = 'v'}
@@ -177,15 +177,15 @@ M.setup_plugins = U.Service():new(function()
   M.key {'gu',                '<CMD>Gitsigns undo_stage_hunk<CR>'}
   M.key {'g<Left>',           '<CMD>Gitsigns prev_hunk<CR>zz'}
   M.key {'g<Right>',          '<CMD>Gitsigns next_hunk<CR>zz'}
-  -- gomove
-  M.key {'<A-Down>',          '<Plug>GoNSMDown', mode = 'n' }
-  M.key {'<A-Up>',            '<Plug>GoNSMUp', mode = 'n' }
-  -- M.key {'<A-Left>',       '<Plug>GoNSMLeft', mode = 'n' }
-  -- M.key {'<A-Right>',      '<Plug>GoNSMRight', mode = 'n' }
-  M.key {'<A-Down>',          '<Plug>GoVSMDown', mode = 'x' }
-  M.key {'<A-Up>',            '<Plug>GoVSMUp', mode = 'x' }
-  -- M.key {'<A-Left>',       '<Plug>GoVSMLeft', mode = 'x' }
-  -- M.key {'<A-Right>',      '<Plug>GoVSMRight', mode = 'x' }
+  -- mini.move
+  M.key {'<Tab>',             function() require 'mini.move'.move_line('right') end, mode = 'n' }
+  M.key {'<S-Tab>',           function() require 'mini.move'.move_line('left') end, mode = 'n' }
+  M.key {'<Tab>',             function() require 'mini.move'.move_selection('right') end, mode = 'x' }
+  M.key {'<S-Tab>',           function() require 'mini.move'.move_selection('left') end, mode = 'x' }
+  M.key {'<A-Down>',          function() require 'mini.move'.move_line('down') end, mode = 'n' }
+  M.key {'<A-Up>',            function() require 'mini.move'.move_line('up') end, mode = 'n' }
+  M.key {'<A-Down>',          function() require 'mini.move'.move_selection('down') end, mode = 'x' }
+  M.key {'<A-Up>',            function() require 'mini.move'.move_selection('up') end, mode = 'x' }
   -- lsp installer
   M.key {'<leader>l',         '<CMD>Mason<CR>'}
   -- lsp

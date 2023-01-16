@@ -680,6 +680,10 @@ M.mini_pairs = U.Service():require(FT.PLUGIN, 'mini.nvim'):new(function()
   require 'mini.pairs'.setup {}
 end)
 
+M.mini_move = U.Service():require(FT.PLUGIN, 'mini.nvim'):new(function()
+  require 'mini.move'.setup {}
+end)
+
 M.corn = U.Service():require(FT.PLUGIN, "corn.nvim"):new(function()
   require 'corn'.setup()
   -- require 'corn'.setup {

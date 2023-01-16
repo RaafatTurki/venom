@@ -63,7 +63,6 @@ local plugins = {
   { p.gitsigns,
     dependencies = p.plenary,
   },
-  { 'booperlv/nvim-gomove' },
   { 'Mofiqul/trld.nvim' },
   { 'kyazdani42/nvim-tree.lua',
     dependencies = p.devicons,
@@ -155,6 +154,7 @@ PluginManager.event_post_complete:sub(function()
   Plugins.mini_surround()
   Plugins.mini_map()
   Plugins.mini_bufremove()
+  Plugins.mini_move()
   Plugins.trld()
   Plugins.fold_cycle()
   Plugins.fold_preview()

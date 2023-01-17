@@ -79,7 +79,7 @@ we need functions that conditionally execute depending on what features they req
 and register the features they provide once executed.
 Implemented as the LUA class `Service`
 
-Usage:
+**Usage:**
 ```lua
 local impatient = U.Service():require(FT.PLUGIN, "impatient.nvim"):new(function()
   require 'impatient'
@@ -88,7 +88,7 @@ end)
 
 impatient()
 ```
-Extras:
+**Extras:**
 ```lua
 impatient:required_features -- table of features this service requires
 impatient:provided_features -- 

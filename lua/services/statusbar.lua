@@ -263,7 +263,12 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
 
   M.components.snippetinfo = U.Service():new(function(opts)
     return {
-      condition = require 'luasnip'.jumpable,
+      condition = function()
+        if venom.features:has(FT.PLUGIN, 'LuaSnip') then 
+          return require 'luasnip'.jumpable()
+        end
+        return false
+      end,
       opts.left_pad,
       {
         provider = function()

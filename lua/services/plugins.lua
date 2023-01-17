@@ -299,6 +299,10 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   })
 end)
 
+M.coq = U.Service():require(FT.PLUGIN, 'coq_nvim'):new(function()
+  vim.cmd [[COQnow --shut-up]]
+end)
+
 M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
   vim.g.nvim_tree_allow_resize = 1
 

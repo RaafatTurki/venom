@@ -12,6 +12,8 @@ M.setup_lspconfig_server = U.Service():require(FT.PLUGIN, 'nvim-lspconfig'):new(
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
   if venom.features:has(FT.PLUGIN, 'nvim-cmp') then
     shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities()
+  elseif venom.features:has(FT.PLUGIN, 'coq_nvim') then
+    opts = require 'coq'.lsp_ensure_capabilities(opts)
   end
 
   local shared_opts = {

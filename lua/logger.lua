@@ -2,13 +2,13 @@
 -- @module logger
 local M = {}
 
-M.last_log = {
+local last_log = {
   message = "",
   log_level = 0,
   count = 1,
 }
 
-M.highlights = {
+local highlights = {
   source = "Comment",
   count = "Folded",
   log_levels = {
@@ -35,37 +35,37 @@ local sanitize_value = function(val)
   return val
 end
 
-M.process = function(val, opts)
+process = function(val, opts)
   val = sanitize_value(val)
 
   -- repeat log counting
-  if M.last_log.message == val and opts.log_level == M.last_log.log_level then
-    M.last_log.count = M.last_log.count + 1
+  if last_log.message == val and opts.log_level == last_log.log_level then
+    last_log.count = last_log.count + 1
   else
-    M.last_log.count = 1
-    M.last_log.message = val
-    M.last_log.log_level = opts.log_level
+    last_log.count = 1
+    last_log.message = val
+    last_log.log_level = opts.log_level
   end
 
   local src = get_caller_src(opts.stack_level_offset or 0)
-  local count = M.last_log.count > 1 and '×' .. M.last_log.count or ''
+  local count = last_log.count > 1 and '×' .. last_log.count or ''
 
   vim.api.nvim_echo({
-    { count, M.highlights.count },
+    { count, highlights.count },
     { ' ', '' },
-    { src, M.highlights.source },
+    { src, highlights.source },
     { ' ', '' },
-    { val, M.highlights.log_levels[opts.log_level] },
+    { val, highlights.log_levels[opts.log_level] },
   }, true, {})
 end
 
 M.log = {
-  dbg   = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.DEBUG })) end,
-  err   = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.ERROR })) end,
-  info  = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.INFO })) end,
-  trace = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.TRACE })) end,
-  warn  = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.WARN })) end,
-  off   = function(val, opts) M.process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.OFF })) end,
+  dbg   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.DEBUG })) end,
+  err   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.ERROR })) end,
+  info  = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.INFO })) end,
+  trace = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.TRACE })) end,
+  warn  = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.WARN })) end,
+  off   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.OFF })) end,
 }
 
 setmetatable(M.log, {

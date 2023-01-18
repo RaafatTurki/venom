@@ -242,67 +242,69 @@ M.auto_install_ts_parser = U.Service():new(function()
   })
 end)
 
---- camel!
-M.camel = U.Service():new(function()
-  local camels = {}
-  local conf = { character = "", winblend = 100, speed = 1, width = 2 }
+--- pets!
+M.pets = U.Service():new(function()
+  local pets = {}
+  local conf = { character = 'x', speed = 2 }
 
-  local waddle = function(camel)
+  local waddle = function(pet)
     local timer = vim.loop.new_timer()
-    local new_camel = { name = camel, timer = timer }
-    table.insert(camels, new_camel)
+    local new_pet = { name = pet, timer = timer }
+    table.insert(pets, new_pet)
 
     local speed = math.abs(100 - (conf.speed or 1))
     vim.loop.timer_start(timer, 1000, speed, vim.schedule_wrap(function()
-      if vim.api.nvim_win_is_valid(camel) then
-        local config = vim.api.nvim_win_get_config(camel)
-        local col, row = config["col"][false], config["row"][false]
+      if vim.api.nvim_win_is_valid(pet) then
+        local pet_cfg = vim.api.nvim_win_get_config(pet)
+        local col, row = pet_cfg["col"][false], pet_cfg["row"][false]
 
-        math.randomseed(os.time() * camel)
+        math.randomseed(os.time() * pet)
         local movement = math.ceil(math.random() * 4)
         if movement == 1 or row <= 0 then
-          config["row"] = row + 1
+          pet_cfg["row"] = row + 1
         elseif movement == 2 or row >= vim.o.lines - 1 then
-          config["row"] = row - 1
+          pet_cfg["row"] = row - 1
         elseif movement == 3 or col <= 0 then
-          config["col"] = col + 1
+          pet_cfg["col"] = col + 1
         elseif movement == 4 or col >= vim.o.columns - 2 then
-          config["col"] = col - 1
+          pet_cfg["col"] = col - 1
         end
-        vim.api.nvim_win_set_config(camel, config)
+        vim.api.nvim_win_set_config(pet, pet_cfg)
       end
     end))
   end
 
-  local function spawn(char)
-    local buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_lines(buf, 0, 1, true, { char or conf.character })
+  local function spawn()
+    local pet_buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(pet_buf, 0, 1, true, { conf.character })
 
-    local camel = vim.api.nvim_open_win(buf, false, {
-      relative = 'cursor', style = 'minimal', row = 1, col = 1, width = conf.width or 2, height = 1
+    local pet_win = vim.api.nvim_open_win(pet_buf, false, {
+      relative = 'win',
+      style = 'minimal',
+      row = vim.api.nvim_win_get_height(0)-vim.o.cmdheight,
+      col = 0,
+      width = 1,
+      height = 1
     })
     -- vim.api.nvim_win_set_option(camel, 'winblend', conf.winblend or 100)
-    vim.api.nvim_win_set_option(camel, 'winhighlight', 'Normal:Camel')
-
-    waddle(camel)
+    vim.api.nvim_win_set_option(pet_win, 'winhighlight', 'Normal:Camel')
+    waddle(pet_win)
   end
 
-  local function kill_all()
-    local last_camel = camels[#camels]
-    local camel = last_camel['name']
-    local timer = last_camel['timer']
-    table.remove(camels, #camels)
+  local function kill_last()
+    local last_pet = pets[#pets]
+    local pet = last_pet['name']
+    local timer = last_pet['timer']
+    table.remove(pets, #pets)
     timer:stop()
     timer:close()
-    vim.api.nvim_win_close(camel, true)
+    vim.api.nvim_win_close(pet, true)
   end
 
-  function CamelSpawn() spawn() end
-
-  function CamelKill() kill_all() end
-
-  vim.api.nvim_create_user_command('CamelSpawn', CamelSpawn, {})
-  vim.api.nvim_create_user_command('CamelKill', CamelKill, {})
+  function PetSpawn() spawn() end
+  function PetKillLast() kill_last() end
+  vim.api.nvim_create_user_command('PetSpawn', PetSpawn, {})
+  vim.api.nvim_create_user_command('PetKillLast', PetKillLast, {})
 end)
 
 --- buffer edits (remove trailing spaces, EOLs)

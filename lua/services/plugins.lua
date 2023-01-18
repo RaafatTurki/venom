@@ -44,25 +44,27 @@ end)
 M.dressing = U.Service():require(FT.PLUGIN, "dressing.nvim"):new(function()
   require 'dressing'.setup {
     input = {
-      border = 'single',
-      win_options = {
-        winblend = 0,
-      },
-      override = function(conf)
-        conf.col = -1
-        return conf
-      end,
+      enabled = false,
     },
+    -- input = {
+    --   border = 'single',
+    --   win_options = {
+    --     winblend = 0,
+    --   },
+    --   override = function(conf)
+    --     conf.col = -1
+    --     return conf
+    --   end,
+    -- },
     select = {
       backend = { 'telescope' },
-
-      builtin = {
-        border = 'single',
-        win_options = {
-          winblend = 0,
-          winhighlight = "CursorLine:Normal",
-        },
-      }
+      -- builtin = {
+      --   border = 'single',
+      --   win_options = {
+      --     winblend = 0,
+      --     winhighlight = "CursorLine:Normal",
+      --   },
+      -- }
     }
   }
 end)
@@ -840,7 +842,7 @@ M.colorizer = U.Service():require(FT.PLUGIN, 'nvim-colorizer.lua'):new(function(
       rgb_fn = true,
       hsl_fn = true,
       mode = "background", -- Set the display mode.
-      tailwind = false, -- Enable tailwind colors
+      tailwind = 'both',
       sass = { enable = false, parsers = { 'css' }, },
     },
   }
@@ -912,11 +914,27 @@ end)
 
 M.noice = U.Service():require(FT.PLUGIN, 'noice.nvim'):new(function()
   require 'noice'.setup {
+    cmdline = {
+      -- format = {
+      --   cmdline = { icon = ">" },
+      --   search_down = { icon = "⌄" },
+      --   search_up = { icon = "⌃" },
+      --   filter = { icon = "$" },
+      --   lua = { icon = "" },
+      --   help = { icon = "?" },
+      -- },
+    },
     lsp = {
       override = {
         ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
         ["vim.lsp.util.stylize_markdown"] = true,
+        -- override cmp documentation with Noice (needs the other options to work)
+        -- ["cmp.entry.get_documentation"] = true,
       },
+    },
+    popupmenu = {
+      -- backend = 'nui',
+      -- backend = 'cmp',
     },
     presets = {
       bottom_search = true,

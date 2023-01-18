@@ -21,9 +21,7 @@ local p = {
   gitsigns = 'lewis6991/gitsigns.nvim',
   nui = 'MunifTanjim/nui.nvim',
   lspconfig = 'neovim/nvim-lspconfig',
-  cmp = 'hrsh7th/nvim-cmp',
   mini = 'echasnovski/mini.nvim',
-  keymap_amend = 'anuvyklack/keymap-amend.nvim',
 }
 local plugins = {
   -- LSP:
@@ -80,13 +78,13 @@ local plugins = {
   { 'jghauser/fold-cycle.nvim' },
   { 'Issafalcon/lsp-overloads.nvim' },
   { 'anuvyklack/fold-preview.nvim',
-    dependencies = p.keymap_amend,
+    dependencies = 'anuvyklack/keymap-amend.nvim',
   },
   { 'NvChad/nvim-colorizer.lua' },
   { 'folke/noice.nvim',
     dependencies = p.nui,
   },
-  { p.cmp,
+  { 'hrsh7th/nvim-cmp',
     dependencies = {
       'lukas-reineke/cmp-rg',
       'hrsh7th/cmp-path',
@@ -98,6 +96,7 @@ local plugins = {
       'hrsh7th/cmp-buffer',
     },
   },
+  { 'stevearc/dressing.nvim' },
   -- STATUSBAR:
   { 'rebelot/heirline.nvim',
     dependencies = {
@@ -118,7 +117,7 @@ local plugins = {
     dependencies = p.plenary
   },
   { 'folke/paint.nvim' },
-  { 'RaafatTurki/hex.nvim', dev = true },
+  { 'RaafatTurki/hex.nvim', dev = false },
 }
 
 PluginManager.event_post_complete:sub(function()
@@ -136,18 +135,18 @@ PluginManager.event_post_complete:sub(function()
   Misc.highlight_yank()
   Misc.auto_install_ts_parser()
   -- Misc.diag_on_hold()
-  -- Misc.camel()
+  Misc.pets()
   Misc.buffer_edits()
   Misc.auto_create_dir()
   Misc.lorem_picsum()
   Misc.auto_gitignore_io()
-  -- Misc.hex_editor()
 
   Plugins.devicons()
   Plugins.illuminate()
   Plugins.telescope()
   Plugins.gitsigns()
   Plugins.cmp_ls()
+  Plugins.dressing()
   Plugins.toggle_term()
   Plugins.mini_starter()
   Plugins.mini_surround()

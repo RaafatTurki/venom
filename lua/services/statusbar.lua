@@ -106,6 +106,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   M.components.gitinfo = U.Service():new(function(opts)
     return {
       init = function(self)
+        ---@diagnostic disable-next-line: undefined-field
         self.status_dict = vim.b.gitsigns_status_dict
         -- self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
       end,

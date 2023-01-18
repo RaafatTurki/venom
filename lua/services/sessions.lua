@@ -74,7 +74,11 @@ M.save = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
 end)
 
 M.load = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
-  MiniSessions.read(session_name, {})
+  if vim.tbl_contains(M.get_all(), session_name) then
+    MiniSessions.read(session_name, {})
+  else
+    log.warn('session "' .. session_name .. '" does not exist')
+  end
 
   -- require 'resession'.load(session_name)
 end)

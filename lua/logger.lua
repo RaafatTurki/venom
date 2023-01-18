@@ -2,6 +2,8 @@
 -- @module logger
 local M = {}
 
+local cached_logs = {}
+
 local last_log = {
   message = "",
   log_level = 0,
@@ -35,7 +37,7 @@ local sanitize_value = function(val)
   return val
 end
 
-process = function(val, opts)
+local process = function(val, opts)
   val = sanitize_value(val)
 
   -- repeat log counting
@@ -59,13 +61,26 @@ process = function(val, opts)
   }, true, {})
 end
 
+local preprocess = function(val, opts)
+  if vim.v.vim_did_enter == 1 then
+    process(val, opts)
+  else
+    table.insert(cached_logs, { val = val, opts = opts })
+    venom.events.enter:sub(function()
+      for i, log in ipairs(cached_logs) do
+        process(log.val, log.opts)
+      end
+    end)
+  end
+end
+
 M.log = {
-  dbg   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.DEBUG })) end,
-  err   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.ERROR })) end,
-  info  = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.INFO })) end,
-  trace = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.TRACE })) end,
-  warn  = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.WARN })) end,
-  off   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.OFF })) end,
+  dbg   = function(val, opts) preprocess(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.DEBUG })) end,
+  err   = function(val, opts) preprocess(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.ERROR })) end,
+  info  = function(val, opts) preprocess(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.INFO })) end,
+  trace = function(val, opts) preprocess(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.TRACE })) end,
+  warn  = function(val, opts) preprocess(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.WARN })) end,
+  off   = function(val, opts) preprocess(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.OFF })) end,
 }
 
 setmetatable(M.log, {

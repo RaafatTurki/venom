@@ -37,7 +37,7 @@ local sanitize_value = function(val)
   return val
 end
 
-local process = function(val, opts)
+local process = function(val, opts, src)
   val = sanitize_value(val)
 
   -- repeat log counting
@@ -49,7 +49,6 @@ local process = function(val, opts)
     last_log.log_level = opts.log_level
   end
 
-  local src = get_caller_src(opts.stack_level_offset or 0)
   local count = last_log.count > 1 and '×' .. last_log.count or ''
 
   vim.api.nvim_echo({
@@ -62,15 +61,12 @@ local process = function(val, opts)
 end
 
 local preprocess = function(val, opts)
+  local src = get_caller_src(opts.stack_level_offset or 0)
+
   if vim.v.vim_did_enter == 1 then
-    process(val, opts)
+    process(val, opts, src)
   else
-    table.insert(cached_logs, { val = val, opts = opts })
-    venom.events.enter:sub(function()
-      for i, log in ipairs(cached_logs) do
-        process(log.val, log.opts)
-      end
-    end)
+    table.insert(cached_logs, { val = val, opts = opts, src = src })
   end
 end
 
@@ -88,5 +84,12 @@ setmetatable(M.log, {
     self.info(val, { stack_level_offset = 1 })
   end
 })
+
+-- process all cached_logs on enter
+venom.events.enter:sub(function()
+  for i, log in ipairs(cached_logs) do
+    process(log.val, log.opts, log.src)
+  end
+end)
 
 return M

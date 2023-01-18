@@ -118,8 +118,17 @@ M.setup = U.Service():require(FT.PLUGIN, "mason.nvim"):require(FT.PLUGIN, "nvim-
     ensure_installed = M.ts_parsers_ensure_installed,
     highlight = { enable = true },
     indent = { enable = true }, -- indentexpr (=)
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = "<CR>",
+        -- node_incremental = "grn",
+        scope_incremental = "<CR>",
+        node_decremental = "<BS>",
+      },
+    },
     context_commentstring = { enable = true, enable_autocmd = false },
-    matchup = { enable = true },
+    -- matchup = { enable = true },
     -- playground = { enable = true },
   }
 end)

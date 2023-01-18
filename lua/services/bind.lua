@@ -151,11 +151,11 @@ M.setup_plugins = U.Service():new(function()
   M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
   -- M.key {'<C-e>',             '<CMD>Neotree toggle<CR>', mode = 'i n'}
   -- fold-cycle
-  M.key {'za',                function() require 'fold-cycle'.toggle_all() venom.events.folding() end}
-  M.key {'z<Right>',          function() require 'fold-cycle'.open() venom.events.folding() end}
-  M.key {'z<Left>',           function() require 'fold-cycle'.close() venom.events.folding() end}
-  M.key {'z<Down>',           function() require 'fold-cycle'.open_all() venom.events.folding() end}
-  M.key {'z<Up>',             function() require 'fold-cycle'.close_all() venom.events.folding() end}
+  M.key {'za',                function() require 'fold-cycle'.toggle_all() venom.events.fold_update() end}
+  M.key {'z<Right>',          function() require 'fold-cycle'.open() venom.events.fold_update() end}
+  M.key {'z<Left>',           function() require 'fold-cycle'.close() venom.events.fold_update() end}
+  M.key {'z<Down>',           function() require 'fold-cycle'.open_all() venom.events.fold_update() end}
+  M.key {'z<Up>',             function() require 'fold-cycle'.close_all() venom.events.fold_update() end}
   -- fold-preview
   M.key {'zq',                function() require 'fold-preview'.toggle_preview() end}
   -- gitsigns

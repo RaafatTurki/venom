@@ -673,7 +673,7 @@ M.mini_map = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   })
 
   -- refresh on folding/unfolding
-  venom.events.folding:sub(map.refresh)
+  venom.events.fold_update:sub(map.refresh)
 end)
 
 M.mini_bufremove = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
@@ -779,10 +779,14 @@ M.fold_cycle = U.Service():require(FT.PLUGIN, 'fold-cycle.nvim'):new(function()
 end)
 
 M.fold_preview = U.Service():require(FT.PLUGIN, 'fold-preview.nvim'):new(function()
-  require 'fold-preview'.setup {
+  local fold_preview = require 'fold-preview'
+
+  fold_preview.setup {
     default_keybindings = false,
     border = 'none',
   }
+
+  venom.events.fold_update:sub(fold_preview.close_preview)
 end)
 
 M.icon_picker = U.Service():require(FT.PLUGIN, 'icon-picker.nvim'):new(function()

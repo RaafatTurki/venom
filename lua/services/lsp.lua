@@ -1,9 +1,5 @@
 --- defines language servers setup and install mechanisms.
 -- @module lsp
-
-log = require 'logger'.log
-U = require 'utils'
-
 local M = {}
 
 M.setup_lspconfig_server = U.Service():require(FT.PLUGIN, 'nvim-lspconfig'):new(function(server_name, opts)

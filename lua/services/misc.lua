@@ -1,8 +1,5 @@
 --- defines various miscellanous features.
 -- @module misc
-log = require 'logger'.log
-U = require 'utils'
-
 local M = {}
 
 -- TODO: add required and provided features

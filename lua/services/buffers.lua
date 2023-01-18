@@ -1,8 +1,5 @@
 --- defines buffer managment mechanisms
 -- @module buffers
-log = require 'logger'.log
-U = require 'utils'
-
 local M = {}
 
 M.labels = {

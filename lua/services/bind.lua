@@ -1,8 +1,5 @@
 --- defines vanilla and (a much as possible) plugin keybinds
 -- @module bind
-log = require 'logger'.log
-U = require 'utils'
-
 local M = {}
 
 M.bind_leader = U.Service():new(function()

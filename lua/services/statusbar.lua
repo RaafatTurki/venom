@@ -1,8 +1,5 @@
 --- defines statusbar and winbar components.
 -- @module statusbar
-log = require 'logger'.log
-U = require 'utils'
-
 local M = {}
 
 M.components = {}

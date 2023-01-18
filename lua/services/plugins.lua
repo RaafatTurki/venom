@@ -1,8 +1,5 @@
 --- defines plugins configurations.
 -- @module plugins
-log = require 'logger'.log
-U = require 'utils'
-
 local M = {}
 
 M.impatient = U.Service():require(FT.PLUGIN, "impatient.nvim"):new(function()

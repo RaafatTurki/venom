@@ -1,8 +1,5 @@
 --- defines plugin managment mechanism.
 -- @module plugin_manager
-log = require 'logger'.log
-U = require 'utils'
-
 local M = {}
 
 M.plugin_manager_name = 'lazy.nvim'

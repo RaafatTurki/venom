@@ -1,7 +1,5 @@
 --- defines vanialla options, constants, enums and global variables.
 -- @module options
-log = require 'logger'.log
-U = require 'utils'
 
 -- use filetype.lua instead of filetype.vim
 -- vim.g.did_load_filetypes = 0

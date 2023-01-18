@@ -1,7 +1,5 @@
 --- defines various utility functions and classes.
 -- @module utils
-log = require 'logger'.log
-
 local M = {}
 
 -- Lua Utils

@@ -1,8 +1,5 @@
 --- defines language specific configurations
 -- @module lang
-log = require 'logger'.log
-U = require 'utils'
-
 local M = {}
 
 M.ts_parsers_ensure_installed = {

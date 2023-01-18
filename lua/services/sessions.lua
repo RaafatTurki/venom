@@ -1,10 +1,8 @@
 --- defines session managment.
 -- @module sessions
-log = require 'logger'.log
-U = require 'utils'
+local M = {}
 
 ---@diagnostic disable: undefined-global
-local M = {}
 
 -- M.last_session_name = 'last'
 

@@ -322,11 +322,9 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
 
   require 'nvim-tree'.setup {
     hijack_cursor       = true,
-    open_on_tab         = true,
-    update_cwd          = true,
+    sync_root_with_cwd  = true,
     view                = {
-      adaptive_size = true,
-      hide_root_folder = true,
+      -- adaptive_size = true,
       centralize_selection = true,
       mappings = {
         custom_only = false,
@@ -334,6 +332,8 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
       }
     },
     renderer            = {
+      full_name = true,
+      highlight_git = true,
       group_empty = true,
       indent_markers = {
         enable = true,
@@ -346,12 +346,14 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
       },
       icons = {
         git_placement = 'after',
+        symlink_arrow = ' -> ',
         show = {
           folder_arrow = false,
         },
         glyphs = {
           default = '',
           symlink = '',
+          modified = '•',
           folder = {
             arrow_open = "",
             arrow_closed = "",
@@ -363,8 +365,8 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
             symlink_open = "",
           },
           git = {
-            unstaged = "+",
-            staged = "*",
+            unstaged = "",
+            staged = "",
             unmerged = "",
             renamed = "r ",
             untracked = "-",
@@ -373,12 +375,11 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
           },
         }
       },
-      symlink_destination = false,
+      symlink_destination = true,
     },
     update_focused_file = {
-      enable      = true,
-      update_cwd  = false,
-      ignore_list = {}
+      enable = true,
+      -- ignore_list = {}
     },
     ignore_ft_on_setup  = { 'startify', 'dashboard' },
     diagnostics         = {
@@ -394,8 +395,11 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
       dotfiles = false,
       custom = { 'node_modules', '.cache', '*.import', '__pycache__', 'pnpm-lock.yaml', 'package-lock.json' }
     },
+    modified            = {
+      enable = true
+    },
     git                 = {
-      ignore = true
+      show_on_open_dirs = false
     },
     actions             = {
       change_dir = {
@@ -406,13 +410,15 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
         window_picker = {
           enable = true,
           chars = "1234567890",
-          exclude = {
-            filetype = { "notify", "packer", "qf", "diff", "fugitive", "fugitiveblame", },
-            buftype  = { "nofile", "terminal", "help", },
-          }
         }
       }
-    }
+    },
+    tab                 = {
+      sync = {
+        open = true,
+        close = true,
+      }
+    },
   }
 end)
 

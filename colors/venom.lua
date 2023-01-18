@@ -119,7 +119,7 @@ local c = {
 
   -- vsc
   dirty     = orange[4],
-  staged    = white[1],
+  staged    = yellow[4],
   merge     = purple[1],
   renamed   = orange[1],
   deleted   = red[1],
@@ -494,10 +494,12 @@ healthBar               = { '@debug' };
   NvimTreeFileIcon        = { fg = c.fg };
   NvimTreeSpecialFile     = { fg = c.fg };
   NvimTreeExecFile        = { bold = true };
+  NvimTreeSymlink         = { underline = true };
   NvimTreeIndentMarker    = { fg = c.mg };
+  NvimTreeImageFile       = { fg = c.fg };
   NvimTreeOpenedFile      = { fg = c.fg };
   NvimTreeGitDirty        = { fg = c.dirty };
-  NvimTreeGitStaged       = { fg = c.staged, bold = true };
+  NvimTreeGitStaged       = { fg = c.staged };
   NvimTreeGitMerge        = { fg = c.merge };
   NvimTreeGitRenamed      = { fg = c.renamed };
   NvimTreeGitDeleted      = { fg = c.deleted };

@@ -11,6 +11,24 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
   local align = { provider = "%=" }
   local space = { provider = " " }
 
+  local function space_statusline_components(statusline)
+    for i, comp in ipairs(statusline) do
+      local surrounds = { ' ', ' ' }
+      if i == 1 then
+        surrounds = { '', ' ' }
+      elseif i == #statusline then
+        surrounds = { ' ', '' }
+      end
+      local new_comp = utils.surround(surrounds, nil, comp)
+      new_comp.init = comp.init
+      new_comp.condition = comp.condition
+      comp.condition = nil
+      statusline[i] = new_comp
+    end
+    return statusline
+  end
+
+
   M.components.vimode = {
     init = function(self)
       self.mode = vim.fn.mode(1)
@@ -558,9 +576,9 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
 
   local statuslines = {
     fallthrough = false,
-    default_statusline,
-    -- special_statusline,
-    -- terminal_statusline,
+    space_statusline_components(default_statusline),
+    space_statusline_components(special_statusline),
+    space_statusline_components(terminal_statusline),
   }
 
 

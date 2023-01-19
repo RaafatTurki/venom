@@ -48,86 +48,80 @@ M.ts_parsers_ensure_installed = {
   'yaml',
 }
 
-M.setup = U.Service({{FT.PLUGIN, "mason.nvim"},{FT.PLUGIN, "nvim-navic"},{FT.PLUGIN, 'nvim-treesitter'}}, function()
+M.setup = U.Service({{FT.LANG, 'setup'}}, {}, function()
   -- mason
-  require 'mason'.setup {
-    ui = {
-      border = 'single',
-      icons = {
-        package_installed = " ",
-        package_pending = " ",
-        package_uninstalled = "  ",
-      },
-      keymaps = {
-        toggle_package_expand = "<Space>",
-        install_package = "<CR>",
-        update_package = "<CR>",
-        uninstall_package = "<BS>",
-        cancel_installation = "<C-c>",
-        check_package_version = "v",
-        update_all_packages = "u",
-        check_outdated_packages = "o",
-        apply_language_filter = "f",
-      },
+  if Features:has(FT.PLUGIN, 'mason.nvim') then
+    require 'mason'.setup {
+      ui = {
+        border = 'single',
+        icons = {
+          package_installed = " ",
+          package_pending = " ",
+          package_uninstalled = "  ",
+        },
+        keymaps = {
+          toggle_package_expand = "<Space>",
+          install_package = "<CR>",
+          update_package = "<CR>",
+          uninstall_package = "<BS>",
+          cancel_installation = "<C-c>",
+          check_package_version = "v",
+          update_all_packages = "u",
+          check_outdated_packages = "o",
+          apply_language_filter = "f",
+        },
+      }
     }
-  }
+  end
 
   -- mini.comment
-  require 'mini.comment'.setup {
-    mappings = {
-      comment = '<space>c',
-      comment_line = '<space>c',
-      textobject = '',
-    },
-    hooks = {
-      pre = function()
-        require('ts_context_commentstring.internal').update_commentstring()
-      end,
-      post = function() end,
-    },
-  }
+  if Features:has(FT.PLUGIN, 'mini.nvim') then
+    require 'mini.comment'.setup {
+      mappings = {
+        comment = '<space>c',
+        comment_line = '<space>c',
+        textobject = '',
+      },
+      hooks = {
+        pre = function()
+          require('ts_context_commentstring.internal').update_commentstring()
+        end,
+        post = function() end,
+      },
+    }
+  end
 
   -- navic
-  local navic_icons = {}
-  for name, icon in pairs(Icons.item_kinds) do navic_icons[name] = icon .. ' ' end
-  vim.g.navic_silence = true
-  require 'nvim-navic'.setup {
-    highlight = true,
-    separator = ' > ',
-    icons = navic_icons,
-  }
-
-  -- neotest
-  -- require 'neotest'.setup {
-  --   adapters = {
-  --     require 'neotest-go',
-  --     require 'neotest-jest',
-  --   }
-  -- }
-  -- vim.api.nvim_create_user_command('NeotestToggleTree',   function() require 'neotest'.summary.toggle() end,              {})
-  -- vim.api.nvim_create_user_command('NeotestRunNearest',   function() require 'neotest'.run.run() end,                     {})
-  -- vim.api.nvim_create_user_command('NeotestRunFile',      function() require 'neotest'.run.run(vim.fn.expand("%")) end,   {})
+  if Features:has(FT.PLUGIN, 'nvim-navic') then
+    local navic_icons = {}
+    for name, icon in pairs(Icons.item_kinds) do navic_icons[name] = icon .. ' ' end
+    vim.g.navic_silence = true
+    require 'nvim-navic'.setup {
+      highlight = true,
+      separator = ' > ',
+      icons = navic_icons,
+    }
+  end
 
   -- treesitter
-  -- local parser_configs = require 'nvim-treesitter.parsers'.get_parser_configs()
-  require 'nvim-treesitter.configs'.setup {
-    -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
-    ensure_installed = M.ts_parsers_ensure_installed,
-    highlight = { enable = true },
-    indent = { enable = true }, -- indentexpr (=)
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<CR>",
-        -- node_incremental = "grn",
-        scope_incremental = "<CR>",
-        node_decremental = "<BS>",
+  if Features:has(FT.PLUGIN, 'nvim-treesitter') then
+    require 'nvim-treesitter.configs'.setup {
+      -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
+      ensure_installed = M.ts_parsers_ensure_installed,
+      highlight = { enable = true },
+      indent = { enable = true }, -- indentexpr (=)
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<CR>",
+          -- node_incremental = "grn",
+          scope_incremental = "<CR>",
+          node_decremental = "<BS>",
+        },
       },
-    },
-    context_commentstring = { enable = true, enable_autocmd = false },
-    -- matchup = { enable = true },
-    -- playground = { enable = true },
-  }
+      context_commentstring = { enable = true, enable_autocmd = false },
+    }
+  end
 end)
 
 -- TODO: abstract into a generic build state system

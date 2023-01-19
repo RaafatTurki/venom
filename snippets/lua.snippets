@@ -1,5 +1,14 @@
-snippet Service new service
-	M.${1} = U.Service():require(FT.PLUGIN, '${2}'):new(function()
+# snippet Service new service
+# 	M.${1} = U.Service():require(FT.PLUGIN, '${2}'):new(function()
+# 		require '${3}'.setup {${0}}
+# 	end)
+
+snippet Service plugin service
+	M.${1} = U.Service({{FT.PLUGIN, '${2}'}}, function()
 		require '${3}'.setup {${0}}
 	end)
 
+snippet Feature feature check
+  if Features:has(FT.PLUGIN, '${1}') then
+  	${0}
+  end

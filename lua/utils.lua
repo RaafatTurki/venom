@@ -78,21 +78,18 @@ end
 function M.tbl_union(tbl1, tbl2)
   local result = {}
   local hash = {}
-
   for _, v in pairs(tbl1) do
     if not hash[v] then
       table.insert(result, v)
       hash[v] = true
     end
   end
-
   for _, v in pairs(tbl2) do
     if not hash[v] then
       table.insert(result, v)
       hash[v] = true
     end
   end
-
   return result
 end
 
@@ -195,20 +192,19 @@ function M.request_jump(target_path, line, col)
 end
 
 -- Stateful Utils
+-- feature list class
 function M.FeatureList()
   return setmetatable(
     {
       list = {},
       new = function(self) return self end,
-      add = function(self, feature_type, feature_name) table.insert(self.list, feature_type .. ":" .. feature_name) end,
-      add_str = function(self, feature_str) table.insert(self.list, feature_str) end,
-      has = function(self, feature_type, feature_name) return vim.tbl_contains(self.list, feature_type ..
-          ":" .. feature_name)
-      end,
-      has_str = function(self, feature_str) return vim.tbl_contains(self.list, feature_str) end,
-      stitch = function(self, feature_type, feature_name) return feature_type .. ':' .. feature_name end,
-      unstitch = function(self, feature)
-        local feat_tbl = vim.split(feature, ':')
+      add = function(self, feat_type, feat_name) table.insert(self.list, feat_type .. ":" .. feat_name) end,
+      add_str = function(self, feat_str) table.insert(self.list, feat_str) end,
+      has = function(self, feat_type, feat_name) return vim.tbl_contains(self.list, feat_type .. ":" .. feat_name) end,
+      has_str = function(self, feat_str) return vim.tbl_contains(self.list, feat_str) end,
+      stitch = function(self, feat_type, feat_name) return feat_type .. ':' .. feat_name end,
+      unstitch = function(self, feat)
+        local feat_tbl = vim.split(feat, ':')
         if #feat_tbl == 2 then return feat_tbl end
         log.err('invalid feature', { stack_level_offset = 2 })
         return nil

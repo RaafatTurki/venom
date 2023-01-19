@@ -49,7 +49,7 @@ local process = function(val, opts, src)
     last_log.log_level = opts.log_level
   end
 
-  local count = last_log.count > 1 and '×' .. last_log.count or ''
+  local count = last_log.count > 1 and '×' .. last_log.count or '  '
 
   vim.api.nvim_echo({
     { count, highlights.count },

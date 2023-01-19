@@ -18,17 +18,12 @@ local p = {
   gitsigns = 'lewis6991/gitsigns.nvim',
   nui = 'MunifTanjim/nui.nvim',
   lspconfig = 'neovim/nvim-lspconfig',
-  mini = 'echasnovski/mini.nvim',
 }
 local plugins = {
-  -- LSP:
+  -- LSP: language server protocol related
   p.lspconfig,
   { 'jose-elias-alvarez/null-ls.nvim',
     dependencies = p.plenary,
-  },
-  -- LANG:
-  { p.treesitter,
-    build = ':TSUpdate',
   },
   { 'williamboman/mason.nvim',
     dependencies = {
@@ -37,24 +32,37 @@ local plugins = {
       'jayp0521/mason-null-ls.nvim',
     },
   },
+  { 'mfussenegger/nvim-jdtls' },
+  { 'folke/neodev.nvim',
+  { 'b0o/schemastore.nvim',
+    dependencies = p.lspconfig,
+  },
+    dependencies = p.lspconfig,
+  },
+  -- LANG: treesitter and language specific plugins
+  { p.treesitter,
+    build = ':TSUpdate',
+  },
   { 'JoosepAlviste/nvim-ts-context-commentstring',
     dependencies = p.treesitter,
   },
   { 'SmiteshP/nvim-navic',
     dependencies = p.lspconfig,
   },
-  { 'b0o/schemastore.nvim',
-    dependencies = p.lspconfig,
+  { 'nvim-treesitter/playground',
+    dependencies = p.treesitter
   },
-  { 'folke/neodev.nvim',
-    dependencies = p.lspconfig,
+  { 'euclio/vim-markdown-composer',
+    build = 'cargo build --release'
   },
-  -- p.dap,
-  -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
+  { 'rest-nvim/rest.nvim',
+    dependencies = p.plenary
+  },
+  -- STATUSBAR:
+  { 'rebelot/heirline.nvim' },
   -- PLUGINS:
-  -- mini.*
+  { 'echasnovski/mini.nvim' },
   { 'RRethy/vim-illuminate' },
-  p.devicons,
   { p.gitsigns,
     dependencies = p.plenary,
   },
@@ -94,27 +102,11 @@ local plugins = {
     },
   },
   { 'stevearc/dressing.nvim' },
-  -- STATUSBAR:
-  { 'rebelot/heirline.nvim',
-    dependencies = {
-      p.devicons,
-      p.gitsigns
-    },
-  },
-  -- UNCHARTED:
-  p.mini,
-  { 'nvim-treesitter/playground',
-    dependencies = p.treesitter
-  },
-  { 'mfussenegger/nvim-jdtls' },
-  { 'euclio/vim-markdown-composer',
-    build = 'cargo build --release'
-  },
-  { 'rest-nvim/rest.nvim',
-    dependencies = p.plenary
-  },
-  { 'folke/paint.nvim' },
   { 'RaafatTurki/hex.nvim', dev = false },
+  -- p.dap,
+  -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
+  -- UNCHARTED:
+  { 'folke/paint.nvim' },
 }
 
 PluginManager.event_post_complete:sub(function()

@@ -22,7 +22,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       local new_comp = utils.surround(surrounds, nil, comp)
       new_comp.init = comp.init
       new_comp.condition = comp.condition
-      comp.condition = nil
+      -- comp.condition = nil
       statusline[i] = new_comp
     end
     return statusline
@@ -43,7 +43,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
         i       = 'ModeInsert',
         v       = 'ModeVisual',
         V       = 'ModeVisual',
-        ['\22'] = "ModeVisual",
+        ['\22'] = 'ModeVisual',
         c       = 'ModeControl',
         s       = 'ModeSelect',
         S       = 'ModeSelect',

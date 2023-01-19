@@ -40,7 +40,7 @@ M.base = U.Service(function()
     au BufEnter tsconfig.json setlocal ft=jsonc
     au BufEnter mimeapps.list setlocal ft=dosini
     au BufEnter PKGBUILD.* setlocal ft=PKGBUILD
-    " au BufEnter README setlocal ft=markdown
+    au BufEnter README setlocal ft=markdown
     au BufEnter nanorc setlocal ft=nanorc
     au BufEnter pythonrc setlocal ft=python
     au BufEnter sxhkdrc,*.sxhkdrc set ft=sxhkdrc
@@ -100,11 +100,6 @@ M.open_uri = U.Service(function()
   end
 
   function OpenURIUnderCursor()
-    if not open_cmd then
-      log.warn("OpenURIUnderCursor is not supported on this OS")
-      return
-    end
-
     local word_under_cursor = vim.fn.expand("<cfile>")
     local uri = nil
 
@@ -129,9 +124,7 @@ M.open_uri = U.Service(function()
 
     vim.fn.jobstart(open_cmd .. ' "' .. uri .. '"', {
       detach = true,
-      on_exit = function(chan_id, data, name)
-        log.info("URI opened")
-      end,
+      on_exit = function(chan_id, data, name) log.info("URI opened") end,
     })
   end
 
@@ -196,7 +189,12 @@ M.term_smart_esc = U.Service(function()
     lazygit = true,
   }
 
-  function TermSmartEsc(term_pid, fallback_key)
+  -- function TermSmartEsc(term_pid, fallback_key)
+  function TermSmartEsc(fallback_key, term_pid)
+    fallback_key = fallback_key or [[<ESC>]]
+    ---@diagnostic disable-next-line: undefined-field
+    term_pid = term_pid or vim.b.terminal_job_pid
+
     local function find_process(pid)
       local p = vim.api.nvim_get_proc(pid)
       if exclude_process_names[p.name] then return true end

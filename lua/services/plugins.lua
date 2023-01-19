@@ -894,7 +894,7 @@ M.paint = U.Service({{FT.PLUGIN, 'paint.nvim'}}, function()
           local file_name = vim.fn.fnamemodify(vim.fn.bufname(), ':t')
           return string.match(file_name, "LICENSE.*")
         end,
-        pattern = "[Cc][Oo][Pp][Yy][Rr][Ii][Gg][Hh][Tt]%s+%(?[Cc]%)?%s+(.+)",
+        pattern = "Copyright%s+.*(%d%d%d%d%s+.+)",
         hl = "Label",
       },
       -- TODOs, FIXMEs .. etc
@@ -932,6 +932,9 @@ M.noice = U.Service({{FT.PLUGIN, 'noice.nvim'}}, function()
     popupmenu = {
       -- backend = 'nui',
       -- backend = 'cmp',
+    },
+    messages = {
+      view_search = false,
     },
     presets = {
       bottom_search = true,

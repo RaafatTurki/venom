@@ -260,7 +260,7 @@ local highlights = {
 
   ColorColumn	    = { 'CursorLine' },
 Conceal         = { '@debug' },
-  CurSearch       = { bg = c.fg, fg = c.bg, bold = true },
+  CurSearch       = { bg = c.match, bold = true },
   Cursor          = { bg = c.fg },
   CursorColumn    = { 'CursorLine' }, --
   CursorIM        = { }, --
@@ -298,7 +298,7 @@ Conceal         = { '@debug' },
   PmenuThumb      = { bg = c.mg },
   Question        = { fg = c.fg, bold = true },
   QuickFixLine    = { 'PmenuSel' },
-  Search          = { bg = c.match, fg = c.bg, bold = true },
+  Search          = { bg = c.mg, bold = true },
   SignColumn      = { }, --
   SpecialKey      = { fg = c.fold },
   SpellBad        = { undercurl = true, sp = c.err },

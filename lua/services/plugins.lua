@@ -163,12 +163,12 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
   require 'luasnip'.config.setup({
     ext_opts = {
       [ls_types.choiceNode] = {
-        active = { virt_text = { { venom.icons.item_kinds.Snippet, 'SnippetChoiceIndicator' } } },
-        passive = { virt_text = { { venom.icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
+        active = { virt_text = { { Icons.item_kinds.Snippet, 'SnippetChoiceIndicator' } } },
+        passive = { virt_text = { { Icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
       },
       [ls_types.insertNode] = {
-        active = { virt_text = { { venom.icons.item_kinds.Snippet, 'SnippetInsertIndicator' } } },
-        passive = { virt_text = { { venom.icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
+        active = { virt_text = { { Icons.item_kinds.Snippet, 'SnippetInsertIndicator' } } },
+        passive = { virt_text = { { Icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
       }
     },
   })
@@ -248,7 +248,7 @@ M.cmp_ls = U.Service():require(FT.PLUGIN, "nvim-cmp"):new(function()
         --   vim_item.kind = 'Ω'
         --   vim_item.kind_hl_group = 'CmpItemKindProperty'
         -- else
-        vim_item.kind = venom.icons.item_kinds[vim_item.kind] or ''
+        vim_item.kind = Icons.item_kinds[vim_item.kind] or ''
         -- end
         return vim_item
       end
@@ -384,10 +384,10 @@ M.nvim_tree = U.Service():require(FT.PLUGIN, "nvim-tree.lua"):new(function()
     diagnostics         = {
       enable = true,
       icons = {
-        hint    = venom.icons.diagnostic_states.Hint,
-        info    = venom.icons.diagnostic_states.Info,
-        warning = venom.icons.diagnostic_states.Warn,
-        error   = venom.icons.diagnostic_states.Error,
+        hint    = Icons.diagnostic_states.Hint,
+        info    = Icons.diagnostic_states.Info,
+        warning = Icons.diagnostic_states.Warn,
+        error   = Icons.diagnostic_states.Error,
       },
     },
     filters             = {
@@ -616,7 +616,7 @@ M.mini_starter = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
     new_item('Browse', 'r', 'Recent', 'Telescope oldfiles'),
   }
 
-  if venom.features:has(FT.SESSION, 'setup') then
+  if Features:has(FT.SESSION, 'setup') then
     -- last session
     table.insert(items, new_item('Session', 'x', 'Last session', function() Sessions.load_last() end))
     -- all other sessions
@@ -678,7 +678,7 @@ M.mini_map = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   })
 
   -- refresh on folding/unfolding
-  venom.events.fold_update:sub(map.refresh)
+  Events.fold_update:sub(map.refresh)
 end)
 
 M.mini_bufremove = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
@@ -710,7 +710,7 @@ end)
 
 M.trld = U.Service():require(FT.PLUGIN, "trld.nvim"):new(function()
   local function get_icon_by_severity(severity)
-    local icon_set = venom.icons.diagnostic_states
+    local icon_set = Icons.diagnostic_states
     local icons = {
       icon_set.Error,
       icon_set.Warn,
@@ -791,7 +791,7 @@ M.fold_preview = U.Service():require(FT.PLUGIN, 'fold-preview.nvim'):new(functio
     border = 'none',
   }
 
-  venom.events.fold_update:sub(fold_preview.close_preview)
+  Events.fold_update:sub(fold_preview.close_preview)
 end)
 
 M.icon_picker = U.Service():require(FT.PLUGIN, 'icon-picker.nvim'):new(function()

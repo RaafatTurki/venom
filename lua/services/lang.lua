@@ -89,7 +89,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mason.nvim"):require(FT.PLUGIN, "nvim-
 
   -- navic
   local navic_icons = {}
-  for name, icon in pairs(venom.icons.item_kinds) do navic_icons[name] = icon .. ' ' end
+  for name, icon in pairs(Icons.item_kinds) do navic_icons[name] = icon .. ' ' end
   vim.g.navic_silence = true
   require 'nvim-navic'.setup {
     highlight = true,

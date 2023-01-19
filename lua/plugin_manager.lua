@@ -84,10 +84,10 @@ end
 
 --- registers a plugin into the feature list as PLUGIN:<plugin short name>
 M.register_plugin = U.Service():new(function(short_name)
-  if venom.features:has(FT.PLUGIN, short_name) then
+  if Features:has(FT.PLUGIN, short_name) then
     log.warn('attempt to feature re-register a plugin "' .. short_name .. '"')
   else
-    venom.features:add(FT.PLUGIN, short_name)
+    Features:add(FT.PLUGIN, short_name)
   end
 end)
 

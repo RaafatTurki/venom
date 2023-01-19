@@ -109,7 +109,7 @@ end)
 -- end)
 
 M.load_cli = U.Service():new(function(session_name)
-  if venom.features:has(FT.SESSION, 'setup') then
+  if Features:has(FT.SESSION, 'setup') then
     M.load(session_name)
   else
     PluginManager.event_post_complete:sub(function()

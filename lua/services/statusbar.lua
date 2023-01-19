@@ -262,7 +262,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
   M.components.snippetinfo = U.Service():new(function(opts)
     return {
       condition = function()
-        if venom.features:has(FT.PLUGIN, 'LuaSnip') then 
+        if Features:has(FT.PLUGIN, 'LuaSnip') then 
           return require 'luasnip'.jumpable()
         end
         return false
@@ -272,7 +272,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
         provider = function()
           local forward = require 'luasnip'.jumpable(1) and '' or ''
           local backward = require 'luasnip'.jumpable(-1) and '' or ''
-          return backward .. venom.icons.item_kinds.Snippet .. forward
+          return backward .. Icons.item_kinds.Snippet .. forward
         end,
         hl = 'CmpItemKindSnippet',
       },
@@ -287,7 +287,7 @@ M.setup = U.Service():require(FT.PLUGIN, "mini.nvim"):new(function()
       end,
       opts.right_pad,
       {
-        provider = venom.icons.item_kinds.Text,
+        provider = Icons.item_kinds.Text,
       },
       opts.left_pad,
     }

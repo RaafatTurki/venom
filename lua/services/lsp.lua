@@ -6,9 +6,9 @@ M.setup_lspconfig_server = U.Service():require(FT.PLUGIN, 'nvim-lspconfig'):new(
   local lspconf = require 'lspconfig'
 
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
-  if venom.features:has(FT.PLUGIN, 'nvim-cmp') then
+  if Features:has(FT.PLUGIN, 'nvim-cmp') then
     shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities()
-  elseif venom.features:has(FT.PLUGIN, 'coq_nvim') then
+  elseif Features:has(FT.PLUGIN, 'coq_nvim') then
     opts = require 'coq'.lsp_ensure_capabilities(opts)
   end
 
@@ -23,12 +23,12 @@ M.setup_lspconfig_server = U.Service():require(FT.PLUGIN, 'nvim-lspconfig'):new(
       vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
 
       -- navic
-      if venom.features:has(FT.PLUGIN, 'nvim-navic') then
+      if Features:has(FT.PLUGIN, 'nvim-navic') then
         require 'nvim-navic'.attach(client, bufnr)
       end
 
       -- lsp-overloads
-      if venom.features:has(FT.PLUGIN, 'lsp-overloads.nvim') and client.server_capabilities.signatureHelpProvider then
+      if Features:has(FT.PLUGIN, 'lsp-overloads.nvim') and client.server_capabilities.signatureHelpProvider then
         require 'lsp-overloads'.setup(client, {
           ui = {
             border = "single"
@@ -221,7 +221,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
       })
     end,
     jdtls = function()
-      if venom.features:has(FT.PLUGIN, 'nvim-jdtls') then
+      if Features:has(FT.PLUGIN, 'nvim-jdtls') then
         function JDTLSSetup()
           local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
           local workspace_dir = vim.env['XDG_CACHE_HOME'] .. '/jdtls/workspaces/' .. project_name
@@ -342,7 +342,7 @@ M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'mason.nvim'):
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- per line nvim diagnostics
-  for type, icon in pairs(venom.icons.diagnostic_states) do
+  for type, icon in pairs(Icons.diagnostic_states) do
     local hl = "DiagnosticSign" .. type
     -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -359,13 +359,13 @@ M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'mason.nvim'):
   -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {})
 
   -- inc-rename
-  if venom.features:has(FT.PLUGIN, 'inc-rename.nvim') then
+  if Features:has(FT.PLUGIN, 'inc-rename.nvim') then
     require 'inc_rename'.setup()
   end
 end)
 
 M.rename = U.Service():new(function()
-  if venom.features:has(FT.PLUGIN, 'inc-rename.nvim') then
+  if Features:has(FT.PLUGIN, 'inc-rename.nvim') then
     vim.api.nvim_feedkeys(':IncRename ' .. vim.fn.expand('<cword>'), '', false)
     -- require 'inc_rename'.setup()
     -- inc-rename.nvim
@@ -411,7 +411,7 @@ M.rename = U.Service():new(function()
 end)
 
 M.references = U.Service():new(function()
-  if venom.features:has(FT.PLUGIN, 'telescope.nvim') then
+  if Features:has(FT.PLUGIN, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_references]]
   else
     vim.lsp.buf.references()
@@ -419,7 +419,7 @@ M.references = U.Service():new(function()
 end)
 
 M.definition = U.Service():new(function()
-  if venom.features:has(FT.PLUGIN, 'telescope.nvim') then
+  if Features:has(FT.PLUGIN, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_definitions]]
   else
     vim.lsp.buf.definition()

@@ -264,7 +264,7 @@ function M.Service()
         local missing_features = {}
         -- check for all required features
         for _, required_feature in pairs(self.required_features) do
-          if (not venom.features:has(required_feature[1], required_feature[2])) then
+          if (not Features:has(required_feature[1], required_feature[2])) then
             can_be_invoked = false
             table.insert(missing_features, required_feature)
           end
@@ -273,7 +273,7 @@ function M.Service()
           local return_value = self.callback(...)
           -- add all provided features
           for _, provided_feature in pairs(self.provided_features) do
-            venom.features:add(provided_feature[1], provided_feature[2])
+            Features:add(provided_feature[1], provided_feature[2])
           end
           return return_value
         else

@@ -41,9 +41,9 @@ M.setup = U.Service():new(function()
 
   -- BASE
   -- write, undo, quit
-  venom.events.write:sub(vim.cmd.write)
-  venom.events.write:sub(vim.cmd.stopinsert)
-  M.key {'<C-s>',             function() venom.events.write() end, mode = 'n v i'}
+  Events.write:sub(vim.cmd.write)
+  Events.write:sub(vim.cmd.stopinsert)
+  M.key {'<C-s>',             function() Events.write() end, mode = 'n v i'}
   M.key {'<C-z>',             function() vim.cmd.undo() end, mode = 'n v i'}
   M.key {'<C-c>',             function() vim.cmd.quit() end, mode = 'n v i'}
   -- M.key {'<A-c>',             function() vim.cmd.bdelete() end, mode = 'n v i'}
@@ -52,11 +52,9 @@ M.setup = U.Service():new(function()
   M.key {'<C-Up>',            '<C-y>k'}
   M.key {'<C-Down>',          '<C-e>j'}
   -- M.key {'<C-a>',            ':%'}
-  -- indent
-  -- M.key {'<Tab>',             '>>_'}
-  -- M.key {'<S-Tab>',           '<<_'}
-  -- M.key {'<Tab>',             '>gv_', mode = 'v'}
-  -- M.key {'<S-Tab>',           '<gv_', mode = 'v'}
+  -- quick fix list
+  M.key {'<S-Up>',          '<CMD>cprevious<CR>'}
+  M.key {'<S-Down>',            '<CMD>cnext<CR>'}
   -- filter
   M.key {'==',                '==_'}
   M.key {'=',                 '=gv_', mode = 'v'}
@@ -90,9 +88,9 @@ M.setup = U.Service():new(function()
   -- M.key {'<F5>',              function() venom.events.refresh() end}
   -- clear action
   -- venom.actions.clear:sub [[let @/ = ""]]
-  venom.events.clear:sub [[noh]]
-  venom.events.clear:sub(U.clear_prompt)
-  M.key {'<C-l>',             function() venom.events.clear() end}
+  Events.clear:sub [[noh]]
+  Events.clear:sub(U.clear_prompt)
+  M.key {'<C-l>',             function() Events.clear() end}
   M.key {'<C-l>',             '<ESC>', mode = 'i'}
   -- terminal smart escape
   M.key {'<Esc>',             "v:lua.TermSmartEsc(b:terminal_job_pid, '"..'<Esc>'.."')", mode = 't', opts = { noremap = true, expr = true } }
@@ -148,11 +146,11 @@ M.setup_plugins = U.Service():new(function()
   M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
   -- M.key {'<C-e>',             '<CMD>Neotree toggle<CR>', mode = 'i n'}
   -- fold-cycle
-  M.key {'za',                function() require 'fold-cycle'.toggle_all() venom.events.fold_update() end}
-  M.key {'z<Right>',          function() require 'fold-cycle'.open() venom.events.fold_update() end}
-  M.key {'z<Left>',           function() require 'fold-cycle'.close() venom.events.fold_update() end}
-  M.key {'z<Down>',           function() require 'fold-cycle'.open_all() venom.events.fold_update() end}
-  M.key {'z<Up>',             function() require 'fold-cycle'.close_all() venom.events.fold_update() end}
+  M.key {'za',                function() require 'fold-cycle'.toggle_all() Events.fold_update() end}
+  M.key {'z<Right>',          function() require 'fold-cycle'.open() Events.fold_update() end}
+  M.key {'z<Left>',           function() require 'fold-cycle'.close() Events.fold_update() end}
+  M.key {'z<Down>',           function() require 'fold-cycle'.open_all() Events.fold_update() end}
+  M.key {'z<Up>',             function() require 'fold-cycle'.close_all() Events.fold_update() end}
   -- fold-preview
   M.key {'zq',                function() require 'fold-preview'.toggle_preview() end}
   -- gitsigns

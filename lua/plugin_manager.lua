@@ -7,7 +7,7 @@ M.install_path = vim.fn.stdpath("data") .. '/lazy/'
 M.event_post_complete = U.Event():new()
 
 --- bootstraps the plugin manager if not installed
-M.bootstrap = U.Service():new(function()
+M.bootstrap = U.Service(function()
   local plugin_manager_path = M.install_path .. M.plugin_manager_name
 
   if not vim.loop.fs_stat(plugin_manager_path) then
@@ -25,7 +25,7 @@ M.bootstrap = U.Service():new(function()
 end)
 
 --- initializes and configures the plugin manager
-M.setup = U.Service():new(function(plugins)
+M.setup = U.Service(function(plugins)
   M.bootstrap()
 
   require 'lazy'.setup(plugins, {
@@ -83,7 +83,7 @@ M.get_short_plugin_names_from_plugin_spec_tree = function(specs)
 end
 
 --- registers a plugin into the feature list as PLUGIN:<plugin short name>
-M.register_plugin = U.Service():new(function(short_name)
+M.register_plugin = U.Service(function(short_name)
   if Features:has(FT.PLUGIN, short_name) then
     log.warn('attempt to feature re-register a plugin "' .. short_name .. '"')
   else
@@ -92,7 +92,7 @@ M.register_plugin = U.Service():new(function(short_name)
 end)
 
 --- syncs plugins (updates them regardless of the method)
-M.sync = U.Service():new(function(opts)
+M.sync = U.Service(function(opts)
   vim.cmd [[Lazy update]]
 end)
 

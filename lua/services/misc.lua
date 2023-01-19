@@ -5,7 +5,7 @@ local M = {}
 -- TODO: add required and provided features
 
 --- defines command aliases
-M.base = U.Service():new(function()
+M.base = U.Service(function()
   --- commands
   -- write as sudo
   vim.cmd [[cnoreabbrev w!! w !sudo tee > /dev/null %]]
@@ -76,7 +76,7 @@ M.base = U.Service():new(function()
 end)
 
 --- shows diagnostics on cursor hold
-M.diag_on_hold = U.Service():new(function()
+M.diag_on_hold = U.Service(function()
   vim.cmd [[
     augroup diag_on_hold
     autocmd!
@@ -88,7 +88,7 @@ M.diag_on_hold = U.Service():new(function()
 end)
 
 --- defines OpenURIUnderCursor(), works on urls, uris, vim plugins
-M.open_uri = U.Service():new(function()
+M.open_uri = U.Service(function()
   local open_cmd = nil
 
   if vim.fn.has("unix") == 1 then
@@ -139,13 +139,13 @@ M.open_uri = U.Service():new(function()
 end)
 
 --- sets color colorcolumn on the below filetypes
-M.color_col = U.Service():new(function()
+M.color_col = U.Service(function()
   local seq_str = U.seq(120, 999, ',', 1)
   vim.wo.colorcolumn = seq_str
 end)
 
 --- highlights yanked text for a period of time
-M.highlight_yank = U.Service():new(function()
+M.highlight_yank = U.Service(function()
   local timeout = 150
   local hl = 'Search'
 
@@ -158,7 +158,7 @@ M.highlight_yank = U.Service():new(function()
 end)
 
 --- disables some of the builtin neovim plugins
-M.disable_builtin_plugins = U.Service():new(function()
+M.disable_builtin_plugins = U.Service(function()
   local disabled_built_ins = {
     "gzip",
     "tar",
@@ -190,7 +190,7 @@ M.disable_builtin_plugins = U.Service():new(function()
 end)
 
 --- defines TermSmartEsc(), escapes term mode of running process isn't in blacklist
-M.term_smart_esc = U.Service():new(function()
+M.term_smart_esc = U.Service(function()
   local exclude_process_names = {
     nvim = true,
     lazygit = true,
@@ -215,7 +215,7 @@ M.term_smart_esc = U.Service():new(function()
 end)
 
 --- prompts to install ts parsers upon opening new file types with available ones.
-M.auto_install_ts_parser = U.Service():new(function()
+M.auto_install_ts_parser = U.Service(function()
   local blacklist = {}
 
   vim.api.nvim_create_autocmd('FileType', {
@@ -240,7 +240,7 @@ M.auto_install_ts_parser = U.Service():new(function()
 end)
 
 --- pets!
-M.pets = U.Service():new(function()
+M.pets = U.Service(function()
   local pets = {}
   local conf = { character = 'x', speed = 2 }
 
@@ -305,7 +305,7 @@ M.pets = U.Service():new(function()
 end)
 
 --- buffer edits (remove trailing spaces, EOLs)
-M.buffer_edits = U.Service():new(function()
+M.buffer_edits = U.Service(function()
   function RemoveTrailingWS()
     -- Save cursor position to later restore
     local curpos = vim.api.nvim_win_get_cursor(0)
@@ -330,7 +330,7 @@ M.buffer_edits = U.Service():new(function()
 end)
 
 --- automatically create missing directories in the file path
-M.auto_create_dir = U.Service():new(function()
+M.auto_create_dir = U.Service(function()
   vim.api.nvim_create_autocmd('BufWritePre', {
     group = vim.api.nvim_create_augroup('auto_create_dir', { clear = true }),
     callback = function(ctx)
@@ -341,7 +341,7 @@ end)
 
 --- defines LoremPicsum(), inserts a random image with prompted dimensions
 -- TODO: add :require(FT.PLUGIN, 'plenary.nvim')
-M.lorem_picsum = U.Service():new(function()
+M.lorem_picsum = U.Service(function()
   local curl = require 'plenary.curl'
 
   local function parse_int(str) return str:match("^%-?%d+$") end
@@ -368,7 +368,7 @@ end)
 
 --- defines GitIgnoreFill(), prompts for a gitignore template and inserts it
 -- TODO: add :require(FT.PLUGIN, 'plenary.nvim')
-M.auto_gitignore_io = U.Service():new(function()
+M.auto_gitignore_io = U.Service(function()
   local curl = require 'plenary.curl'
   -- local is_in_progress = false
 

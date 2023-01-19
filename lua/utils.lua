@@ -194,7 +194,7 @@ function M.request_jump(target_path, line, col)
   end
 end
 
--- Class Based Utils (statefull)
+-- Stateful Utils
 function M.FeatureList()
   return setmetatable(
     {
@@ -240,56 +240,41 @@ function M.Event()
   )
 end
 
---- service class
-function M.Service()
-  return setmetatable(
-    {
-      required_features = {},
-      provided_features = {},
-      callback = function(self, ...) log.warn("empty service callback called") end,
-      new = function(self, cb)
-        self.callback = cb
-        return self
-      end,
-      require = function(self, feature_type, feature_name) table.insert(self.required_features,
-          { feature_type, feature_name })
-        return self
-      end,
-      provide = function(self, feature_type, feature_name) table.insert(self.provided_features,
-          { feature_type, feature_name })
-        return self
-      end,
-      invoke = function(self, ...)
-        local can_be_invoked = true
-        local missing_features = {}
-        -- check for all required features
-        for _, required_feature in pairs(self.required_features) do
-          if (not Features:has(required_feature[1], required_feature[2])) then
-            can_be_invoked = false
-            table.insert(missing_features, required_feature)
-          end
-        end
-        if (can_be_invoked) then
-          local return_value = self.callback(...)
-          -- add all provided features
-          for _, provided_feature in pairs(self.provided_features) do
-            Features:add(provided_feature[1], provided_feature[2])
-          end
-          return return_value
-        else
-          for _, missing_feature in pairs(missing_features) do
-            log.warn("missing feature: " .. table.concat(missing_feature, ' / '), { stack_lvl_off = 1 })
-          end
-        end
-      end,
-      wrap = function(self) return function(...) return self:invoke(...) end end
-    },
-    {
-      __call = function(self, ...)
-        return self:invoke(...)
+--- returns a service function
+function M.Service(...)
+  local prov_feats = {}
+  local req_feats = {}
+  local cb = function(...) log.warn("empty service callback called") end
+
+  local argc = select("#", ...)
+  if argc == 1 then
+    cb = ...
+  elseif argc == 2 then
+    req_feats, cb = ...
+  elseif argc == 3 then
+    prov_feats, req_feats, cb = ...
+  end
+
+  return function(...)
+    local is_invokable = true
+
+    -- ensure required features
+    for _, req_feat in pairs(req_feats) do
+      if (not Features:has(req_feat[1], req_feat[2])) then
+        log.warn("missing feature: " .. table.concat(req_feat, ' / '), { stack_lvl_off = 2 })
+        is_invokable = false
       end
-    }
-  )
+    end
+
+    -- invoke and add provided features
+    if is_invokable then
+      local return_val = cb(...)
+      for _, prov_feat in pairs(prov_feats) do
+        Features:add(prov_feat[1], prov_feat[2])
+      end
+      return return_val
+    end
+  end
 end
 
 return M

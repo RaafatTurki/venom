@@ -2,7 +2,7 @@
 -- @module lsp
 local M = {}
 
-M.setup_lspconfig_server = U.Service():require(FT.PLUGIN, 'nvim-lspconfig'):new(function(server_name, opts)
+M.setup_lspconfig_server = U.Service({{FT.PLUGIN, 'nvim-lspconfig'}}, function(server_name, opts)
   local lspconf = require 'lspconfig'
 
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -53,7 +53,7 @@ M.setup_lspconfig_server = U.Service():require(FT.PLUGIN, 'nvim-lspconfig'):new(
 end)
 
 -- TODO: require mason-lspconfig.nvim instead once PM registers deps
-M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_servers_configs)
+M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_configs)
   -- lsp servers
   require 'mason-lspconfig'.setup()
   require 'mason-lspconfig'.setup_handlers {
@@ -338,7 +338,7 @@ M.setup_servers = U.Service():require(FT.PLUGIN, 'mason.nvim'):new(function(lsp_
 end)
 
 
-M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'mason.nvim'):require(FT.PLUGIN, 'nvim-lspconfig'):new(function()
+M.setup = U.Service({{FT.LSP, 'setup'}}, {{FT.PLUGIN, 'mason.nvim'},{FT.PLUGIN, 'nvim-lspconfig'}}, function()
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- per line nvim diagnostics
@@ -364,7 +364,7 @@ M.setup = U.Service():provide(FT.LSP, 'setup'):require(FT.PLUGIN, 'mason.nvim'):
   end
 end)
 
-M.rename = U.Service():new(function()
+M.rename = U.Service(function()
   if Features:has(FT.PLUGIN, 'inc-rename.nvim') then
     vim.api.nvim_feedkeys(':IncRename ' .. vim.fn.expand('<cword>'), '', false)
     -- require 'inc_rename'.setup()
@@ -410,7 +410,7 @@ M.rename = U.Service():new(function()
   end
 end)
 
-M.references = U.Service():new(function()
+M.references = U.Service(function()
   if Features:has(FT.PLUGIN, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_references]]
   else
@@ -418,7 +418,7 @@ M.references = U.Service():new(function()
   end
 end)
 
-M.definition = U.Service():new(function()
+M.definition = U.Service(function()
   if Features:has(FT.PLUGIN, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_definitions]]
   else
@@ -426,28 +426,28 @@ M.definition = U.Service():new(function()
   end
 end)
 
-M.code_action = U.Service():new(function()
+M.code_action = U.Service(function()
   vim.lsp.buf.code_action()
 end)
 
-M.hover = U.Service():new(function()
+M.hover = U.Service(function()
   vim.lsp.buf.hover()
 end)
 
-M.format = U.Service():new(function()
+M.format = U.Service(function()
   vim.lsp.buf.format()
 end)
 
-M.diags_list = U.Service():new(function()
+M.diags_list = U.Service(function()
   vim.diagnostic.setloclist()
   -- vim.diagnostic.setqflist()
 end)
 
-M.diags_hover = U.Service():new(function()
+M.diags_hover = U.Service(function()
   vim.diagnostic.open_float()
 end)
 
-M.setup_buf_fmt_on_save = U.Service():new(function(client, bufnr)
+M.setup_buf_fmt_on_save = U.Service(function(client, bufnr)
   local augroup_fmt_on_save = vim.api.nvim_create_augroup('format_on_save', {})
   if client.supports_method("textDocument/formatting") then
     vim.api.nvim_clear_autocmds({ group = augroup_fmt_on_save, buffer = bufnr })

@@ -14,7 +14,7 @@ M.labels = {
 
 M.buflist = {}
 
-M.setup = U.Service():new(function()
+M.setup = U.Service(function()
 
   vim.api.nvim_create_autocmd('VimEnter', {
     callback = function()

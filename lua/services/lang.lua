@@ -48,7 +48,7 @@ M.ts_parsers_ensure_installed = {
   'yaml',
 }
 
-M.setup = U.Service():require(FT.PLUGIN, "mason.nvim"):require(FT.PLUGIN, "nvim-navic"):require(FT.PLUGIN, 'nvim-treesitter'):new(function()
+M.setup = U.Service({{FT.PLUGIN, "mason.nvim"},{FT.PLUGIN, "nvim-navic"},{FT.PLUGIN, 'nvim-treesitter'}}, function()
   -- mason
   require 'mason'.setup {
     ui = {
@@ -134,7 +134,7 @@ end)
 M.texab_build_status = 0
 
 M.builders = {
-  texlab = U.Service():new(function(bufnr)
+  texlab = U.Service(function(bufnr)
     -- local build_status = vim.tbl_add_reverse_lookup { Success = 0, Error = 1, Failure = 2, Cancelled = 3, }
     local util = require 'lspconfig.util'
     bufnr = util.validate_bufnr(bufnr)

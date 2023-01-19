@@ -2,7 +2,7 @@
 -- @module bind
 local M = {}
 
-M.bind_leader = U.Service():new(function()
+M.bind_leader = U.Service(function()
   M.key({'<Space>', '<Nop>', mode = ''})
   vim.g.mapleader = ' '
 end)
@@ -10,7 +10,7 @@ end)
 M.keys = {}
 
 -- a keymap object is {lhs, rhs, opts = {}, mode = string}
-M.key = U.Service():new(function(keymap)
+M.key = U.Service(function(keymap)
   keymap.opts = keymap.opts or { noremap = true, silent = true }
   keymap.mode = keymap.mode and vim.split(keymap.mode, ' ') or 'n'
 
@@ -18,7 +18,7 @@ M.key = U.Service():new(function(keymap)
   table.insert(M.keys, keymap)
 end)
 
-M.setup = U.Service():new(function()
+M.setup = U.Service(function()
   -- DISABLES
   -- ctrl-x submode, c-p and c-n
   M.key {'<C-x>',            '<Nop>', mode = 'i'}
@@ -128,7 +128,7 @@ M.setup = U.Service():new(function()
 end)
 
 -- TODO load each conditionally depending on registered features
-M.setup_plugins = U.Service():new(function()
+M.setup_plugins = U.Service(function()
   -- open uri under cursor
   M.key {'gx',                OpenURIUnderCursor}
   -- cycle theme

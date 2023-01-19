@@ -6,7 +6,7 @@ local M = {}
 
 -- M.last_session_name = 'last'
 
-M.setup = U.Service():provide(FT.SESSION, "setup"):require(FT.PLUGIN, "mini.nvim"):new(function()
+M.setup = U.Service({{FT.SESSION, "setup"}}, {{FT.PLUGIN, "mini.nvim"}}, function()
   local mini_session = require 'mini.sessions'
   mini_session.setup {
     autoread = false,
@@ -41,7 +41,7 @@ M.setup = U.Service():provide(FT.SESSION, "setup"):require(FT.PLUGIN, "mini.nvim
   ]]
 end)
 
-M.get_current = U.Service():new(function()
+M.get_current = U.Service(function()
   local this_session = vim.v.this_session
 
   if #this_session > 0 then
@@ -55,7 +55,7 @@ M.get_current = U.Service():new(function()
   -- return require'resession'.get_current()
 end)
 
-M.get_all = U.Service():require(FT.SESSION, "setup"):new(function()
+M.get_all = U.Service({{FT.SESSION, "setup"}}, function()
   local session_names = {}
   for session_name, _ in pairs(MiniSessions.detected) do
     table.insert(session_names, session_name)
@@ -65,13 +65,13 @@ M.get_all = U.Service():require(FT.SESSION, "setup"):new(function()
   -- return require 'resession'.list()
 end)
 
-M.save = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
+M.save = U.Service({{FT.SESSION, "setup"}}, function(session_name)
   MiniSessions.write(session_name, {})
 
   -- require 'resession'.save(session_name)
 end)
 
-M.load = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
+M.load = U.Service({{FT.SESSION, "setup"}}, function(session_name)
   if vim.tbl_contains(M.get_all(), session_name) then
     MiniSessions.read(session_name, {})
   else
@@ -81,20 +81,20 @@ M.load = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
   -- require 'resession'.load(session_name)
 end)
 
-M.load_last = U.Service():require(FT.SESSION, "setup"):new(function(last_session_name)
+M.load_last = U.Service({{FT.SESSION, "setup"}}, function(last_session_name)
   last_session_name = MiniSessions.get_latest()
   MiniSessions.read(last_session_name, {})
 
   -- require 'resession'.load(M.last_session_name)
 end)
 
-M.delete = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
+M.delete = U.Service({{FT.SESSION, "setup"}}, function(session_name)
   MiniSessions.delete(session_name, {})
 
   -- require 'resession'.delete(session_name)
 end)
 
--- M.resave = U.Service():require(FT.SESSION, "setup"):new(function(session_name)
+-- M.resave = U.create_service({{FT.SESSION, "setup"}}, function(session_name)
 --   -- if session_name == nil then
 --   --   session_name = M.get_current()
 --   --
@@ -108,7 +108,7 @@ end)
 --   -- M.save(session_name)
 -- end)
 
-M.load_cli = U.Service():new(function(session_name)
+M.load_cli = U.Service(function(session_name)
   if Features:has(FT.SESSION, 'setup') then
     M.load(session_name)
   else

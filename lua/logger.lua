@@ -81,7 +81,10 @@ M.log = {
 
 setmetatable(M.log, {
   __call = function(self, val, opts)
-    self.info(val, { stack_level_offset = 1 })
+    ---@diagnostic disable-next-line: redefined-local
+    local opts = opts or {}
+    opts.stack_level_offset = (opts.stack_level_offset or 0) + 1
+    self.info(val, opts)
   end
 })
 

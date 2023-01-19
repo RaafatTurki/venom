@@ -210,6 +210,8 @@ function M.FeatureList()
       unstitch = function(self, feature)
         local feat_tbl = vim.split(feature, ':')
         if #feat_tbl == 2 then return feat_tbl end
+        log.err('invalid feature', { stack_level_offset = 2 })
+        return nil
       end,
     },
     {}
@@ -244,7 +246,7 @@ end
 function M.Service(...)
   local prov_feats = {}
   local req_feats = {}
-  local cb = function(...) log.warn("empty service callback called") end
+  local cb = function(...) log.warn("empty service callback called", { stack_level_offset = 2 }) end
 
   local argc = select("#", ...)
   if argc == 1 then
@@ -261,7 +263,7 @@ function M.Service(...)
     -- ensure required features
     for _, req_feat in pairs(req_feats) do
       if (not Features:has(req_feat[1], req_feat[2])) then
-        log.warn("missing feature: " .. table.concat(req_feat, ' / '), { stack_lvl_off = 2 })
+        log.warn("missing feature: " .. table.concat(req_feat, ' / '), { stack_level_offset = 1 })
         is_invokable = false
       end
     end

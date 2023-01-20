@@ -439,14 +439,13 @@ M.neo_tree = U.Service({{FT.PLUGIN, "neo-tree.nvim"}}, {}, function()
   require 'neo-tree'.setup {
     close_if_last_window = true,
     -- use_popups_for_input = false,
-    -- popup_border_style = 'single',
+    popup_border_style = 'single',
     default_component_configs = {
       modified = {
         symbol = '•',
       },
       name = {
         -- trailing_slash = false,
-        -- use_git_status_colors = true,
       },
       git_status = {
         symbols = {
@@ -513,23 +512,28 @@ M.neo_tree = U.Service({{FT.PLUGIN, "neo-tree.nvim"}}, {}, function()
     filesystem = {
       filtered_items = {
         hide_by_name = {
-          'node_modules',
-          '__pycache__',
-          'pnpm-lock.yaml',
-          'package-lock.json',
+          -- 'node_modules',
+          -- '__pycache__',
+          -- 'pnpm-lock.yaml',
+          -- 'package-lock.json',
         },
         hide_by_pattern = {
-          "*.import"
+          -- "*.import"
         },
         never_show = {
         },
       },
       commands = {
-        -- delete = function(state)
-        --   local path = state.tree:get_node().path
-        --   vim.fn.system({ "gio", 'trash', vim.fn.fnameescape(path) })
-        --   require('neo-tree.sources.manager').refresh(state.name)
-        -- end,
+        delete = function(state)
+          local inputs = require "neo-tree.ui.inputs"
+          local path = state.tree:get_node().path
+          local msg = "Are you sure you want to trash " .. path
+          inputs.confirm(msg, function(confirmed)
+            if not confirmed then return end
+            vim.fn.system { "gio", "trash", vim.fn.fnameescape(path) }
+            require("neo-tree.sources.manager").refresh(state.name)
+          end)
+        end,
       },
       follow_current_file = true,
       use_libuv_file_watcher = true,

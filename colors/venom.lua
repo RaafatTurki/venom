@@ -320,7 +320,7 @@ Conceal         = { '@debug' },
   WarningMsg      = { fg = c.warn },
 Whitespace      = { 'Debug' },
   WildMenu        = { 'Pmenu' },
-  WinBar          = { }, --
+  WinBar          = { 'NormalFloat' },
   WinBarNC        = { }, --
   WinSeparator    = { fg = c.mg },
 

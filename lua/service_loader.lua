@@ -113,9 +113,17 @@ local plugins = {
     dependencies = p.plenary,
     config = Plugins.gitsigns,
   },
-  { 'kyazdani42/nvim-tree.lua',
-    dependencies = p.devicons,
-    config = Plugins.nvim_tree,
+  { 'nvim-neo-tree/neo-tree.nvim',
+    branch = "v2.x",
+    dependencies = {
+      p.plenary,
+      p.nui,
+      p.devicons,
+      { 's1n7ax/nvim-window-picker',
+        tag = "v1.*",
+      }
+    },
+    config = Plugins.neo_tree
   },
   { 'akinsho/nvim-toggleterm.lua',
     config = Plugins.toggle_term,

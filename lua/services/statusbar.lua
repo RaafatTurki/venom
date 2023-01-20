@@ -151,14 +151,20 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       condition = function()
         return require 'nvim-navic'.is_available()
       end,
-      provider = require 'nvim-navic'.get_location,
+      provider = function()
+        return require 'nvim-navic'.get_location()
+      end,
       hl = 'Folded',
       update = 'CursorMoved'
     },
   }
 
   M.components.navic = {
-    condition = require("nvim-navic").is_available,
+    condition = function()
+      if Features:has(FT.PLUGIN, 'nvim-navic') then
+        return require("nvim-navic").is_available()
+      end
+    end,
     static = {
       -- create a type highlight map
       type_hl = {
@@ -289,34 +295,34 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
     end,
     static = {
-      error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
-      warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
-      info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
-      hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
+      error_icon = Icons.diagnostic_states.Error,
+      warn_icon = Icons.diagnostic_states.Warn,
+      info_icon = Icons.diagnostic_states.Info,
+      hint_icon = Icons.diagnostic_states.Hint,
     },
     update = { "DiagnosticChanged", "BufEnter" },
     condition = conditions.has_diagnostics,
     {
       provider = function(self)
-        return self.errors > 0 and (self.error_icon .. self.errors .. " ")
+        return self.errors > 0 and (self.error_icon .. ' ' .. self.errors .. " ")
       end,
       hl = 'DiagnosticError',
     },
     {
       provider = function(self)
-        return self.warnings > 0 and (self.warn_icon .. self.warnings .. " ")
+        return self.warnings > 0 and (self.warn_icon .. ' ' .. self.warnings .. " ")
       end,
       hl = 'DiagnosticWarn',
     },
     {
       provider = function(self)
-        return self.info > 0 and (self.info_icon .. self.info .. " ")
+        return self.info > 0 and (self.info_icon .. ' ' .. self.info .. " ")
       end,
       hl = 'DiagnosticInfo',
     },
     {
       provider = function(self)
-        return self.hints > 0 and (self.hint_icon .. self.hints)
+        return self.hints > 0 and (self.hint_icon .. ' ' .. self.hints)
       end,
       hl = 'DiagnosticHint',
     },
@@ -587,7 +593,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       return vim.bo.buftype == ''
     end,
     space,
-    M.components.navic,
+    M.components.navic_simple,
     align,
     -- M.components.gitinfo(component_opts.middle),
   }

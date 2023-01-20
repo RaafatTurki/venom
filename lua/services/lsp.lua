@@ -163,6 +163,7 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
       M.setup_lspconfig_server('jsonls', {
         settings = {
           json = {
+            -- TODO: emsure plugin is installed
             schemas = require 'schemastore'.json.schemas(),
             validate = { enable = true },
 

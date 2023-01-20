@@ -21,9 +21,16 @@ local p = {
 }
 local plugins = {
   -- LSP: language server protocol related
-  p.lspconfig,
-  { 'jose-elias-alvarez/null-ls.nvim',
+  { p.lspconfig,
+    config = function()
+      Features:add(FT.PLUGIN, 'nvim-lspconfig')
+    end,
+  },
+  {'jose-elias-alvarez/null-ls.nvim',
     dependencies = p.plenary,
+    config = function()
+      Features:add(FT.PLUGIN, 'null-ls.nvim')
+    end,
   },
   { 'williamboman/mason.nvim',
     dependencies = {
@@ -31,46 +38,88 @@ local plugins = {
       'williamboman/mason-lspconfig.nvim',
       'jayp0521/mason-null-ls.nvim',
     },
+    config = function()
+      Features:add(FT.PLUGIN, 'mason.nvim')
+    end,
   },
-  { 'mfussenegger/nvim-jdtls' },
-  { 'folke/neodev.nvim',
+  { 'mfussenegger/nvim-jdtls',
+    config = function()
+      Features:add(FT.PLUGIN, 'nvim-jdtls')
+    end
+  },
   { 'b0o/schemastore.nvim',
     dependencies = p.lspconfig,
+    config = function()
+      Features:add(FT.PLUGIN, 'schemastore.nvim')
+    end,
   },
+  { 'folke/neodev.nvim',
     dependencies = p.lspconfig,
+    config = function()
+      -- Features:add(FT.PLUGIN, 'schemastore.nvim')
+    end,
   },
+  { 'Mofiqul/trld.nvim',
+    config = Plugins.trld,
+  },
+  -- { 'Issafalcon/lsp-overloads.nvim' },
   -- LANG: treesitter and language specific plugins
   { p.treesitter,
     build = ':TSUpdate',
+    config = function()
+      Features:add(FT.PLUGIN, 'nvim-treesitter')
+    end,
   },
   { 'JoosepAlviste/nvim-ts-context-commentstring',
     dependencies = p.treesitter,
+    config = function()
+      Features:add(FT.PLUGIN, 'nvim-ts-context-commentstring')
+    end,
   },
   { 'SmiteshP/nvim-navic',
     dependencies = p.lspconfig,
+    config = function()
+      Features:add(FT.PLUGIN, 'nvim-navic')
+    end,
   },
   { 'nvim-treesitter/playground',
-    dependencies = p.treesitter
+    dependencies = p.treesitter,
+    config = function()
+      Features:add(FT.PLUGIN, 'playground')
+    end,
   },
   { 'euclio/vim-markdown-composer',
-    build = 'cargo build --release'
+    build = 'cargo build --release',
+    config = Plugins.vim_markdown_composer,
   },
   { 'rest-nvim/rest.nvim',
-    dependencies = p.plenary
+    dependencies = p.plenary,
+    config = Plugins.rest,
   },
   -- STATUSBAR:
-  { 'rebelot/heirline.nvim' },
+  { 'rebelot/heirline.nvim',
+    config = function()
+      Features:add(FT.PLUGIN, 'heirline.nvim')
+    end
+  },
   -- PLUGINS:
-  { 'echasnovski/mini.nvim' },
-  { 'RRethy/vim-illuminate' },
+  { 'echasnovski/mini.nvim',
+    config = Plugins.mini_map
+  },
+  { 'RRethy/vim-illuminate',
+    config = Plugins.illuminate
+  },
   { p.gitsigns,
     dependencies = p.plenary,
+    config = Plugins.gitsigns,
   },
-  { 'Mofiqul/trld.nvim' },
   { 'kyazdani42/nvim-tree.lua',
     dependencies = p.devicons,
+    config = Plugins.nvim_tree,
   },
-  { 'akinsho/nvim-toggleterm.lua' },
+  { 'akinsho/nvim-toggleterm.lua',
+    config = Plugins.toggle_term,
+  },
   { 'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
     dependencies = {
@@ -78,16 +127,22 @@ local plugins = {
       { 'nvim-telescope/telescope-fzf-native.nvim',
         build = 'make',
       },
-    }
+    },
+    config = Plugins.telescope,
   },
-  { 'jghauser/fold-cycle.nvim' },
-  { 'Issafalcon/lsp-overloads.nvim' },
+  { 'jghauser/fold-cycle.nvim',
+    config = Plugins.fold_cycle,
+  },
   { 'anuvyklack/fold-preview.nvim',
     dependencies = 'anuvyklack/keymap-amend.nvim',
+    config = Plugins.fold_preview,
   },
-  { 'NvChad/nvim-colorizer.lua' },
+  { 'NvChad/nvim-colorizer.lua',
+    config = Plugins.colorizer,
+  },
   { 'folke/noice.nvim',
     dependencies = p.nui,
+    config = Plugins.noice,
   },
   { 'hrsh7th/nvim-cmp',
     dependencies = {
@@ -100,13 +155,20 @@ local plugins = {
       'hrsh7th/cmp-cmdline',
       'hrsh7th/cmp-buffer',
     },
+    config = Plugins.cmp_ls,
   },
-  { 'stevearc/dressing.nvim' },
-  { 'RaafatTurki/hex.nvim', dev = false },
+  { 'stevearc/dressing.nvim',
+    config = Plugins.dressing,
+  },
+  { 'RaafatTurki/hex.nvim', dev = false,
+    config = Plugins.hex,
+  },
   -- p.dap,
   -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
   -- UNCHARTED:
-  { 'folke/paint.nvim' },
+  { 'folke/paint.nvim',
+    config = Plugins.paint,
+  },
 }
 
 PluginManager.event_post_complete:sub(function()
@@ -129,29 +191,6 @@ PluginManager.event_post_complete:sub(function()
   Misc.auto_create_dir()
   Misc.lorem_picsum()
   Misc.auto_gitignore_io()
-
-  Plugins.devicons()
-  Plugins.illuminate()
-  Plugins.telescope()
-  Plugins.gitsigns()
-  Plugins.cmp_ls()
-  Plugins.dressing()
-  Plugins.toggle_term()
-  Plugins.mini_starter()
-  Plugins.mini_surround()
-  Plugins.mini_map()
-  Plugins.mini_bufremove()
-  Plugins.mini_move()
-  Plugins.trld()
-  Plugins.fold_cycle()
-  Plugins.fold_preview()
-  Plugins.nvim_tree()
-  Plugins.colorizer()
-  Plugins.vim_markdown_composer()
-  Plugins.rest()
-  Plugins.paint()
-  Plugins.noice()
-  Plugins.hex()
 
   Lang.setup()
 

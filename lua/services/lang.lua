@@ -119,6 +119,7 @@ M.setup = U.Service({{FT.LANG, 'setup'}}, {}, function()
           node_decremental = "<BS>",
         },
       },
+      -- TODO: ensure the plgu is installed
       context_commentstring = { enable = true, enable_autocmd = false },
     }
   end

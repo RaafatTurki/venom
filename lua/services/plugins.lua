@@ -2,12 +2,12 @@
 -- @module plugins
 local M = {}
 
-M.impatient = U.Service({{FT.PLUGIN, "impatient.nvim"}}, function()
+M.impatient = U.Service({{FT.PLUGIN, "impatient.nvim"}}, {}, function()
   require 'impatient'
   require 'impatient'.enable_profile()
 end)
 
-M.illuminate = U.Service({{FT.PLUGIN, 'vim-illuminate'}}, function()
+M.illuminate = U.Service({{FT.PLUGIN, 'vim-illuminate'}}, {}, function()
   -- default configuration
   require('illuminate').configure {
     filetypes_denylist = {
@@ -25,7 +25,7 @@ M.illuminate = U.Service({{FT.PLUGIN, 'vim-illuminate'}}, function()
   }
 end)
 
-M.devicons = U.Service({{FT.PLUGIN, "nvim-web-devicons"}}, function()
+M.devicons = U.Service({{FT.PLUGIN, "nvim-web-devicons"}}, {}, function()
   require 'nvim-web-devicons'.setup {
     override = {
       default_icon = {
@@ -38,7 +38,7 @@ M.devicons = U.Service({{FT.PLUGIN, "nvim-web-devicons"}}, function()
   }
 end)
 
-M.dressing = U.Service({{FT.PLUGIN, "dressing.nvim"}}, function()
+M.dressing = U.Service({{FT.PLUGIN, "dressing.nvim"}}, {}, function()
   require 'dressing'.setup {
     input = {
       enabled = false,
@@ -66,7 +66,7 @@ M.dressing = U.Service({{FT.PLUGIN, "dressing.nvim"}}, function()
   }
 end)
 
-M.telescope = U.Service({{FT.PLUGIN, 'telescope.nvim'},{FT.PLUGIN, 'telescope-fzf-native.nvim'}}, function()
+M.telescope = U.Service({{FT.PLUGIN, 'telescope.nvim'},{FT.PLUGIN, 'telescope-fzf-native.nvim'}}, {}, function()
   require('telescope').setup {
     extensions = {
       fzf = {
@@ -93,7 +93,7 @@ M.telescope = U.Service({{FT.PLUGIN, 'telescope.nvim'},{FT.PLUGIN, 'telescope-fz
   require('telescope').load_extension('fzf')
 end)
 
-M.notify = U.Service({{FT.PLUGIN, "nvim-notify"}}, function()
+M.notify = U.Service({{FT.PLUGIN, "nvim-notify"}}, {}, function()
   local notify = require 'notify'
 
   notify.setup {
@@ -105,7 +105,7 @@ M.notify = U.Service({{FT.PLUGIN, "nvim-notify"}}, function()
   vim.notify = notify
 end)
 
-M.bqf = U.Service({{FT.PLUGIN, 'nvim-bqf'}}, function()
+M.bqf = U.Service({{FT.PLUGIN, 'nvim-bqf'}}, {}, function()
   require 'bqf'.setup {
     -- magic_window = false,
     -- auto_resize_height = true,
@@ -130,18 +130,18 @@ M.bqf = U.Service({{FT.PLUGIN, 'nvim-bqf'}}, function()
   }
 end)
 
-M.reach = U.Service({{FT.PLUGIN, 'reach.nvim'}}, function()
+M.reach = U.Service({{FT.PLUGIN, 'reach.nvim'}}, {}, function()
   require 'reach'.setup {
     notifications = false
   }
 end)
 
-M.grapple = U.Service({{FT.PLUGIN, 'grapple.nvim'}}, function()
+M.grapple = U.Service({{FT.PLUGIN, 'grapple.nvim'}}, {}, function()
   require 'grapple'.setup {
   }
 end)
 
-M.gitsigns = U.Service({{FT.PLUGIN, "gitsigns.nvim"}}, function()
+M.gitsigns = U.Service({{FT.PLUGIN, "gitsigns.nvim"}}, {}, function()
   require 'gitsigns'.setup {
     signs = {
       add          = { text = '│' },
@@ -155,7 +155,7 @@ M.gitsigns = U.Service({{FT.PLUGIN, "gitsigns.nvim"}}, function()
   }
 end)
 
-M.cmp_ls = U.Service({{FT.PLUGIN, "nvim-cmp"}}, function()
+M.cmp_ls = U.Service({{FT.PLUGIN, "nvim-cmp"}}, {}, function()
   -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
   local ls = require 'luasnip'
   local ls_types = require 'luasnip.util.types'
@@ -298,11 +298,11 @@ M.cmp_ls = U.Service({{FT.PLUGIN, "nvim-cmp"}}, function()
   })
 end)
 
-M.coq = U.Service({{FT.PLUGIN, 'coq_nvim'}}, function()
+M.coq = U.Service({{FT.PLUGIN, 'coq_nvim'}}, {}, function()
   vim.cmd [[COQnow --shut-up]]
 end)
 
-M.nvim_tree = U.Service({{FT.PLUGIN, "nvim-tree.lua"}}, function()
+M.nvim_tree = U.Service({{FT.PLUGIN, "nvim-tree.lua"}}, {}, function()
   vim.g.nvim_tree_allow_resize = 1
 
   local nvimtree_keybindings = {
@@ -421,7 +421,7 @@ M.nvim_tree = U.Service({{FT.PLUGIN, "nvim-tree.lua"}}, function()
   }
 end)
 
-M.neo_tree = U.Service({{FT.PLUGIN, "neo-tree.nvim"}}, function()
+M.neo_tree = U.Service({{FT.PLUGIN, "neo-tree.nvim"}}, {}, function()
   require 'window-picker'.setup {
     autoselect_one = true,
     include_current = false,
@@ -541,7 +541,7 @@ M.neo_tree = U.Service({{FT.PLUGIN, "neo-tree.nvim"}}, function()
   }
 end)
 
-M.bufferline = U.Service({{FT.PLUGIN, 'bufferline.nvim'}}, function()
+M.bufferline = U.Service({{FT.PLUGIN, 'bufferline.nvim'}}, {}, function()
   require 'bufferline'.setup {
     options = {
       mode = 'tabs',
@@ -564,7 +564,7 @@ M.bufferline = U.Service({{FT.PLUGIN, 'bufferline.nvim'}}, function()
   }
 end)
 
-M.toggle_term = U.Service({{FT.PLUGIN, "nvim-toggleterm.lua"}}, function()
+M.toggle_term = U.Service({{FT.PLUGIN, "nvim-toggleterm.lua"}}, {}, function()
   require 'toggleterm'.setup {
     shade_terminals = false,
     direction = 'horizontal',
@@ -585,7 +585,7 @@ M.toggle_term = U.Service({{FT.PLUGIN, "nvim-toggleterm.lua"}}, function()
   }
 end)
 
-M.fidget = U.Service({{FT.PLUGIN, "fidget.nvim"}}, function()
+M.fidget = U.Service({{FT.PLUGIN, "fidget.nvim"}}, {}, function()
   require 'fidget'.setup {
     window = {
       blend = 0,
@@ -593,7 +593,7 @@ M.fidget = U.Service({{FT.PLUGIN, "fidget.nvim"}}, function()
   }
 end)
 
-M.mini_starter = U.Service({{FT.PLUGIN, "mini.nvim"}}, function()
+M.mini_starter = U.Service({{FT.PLUGIN, "mini.nvim"}}, {}, function()
   local starter = require 'mini.starter'
 
   local new_item = function(section, key, title, action)
@@ -648,11 +648,11 @@ M.mini_starter = U.Service({{FT.PLUGIN, "mini.nvim"}}, function()
   }
 end)
 
-M.mini_surround = U.Service({{FT.PLUGIN, "mini.nvim"}}, function()
+M.mini_surround = U.Service({{FT.PLUGIN, "mini.nvim"}}, {}, function()
   require 'mini.surround'.setup()
 end)
 
-M.mini_map = U.Service({{FT.PLUGIN, "mini.nvim"}}, function()
+M.mini_map = U.Service({{FT.PLUGIN, "mini.nvim"}}, {}, function()
   local map = require('mini.map')
 
   require 'mini.map'.setup {
@@ -681,19 +681,19 @@ M.mini_map = U.Service({{FT.PLUGIN, "mini.nvim"}}, function()
   Events.fold_update:sub(map.refresh)
 end)
 
-M.mini_bufremove = U.Service({{FT.PLUGIN, "mini.nvim"}}, function()
+M.mini_bufremove = U.Service({{FT.PLUGIN, "mini.nvim"}}, {}, function()
   require 'mini.bufremove'.setup()
 end)
 
-M.mini_pairs = U.Service({{FT.PLUGIN, 'mini.nvim'}}, function()
+M.mini_pairs = U.Service({{FT.PLUGIN, 'mini.nvim'}}, {}, function()
   require 'mini.pairs'.setup {}
 end)
 
-M.mini_move = U.Service({{FT.PLUGIN, 'mini.nvim'}}, function()
+M.mini_move = U.Service({{FT.PLUGIN, 'mini.nvim'}}, {}, function()
   require 'mini.move'.setup {}
 end)
 
-M.corn = U.Service({{FT.PLUGIN, "corn.nvim"}}, function()
+M.corn = U.Service({{FT.PLUGIN, "corn.nvim"}}, {}, function()
   require 'corn'.setup()
   -- require 'corn'.setup {
   --   -- win_opts = {
@@ -708,7 +708,7 @@ M.corn = U.Service({{FT.PLUGIN, "corn.nvim"}}, function()
   -- }
 end)
 
-M.trld = U.Service({{FT.PLUGIN, "trld.nvim"}}, function()
+M.trld = U.Service({{FT.PLUGIN, "trld.nvim"}}, {}, function()
   local function get_icon_by_severity(severity)
     local icon_set = Icons.diagnostic_states
     local icons = {
@@ -744,11 +744,11 @@ M.trld = U.Service({{FT.PLUGIN, "trld.nvim"}}, function()
   }
 end)
 
-M.dirty_talk = U.Service({{FT.PLUGIN, 'vim-dirtytalk'}}, function()
+M.dirty_talk = U.Service({{FT.PLUGIN, 'vim-dirtytalk'}}, {}, function()
   vim.opt.spelllang:append 'programming'
 end)
 
-M.hover = U.Service({{FT.PLUGIN, 'hover.nvim'}}, function()
+M.hover = U.Service({{FT.PLUGIN, 'hover.nvim'}}, {}, function()
   require 'hover'.setup {
     init = function()
       require('hover.providers.lsp')
@@ -763,7 +763,7 @@ M.hover = U.Service({{FT.PLUGIN, 'hover.nvim'}}, function()
   }
 end)
 
-M.paperplanes = U.Service({{FT.PLUGIN, 'paperplanes.nvim'}}, function()
+M.paperplanes = U.Service({{FT.PLUGIN, 'paperplanes.nvim'}}, {}, function()
   require 'paperplanes'.setup {
     register = '+',
     -- provider = "0x0.st",
@@ -775,7 +775,7 @@ M.paperplanes = U.Service({{FT.PLUGIN, 'paperplanes.nvim'}}, function()
   }
 end)
 
-M.fold_cycle = U.Service({{FT.PLUGIN, 'fold-cycle.nvim'}}, function()
+M.fold_cycle = U.Service({{FT.PLUGIN, 'fold-cycle.nvim'}}, {}, function()
   require 'fold-cycle'.setup {
     open_if_max_closed = false,
     close_if_max_opened = false,
@@ -783,7 +783,7 @@ M.fold_cycle = U.Service({{FT.PLUGIN, 'fold-cycle.nvim'}}, function()
   }
 end)
 
-M.fold_preview = U.Service({{FT.PLUGIN, 'fold-preview.nvim'}}, function()
+M.fold_preview = U.Service({{FT.PLUGIN, 'fold-preview.nvim'}}, {}, function()
   local fold_preview = require 'fold-preview'
 
   fold_preview.setup {
@@ -794,11 +794,11 @@ M.fold_preview = U.Service({{FT.PLUGIN, 'fold-preview.nvim'}}, function()
   Events.fold_update:sub(fold_preview.close_preview)
 end)
 
-M.icon_picker = U.Service({{FT.PLUGIN, 'icon-picker.nvim'}}, function()
+M.icon_picker = U.Service({{FT.PLUGIN, 'icon-picker.nvim'}}, {}, function()
   require 'icon-picker'
 end)
 
-M.fzf_lua = U.Service({{FT.PLUGIN, 'fzf-lua'}}, function()
+M.fzf_lua = U.Service({{FT.PLUGIN, 'fzf-lua'}}, {}, function()
   require 'fzf-lua'.setup {
     winopts = {
       border  = 'single',
@@ -813,17 +813,17 @@ M.fzf_lua = U.Service({{FT.PLUGIN, 'fzf-lua'}}, function()
   }
 end)
 
-M.guess_indent = U.Service({{FT.PLUGIN, 'guess-indent.nvim'}}, function()
+M.guess_indent = U.Service({{FT.PLUGIN, 'guess-indent.nvim'}}, {}, function()
   require 'guess-indent'.setup {}
 end)
 
-M.gomove = U.Service({{FT.PLUGIN, 'nvim-gomove'}}, function()
+M.gomove = U.Service({{FT.PLUGIN, 'nvim-gomove'}}, {}, function()
   require 'gomove'.setup {
     map_defaults = false,
   }
 end)
 
-M.colorizer = U.Service({{FT.PLUGIN, 'nvim-colorizer.lua'}}, function()
+M.colorizer = U.Service({{FT.PLUGIN, 'nvim-colorizer.lua'}}, {}, function()
   require 'colorizer'.setup {
     filetypes = {
       '*',
@@ -845,16 +845,16 @@ M.colorizer = U.Service({{FT.PLUGIN, 'nvim-colorizer.lua'}}, function()
   }
 end)
 
-M.vim_markdown_composer = U.Service({{FT.PLUGIN, 'vim-markdown-composer'}}, function()
+M.vim_markdown_composer = U.Service({{FT.PLUGIN, 'vim-markdown-composer'}}, {}, function()
   vim.g.markdown_composer_autostart = 0
   -- vim.g.markdown_composer_browser = 'qutebrowser'
 end)
 
-M.overseer = U.Service({{FT.PLUGIN, 'overseer.nvim'}}, function()
+M.overseer = U.Service({{FT.PLUGIN, 'overseer.nvim'}}, {}, function()
   require 'overseer'.setup {}
 end)
 
-M.rest = U.Service({{FT.PLUGIN, 'rest.nvim'}}, function()
+M.rest = U.Service({{FT.PLUGIN, 'rest.nvim'}}, {}, function()
   require 'rest-nvim'.setup {
     -- skip_ssl_verification = false,
     -- result = {
@@ -869,7 +869,7 @@ M.rest = U.Service({{FT.PLUGIN, 'rest.nvim'}}, function()
   }
 end)
 
-M.paint = U.Service({{FT.PLUGIN, 'paint.nvim'}}, function()
+M.paint = U.Service({{FT.PLUGIN, 'paint.nvim'}}, {}, function()
   require 'paint'.setup {
     highlights = {
       -- snippets
@@ -909,7 +909,7 @@ M.paint = U.Service({{FT.PLUGIN, 'paint.nvim'}}, function()
   }
 end)
 
-M.noice = U.Service({{FT.PLUGIN, 'noice.nvim'}}, function()
+M.noice = U.Service({{FT.PLUGIN, 'noice.nvim'}}, {}, function()
   require 'noice'.setup {
     cmdline = {
       -- format = {
@@ -946,7 +946,7 @@ M.noice = U.Service({{FT.PLUGIN, 'noice.nvim'}}, function()
   }
 end)
 
-M.hex = U.Service({{FT.PLUGIN, 'hex.nvim'}}, function()
+M.hex = U.Service({{FT.PLUGIN, 'hex.nvim'}}, {}, function()
   require 'hex'.setup {}
 end)
 

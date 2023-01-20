@@ -61,7 +61,13 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
       M.setup_lspconfig_server(server_name, {})
     end,
     sumneko_lua = function()
-      -- require("neodev").setup {}
+      if Features:has(FT.PLUGIN, 'neodev.nvim') then
+        require("neodev").setup {
+          library = {
+            plugins = false,
+          }
+        }
+      end
       M.setup_lspconfig_server('sumneko_lua', {
         settings = {
           Lua = {

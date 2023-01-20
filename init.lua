@@ -14,6 +14,7 @@ Events = {
   clear = U.Event():new(),
   write = U.Event():new(),
   fold_update = U.Event():new(),
+  install_post = U.Event():new(),
 }
 
 local icon_sets = require 'icons'.icon_sets

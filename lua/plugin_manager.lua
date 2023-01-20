@@ -4,7 +4,6 @@ local M = {}
 
 M.plugin_manager_name = 'lazy.nvim'
 M.install_path = vim.fn.stdpath("data") .. '/lazy/'
-M.event_post_complete = U.Event():new()
 
 --- bootstraps the plugin manager if not installed
 M.bootstrap = U.Service(function()
@@ -38,7 +37,6 @@ M.setup = U.Service(function(plugins)
     },
   })
 
-
   -- registering plugins that are both installed and listed
   -- local instaled_plugins = U.scan_dir(M.install_path)
   -- local listed_plugins = M.get_short_plugin_names_from_plugin_spec_tree(plugins)
@@ -47,7 +45,7 @@ M.setup = U.Service(function(plugins)
   --   M.register_plugin(v)
   -- end
 
-  M.event_post_complete()
+  Events.install_post()
 end)
 
 --- returns plugin short name from a single plugin spec

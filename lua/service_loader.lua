@@ -56,7 +56,7 @@ local plugins = {
   { 'folke/neodev.nvim',
     dependencies = p.lspconfig,
     config = function()
-      -- Features:add(FT.PLUGIN, 'schemastore.nvim')
+      Features:add(FT.PLUGIN, 'neodev.nvim')
     end,
   },
   { 'Mofiqul/trld.nvim',
@@ -171,7 +171,7 @@ local plugins = {
   },
 }
 
-PluginManager.event_post_complete:sub(function()
+Events.install_post:sub(function()
   Buffers.setup()
   Sessions.setup()
   Bind.setup()

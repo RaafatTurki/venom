@@ -15,11 +15,13 @@ Events = {
   write = U.Event():new(),
   fold_update = U.Event():new(),
   install_post = U.Event():new(),
+  install_pre = U.Event():new(),
+  configure = U.Event():new(),
 }
 
 local icon_sets = require 'icons'.icon_sets
 Icons = {
-  diagnostic_states = icon_sets.diagnostic_states.full,
+  diagnostic_states = icon_sets.diagnostic_states.codicons,
   item_kinds = icon_sets.item_kinds.codicons,
   debugging = icon_sets.ui.codicons,
 }
@@ -27,6 +29,7 @@ Icons = {
 --- feature types enum
 FT = {
   PLUGIN = "PLUGIN",
+  CONF = "CONF",
   KEY = "KEY",
   LANG = "LANG",
   LSP = "LSP",

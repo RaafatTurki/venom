@@ -4,7 +4,7 @@ local M = {}
 
 M.components = {}
 
-M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
+M.setup = U.Service({{FT.CONF, "heirline.nvim"}}, function()
   local utils = require 'heirline/utils'
   local conditions = require 'heirline/conditions'
 
@@ -161,7 +161,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
 
   M.components.navic = {
     condition = function()
-      if Features:has(FT.PLUGIN, 'nvim-navic') then
+      if Features:has(FT.CONF, 'nvim-navic') then
         return require("nvim-navic").is_available()
       end
     end,
@@ -259,7 +259,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
 
   M.components.snippetinfo = {
     condition = function()
-      if Features:has(FT.PLUGIN, 'LuaSnip') then 
+      if Features:has(FT.CONF, 'LuaSnip') then 
         return require 'luasnip'.jumpable()
       end
       return false

@@ -23,13 +23,13 @@ local plugins = {
   -- LSP: language server protocol related
   { p.lspconfig,
     config = function()
-      Features:add(FT.PLUGIN, 'nvim-lspconfig')
+      Features:add(FT.CONF, 'nvim-lspconfig')
     end,
   },
   {'jose-elias-alvarez/null-ls.nvim',
     dependencies = p.plenary,
     config = function()
-      Features:add(FT.PLUGIN, 'null-ls.nvim')
+      Features:add(FT.CONF, 'null-ls.nvim')
     end,
   },
   { 'williamboman/mason.nvim',
@@ -39,79 +39,96 @@ local plugins = {
       'jayp0521/mason-null-ls.nvim',
     },
     config = function()
-      Features:add(FT.PLUGIN, 'mason.nvim')
+      Features:add(FT.CONF, 'mason.nvim')
     end,
   },
   { 'mfussenegger/nvim-jdtls',
     config = function()
-      Features:add(FT.PLUGIN, 'nvim-jdtls')
+      Features:add(FT.CONF, 'nvim-jdtls')
     end
   },
   { 'b0o/schemastore.nvim',
     dependencies = p.lspconfig,
     config = function()
-      Features:add(FT.PLUGIN, 'schemastore.nvim')
+      Features:add(FT.CONF, 'schemastore.nvim')
     end,
   },
   { 'folke/neodev.nvim',
     dependencies = p.lspconfig,
     config = function()
-      Features:add(FT.PLUGIN, 'neodev.nvim')
+      Features:add(FT.CONF, 'neodev.nvim')
     end,
   },
   { 'Mofiqul/trld.nvim',
-    config = Plugins.trld,
+    config = function()
+      Events.configure:sub(Plugins.trld)
+    end
   },
   -- { 'Issafalcon/lsp-overloads.nvim' },
   -- LANG: treesitter and language specific plugins
   { p.treesitter,
     build = ':TSUpdate',
     config = function()
-      Features:add(FT.PLUGIN, 'nvim-treesitter')
+      Features:add(FT.CONF, 'nvim-treesitter')
     end,
   },
   { 'JoosepAlviste/nvim-ts-context-commentstring',
     dependencies = p.treesitter,
     config = function()
-      Features:add(FT.PLUGIN, 'nvim-ts-context-commentstring')
+      Features:add(FT.CONF, 'nvim-ts-context-commentstring')
     end,
   },
   { 'SmiteshP/nvim-navic',
     dependencies = p.lspconfig,
     config = function()
-      Features:add(FT.PLUGIN, 'nvim-navic')
+      Features:add(FT.CONF, 'nvim-navic')
     end,
   },
   { 'nvim-treesitter/playground',
     dependencies = p.treesitter,
     config = function()
-      Features:add(FT.PLUGIN, 'playground')
+      Features:add(FT.CONF, 'playground')
     end,
   },
   { 'euclio/vim-markdown-composer',
     build = 'cargo build --release',
-    config = Plugins.vim_markdown_composer,
+    config = function()
+      Events.configure:sub(Plugins.vim_markdown_composer)
+    end
   },
   { 'rest-nvim/rest.nvim',
     dependencies = p.plenary,
-    config = Plugins.rest,
+    config = function()
+      Events.configure:sub(Plugins.rest)
+    end
   },
   -- STATUSBAR:
   { 'rebelot/heirline.nvim',
+    dependencies = p.devicons,
     config = function()
-      Features:add(FT.PLUGIN, 'heirline.nvim')
+      Features:add(FT.CONF, 'heirline.nvim')
     end
   },
   -- PLUGINS:
   { 'echasnovski/mini.nvim',
-    config = Plugins.mini_map
+    config = function()
+      Events.configure:sub(Plugins.mini_starter)
+      Events.configure:sub(Plugins.mini_surround)
+      Events.configure:sub(Plugins.mini_map)
+      Events.configure:sub(Plugins.mini_bufremove)
+      Events.configure:sub(Plugins.mini_move)
+    end
   },
   { 'RRethy/vim-illuminate',
-    config = Plugins.illuminate
+    config = function()
+      Events.configure:sub(Plugins.illuminat)
+    end
   },
   { p.gitsigns,
     dependencies = p.plenary,
-    config = Plugins.gitsigns,
+    config = function()
+      Events.configure:sub(Plugins.gitsigns)
+    end
   },
   { 'nvim-neo-tree/neo-tree.nvim',
     branch = "v2.x",
@@ -119,14 +136,16 @@ local plugins = {
       p.plenary,
       p.nui,
       p.devicons,
-      { 's1n7ax/nvim-window-picker',
-        tag = "v1.*",
-      }
+      's1n7ax/nvim-window-picker',
     },
-    config = Plugins.neo_tree
+    config = function()
+      Events.configure:sub(Plugins.neo_tree)
+    end
   },
   { 'akinsho/nvim-toggleterm.lua',
-    config = Plugins.toggle_term,
+    config = function()
+      Events.configure:sub(Plugins.toggle_term)
+    end
   },
   { 'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
@@ -136,21 +155,31 @@ local plugins = {
         build = 'make',
       },
     },
-    config = Plugins.telescope,
+    config = function()
+      Events.configure:sub(Plugins.telescope)
+    end
   },
   { 'jghauser/fold-cycle.nvim',
-    config = Plugins.fold_cycle,
+    config = function()
+      Events.configure:sub(Plugins.fold_cycle)
+    end
   },
   { 'anuvyklack/fold-preview.nvim',
     dependencies = 'anuvyklack/keymap-amend.nvim',
-    config = Plugins.fold_preview,
+    config = function()
+      Events.configure:sub(Plugins.fold_preview)
+    end
   },
   { 'NvChad/nvim-colorizer.lua',
-    config = Plugins.colorizer,
+    config = function()
+      Events.configure:sub(Plugins.colorizer)
+    end
   },
   { 'folke/noice.nvim',
     dependencies = p.nui,
-    config = Plugins.noice,
+    config = function()
+      Events.configure:sub(Plugins.noice)
+    end
   },
   { 'hrsh7th/nvim-cmp',
     dependencies = {
@@ -163,28 +192,33 @@ local plugins = {
       'hrsh7th/cmp-cmdline',
       'hrsh7th/cmp-buffer',
     },
-    config = Plugins.cmp_ls,
+    config = function()
+      Events.configure:sub(Plugins.cmp_ls)
+    end
   },
   { 'stevearc/dressing.nvim',
-    config = Plugins.dressing,
+    config = function()
+      Events.configure:sub(Plugins.dressing)
+    end
   },
-  { 'RaafatTurki/hex.nvim', dev = false,
-    config = Plugins.hex,
+  { 'RaafatTurki/hex.nvim', dev = true,
+    config = function()
+      Events.configure:sub(Plugins.hex)
+    end
   },
   -- p.dap,
   -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
   -- UNCHARTED:
   { 'folke/paint.nvim',
-    config = Plugins.paint,
+    config = function()
+      Events.configure:sub(Plugins.paint)
+    end,
   },
 }
 
-Events.install_post:sub(function()
+Events.install_pre:sub(function()
   Buffers.setup()
-  Sessions.setup()
   Bind.setup()
-
-  Bind.bind_leader()
 
   Misc.base()
   Misc.open_uri()
@@ -192,13 +226,20 @@ Events.install_post:sub(function()
   Misc.term_smart_esc()
   Misc.disable_builtin_plugins()
   Misc.highlight_yank()
-  Misc.auto_install_ts_parser()
   -- Misc.diag_on_hold()
   Misc.pets()
   Misc.buffer_edits()
   Misc.auto_create_dir()
+end)
+
+Events.install_post:sub(function()
+  Sessions.setup()
+
+  Misc.auto_install_ts_parser()
   Misc.lorem_picsum()
   Misc.auto_gitignore_io()
+
+  Events.configure()
 
   Lang.setup()
 

@@ -2,11 +2,6 @@
 -- @module bind
 local M = {}
 
-M.bind_leader = U.Service(function()
-  M.key({'<Space>', '<Nop>', mode = ''})
-  vim.g.mapleader = ' '
-end)
-
 M.keys = {}
 
 -- a keymap object is {lhs, rhs, opts = {}, mode = string}
@@ -19,6 +14,10 @@ M.key = U.Service(function(keymap)
 end)
 
 M.setup = U.Service(function()
+  -- LEADER KEY
+  M.key({'<Space>', '<Nop>', mode = ''})
+  vim.g.mapleader = ' '
+
   -- DISABLES
   -- ctrl-x submode, c-p and c-n
   M.key {'<C-x>',            '<Nop>', mode = 'i'}
@@ -144,18 +143,20 @@ M.setup_plugins = U.Service(function()
   M.key {'<Esc>',             TermSmartEsc, mode = 't', opts = { expr = true }}
 
   -- PLUGINS
-  if Features:has(FT.PLUGIN, 'nvim-toggleterm.lua') then
+  if Features:has(FT.CONF, 'nvim-toggleterm.lua') then
     M.key {[[<C-\>]],           '<CMD>ToggleTerm<CR>', mode = 'n'}
     M.key {[[<C-\>]],           [[<C-\><C-n><CMD>ToggleTerm<CR>]], mode = 't'}
   end
 
-  if Features:has(FT.PLUGIN, 'nvim-tree.lua') then
+  if Features:has(FT.CONF, 'nvim-tree.lua') then
     M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
   end
 
-  -- M.key {'<C-e>',             '<CMD>Neotree toggle<CR>', mode = 'i n'}
+  if Features:has(FT.CONF, 'neo-tree.nvim') then
+    M.key {'<C-e>',             '<CMD>Neotree toggle<CR>', mode = 'i n'}
+  end
 
-  if Features:has(FT.PLUGIN, 'fold-cycle.nvim') then
+  if Features:has(FT.CONF, 'fold-cycle.nvim') then
     M.key {'za',                function() require 'fold-cycle'.toggle_all() Events.fold_update() end }
     M.key {'z<Right>',          function() require 'fold-cycle'.open() Events.fold_update() end }
     M.key {'z<Left>',           function() require 'fold-cycle'.close() Events.fold_update() end }
@@ -163,11 +164,11 @@ M.setup_plugins = U.Service(function()
     M.key {'z<Up>',             function() require 'fold-cycle'.close_all() Events.fold_update() end }
   end
 
-  if Features:has(FT.PLUGIN, 'fold-preview.nvim') then
+  if Features:has(FT.CONF, 'fold-preview.nvim') then
     M.key {'zq',                function() require 'fold-preview'.toggle_preview() end}
   end
 
-  if Features:has(FT.PLUGIN, 'gitsigns.nvim') then
+  if Features:has(FT.CONF, 'gitsigns.nvim') then
     M.key {'gr',                '<CMD>Gitsigns reset_hunk<CR>'}
     M.key {'gr',                function()
       require 'gitsigns'.reset_hunk({ vim.fn.line('v'), vim.fn.getpos('.')[2] })
@@ -188,7 +189,7 @@ M.setup_plugins = U.Service(function()
     M.key {'g<Right>',          '<CMD>Gitsigns next_hunk<CR>zz'}
   end
 
-  if Features:has(FT.PLUGIN, 'mini.nvim') then
+  if Features:has(FT.CONF, 'mini.nvim') then
     -- mini.bufremove
     M.key {'<A-c>',             function() require 'mini.bufremove'.delete() end, mode = 'n x i'}
     -- mini.move
@@ -202,11 +203,11 @@ M.setup_plugins = U.Service(function()
     M.key {'<A-Up>',            function() require 'mini.move'.move_selection('up') end, mode = 'x' }
   end
   
-  if Features:has(FT.PLUGIN, 'mason.nvim') then
+  if Features:has(FT.CONF, 'mason.nvim') then
     M.key {'<leader>l',         '<CMD>Mason<CR>'}
   end
 
-  if Features:has(FT.PLUGIN, 'telescope.nvim') then
+  if Features:has(FT.CONF, 'telescope.nvim') then
     M.key {'<leader><CR>',      '<CMD>Telescope resume<CR>'}
     M.key {'<leader>f',         '<CMD>Telescope find_files<CR>'}
     M.key {'<leader>g',         '<CMD>Telescope live_grep<CR>'}
@@ -215,12 +216,12 @@ M.setup_plugins = U.Service(function()
   -- neotest
   -- M.key {'<leader>t',         '<CMD>NeotestToggleTree<CR>'}
 
-  if Features:has(FT.PLUGIN, 'vim-illuminate') then
+  if Features:has(FT.CONF, 'vim-illuminate') then
     M.key {'r<Right>',          function() require('illuminate').goto_next_reference() end}
     M.key {'r<Left>',           function() require('illuminate').goto_prev_reference() end}
   end
   
-  if Features:has(FT.PLUGIN, 'rest.nvim') then
+  if Features:has(FT.CONF, 'rest.nvim') then
     M.key {'h<CR>',             '<Plug>RestNvim'}
   end
 

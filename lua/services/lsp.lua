@@ -2,13 +2,13 @@
 -- @module lsp
 local M = {}
 
-M.setup_lspconfig_server = U.Service({{FT.PLUGIN, 'nvim-lspconfig'}}, function(server_name, opts)
+M.setup_lspconfig_server = U.Service({{FT.CONF, 'nvim-lspconfig'}}, function(server_name, opts)
   local lspconf = require 'lspconfig'
 
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
-  if Features:has(FT.PLUGIN, 'nvim-cmp') then
+  if Features:has(FT.CONF, 'nvim-cmp') then
     shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities()
-  elseif Features:has(FT.PLUGIN, 'coq_nvim') then
+  elseif Features:has(FT.CONF, 'coq_nvim') then
     opts = require 'coq'.lsp_ensure_capabilities(opts)
   end
 
@@ -23,12 +23,12 @@ M.setup_lspconfig_server = U.Service({{FT.PLUGIN, 'nvim-lspconfig'}}, function(s
       vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
 
       -- navic
-      if Features:has(FT.PLUGIN, 'nvim-navic') then
+      if Features:has(FT.CONF, 'nvim-navic') then
         require 'nvim-navic'.attach(client, bufnr)
       end
 
       -- lsp-overloads
-      if Features:has(FT.PLUGIN, 'lsp-overloads.nvim') and client.server_capabilities.signatureHelpProvider then
+      if Features:has(FT.CONF, 'lsp-overloads.nvim') and client.server_capabilities.signatureHelpProvider then
         require 'lsp-overloads'.setup(client, {
           ui = {
             border = "single"
@@ -53,7 +53,7 @@ M.setup_lspconfig_server = U.Service({{FT.PLUGIN, 'nvim-lspconfig'}}, function(s
 end)
 
 -- TODO: require mason-lspconfig.nvim instead once PM registers deps
-M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_configs)
+M.setup_servers = U.Service({{FT.CONF, 'mason.nvim'}}, function(lsp_servers_configs)
   -- lsp servers
   require 'mason-lspconfig'.setup()
   require 'mason-lspconfig'.setup_handlers {
@@ -61,7 +61,7 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
       M.setup_lspconfig_server(server_name, {})
     end,
     sumneko_lua = function()
-      if Features:has(FT.PLUGIN, 'neodev.nvim') then
+      if Features:has(FT.CONF, 'neodev.nvim') then
         require("neodev").setup {
           library = {
             plugins = false,
@@ -228,7 +228,7 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
       })
     end,
     jdtls = function()
-      if Features:has(FT.PLUGIN, 'nvim-jdtls') then
+      if Features:has(FT.CONF, 'nvim-jdtls') then
         function JDTLSSetup()
           local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
           local workspace_dir = vim.env['XDG_CACHE_HOME'] .. '/jdtls/workspaces/' .. project_name
@@ -345,7 +345,7 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
 end)
 
 
-M.setup = U.Service({{FT.LSP, 'setup'}}, {{FT.PLUGIN, 'mason.nvim'},{FT.PLUGIN, 'nvim-lspconfig'}}, function()
+M.setup = U.Service({{FT.LSP, 'setup'}}, {{FT.CONF, 'mason.nvim'},{FT.CONF, 'nvim-lspconfig'}}, function()
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- per line nvim diagnostics
@@ -366,13 +366,13 @@ M.setup = U.Service({{FT.LSP, 'setup'}}, {{FT.PLUGIN, 'mason.nvim'},{FT.PLUGIN, 
   -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {})
 
   -- inc-rename
-  if Features:has(FT.PLUGIN, 'inc-rename.nvim') then
+  if Features:has(FT.CONF, 'inc-rename.nvim') then
     require 'inc_rename'.setup()
   end
 end)
 
 M.rename = U.Service(function()
-  if Features:has(FT.PLUGIN, 'inc-rename.nvim') then
+  if Features:has(FT.CONF, 'inc-rename.nvim') then
     vim.api.nvim_feedkeys(':IncRename ' .. vim.fn.expand('<cword>'), '', false)
     -- require 'inc_rename'.setup()
     -- inc-rename.nvim
@@ -418,7 +418,7 @@ M.rename = U.Service(function()
 end)
 
 M.references = U.Service(function()
-  if Features:has(FT.PLUGIN, 'telescope.nvim') then
+  if Features:has(FT.CONF, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_references]]
   else
     vim.lsp.buf.references()
@@ -426,7 +426,7 @@ M.references = U.Service(function()
 end)
 
 M.definition = U.Service(function()
-  if Features:has(FT.PLUGIN, 'telescope.nvim') then
+  if Features:has(FT.CONF, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_definitions]]
   else
     vim.lsp.buf.definition()

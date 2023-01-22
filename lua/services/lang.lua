@@ -51,7 +51,7 @@ M.ts_parsers_ensure_installed = {
 
 M.setup = U.Service({{FT.LANG, 'setup'}}, {}, function()
   -- mason
-  if Features:has(FT.CONF, 'mason.nvim') then
+  if Features:has(FT.PLUGIN, 'mason.nvim') then
     require 'mason'.setup {
       ui = {
         border = 'single',
@@ -105,7 +105,7 @@ M.setup = U.Service({{FT.LANG, 'setup'}}, {}, function()
   end
 
   -- treesitter
-  if Features:has(FT.CONF, 'nvim-treesitter') then
+  if Features:has(FT.PLUGIN, 'nvim-treesitter') then
     require 'nvim-treesitter.configs'.setup {
       -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       ensure_installed = M.ts_parsers_ensure_installed,

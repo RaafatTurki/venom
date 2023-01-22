@@ -203,7 +203,7 @@ M.setup_plugins = U.Service(function()
     M.key {'<A-Up>',            function() require 'mini.move'.move_selection('up') end, mode = 'x' }
   end
   
-  if Features:has(FT.CONF, 'mason.nvim') then
+  if Features:has(FT.PLUGIN, 'mason.nvim') then
     M.key {'<leader>l',         '<CMD>Mason<CR>'}
   end
 

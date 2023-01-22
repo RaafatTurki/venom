@@ -21,16 +21,9 @@ local p = {
 }
 local plugins = {
   -- LSP: language server protocol related
-  { p.lspconfig,
-    config = function()
-      Features:add(FT.CONF, 'nvim-lspconfig')
-    end,
-  },
+  { p.lspconfig },
   {'jose-elias-alvarez/null-ls.nvim',
     dependencies = p.plenary,
-    config = function()
-      Features:add(FT.CONF, 'null-ls.nvim')
-    end,
   },
   { 'williamboman/mason.nvim',
     dependencies = {
@@ -38,26 +31,13 @@ local plugins = {
       'williamboman/mason-lspconfig.nvim',
       'jayp0521/mason-null-ls.nvim',
     },
-    config = function()
-      Features:add(FT.CONF, 'mason.nvim')
-    end,
   },
-  { 'mfussenegger/nvim-jdtls',
-    config = function()
-      Features:add(FT.CONF, 'nvim-jdtls')
-    end
-  },
+  { 'mfussenegger/nvim-jdtls' },
   { 'b0o/schemastore.nvim',
     dependencies = p.lspconfig,
-    config = function()
-      Features:add(FT.CONF, 'schemastore.nvim')
-    end,
   },
   { 'folke/neodev.nvim',
     dependencies = p.lspconfig,
-    config = function()
-      Features:add(FT.CONF, 'neodev.nvim')
-    end,
   },
   { 'Mofiqul/trld.nvim',
     config = function()
@@ -68,27 +48,15 @@ local plugins = {
   -- LANG: treesitter and language specific plugins
   { p.treesitter,
     build = ':TSUpdate',
-    config = function()
-      Features:add(FT.CONF, 'nvim-treesitter')
-    end,
   },
   { 'JoosepAlviste/nvim-ts-context-commentstring',
     dependencies = p.treesitter,
-    config = function()
-      Features:add(FT.CONF, 'nvim-ts-context-commentstring')
-    end,
   },
   { 'SmiteshP/nvim-navic',
     dependencies = p.lspconfig,
-    config = function()
-      Features:add(FT.CONF, 'nvim-navic')
-    end,
   },
   { 'nvim-treesitter/playground',
     dependencies = p.treesitter,
-    config = function()
-      Features:add(FT.CONF, 'playground')
-    end,
   },
   { 'euclio/vim-markdown-composer',
     build = 'cargo build --release',
@@ -105,9 +73,6 @@ local plugins = {
   -- STATUSBAR:
   { 'rebelot/heirline.nvim',
     dependencies = p.devicons,
-    config = function()
-      Features:add(FT.CONF, 'heirline.nvim')
-    end
   },
   -- PLUGINS:
   { 'echasnovski/mini.nvim',

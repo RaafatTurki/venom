@@ -2,7 +2,7 @@
 -- @module lsp
 local M = {}
 
-M.setup_lspconfig_server = U.Service({{FT.CONF, 'nvim-lspconfig'}}, function(server_name, opts)
+M.setup_lspconfig_server = U.Service({{FT.PLUGIN, 'nvim-lspconfig'}}, function(server_name, opts)
   local lspconf = require 'lspconfig'
 
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -53,7 +53,7 @@ M.setup_lspconfig_server = U.Service({{FT.CONF, 'nvim-lspconfig'}}, function(ser
 end)
 
 -- TODO: require mason-lspconfig.nvim instead once PM registers deps
-M.setup_servers = U.Service({{FT.CONF, 'mason.nvim'}}, function(lsp_servers_configs)
+M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_configs)
   -- lsp servers
   require 'mason-lspconfig'.setup()
   require 'mason-lspconfig'.setup_handlers {
@@ -61,7 +61,7 @@ M.setup_servers = U.Service({{FT.CONF, 'mason.nvim'}}, function(lsp_servers_conf
       M.setup_lspconfig_server(server_name, {})
     end,
     sumneko_lua = function()
-      if Features:has(FT.CONF, 'neodev.nvim') then
+      if Features:has(FT.PLUGIN, 'neodev.nvim') then
         require("neodev").setup {
           library = {
             plugins = false,
@@ -228,7 +228,7 @@ M.setup_servers = U.Service({{FT.CONF, 'mason.nvim'}}, function(lsp_servers_conf
       })
     end,
     jdtls = function()
-      if Features:has(FT.CONF, 'nvim-jdtls') then
+      if Features:has(FT.PLUGIN, 'nvim-jdtls') then
         function JDTLSSetup()
           local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
           local workspace_dir = vim.env['XDG_CACHE_HOME'] .. '/jdtls/workspaces/' .. project_name
@@ -326,26 +326,27 @@ M.setup_servers = U.Service({{FT.CONF, 'mason.nvim'}}, function(lsp_servers_conf
   end
 
   -- null-ls servers
-  local null_ls = require 'null-ls'
-  require 'mason-null-ls'.setup {
-    automatic_setup = true,
-  }
-  require 'mason-null-ls'.setup_handlers {
-    --   function(source_name)
-    --     -- log('the null-ls source '..source_name..' is installed but unused!')
-    --   end,
-    --   stylua = function()
-    --     null_ls.register(null_ls.builtins.formatting.stylua)
-    --   end,
-    --   jq = function()
-    --     null_ls.register(null_ls.builtins.formatting.jq)
-    --   end
-  }
-  null_ls.setup()
+  if Features:has(FT.PLUGIN, 'null-ls.nvim') then
+    local null_ls = require 'null-ls'
+    require 'mason-null-ls'.setup {
+      automatic_setup = true,
+    }
+    require 'mason-null-ls'.setup_handlers {
+      --   function(source_name)
+      --     -- log('the null-ls source '..source_name..' is installed but unused!')
+      --   end,
+      --   stylua = function()
+      --     null_ls.register(null_ls.builtins.formatting.stylua)
+      --   end,
+      --   jq = function()
+      --     null_ls.register(null_ls.builtins.formatting.jq)
+      --   end
+    }
+    null_ls.setup()
+  end
 end)
 
-
-M.setup = U.Service({{FT.LSP, 'setup'}}, {{FT.CONF, 'mason.nvim'},{FT.CONF, 'nvim-lspconfig'}}, function()
+M.setup = U.Service({{FT.LSP, 'setup'}}, {{FT.PLUGIN, 'mason.nvim'},{FT.PLUGIN, 'nvim-lspconfig'}}, function()
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- per line nvim diagnostics

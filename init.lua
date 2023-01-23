@@ -16,6 +16,7 @@ Events = {
   fold_update = U.Event():new(),
   install_post = U.Event():new(),
   install_pre = U.Event():new(),
+  session_write_pre = U.Event():new(),
   configure = U.Event():new(),
 }
 

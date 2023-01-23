@@ -12,8 +12,18 @@ M.setup = U.Service({{FT.SESSION, "setup"}}, {{FT.PLUGIN, "mini.nvim"}}, functio
     -- TODO: create session dir if not found
     force = { read = true, write = true, delete = true },
     hooks = {
-      pre = { read = nil, write = nil, delete = nil },
-      post = { read = nil, write = nil, delete = nil },
+      pre = {
+        read = nil,
+        write = function(session_data)
+          Events.session_write_pre()
+        end,
+        delete = nil
+      },
+      post = {
+        read = nil,
+        write = nil,
+        delete = nil
+      },
     },
     verbose = { read = false, write = false, delete = false },
   }

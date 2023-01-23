@@ -543,6 +543,8 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
       -- statusline = true,
     }
   }
+
+  Events.session_write_pre:sub [[NeoTreeClose]]
 end)
 
 M.bufferline = U.Service({{FT.CONF, 'bufferline.nvim'}}, {}, function()

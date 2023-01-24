@@ -41,7 +41,7 @@ local plugins = {
   },
   { 'Mofiqul/trld.nvim',
     config = function()
-      Events.configure:sub(Plugins.trld)
+      Events.plugin_setup:sub(Plugins.trld)
     end
   },
   -- { 'Issafalcon/lsp-overloads.nvim' },
@@ -61,13 +61,13 @@ local plugins = {
   { 'euclio/vim-markdown-composer',
     build = 'cargo build --release',
     config = function()
-      Events.configure:sub(Plugins.vim_markdown_composer)
+      Events.plugin_setup:sub(Plugins.vim_markdown_composer)
     end
   },
   { 'rest-nvim/rest.nvim',
     dependencies = p.plenary,
     config = function()
-      Events.configure:sub(Plugins.rest)
+      Events.plugin_setup:sub(Plugins.rest)
     end
   },
   -- STATUSBAR:
@@ -77,22 +77,22 @@ local plugins = {
   -- PLUGINS:
   { 'echasnovski/mini.nvim',
     config = function()
-      Events.configure:sub(Plugins.mini_starter)
-      Events.configure:sub(Plugins.mini_surround)
-      Events.configure:sub(Plugins.mini_map)
-      Events.configure:sub(Plugins.mini_bufremove)
-      Events.configure:sub(Plugins.mini_move)
+      Events.plugin_setup:sub(Plugins.mini_starter)
+      Events.plugin_setup:sub(Plugins.mini_surround)
+      Events.plugin_setup:sub(Plugins.mini_map)
+      Events.plugin_setup:sub(Plugins.mini_bufremove)
+      Events.plugin_setup:sub(Plugins.mini_move)
     end
   },
   { 'RRethy/vim-illuminate',
     config = function()
-      Events.configure:sub(Plugins.illuminat)
+      Events.plugin_setup:sub(Plugins.illuminat)
     end
   },
   { p.gitsigns,
     dependencies = p.plenary,
     config = function()
-      Events.configure:sub(Plugins.gitsigns)
+      Events.plugin_setup:sub(Plugins.gitsigns)
     end
   },
   { 'nvim-neo-tree/neo-tree.nvim',
@@ -104,12 +104,12 @@ local plugins = {
       's1n7ax/nvim-window-picker',
     },
     config = function()
-      Events.configure:sub(Plugins.neo_tree)
+      Events.plugin_setup:sub(Plugins.neo_tree)
     end
   },
   { 'akinsho/nvim-toggleterm.lua',
     config = function()
-      Events.configure:sub(Plugins.toggle_term)
+      Events.plugin_setup:sub(Plugins.toggle_term)
     end
   },
   { 'nvim-telescope/telescope.nvim',
@@ -121,29 +121,29 @@ local plugins = {
       },
     },
     config = function()
-      Events.configure:sub(Plugins.telescope)
+      Events.plugin_setup:sub(Plugins.telescope)
     end
   },
   { 'jghauser/fold-cycle.nvim',
     config = function()
-      Events.configure:sub(Plugins.fold_cycle)
+      Events.plugin_setup:sub(Plugins.fold_cycle)
     end
   },
   { 'anuvyklack/fold-preview.nvim',
     dependencies = 'anuvyklack/keymap-amend.nvim',
     config = function()
-      Events.configure:sub(Plugins.fold_preview)
+      Events.plugin_setup:sub(Plugins.fold_preview)
     end
   },
   { 'NvChad/nvim-colorizer.lua',
     config = function()
-      Events.configure:sub(Plugins.colorizer)
+      Events.plugin_setup:sub(Plugins.colorizer)
     end
   },
   { 'folke/noice.nvim',
     dependencies = p.nui,
     config = function()
-      Events.configure:sub(Plugins.noice)
+      Events.plugin_setup:sub(Plugins.noice)
     end
   },
   { 'hrsh7th/nvim-cmp',
@@ -158,17 +158,17 @@ local plugins = {
       'hrsh7th/cmp-buffer',
     },
     config = function()
-      Events.configure:sub(Plugins.cmp_ls)
+      Events.plugin_setup:sub(Plugins.cmp_ls)
     end
   },
   { 'stevearc/dressing.nvim',
     config = function()
-      Events.configure:sub(Plugins.dressing)
+      Events.plugin_setup:sub(Plugins.dressing)
     end
   },
   { 'RaafatTurki/hex.nvim', dev = true,
     config = function()
-      Events.configure:sub(Plugins.hex)
+      Events.plugin_setup:sub(Plugins.hex)
     end
   },
   -- p.dap,
@@ -176,7 +176,7 @@ local plugins = {
   -- UNCHARTED:
   { 'folke/paint.nvim',
     config = function()
-      Events.configure:sub(Plugins.paint)
+      Events.plugin_setup:sub(Plugins.paint)
     end,
   },
 }
@@ -204,7 +204,7 @@ Events.install_post:sub(function()
   Misc.lorem_picsum()
   Misc.auto_gitignore_io()
 
-  Events.configure()
+  Plugins.setup()
 
   Lang.setup()
 

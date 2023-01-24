@@ -2,6 +2,10 @@
 -- @module plugins
 local M = {}
 
+M.setup = U.Service(function()
+  Events.plugin_setup()
+end)
+
 M.impatient = U.Service({{FT.CONF, "impatient.nvim"}}, {}, function()
   require 'impatient'
   require 'impatient'.enable_profile()

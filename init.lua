@@ -17,7 +17,7 @@ Events = {
   install_post = U.Event():new(),
   install_pre = U.Event():new(),
   session_write_pre = U.Event():new(),
-  configure = U.Event():new(),
+  plugin_setup = U.Event():new(),
 }
 
 local icon_sets = require 'icons'.icon_sets

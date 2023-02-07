@@ -203,6 +203,7 @@ Events.install_post:sub(function()
   Misc.auto_install_ts_parser()
   Misc.lorem_picsum()
   Misc.auto_gitignore_io()
+  Misc.conceal_html_classes()
 
   Plugins.setup()
 

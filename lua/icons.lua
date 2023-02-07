@@ -7,7 +7,7 @@ M.icon_sets = {
     outline = { Error = "", Warn = "", Hint = "", Info = "" },
     full    = { Error = "", Warn = "", Hint = "", Info = "" },
     cozette = { Error = "", Warn = "", Hint = "", Info = "" },
-    letters = { Error = "E", Warn = "W", Hint = "H", Info = "I" },
+    codicons = { Error = "", Warn = "", Hint = "", Info = "" },
     none    = { Error = " ", Warn = " ", Hint = " ", Info = " " },
   },
   item_kinds = {

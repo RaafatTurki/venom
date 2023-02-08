@@ -182,13 +182,13 @@ M.cmp_ls = U.Service({{FT.CONF, "nvim-cmp"}}, {}, function()
 
   local cmp = require 'cmp'
 
-  local function tab(fb)
+  local function ls_tab(fb)
     -- if cmp.visible() then cmp.select_next_item()
     if ls.expand_or_locally_jumpable() then ls.expand_or_jump()
     else fb() end
   end
 
-  local function s_tab(fb)
+  local function ls_s_tab(fb)
     -- if cmp.visible() then cmp.select_prev_item()
     if ls.jumpable(-1) then ls.jump(-1)
     else fb() end
@@ -198,13 +198,13 @@ M.cmp_ls = U.Service({{FT.CONF, "nvim-cmp"}}, {}, function()
     -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
     snippet = { expand = function(args) ls.lsp_expand(args.body) end },
 
-    mapping = cmp.mapping.preset.insert({
+    mapping = {
       -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
       -- ["<Tab>"]   = function(fb) tab(fb) end,
       -- ["<S-Tab>"] = function(fb) s_tab(fb) end,
 
       ["<Tab>"]   = cmp.mapping({
-        i = function(fb) tab(fb) end,
+        i = function(fb) ls_tab(fb) end,
         c = function(fb)
           if cmp.visible() then cmp.select_next_item()
           else cmp.complete() end
@@ -213,7 +213,7 @@ M.cmp_ls = U.Service({{FT.CONF, "nvim-cmp"}}, {}, function()
         end
       }),
       ["<S-Tab>"] = cmp.mapping({
-        i = function(fb) s_tab(fb) end,
+        i = function(fb) ls_s_tab(fb) end,
         c = function(fb)
           if cmp.visible() then cmp.select_prev_item()
           else cmp.complete() end
@@ -224,11 +224,21 @@ M.cmp_ls = U.Service({{FT.CONF, "nvim-cmp"}}, {}, function()
 
       ['<PageDown>'] = cmp.mapping.scroll_docs(4),
       ['<PageUp>']   = cmp.mapping.scroll_docs(-4),
-      ['<C-Space>']  = cmp.mapping.complete(),
+      ['<C-Space>']  = cmp.mapping.complete({}),
       ['<C-e>']      = cmp.mapping.abort(),
       ['<Esc>']      = cmp.mapping.close(),
-      ['<CR>']       = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace }),
-    }),
+      ['<CR>']       = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace }),
+      ['<Down>'] = function(fb)
+        cmp.close()
+        fb()
+      end,
+      ['<Up>'] = function(fb)
+        cmp.close()
+        fb()
+      end,
+      ['<C-Down>'] = cmp.mapping.select_next_item(),
+      ['<C-Up>'] = cmp.mapping.select_prev_item(),
+    },
     sources = {
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
@@ -441,6 +451,7 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
   vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
   require 'neo-tree'.setup {
+    add_blank_line_at_top = true,
     close_if_last_window = true,
     -- use_popups_for_input = false,
     popup_border_style = 'single',
@@ -511,23 +522,40 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
       },
     },
     nesting_rules = {
-      js = { 'js.map', 'd.ts' },
+      -- js = { 'js.map', 'd.ts' },
+      -- ['+layout.svelte'] = { '+layout.js', '+layout.ts', '+layout.server.js', '+layout.server.js' },
+      -- ['+page.svelte'] = { '+page.js', '+page.ts', '+page.server.js', '+page.server.js' },
+
+      -- ["js"] = { "js.map" },
+      -- ['svelte'] = { 'svelte.js', 'svelte.ts' },
+      -- ['*.svelte'] = { '*.js', '*.ts', '*.svelte.ts' },
+
+      -- ['+page.svelte'] = { '+page.js', '+page.ts', '+page.server.js', '+page.server.js' },
     },
     filesystem = {
       filtered_items = {
         hide_by_name = {
-          -- 'node_modules',
-          -- '__pycache__',
-          -- 'pnpm-lock.yaml',
-          -- 'package-lock.json',
+          'node_modules',
+          '__pycache__',
+          'pnpm-lock.yaml',
+          'package-lock.json',
         },
         hide_by_pattern = {
-          -- "*.import"
+          "*.import"
         },
         never_show = {
         },
       },
       commands = {
+        system_open = function(state)
+          local node = state.tree:get_node()
+          local path = node:get_id()
+          -- macOs: open file in default application in the background.
+          -- Probably you need to adapt the Linux recipe for manage path with spaces. I don't have a mac to try.
+          -- vim.api.nvim_command("silent !open -g " .. path)
+          -- Linux: open file in default application
+          vim.api.nvim_command(string.format("silent !xdg-open '%s'", path))
+        end,
         delete = function(state)
           local inputs = require "neo-tree.ui.inputs"
           local path = state.tree:get_node().path
@@ -538,6 +566,20 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
             require("neo-tree.sources.manager").refresh(state.name)
           end)
         end,
+        open_in_terminal = function(state)
+          local node = state.tree:get_node()
+          local is_dir = (node.type == "directory")
+
+          if is_dir then
+            require 'toggleterm'.toggle(2, 100, node.path)
+          end
+        end
+      },
+      window = {
+        mappings = {
+          ["A"] = "system_open",
+          ["\\"] = "open_in_terminal",
+        },
       },
       follow_current_file = true,
       use_libuv_file_watcher = true,
@@ -578,9 +620,10 @@ M.toggle_term = U.Service({{FT.CONF, "nvim-toggleterm.lua"}}, {}, function()
   require 'toggleterm'.setup {
     shade_terminals = false,
     direction = 'horizontal',
+    autochdir = true,
     size = function(term)
       if term.direction == "horizontal" then
-        return vim.o.lines * 0.6
+        return vim.o.lines
       elseif term.direction == "vertical" then
         return vim.o.columns * 0.5
       end
@@ -857,7 +900,11 @@ end)
 
 M.vim_markdown_composer = U.Service({{FT.CONF, 'vim-markdown-composer'}}, {}, function()
   vim.g.markdown_composer_autostart = 0
-  -- vim.g.markdown_composer_browser = 'qutebrowser'
+  -- vim.g.markdown_composer_custom_css = 'file:///home/potato/markdown.css'
+  -- vim.g.markdown_composer_syntax_theme = 'github-dark'
+  if vim.fn.executable('qutebrowser') == 1 then
+    vim.g.markdown_composer_browser = 'qutebrowser'
+  end
 end)
 
 M.overseer = U.Service({{FT.CONF, 'overseer.nvim'}}, {}, function()
@@ -958,6 +1005,10 @@ end)
 
 M.hex = U.Service({{FT.CONF, 'hex.nvim'}}, {}, function()
   require 'hex'.setup {}
+end)
+
+M.image = U.Service({{FT.PLUGIN, 'image.nvim'}}, function()
+  require 'image'.setup {}
 end)
 
 return M

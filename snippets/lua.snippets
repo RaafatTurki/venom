@@ -12,3 +12,29 @@ snippet Feature feature check
   if Features:has(FT.PLUGIN, '${1}') then
   	${0}
   end
+
+snippet pmain pico-8 main boilerplate
+	function _init()
+		${0}
+	end
+
+	function _update()
+		
+	end
+
+	function _draw()
+		cls()
+	end
+
+snippet pmod pico-8 module
+	function new_${1}()
+		return {
+			${0}
+
+			-- update = function(self)
+			-- end,
+
+			-- draw = function(self)
+			-- end,
+		}
+	end

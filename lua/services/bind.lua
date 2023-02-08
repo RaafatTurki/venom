@@ -7,7 +7,8 @@ M.keys = {}
 -- a keymap object is {lhs, rhs, opts = {}, mode = string}
 M.key = U.Service(function(keymap)
   keymap.opts = vim.tbl_deep_extend('force', keymap.opts or {}, { noremap = true, silent = true })
-  keymap.mode = keymap.mode and vim.split(keymap.mode, ' ') or 'n'
+  ---@diagnostic disable-next-line: param-type-mismatch
+  keymap.mode = keymap.mode and vim.split(keymap.mode, ' ', {}) or 'n'
 
   vim.keymap.set(keymap.mode, keymap[1], keymap[2], keymap.opts)
   table.insert(M.keys, keymap)
@@ -50,6 +51,8 @@ M.setup = U.Service(function()
   -- page shift up/down, select all
   M.key {'<C-Up>',            '<C-y>k'}
   M.key {'<C-Down>',          '<C-e>j'}
+  -- spell
+  M.key {'<leader>s',         Lang.toggle_spell}
   -- M.key {'<C-a>',            ':%'}
   -- quick fix list
   M.key {'<S-Up>',            '<CMD>cprevious<CR>'}
@@ -72,6 +75,9 @@ M.setup = U.Service(function()
   M.key {'J',                 'J$'}
   -- split (opposite of J)
   M.key {'S',                 'T hr<CR>k$'}
+  -- swap # and *
+  M.key {'*',            '#'}
+  M.key {'#',            '*'}
   -- open man pages in new tabs
   -- M.key {'K',                 ':tab Man<CR>'}
   -- zt and zb with arrows
@@ -132,6 +138,7 @@ M.setup_plugins = U.Service(function()
   -- plugin manager sync
   M.key {'<leader>p',         PluginManager.sync }
   -- lsp
+  M.key {'<leader>D',         Lsp.toggle_diags }
   M.key {'<leader>r',         Lsp.rename }
   M.key {'<leader>R',         Lsp.references }
   M.key {'<leader>d',         Lsp.definition }
@@ -144,6 +151,9 @@ M.setup_plugins = U.Service(function()
 
   -- PLUGINS
   if Features:has(FT.CONF, 'nvim-toggleterm.lua') then
+    -- M.key {[[<C-\>]],           '<CMD>ToggleTermToggleAll<CR>', mode = 'n'}
+    -- M.key {[[<C-\>]],           [[<C-\><C-n><CMD>ToggleTermToggleAll<CR>]], mode = 't'}
+
     M.key {[[<C-\>]],           '<CMD>ToggleTerm<CR>', mode = 'n'}
     M.key {[[<C-\>]],           [[<C-\><C-n><CMD>ToggleTerm<CR>]], mode = 't'}
   end

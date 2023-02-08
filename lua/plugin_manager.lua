@@ -60,6 +60,7 @@ M.get_short_name_from_plugin_spec = function(spec)
     name = spec[1]
   end
 
+  ---@diagnostic disable-next-line: missing-parameter
   local name_arr = vim.split(name, '/')
   return name_arr[#name_arr]
 end
@@ -92,8 +93,13 @@ M.register_plugin = U.Service(function(short_name)
 end)
 
 --- syncs plugins (updates them regardless of the method)
-M.sync = U.Service(function(opts)
+M.sync = U.Service(function()
   vim.cmd [[Lazy update]]
+end)
+
+--- checks for new pending updates
+M.check = U.Service(function()
+  vim.cmd [[Lazy check]]
 end)
 
 return M

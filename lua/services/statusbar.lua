@@ -68,6 +68,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     init = function(self)
       self.filename = vim.api.nvim_buf_get_name(0)
     end,
+    -- icon
     {
       init = function(self)
         local filename = self.filename
@@ -81,6 +82,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
         return { fg = self.icon_color }
       end
     },
+    -- name
     {
       provider = function(self)
         -- first, trim the pattern relative to the current directory. For other
@@ -97,10 +99,12 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       end,
       hl = 'Normal'
     },
+    -- modified
     {
       provider = function() if vim.bo.modified then return ' •' end end,
       hl = 'DiffAdd'
     },
+    -- readonly
     {
       -- 
       provider = function() if (not vim.bo.modifiable) or vim.bo.readonly then return ' ' end end,
@@ -108,21 +112,26 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     },
   }
 
-  M.components.gitinfo = {
+  M.components.gitsigns = {
     init = function(self)
       ---@diagnostic disable-next-line: undefined-field
       self.status_dict = vim.b.gitsigns_status_dict
       -- self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
     end,
     hl = "GitSignsDelete",
-    condition = conditions.is_git_repo,
+    condition = function()
+      return conditions.is_git_repo() and Features:has(FT.CONF, 'gitsigns.nvim')
+    end,
+    -- branch
     {
       provider = function(self)
         if self.status_dict.head ~= '' then
-          return ' ' .. self.status_dict.head .. ' '
+          return ' ' .. self.status_dict.head .. ' '
+          -- 
         end
       end
     },
+    -- adds
     {
       provider = function(self)
         local count = self.status_dict.added or 0
@@ -130,6 +139,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       end,
       hl = "GitSignsAdd",
     },
+    -- changes
     {
       provider = function(self)
         local count = self.status_dict.changed or 0
@@ -137,6 +147,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       end,
       hl = "GitSignsChange",
     },
+    -- deletes
     {
       provider = function(self)
         local count = self.status_dict.removed or 0
@@ -161,12 +172,13 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     },
   }
 
-  M.components.snippetinfo = {
+  M.components.luasnip = {
     condition = function()
-      if Features:has(FT.CONF, 'LuaSnip') then 
+      if Features:has(FT.PLUGIN, 'LuaSnip') then
         return require 'luasnip'.jumpable()
+      else
+        return false
       end
-      return false
     end,
     provider = function()
       local forward = require 'luasnip'.jumpable(1) and '' or ''
@@ -176,14 +188,14 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     hl = 'CmpItemKindSnippet',
   }
 
-  M.components.spellinfo = {
+  M.components.spell = {
     condition = function()
       return vim.wo.spell
     end,
     provider = Icons.item_kinds.Text,
   }
 
-  M.components.rootinfo = {
+  M.components.root_user = {
     condition = function()
       return vim.env['USER'] == 'root'
     end,
@@ -191,7 +203,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     hl = 'ErrorMsg',
   }
 
-  M.components.diaginfo = {
+  M.components.lsp_diags = {
     init = function(self)
       self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
       self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
@@ -206,24 +218,28 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     },
     update = { "DiagnosticChanged", "BufEnter" },
     condition = conditions.has_diagnostics,
+    -- erros
     {
       provider = function(self)
         return self.errors > 0 and (self.error_icon .. ' ' .. self.errors .. " ")
       end,
       hl = 'DiagnosticError',
     },
+    -- warns
     {
       provider = function(self)
         return self.warnings > 0 and (self.warn_icon .. ' ' .. self.warnings .. " ")
       end,
       hl = 'DiagnosticWarn',
     },
+    -- infos
     {
       provider = function(self)
         return self.info > 0 and (self.info_icon .. ' ' .. self.info .. " ")
       end,
       hl = 'DiagnosticInfo',
     },
+    -- hints
     {
       provider = function(self)
         return self.hints > 0 and (self.hint_icon .. ' ' .. self.hints)
@@ -232,7 +248,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     },
   }
 
-  M.components.lspinfo = {
+  M.components.lsp_servers = {
     condition = conditions.lsp_attached,
     provider = function()
       local servers = {}
@@ -259,10 +275,10 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       return res
     end,
     -- update = {'LspAttach', 'LspDetach', 'User LspProgressUpdate'},
-    hl       = 'Folded',
+    hl = 'Folded',
   }
 
-  M.components.sessioninfo = {
+  M.components.session = {
     condition = function() return Sessions.get_current() end,
     provider = function()
       return ' ' .. Sessions.get_current()
@@ -315,6 +331,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     update = 'CursorMoved',
   }
 
+  -- TODO merge into fileinfo
   M.components.helpfilename = {
     condition = function()
       return vim.bo.buftype == "help"
@@ -331,6 +348,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     },
   }
 
+  -- TODO merge into fileinfo
   M.components.terminalname = {
     condition = function()
       return vim.bo.buftype == "terminal"
@@ -348,7 +366,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     },
   }
 
-  M.components.indentinfo = {
+  M.components.indentation = {
     provider = function()
       local indent_type = vim.o.expandtab and 'S' or 'T'
       local indent_width = vim.o.shiftwidth .. ':' .. vim.o.tabstop .. ':' .. vim.o.softtabstop
@@ -390,7 +408,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     hl = 'Error',
   }
 
-  -- TODO: abstract into a generic indicators system
+  -- TODO abstract into a generic indicators system
   M.components.texlab_status = {
     condition = function()
       local util = require 'lspconfig.util'
@@ -411,19 +429,16 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     end
   }
 
-  local component_opts = {
-    left = {
-      left_pad = { provider = '' },
-      right_pad = { provider = ' ' },
+  M.components.lazy = {
+    condition = require("lazy.status").has_updates,
+    update = { "User", pattern = "LazyUpdate" },
+    provider = function() return require 'lazy.status'.updates() end,
+    -- 
+    on_click = {
+      callback = function() require("lazy").update() end,
+      name = "update_plugins",
     },
-    middle = {
-      left_pad = { provider = ' ' },
-      right_pad = { provider = ' ' },
-    },
-    right = {
-      left_pad = { provider = ' ' },
-      right_pad = { provider = '' },
-    },
+    hl = 'Type',
   }
 
 
@@ -433,20 +448,21 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     end,
     M.components.vimode,
     M.components.fileinfo,
-    M.components.gitinfo,
+    M.components.gitsigns,
     align,
+    M.components.lazy,
     M.components.texlab_status,
-    M.components.snippetinfo,
-    M.components.spellinfo,
-    M.components.rootinfo,
-    M.components.diaginfo,
-    M.components.lspinfo,
+    M.components.luasnip,
+    M.components.spell,
+    M.components.root_user,
+    M.components.lsp_diags,
+    M.components.lsp_servers,
     M.components.filetype,
     M.components.fileencoding,
     M.components.fileformat,
-    M.components.indentinfo,
+    M.components.indentation,
     M.components.searchinfo,
-    M.components.sessioninfo,
+    M.components.session,
     M.components.macros,
     M.components.ruler,
   }
@@ -461,10 +477,10 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     M.components.vimode,
     M.components.helpfilename,
     align,
-    M.components.rootinfo,
+    M.components.root_user,
     M.components.filetype,
     M.components.searchinfo,
-    M.components.sessioninfo,
+    M.components.session,
     -- M.components.ruler,
   }
 
@@ -478,10 +494,10 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     M.components.vimode,
     M.components.terminalname,
     align,
-    M.components.rootinfo,
+    M.components.root_user,
     M.components.filetype,
     M.components.searchinfo,
-    M.components.sessioninfo,
+    M.components.session,
   }
 
   local statuslines = {
@@ -499,7 +515,6 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     space,
     M.components.navic,
     align,
-    -- M.components.gitinfo(component_opts.middle),
   }
 
   local special_winbar = {

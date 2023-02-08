@@ -26,6 +26,18 @@ local mod = function(hex, amt)
   return string.format("#%06x", rgb)
 end
 
+local mix = function(color1, color2)
+  color1 = string.sub(color1, 2)
+  color2 = string.sub(color2, 2)
+  -- convert hex colors to decimal values
+  local r1, g1, b1 = tonumber("0x"..string.sub(color1, 1, 2)), tonumber("0x"..string.sub(color1, 3, 4)), tonumber("0x"..string.sub(color1, 5, 6))
+  local r2, g2, b2 = tonumber("0x"..string.sub(color2, 1, 2)), tonumber("0x"..string.sub(color2, 3, 4)), tonumber("0x"..string.sub(color2, 5, 6))
+  -- average the values to get the mixed color
+  local r, g, b = (r1 + r2) / 2, (g1 + g2) / 2, (b1 + b2) / 2
+  -- convert decimal values back to hex
+  return string.format("#%02x%02x%02x", r, g, b)
+end
+
 local gen_shades = function(col)
   local shades = {}
   for i = 0, 9 do
@@ -259,7 +271,7 @@ local highlights = {
 
 
   ColorColumn	    = { 'CursorLine' },
-Conceal         = { '@debug' },
+  Conceal         = { 'Folded' },
   CurSearch       = { bg = c.match, bold = true },
   Cursor          = { bg = c.fg },
   CursorColumn    = { 'CursorLine' }, --
@@ -306,12 +318,12 @@ Conceal         = { '@debug' },
   SpellLocal      = { }, --
   SpellRare       = { }, --
 -- StatusLine      = { bg = c.debug }, --
-  StatusLine      = { }, --
+  StatusLine      = { 'NormalFloat' }, --
   StatusLineNC    = { reverse = true },
   Substitute      = { 'CurSearch' },
-  TabLine         = { fg = c.fold },
   TabLineFill     = { bg = c.bg },
-  TabLineSel      = { fg = c.fg, bold = true },
+  TabLine         = { 'TablineFill', fg = c.fold },
+  TabLineSel      = { 'TablineFill', fg = c.fg, bold = true },
   TermCursor      = { underline = true },
   TermCursorNC    = { 'TermCursor' },
   Title           = { '@text.title' },

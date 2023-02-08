@@ -28,14 +28,14 @@ M.setup = U.Service({{FT.SESSION, "setup"}}, {{FT.PLUGIN, "mini.nvim"}}, functio
     verbose = { read = false, write = false, delete = false },
   }
 
-  vim.cmd [[
-    augroup persist_folds
-      autocmd!
-      autocmd BufWritePost *.* mkview
-      autocmd BufWinLeave *.* mkview
-      autocmd BufWinEnter *.* silent! loadview
-    augroup persist_folds
-  ]]
+  -- vim.cmd [[
+  --   augroup persist_folds
+  --     autocmd!
+  --     autocmd BufWritePost *.* mkview
+  --     autocmd BufWinLeave *.* mkview
+  --     autocmd BufWinEnter *.* silent! loadview
+  --   augroup persist_folds
+  -- ]]
 end)
 
 M.get_current = U.Service(function()
@@ -66,6 +66,7 @@ M.load = U.Service({{FT.SESSION, "setup"}}, function(session_name)
   -- load last session if no session name provided
   session_name = session_name or MiniSessions.get_latest()
 
+  ---@diagnostic disable-next-line: param-type-mismatch
   if vim.tbl_contains(M.get_all(), session_name) then
     MiniSessions.read(session_name, {})
   else

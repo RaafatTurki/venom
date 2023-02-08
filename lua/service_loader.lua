@@ -86,7 +86,7 @@ local plugins = {
   },
   { 'RRethy/vim-illuminate',
     config = function()
-      Events.plugin_setup:sub(Plugins.illuminat)
+      Events.plugin_setup:sub(Plugins.illuminate)
     end
   },
   { p.gitsigns,

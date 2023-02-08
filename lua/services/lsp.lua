@@ -54,6 +54,8 @@ end)
 
 -- TODO: require mason-lspconfig.nvim instead once PM registers deps
 M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_configs)
+  local lspconfig_util = require 'lspconfig.util'
+
   -- lsp servers
   require 'mason-lspconfig'.setup()
   require 'mason-lspconfig'.setup_handlers {
@@ -64,7 +66,7 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
       if Features:has(FT.PLUGIN, 'neodev.nvim') then
         require("neodev").setup {
           library = {
-            plugins = false,
+            -- plugins = false,
           }
         }
       end
@@ -133,17 +135,28 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
           svelte = {
             plugin = {
               svelte = {
-                format = { enable = false },
+                -- defaultScriptLanguage = 'ts',
                 compilerWarnings = {
                   ["css-unused-selector"] = 'ignore',
                   ["a11y-missing-attribute"] = 'ignore',
-                  ["a11y-missing-content "] = 'ignore',
+                  -- ["a11y-missing-content "] = 'ignore',
                   -- ["unused-export-let"] = 'ignore',
                 }
-              }
+              },
+              css = {
+                completions = {
+                  emmet = false,
+                },
+              },
             }
+          },
+          emmet = {
+            showExpandedAbbreviation = 'never'
           }
-        }
+        },
+        -- on_attach = function(client, bufnr)
+        --   Lsp.setup_buf_fmt_on_save(client, bufnr)
+        -- end
       })
     end,
     rust_analyzer = function()
@@ -308,7 +321,21 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
     end,
     yamlls = function()
       M.setup_lspconfig_server('yamlls', {})
-    end
+    end,
+    denols = function()
+      M.setup_lspconfig_server('denols', {
+        root_dir = lspconfig_util.root_pattern('deno.json', 'deno.jsonc')
+      })
+    end,
+    tsserver = function()
+      M.setup_lspconfig_server('tsserver', {
+        root_dir = lspconfig_util.root_pattern('tsconfig.json', 'jsconfig.json', 'package.json', 'vite.config.ts', '.npmrc'),
+        single_file_support = false,
+      })
+    end,
+    unocss = function()
+      M.setup_lspconfig_server('unocss', {})
+    end,
   }
 
   -- lsp servers with no mason-lspconfig support
@@ -465,6 +492,10 @@ M.setup_buf_fmt_on_save = U.Service(function(client, bufnr)
       callback = function() vim.lsp.buf.format() end,
     })
   end
+end)
+
+M.toggle_diags = U.Service({}, function()
+  -- TODO ...
 end)
 
 return M

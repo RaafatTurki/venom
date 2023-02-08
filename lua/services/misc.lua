@@ -46,6 +46,7 @@ M.base = U.Service(function()
     au BufEnter sxhkdrc,*.sxhkdrc set ft=sxhkdrc
     au BufEnter .classpath setlocal ft=xml
     au BufEnter .env* setlocal ft=sh
+    au BufEnter .replit setlocal ft=toml
     au BufEnter package.json setlocal nofoldenable
     au BufEnter tsconfig.json setlocal nofoldenable
 
@@ -57,6 +58,7 @@ M.base = U.Service(function()
     " comment strings
     au FileType sshdconfig setlocal commentstring=#%s
     au FileType c setlocal commentstring=//%s
+    au FileType arduino setlocal commentstring=//%s
     au FileType cs setlocal commentstring=//%s
     au FileType gdscript setlocal commentstring=#%s
     au FileType fish setlocal commentstring=#%s

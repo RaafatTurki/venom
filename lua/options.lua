@@ -26,6 +26,7 @@ vim.o.hlsearch       = true
 vim.o.incsearch      = true
 vim.o.list           = false
 vim.o.secure         = true
+vim.o.breakindent    = true
 vim.o.pumheight      = 16
 vim.o.cmdheight      = 1
 vim.o.showtabline    = 2
@@ -34,6 +35,7 @@ vim.o.scrolloff      = 4
 vim.o.scroll         = 15
 vim.o.updatetime     = 100
 vim.o.timeoutlen     = 200
+vim.o.conceallevel   = 1
 vim.o.wildmenu       = false
 vim.o.clipboard      = 'unnamedplus'
 vim.o.signcolumn     = 'yes:3'
@@ -54,6 +56,7 @@ vim.o.foldtext       = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop
 vim.o.foldnestmax    = 10 -- Maximum amount of nested folds
 vim.o.foldminlines   = 1 -- Minimum amount of lines per fold
 vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize'
+vim.o.viewoptions    = 'cursor,curdir'
 -- indenting
 vim.o.shiftwidth     = 2 -- How many whitespaces is an indent
 vim.o.tabstop        = 2 -- How many whitespaces is a /t
@@ -85,7 +88,6 @@ vim.diagnostic.config {
   -- underline = {
   --   -- severity = vim.diagnostic.severity.INFO,
   -- },
-  virtual_lines = false,
   virtual_text = false,
   -- virtual_text = {
   --   spacing = 2,

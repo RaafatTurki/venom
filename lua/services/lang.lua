@@ -126,7 +126,11 @@ M.setup = U.Service({{FT.LANG, 'setup'}}, {}, function()
   end
 end)
 
--- TODO: abstract into a generic build state system
+M.toggle_spell = U.Service(function()
+  vim.wo.spell = not vim.wo.spell
+end)
+
+-- TODO: abstract into a generic indicators system
 M.texab_build_status = 0
 
 M.builders = {

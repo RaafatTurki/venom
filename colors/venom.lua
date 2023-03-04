@@ -110,9 +110,9 @@ local debug     = gen_shades '#FF00FF'
 
 local c = {
   -- ui
-  bg        = black[3],
+  bg        = black[1],
+  bg_float  = black[4],
   line      = black[2],
-  bg_alt    = black[1],
   mg        = grey[1],
   fg        = white[1],
   match     = grey[10],
@@ -234,7 +234,7 @@ local highlights = {
   ['@text.todo']              = { fg = c.note },
   ['@text.note']              = { fg = c.note },
   ['@text.warning']           = { fg = c.warn },
-  ['@text.danger']            = { bg = c.err, fg = c.bg },
+  ['@text.danger']            = { bg = c.err, fg = c.bg_float },
   ['@text.diff.add']          = { fg = c.add },
   ['@text.diff.delete']       = { fg = c.del },
   -- Tags
@@ -298,11 +298,11 @@ local highlights = {
   ModeMsg         = { fg = c.fg, bold = true },
   MoreMsg         = { fg = c.info },
   MsgArea         = { fg = c.match },
-  MsgSeparator    = { bg = c.bg, fg = c.mg },
+  MsgSeparator    = { bg = c.bg_float, fg = c.mg },
   NonText         = { fg = c.comment, bold = true },
-  Normal          = { bg = c.bg_alt },
-  NormalFloat     = { bg = c.bg },
-  FloatBorder     = { bg = c.bg, fg = c.bg },
+  Normal          = { bg = c.bg },
+  NormalFloat     = { bg = c.bg_float },
+  FloatBorder     = { bg = c.bg_float, fg = c.bg_float },
   NormalNC        = { }, --
   Pmenu           = { bg = c.line, fg = c.fg },
   PmenuSel        = { bg = c.mg, fg = c.fg },
@@ -321,7 +321,7 @@ local highlights = {
   StatusLine      = { 'NormalFloat' }, --
   StatusLineNC    = { reverse = true },
   Substitute      = { 'CurSearch' },
-  TabLineFill     = { bg = c.bg },
+  TabLineFill     = { bg = c.bg_float },
   TabLine         = { 'TablineFill', fg = c.fold },
   TabLineSel      = { 'TablineFill', fg = c.fg, bold = true },
   TermCursor      = { underline = true },
@@ -408,7 +408,7 @@ LspCodeLensSeparator        = { '@debug' },
   Debug                   = { '@debug' },
   Underlined              = { '@underline' },
   Error                   = { '@error' },
-  Ignore                  = { fg = c.bg };
+  Ignore                  = { fg = c.bg_float };
   Todo                    = { '@text.todo' },
 
 
@@ -522,7 +522,7 @@ healthBar               = { '@debug' };
 
   -- neo-tree
   NeoTreeBufferNumber         = { 'Comment' };
-  NeoTreeCursorLine           = { 'Normal' };
+  NeoTreeCursorLine           = { 'CursorLine' };
   NeoTreeDirectoryIcon        = {}; --
   NeoTreeDirectoryName        = {}; --
   NeoTreeDimText              = { 'Folded' };
@@ -563,7 +563,7 @@ NeoTreeWindowsHidden        = { '@debug' };
   NeoTreeTabSeparatorInactive = { 'Ignore' };
 
   -- vim-quickui
-  QuickBG                 = { bg = c.bg, fg = c.fg };
+  QuickBG                 = { bg = c.bg_float, fg = c.fg };
   QuickSel                = { 'Search' };
   QuickKey                = { fg = c.err };
   QuickOff                = { fg = c.mg };
@@ -577,7 +577,7 @@ NeoTreeWindowsHidden        = { '@debug' };
   TelescopeBorder         = { 'FloatBorder' };
   TelescopeMatching       = { fg = c.fg, bold = true };
   TelescopeSelectionCaret = { fg = c.fg, bold = true },
-  TelescopeNormal         = { bg = c.bg, fg = c.fold },
+  TelescopeNormal         = { bg = c.bg_float, fg = c.fold },
   TelescopeSelection      = { 'CursorLine' },
   TelescopeMultiSelection = { 'Type' },
   TelescopeTitle          = { fg = c.fg };

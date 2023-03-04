@@ -271,7 +271,8 @@ M.cmp_ls = U.Service({{FT.CONF, "nvim-cmp"}}, {}, function()
       -- completion = cmp.config.window.bordered(),
       completion = {
         border = 'single',
-        winhighlight = 'CursorLine:Normal',
+        winhighlight = '',
+        -- winhighlight = 'CursorLine:Normal',
       },
       documentation = {
         border = 'single',

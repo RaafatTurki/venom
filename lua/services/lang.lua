@@ -35,6 +35,7 @@ M.ts_parsers_ensure_installed = {
   'nix',
   'org',
   'php',
+  'pug',
   'python',
   'query',
   'regex',

@@ -44,8 +44,11 @@ vim.o.fileencoding   = 'utf-8'
 vim.o.guicursor      = 'a:hor25,v:block,i:ver25'
 vim.o.completeopt    = 'menu,menuone,noselect'
 vim.o.backspace      = 'indent,eol,nostop'
-vim.o.listchars      = 'trail:_,tab:  │'
+-- vim.o.listchars      = 'trail:_,tab:  │'
+-- vim.o.listchars      = 'extends:…,precedes:…,nbsp:␣'
 vim.o.shell          = '/usr/bin/fish'
+
+
 -- folding
 -- vim.o.foldcolumn        = '1'
 -- vim.o.foldenable        = true

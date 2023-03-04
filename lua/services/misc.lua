@@ -184,14 +184,10 @@ M.disable_builtin_plugins = U.Service(function()
   end
 end)
 
---- defines TermSmartEsc(), escapes term mode of running process isn't in blacklist
+--- defines TermSmartEsc(), conditionally escapes term mode depending on the running process
 M.term_smart_esc = U.Service(function()
-  local exclude_process_names = {
-    nvim = true,
-    lazygit = true,
-  }
+  local exclude_process_names = { 'nvim', 'lazygit', 'gitui' }
 
-  -- function TermSmartEsc(term_pid, fallback_key)
   function TermSmartEsc(fallback_key, term_pid)
     fallback_key = fallback_key or [[<ESC>]]
     ---@diagnostic disable-next-line: undefined-field
@@ -199,7 +195,7 @@ M.term_smart_esc = U.Service(function()
 
     local function find_process(pid)
       local p = vim.api.nvim_get_proc(pid)
-      if exclude_process_names[p.name] then return true end
+      if vim.tbl_contains(exclude_process_names, p.name) then return true end
       for _, v in ipairs(vim.api.nvim_get_proc_children(pid)) do
         if find_process(v) then return true end
       end

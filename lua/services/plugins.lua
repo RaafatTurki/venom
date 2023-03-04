@@ -535,14 +535,15 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
     },
     filesystem = {
       filtered_items = {
+        hide_dotfiles = false,
         hide_by_name = {
-          'node_modules',
-          '__pycache__',
-          'pnpm-lock.yaml',
-          'package-lock.json',
+          -- 'node_modules',
+          -- '__pycache__',
+          -- 'pnpm-lock.yaml',
+          -- 'package-lock.json',
         },
         hide_by_pattern = {
-          "*.import"
+          -- "*.import"
         },
         never_show = {
         },
@@ -551,11 +552,9 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
         system_open = function(state)
           local node = state.tree:get_node()
           local path = node:get_id()
-          -- macOs: open file in default application in the background.
-          -- Probably you need to adapt the Linux recipe for manage path with spaces. I don't have a mac to try.
-          -- vim.api.nvim_command("silent !open -g " .. path)
-          -- Linux: open file in default application
-          vim.api.nvim_command(string.format("silent !xdg-open '%s'", path))
+          path = path:gsub(" ", "\\ ")
+          local cmd = string.format("xdg-open %s", path)
+          vim.fn.jobstart(cmd, { detach = true })
         end,
         delete = function(state)
           local inputs = require "neo-tree.ui.inputs"
@@ -563,7 +562,13 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
           local msg = "Are you sure you want to trash " .. path
           inputs.confirm(msg, function(confirmed)
             if not confirmed then return end
-            vim.fn.system { "gio", "trash", vim.fn.fnameescape(path) }
+
+            if vim.fn.executable('trash') == 1 then
+              vim.fn.system { "trash", vim.fn.fnameescape(path) }
+            elseif vim.fn.executable('gio') == 1 then
+              vim.fn.system { "gio", "trash", vim.fn.fnameescape(path) }
+            end
+
             require("neo-tree.sources.manager").refresh(state.name)
           end)
         end,
@@ -578,7 +583,8 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
       },
       window = {
         mappings = {
-          ["A"] = "system_open",
+          ["s"] = "system_open",
+          ["v"] = "open_vsplit",
           ["\\"] = "open_in_terminal",
         },
       },

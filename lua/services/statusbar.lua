@@ -208,6 +208,12 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     hl = hi_finalize('ErrorMsg'),
   }
 
+  M.components.showcmd = {
+    provider = "%S",
+    hl = hi_finalize('Comment'),
+    -- update = 'CursorMoved',
+  }
+
   M.components.lsp_diags = {
     init = function(self)
       self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
@@ -411,6 +417,10 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       return '' .. ' ' .. self.reg_recording
     end,
     hl = hi_finalize('Error'),
+    update = {
+      "RecordingEnter",
+      "RecordingLeave",
+    }
   }
 
   -- TODO abstract into a generic indicators system
@@ -422,6 +432,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     end,
     provider = function()
       return ''
+      -- 
     end,
     hl = function()
       local build_status_hls = vim.tbl_add_reverse_lookup {
@@ -436,14 +447,9 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
 
   M.components.lazy = {
     condition = require("lazy.status").has_updates,
-    update = { "User", pattern = "LazyUpdate" },
     provider = function() return require 'lazy.status'.updates() end,
-    -- 
-    on_click = {
-      callback = function() require("lazy").update() end,
-      name = "update_plugins",
-    },
     hl = hi_finalize('Type'),
+    update = { "User", pattern = "LazyUpdate" },
   }
 
 
@@ -460,6 +466,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     M.components.luasnip,
     M.components.spell,
     M.components.root_user,
+    M.components.showcmd,
     M.components.lsp_diags,
     M.components.lsp_servers,
     M.components.filetype,
@@ -518,7 +525,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       return vim.bo.buftype == ''
     end,
     space,
-    M.components.navic,
+    -- M.components.navic,
     align,
   }
 
@@ -695,7 +702,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
   require 'heirline'.setup {
     statusline = statuslines,
     tabline = tabline,
-    winbar = winbars,
+    -- winbar = winbars,
     -- statuscolumn = {}
   }
 

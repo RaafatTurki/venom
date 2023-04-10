@@ -224,7 +224,7 @@ local highlights = {
   ['@text.emphasis']          = { italic = true },
   ['@text.underline']         = { underline = true },
   ['@text.strike']            = { strikethrough = true },
-  ['@text.title']             = { bold = true },
+  ['@text.title']             = { fg = c.fg, bold = true },
   ['@text.literal']           = { '@string' },
   ['@text.uri']               = { underline = true, fg = c.link },
   ['@text.math']              = { '@keyword' },
@@ -270,6 +270,24 @@ local highlights = {
   -- ['@reference']
 
 
+  -- LSP SEMANTIC HIGHLIGHT
+  ['@lsp.type.namespace']   = { '@namespace' },
+  ['@lsp.type.type']        = { '@type' },
+  ['@lsp.type.class']       = { '@type' },
+  ['@lsp.type.enum']        = { '@type' },
+  ['@lsp.type.interface']   = { '@type' },
+  ['@lsp.type.struct']      = { '@structure' },
+  ['@lsp.type.parameter']   = { '@parameter' },
+  ['@lsp.type.variable']    = { '@variable' },
+  ['@lsp.type.property']    = { '@property' },
+  ['@lsp.type.enumMember']  = { '@constant' },
+  ['@lsp.type.function']    = { '@function' },
+  ['@lsp.type.method']      = { '@method' },
+  ['@lsp.type.macro']       = { '@macro' },
+  ['@lsp.type.decorator']   = { '@function' },
+
+
+  -- N/VIM
   ColorColumn	    = { 'CursorLine' },
   Conceal         = { 'Folded' },
   CurSearch       = { bg = c.match, bold = true },
@@ -301,8 +319,8 @@ local highlights = {
   MsgSeparator    = { bg = c.bg_float, fg = c.mg },
   NonText         = { fg = c.comment, bold = true },
   Normal          = { bg = c.bg },
-  NormalFloat     = { bg = c.bg_float },
-  FloatBorder     = { bg = c.bg_float, fg = c.bg_float },
+  NormalFloat     = { bg = c.bg },
+  FloatBorder     = { fg = c.mg },
   NormalNC        = { }, --
   Pmenu           = { bg = c.line, fg = c.fg },
   PmenuSel        = { bg = c.mg, fg = c.fg },
@@ -574,21 +592,21 @@ NeoTreeWindowsHidden        = { '@debug' };
   SymbolsOutlineConnector = { fg = c.mg };
 
   -- telescope
-  TelescopeBorder         = { 'FloatBorder' };
   TelescopeMatching       = { fg = c.fg, bold = true };
-  TelescopeSelectionCaret = { fg = c.fg, bold = true },
-  TelescopeNormal         = { bg = c.bg_float, fg = c.fold },
-  TelescopeSelection      = { 'CursorLine' },
-  TelescopeMultiSelection = { 'Type' },
-  TelescopeTitle          = { fg = c.fg };
-  TelescopePreviewTitle   = { fg = c.fg },
-  TelescopePreviewNormal  = { },
-  TelescopePromptTitle    = { fg = c.fg },
-  TelescopePromptNormal   = { },
-  TelescopePromptBorder   = { 'FloatBorder' },
+  TelescopeMultiSelection = { fg = c.type };
+  TelescopeSelectionCaret = { 'NormalFloat' };
+  TelescopeNormal         = { fg = c.mg };
+  TelescopePreviewNormal  = { 'NormalFloat' };
+  TelescopePromptNormal   = { 'NormalFloat' };
+  TelescopeSelection      = { 'CursorLine' };
+  TelescopeTitle          = { 'Title' };
+  TelescopePreviewTitle   = { 'Title' };
+  TelescopePromptTitle    = { 'Title' };
+  TelescopeBorder         = { 'FloatBorder' };
+  TelescopePromptBorder   = { 'FloatBorder' };
 
   -- harpoon
-  HarpoonBorder           = { 'WinSeparator' };
+  HarpoonBorder           = { 'FloatBorder' };
 
   -- startup-time
   StartupTimeStartupKey   = { bold = true };

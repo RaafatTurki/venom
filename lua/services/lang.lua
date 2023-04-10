@@ -47,6 +47,7 @@ M.ts_parsers_ensure_installed = {
   'toml',
   'typescript',
   'vim',
+  'vimdoc',
   'yaml',
 }
 

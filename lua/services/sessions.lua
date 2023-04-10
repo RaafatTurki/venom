@@ -8,10 +8,10 @@ M.sessions_path = vim.fn.stdpath("data") .. '/session/'
 
 M.setup = U.Service({{FT.SESSION, "setup"}}, {{FT.PLUGIN, "mini.nvim"}}, function()
   -- ensure sessions path exist
-  if vim.fn.isdirectory(M.sessions_path) == 0 then
-    vim.loop.fs_mkdir(M.sessions_path, 493)
-    log(M.sessions_path)
-  end
+  -- if vim.fn.isdirectory(M.sessions_path) == 0 then
+  --   vim.loop.fs_mkdir(M.sessions_path, 493)
+  --   log(M.sessions_path)
+  -- end
 
   local mini_session = require 'mini.sessions'
   mini_session.setup {

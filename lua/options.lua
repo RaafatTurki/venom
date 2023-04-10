@@ -38,6 +38,7 @@ vim.o.timeoutlen     = 200
 vim.o.conceallevel   = 1
 vim.o.wildmenu       = false
 vim.o.clipboard      = 'unnamedplus'
+vim.o.showcmdloc     = 'statusline'
 vim.o.signcolumn     = 'yes:3'
 vim.o.encoding       = 'utf-8'
 vim.o.fileencoding   = 'utf-8'
@@ -92,6 +93,7 @@ vim.diagnostic.config {
   --   -- severity = vim.diagnostic.severity.INFO,
   -- },
   virtual_text = false,
+  virtual_lines = { only_current_line = true },
   -- virtual_text = {
   --   spacing = 2,
   --   prefix = '●',

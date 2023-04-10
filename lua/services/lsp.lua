@@ -358,17 +358,17 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
     require 'mason-null-ls'.setup {
       automatic_setup = true,
     }
-    require 'mason-null-ls'.setup_handlers {
-      --   function(source_name)
-      --     -- log('the null-ls source '..source_name..' is installed but unused!')
-      --   end,
-      --   stylua = function()
-      --     null_ls.register(null_ls.builtins.formatting.stylua)
-      --   end,
-      --   jq = function()
-      --     null_ls.register(null_ls.builtins.formatting.jq)
-      --   end
-    }
+    -- require 'mason-null-ls'.setup_handlers {
+    --   --   function(source_name)
+    --   --     -- log('the null-ls source '..source_name..' is installed but unused!')
+    --   --   end,
+    --   --   stylua = function()
+    --   --     null_ls.register(null_ls.builtins.formatting.stylua)
+    --   --   end,
+    --   --   jq = function()
+    --   --     null_ls.register(null_ls.builtins.formatting.jq)
+    --   --   end
+    -- }
     null_ls.setup()
   end
 end)

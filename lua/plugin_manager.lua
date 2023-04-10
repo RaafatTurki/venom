@@ -37,6 +37,14 @@ M.setup = U.Service(function(plugins)
     install = {
       colorscheme = { 'venom' }
     },
+    ui = {
+      size = { width = 142, height = 0.8 },
+      wrap = false,
+      border = 'single',
+    },
+    checker = {
+      enabled = true,
+    },
   })
 
   -- registering plugins that are both installed and listed

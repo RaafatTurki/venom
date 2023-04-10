@@ -45,33 +45,26 @@ end)
 M.dressing = U.Service({{FT.CONF, "dressing.nvim"}}, {}, function()
   require 'dressing'.setup {
     input = {
-      enabled = false,
+      border = 'single',
+      title_pos = 'center',
+      win_options = {
+        winblend = 0,
+      },
     },
-    -- input = {
-    --   border = 'single',
-    --   win_options = {
-    --     winblend = 0,
-    --   },
-    --   override = function(conf)
-    --     conf.col = -1
-    --     return conf
-    --   end,
-    -- },
     select = {
-      backend = { 'telescope' },
-      -- builtin = {
-      --   border = 'single',
-      --   win_options = {
-      --     winblend = 0,
-      --     winhighlight = "CursorLine:Normal",
-      --   },
-      -- }
+      backend = { 'telescope', 'builtin' },
+      builtin = {
+        border = 'single',
+        win_options = {
+          winblend = 0,
+        },
+      }
     }
   }
 end)
 
 M.telescope = U.Service({{FT.CONF, 'telescope.nvim'},{FT.CONF, 'telescope-fzf-native.nvim'}}, {}, function()
-  require('telescope').setup {
+  require 'telescope'.setup {
     extensions = {
       fzf = {
         fuzzy = true, -- false will only do exact matching
@@ -79,9 +72,13 @@ M.telescope = U.Service({{FT.CONF, 'telescope.nvim'},{FT.CONF, 'telescope-fzf-na
         override_file_sorter = true, -- override the file sorter
         case_mode = "smart_case", -- or "ignore_case" or "respect_case"
         -- the default case_mode is "smart_case"
+      },
+      ['ui-select'] = {
+        require 'telescope.themes'.get_dropdown {}
       }
     },
     defaults = {
+      borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
       mappings = {
         i = {
           -- NOTE: fixes the folds not applying issue
@@ -95,6 +92,7 @@ M.telescope = U.Service({{FT.CONF, 'telescope.nvim'},{FT.CONF, 'telescope-fzf-na
   }
 
   require('telescope').load_extension('fzf')
+  require("telescope").load_extension("ui-select")
 end)
 
 M.notify = U.Service({{FT.CONF, "nvim-notify"}}, {}, function()
@@ -848,7 +846,7 @@ M.fold_preview = U.Service({{FT.CONF, 'fold-preview.nvim'}}, {}, function()
 
   fold_preview.setup {
     default_keybindings = false,
-    border = 'none',
+    border = 'single',
   }
 
   Events.fold_update:sub(fold_preview.close_preview)
@@ -976,26 +974,45 @@ end)
 M.noice = U.Service({{FT.CONF, 'noice.nvim'}}, {}, function()
   require 'noice'.setup {
     cmdline = {
-      -- format = {
-      --   cmdline = { icon = ">" },
-      --   search_down = { icon = "⌄" },
-      --   search_up = { icon = "⌃" },
-      --   filter = { icon = "$" },
-      --   lua = { icon = "" },
-      --   help = { icon = "?" },
-      -- },
+      format = {
+        cmdline = { icon = ">" },
+        lua = { icon = "> lua" },
+        search_down = { icon = " " },
+        search_up = { icon = " " },
+        filter = { icon = "$" },
+        help = { icon = "?" },
+      },
     },
     lsp = {
       override = {
         ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
         ["vim.lsp.util.stylize_markdown"] = true,
-        -- override cmp documentation with Noice (needs the other options to work)
-        -- ["cmp.entry.get_documentation"] = true,
+        ["cmp.entry.get_documentation"] = true,
       },
-    },
-    popupmenu = {
-      -- backend = 'nui',
-      -- backend = 'cmp',
+      progress = {
+        enabled = true,
+      },
+      hover = {
+        enabled = true,
+        view = 'hover',
+      },
+      signature = {
+        enabled = true,
+        auto_open = {
+          enabled = true,
+          trigger = true,
+          luasnip = true,
+          throttle = 50,
+        },
+        view = 'hover',
+      },
+      message = {
+        enabled = true,
+        view = "notify",
+      },
+      documentation = {
+        view = "hover",
+      },
     },
     messages = {
       view_search = false,
@@ -1004,8 +1021,8 @@ M.noice = U.Service({{FT.CONF, 'noice.nvim'}}, {}, function()
       bottom_search = true,
       command_palette = true,
       long_message_to_split = true,
-      inc_rename = true
-      -- lsp_doc_border = true, -- add a border to hover docs and signature help
+      inc_rename = true,
+      lsp_doc_border = true,
     },
   }
 end)
@@ -1016,6 +1033,19 @@ end)
 
 M.image = U.Service({{FT.PLUGIN, 'image.nvim'}}, function()
   require 'image'.setup {}
+end)
+
+M.peek = U.Service({{FT.PLUGIN, 'peek.nvim'}}, function()
+  require 'peek'.setup {
+    -- auto_load = true,
+    -- app = 'webview',
+    -- filetype = { 'markdown' },
+    -- throttle_at = 200000,
+    -- throttle_time = 'auto',
+  }
+  
+  vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})
+  vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})
 end)
 
 return M

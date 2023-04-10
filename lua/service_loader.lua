@@ -39,11 +39,11 @@ local plugins = {
   { 'folke/neodev.nvim',
     dependencies = p.lspconfig,
   },
-  { 'Mofiqul/trld.nvim',
-    config = function()
-      Events.plugin_setup:sub(Plugins.trld)
-    end
-  },
+  -- { 'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
+  --   config = function()
+  --     require 'lsp_lines'.setup {}
+  --   end,
+  -- },
   -- { 'Issafalcon/lsp-overloads.nvim' },
   -- LANG: treesitter and language specific plugins
   { p.treesitter,
@@ -52,16 +52,16 @@ local plugins = {
   { 'JoosepAlviste/nvim-ts-context-commentstring',
     dependencies = p.treesitter,
   },
-  { 'SmiteshP/nvim-navic',
-    dependencies = p.lspconfig,
-  },
-  { 'nvim-treesitter/playground',
-    dependencies = p.treesitter,
-  },
   { 'euclio/vim-markdown-composer',
     build = 'cargo build --release',
     config = function()
       Events.plugin_setup:sub(Plugins.vim_markdown_composer)
+    end
+  },
+  { 'toppair/peek.nvim',
+    build = 'deno task --quiet build:fast',
+    config = function()
+      Events.plugin_setup:sub(Plugins.peek)
     end
   },
   { 'rest-nvim/rest.nvim',
@@ -119,6 +119,7 @@ local plugins = {
       { 'nvim-telescope/telescope-fzf-native.nvim',
         build = 'make',
       },
+      'nvim-telescope/telescope-ui-select.nvim',
     },
     config = function()
       Events.plugin_setup:sub(Plugins.telescope)
@@ -141,10 +142,10 @@ local plugins = {
     end
   },
   { 'folke/noice.nvim',
-    dependencies = p.nui,
     config = function()
       Events.plugin_setup:sub(Plugins.noice)
-    end
+    end,
+    dependencies = p.nui,
   },
   { 'hrsh7th/nvim-cmp',
     dependencies = {
@@ -161,12 +162,7 @@ local plugins = {
       Events.plugin_setup:sub(Plugins.cmp_ls)
     end
   },
-  { 'stevearc/dressing.nvim',
-    config = function()
-      Events.plugin_setup:sub(Plugins.dressing)
-    end
-  },
-  { 'RaafatTurki/hex.nvim', dev = true,
+  { 'RaafatTurki/hex.nvim', dev = false,
     config = function()
       Events.plugin_setup:sub(Plugins.hex)
     end
@@ -174,11 +170,11 @@ local plugins = {
   -- p.dap,
   -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
   -- UNCHARTED:
-  { 'folke/paint.nvim',
-    config = function()
-      Events.plugin_setup:sub(Plugins.paint)
-    end,
-  },
+  -- { 'folke/paint.nvim',
+  --   config = function()
+  --     Events.plugin_setup:sub(Plugins.paint)
+  --   end,
+  -- },
 }
 
 Events.install_pre:sub(function()

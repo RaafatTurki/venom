@@ -417,7 +417,7 @@ M.conceal_html_classes = U.Service({}, function()
     local syntax_tree = language_tree:parse()
     local root = syntax_tree[1]:root()
 
-    local query = vim.treesitter.parse_query("html",
+    local query = vim.treesitter.query.parse("html",
       [[
         ((attribute
           (attribute_name) @att_name (#eq? @att_name "class")
@@ -438,7 +438,7 @@ M.conceal_html_classes = U.Service({}, function()
 
   vim.api.nvim_create_autocmd({ "BufWritePost", "TextChanged", "BufEnter" }, {
     group = group,
-    pattern = "*.html,*.svelte",
+    pattern = "*.html,*.svelte,*.vue",
     callback = function()
       local bufnr = vim.api.nvim_get_current_buf()
       conceal_html_class(bufnr)

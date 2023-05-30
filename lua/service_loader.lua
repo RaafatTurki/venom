@@ -107,7 +107,7 @@ local plugins = {
       Events.plugin_setup:sub(Plugins.neo_tree)
     end
   },
-  { 'akinsho/nvim-toggleterm.lua',
+  { 'akinsho/toggleterm.nvim',
     config = function()
       Events.plugin_setup:sub(Plugins.toggle_term)
     end

@@ -621,9 +621,11 @@ M.bufferline = U.Service({{FT.CONF, 'bufferline.nvim'}}, {}, function()
   }
 end)
 
-M.toggle_term = U.Service({{FT.CONF, "nvim-toggleterm.lua"}}, {}, function()
+M.toggle_term = U.Service({{FT.CONF, "toggleterm.nvim"}}, {}, function()
   require 'toggleterm'.setup {
-    shade_terminals = false,
+    open_mapping = [[<C-\>]],
+    insert_mappings = true,
+    terminal_mappings = true,
     direction = 'horizontal',
     autochdir = true,
     size = function(term)
@@ -633,6 +635,9 @@ M.toggle_term = U.Service({{FT.CONF, "nvim-toggleterm.lua"}}, {}, function()
         return vim.o.columns * 0.5
       end
     end,
+    highlights = {
+      CursorLine = {},
+    },
     -- winbar = {
     --   enabled = true,
     --   -- name_formatter = function(term)

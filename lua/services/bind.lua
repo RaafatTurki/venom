@@ -150,14 +150,6 @@ M.setup_plugins = U.Service(function()
   M.key {'<Esc>',             TermSmartEsc, mode = 't', opts = { expr = true }}
 
   -- PLUGINS
-  if Features:has(FT.CONF, 'nvim-toggleterm.lua') then
-    -- M.key {[[<C-\>]],           '<CMD>ToggleTermToggleAll<CR>', mode = 'n'}
-    -- M.key {[[<C-\>]],           [[<C-\><C-n><CMD>ToggleTermToggleAll<CR>]], mode = 't'}
-
-    M.key {[[<C-\>]],           '<CMD>ToggleTerm<CR>', mode = 'n'}
-    M.key {[[<C-\>]],           [[<C-\><C-n><CMD>ToggleTerm<CR>]], mode = 't'}
-  end
-
   if Features:has(FT.CONF, 'nvim-tree.lua') then
     M.key {'<C-e>',             '<CMD>NvimTreeToggle<CR>', mode = 'i n'}
   end

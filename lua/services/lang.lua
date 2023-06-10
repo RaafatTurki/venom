@@ -86,10 +86,15 @@ M.setup = U.Service({{FT.LANG, 'setup'}}, {}, function()
         textobject = '',
       },
       hooks = {
-        pre = function()
-          require('ts_context_commentstring.internal').update_commentstring()
-        end,
+        pre = function() end,
         post = function() end,
+      },
+      options = {
+        custom_commentstring = function()
+          ---@diagnostic disable-next-line: missing-parameter
+          return require 'ts_context_commentstring.internal'.calculate_commentstring() or vim.bo.commentstring
+        end,
+        ignore_blank_line = true,
       },
     }
   end

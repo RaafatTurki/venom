@@ -144,8 +144,8 @@ M.setup_plugins = U.Service(function()
   M.key {'<leader>d',         Lsp.definition }
   M.key {'<leader>C',         Lsp.code_action }
   M.key {'<leader>v',         Lsp.hover }
-  M.key {'<leader>dl',        Lsp.diags_list }
-  M.key {'<leader>dv',        Lsp.diags_hover }
+  M.key {'<leader>x',         Lsp.diags_hover }
+  M.key {'<leader>X',         Lsp.diags_list }
   -- terminal smart escape
   M.key {'<Esc>',             TermSmartEsc, mode = 't', opts = { expr = true }}
 

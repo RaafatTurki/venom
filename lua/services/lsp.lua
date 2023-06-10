@@ -2,7 +2,7 @@
 -- @module lsp
 local M = {}
 
-M.setup_lspconfig_server = U.Service({{FT.PLUGIN, 'nvim-lspconfig'}}, function(server_name, opts)
+M.setup_lspconfig_server = U.Service({ { FT.PLUGIN, 'nvim-lspconfig' } }, function(server_name, opts)
   local lspconf = require 'lspconfig'
 
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -21,6 +21,7 @@ M.setup_lspconfig_server = U.Service({{FT.PLUGIN, 'nvim-lspconfig'}}, function(s
     on_attach = function(client, bufnr)
       -- set gq command to use the lsp formatter for this buffer
       vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
+      -- Lsp.setup_buf_fmt_on_save(client, bufnr)
 
       -- navic
       if Features:has(FT.CONF, 'nvim-navic') then
@@ -53,7 +54,7 @@ M.setup_lspconfig_server = U.Service({{FT.PLUGIN, 'nvim-lspconfig'}}, function(s
 end)
 
 -- TODO: require mason-lspconfig.nvim instead once PM registers deps
-M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_configs)
+M.setup_servers = U.Service({ { FT.PLUGIN, 'mason.nvim' } }, function(lsp_servers_configs)
   local lspconfig_util = require 'lspconfig.util'
 
   -- lsp servers
@@ -109,7 +110,7 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
 
                 '--synctex-editor-command',
                 [[nvim --server ]] ..
-                    vim.v.servername .. [[ --remote-send "<CMD>lua U.request_jump('%{input}', %{line}, 1)<CR>"]],
+                vim.v.servername .. [[ --remote-send "<CMD>lua U.request_jump('%{input}', %{line}, 1)<CR>"]],
 
                 '%p',
               },
@@ -185,7 +186,6 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
             -- TODO: emsure plugin is installed
             schemas = require 'schemastore'.json.schemas(),
             validate = { enable = true },
-
             -- visit https://www.schemastore.org/json/ for more schemas
             -- schemas = {
             --   { fileMatch = { 'package.json' }, url = 'https://json.schemastore.org/package.json' },
@@ -235,9 +235,9 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
             },
           }
         },
-        on_attach = function(client, bufnr)
-          Lsp.setup_buf_fmt_on_save(client, bufnr)
-        end
+        -- on_attach = function(client, bufnr)
+        --   Lsp.setup_buf_fmt_on_save(client, bufnr)
+        -- end
       })
     end,
     jdtls = function()
@@ -275,14 +275,11 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
               '-configuration', jdtls_root_dir .. '/config_linux',
               '-data', workspace_dir,
             },
-
             root_dir = require('jdtls.setup').find_root({ '.git', 'mvnw', 'gradlew' }),
-
             -- TODO: extract into a ServerConfig
             settings = {
               java = {}
             },
-
             init_options = {
               bundles = {}
             },
@@ -295,7 +292,7 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
             " let g:jdtls_java_home = expand('$ANDROID_HOME/platforms/android-*/android.jar')
             let g:jdtls_java_home = expand('$ANDROID_HOME/platforms/android-30/android.jar')
             let g:jdtls_java_config_path = ''
-          ]]
+            ]]
         end
 
         vim.cmd [[
@@ -328,13 +325,33 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
       })
     end,
     tsserver = function()
-      M.setup_lspconfig_server('tsserver', {
+      
+      local server_opts = {
         root_dir = lspconfig_util.root_pattern('tsconfig.json', 'jsconfig.json', 'package.json', 'vite.config.ts', '.npmrc'),
-        single_file_support = false,
-      })
+        -- single_file_support = true,
+      }
+
+      if Features:has(FT.PLUGIN, 'typescript.nvim') then
+        require("typescript").setup({
+            disable_commands = false, -- prevent the plugin from creating Vim commands
+            debug = false, -- enable debug logging for commands
+            go_to_source_definition = {
+                fallback = true, -- fall back to standard LSP definition on failure
+            },
+            server = server_opts,
+        })
+      else
+        M.setup_lspconfig_server('tsserver', server_opts)
+      end
     end,
     unocss = function()
       M.setup_lspconfig_server('unocss', {})
+    end,
+    volar = function()
+      M.setup_lspconfig_server('volar', {
+        root_dir = lspconfig_util.root_pattern('node_modules/vue'),
+        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' }
+      })
     end,
   }
 
@@ -357,23 +374,21 @@ M.setup_servers = U.Service({{FT.PLUGIN, 'mason.nvim'}}, function(lsp_servers_co
     local null_ls = require 'null-ls'
     require 'mason-null-ls'.setup {
       automatic_setup = true,
+      handlers = {
+        function(source_name, methods)
+          -- if vim.tbl_contains(methods, "formatting") then
+          --   null_ls.register(null_ls.builtins.formatting[source_name])
+          -- else
+          --   log('the null-ls source '..source_name..' is installed but unused!')
+          -- end
+        end,
+      }
     }
-    -- require 'mason-null-ls'.setup_handlers {
-    --   --   function(source_name)
-    --   --     -- log('the null-ls source '..source_name..' is installed but unused!')
-    --   --   end,
-    --   --   stylua = function()
-    --   --     null_ls.register(null_ls.builtins.formatting.stylua)
-    --   --   end,
-    --   --   jq = function()
-    --   --     null_ls.register(null_ls.builtins.formatting.jq)
-    --   --   end
-    -- }
-    null_ls.setup()
+    null_ls.setup({})
   end
 end)
 
-M.setup = U.Service({{FT.LSP, 'setup'}}, {{FT.PLUGIN, 'mason.nvim'},{FT.PLUGIN, 'nvim-lspconfig'}}, function()
+M.setup = U.Service({ { FT.LSP, 'setup' } }, { { FT.PLUGIN, 'mason.nvim' }, { FT.PLUGIN, 'nvim-lspconfig' } }, function()
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- per line nvim diagnostics

@@ -2,8 +2,6 @@
 -- @module sessions
 local M = {}
 
----@diagnostic disable: undefined-global
-
 M.sessions_path = vim.fn.stdpath("data") .. '/session/'
 
 M.setup = U.Service({{FT.SESSION, "setup"}}, {{FT.PLUGIN, "mini.nvim"}}, function()
@@ -36,14 +34,15 @@ M.setup = U.Service({{FT.SESSION, "setup"}}, {{FT.PLUGIN, "mini.nvim"}}, functio
     verbose = { read = false, write = false, delete = false },
   }
 
-  -- vim.cmd [[
-  --   augroup persist_folds
-  --     autocmd!
-  --     autocmd BufWritePost *.* mkview
-  --     autocmd BufWinLeave *.* mkview
-  --     autocmd BufWinEnter *.* silent! loadview
-  --   augroup persist_folds
-  -- ]]
+  -- save viewopts using mkview
+  vim.cmd [[
+    augroup persist_view
+      autocmd!
+      autocmd BufWritePost *.* mkview
+      autocmd BufWinLeave *.* mkview
+      autocmd BufWinEnter *.* silent! loadview
+    augroup persist_view
+  ]]
 end)
 
 M.get_current = U.Service(function()
@@ -83,11 +82,24 @@ M.load = U.Service({{FT.SESSION, "setup"}}, function(session_name)
 end)
 
 M.delete = U.Service({{FT.SESSION, "setup"}}, function(session_name)
+  session_name = session_name or M.get_current()
   MiniSessions.delete(session_name, {})
+end)
+
+M.rename = U.Service({{FT.SESSION, "setup"}}, function(session_name, new_session_name)
+  -- rename current session if no new_session_name is provided
+  if new_session_name == nil then
+    new_session_name = session_name
+    session_name = M.get_current()
+  end
+
+  MiniSessions.delete(session_name, {})
+  MiniSessions.write(new_session_name, {})
 end)
 
 vim.api.nvim_create_user_command('SessionSave',       function(opts) M.save(opts.fargs[1]) end,     { nargs = 1, complete = function() return M.get_all() end })
 vim.api.nvim_create_user_command('SessionLoad',       function(opts) M.load(opts.fargs[1]) end,     { nargs = '?', complete = function() return M.get_all() end })
-vim.api.nvim_create_user_command('SessionDelete',     function(opts) M.delete(opts.fargs[1]) end,   { nargs = 1, complete = function() return M.get_all() end })
+vim.api.nvim_create_user_command('SessionDelete',     function(opts) M.delete(opts.fargs[1]) end,   { nargs = '?', complete = function() return M.get_all() end })
+vim.api.nvim_create_user_command('SessionRename',     function(opts) M.rename(opts.fargs[1], opts.fargs[2]) end,   { nargs = '+', complete = function() return M.get_all() end })
 
 return M

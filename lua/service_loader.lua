@@ -162,6 +162,11 @@ local plugins = {
       Events.plugin_setup:sub(Plugins.cmp_ls)
     end
   },
+  { 'mawkler/modicator.nvim',
+    config = function()
+      Events.plugin_setup:sub(Plugins.modicator)
+    end,
+  },
   { 'RaafatTurki/hex.nvim', dev = false,
     config = function()
       Events.plugin_setup:sub(Plugins.hex)

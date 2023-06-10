@@ -124,7 +124,7 @@ local c = {
   warn      = yellow[4],
   hint      = purple[4],
 
-  add       = green[1],
+  add       = green[2],
   mod       = blue[1],
   del       = red[1],
   mod_alt   = cyan[1],
@@ -139,7 +139,7 @@ local c = {
   -- syntax
   comment   = grey[2],
   link      = cyan[3],
-  note      = yellow[10],
+  note      = blue[10],
   value     = red[10],
   variable  = purple[10],
   constant  = red[1],
@@ -231,10 +231,10 @@ local highlights = {
   ['@text.environment']       = { '@function' },
   ['@text.environment.name']  = { '@constant' },
   ['@text.reference']         = { '@text.uri' },
-  ['@text.todo']              = { fg = c.note },
-  ['@text.note']              = { fg = c.note },
-  ['@text.warning']           = { fg = c.warn },
-  ['@text.danger']            = { bg = c.err, fg = c.bg_float },
+  ['@text.todo']              = { },
+  ['@text.note']              = { },
+  ['@text.warning']           = { },
+  ['@text.danger']            = { },
   ['@text.diff.add']          = { fg = c.add },
   ['@text.diff.delete']       = { fg = c.del },
   -- Tags
@@ -340,8 +340,8 @@ local highlights = {
   StatusLineNC    = { reverse = true },
   Substitute      = { 'CurSearch' },
   TabLineFill     = { bg = c.bg_float },
-  TabLine         = { 'TablineFill', fg = c.fold },
-  TabLineSel      = { 'TablineFill', fg = c.fg, bold = true },
+  TabLine         = { bg = c.bg_float, fg = c.fold },
+  TabLineSel      = { bg = c.bg_float, fg = c.fg, bold = true },
   TermCursor      = { underline = true },
   TermCursorNC    = { 'TermCursor' },
   Title           = { '@text.title' },
@@ -706,6 +706,15 @@ NeoTreeWindowsHidden        = { '@debug' };
   IlluminatedWordRead     = { 'LspReferenceRead' };
   IlluminatedWordWrite    = { 'LspReferenceWrite' };
 
+  -- modicator
+  NormalMode              = { fg = c.fg };
+  InsertMode              = { fg = c.del };
+  VisualMode              = { fg = c.add };
+  CommandMode             = { fg = c.warn };
+  ReplaceMode             = { 'CommandMode' };
+  SelectMode              = { fg = c.add };
+  TerminalMode            = { fg = c.type };
+
   MiniStarterHeader       = { 'Label' };
   MiniStarterFooter       = { 'Label' };
   MiniStarterSection      = { 'Label' };
@@ -718,6 +727,10 @@ NeoTreeWindowsHidden        = { '@debug' };
   MiniMapSymbolView       = { 'Comment' };
   MiniAnimateCursor       = { bg = c.fg };
 
+  MiniHipatternsFixme     = { bold = true, fg = c.err };
+  MiniHipatternsHack      = { bold = true, fg = c.hint };
+  MiniHipatternsTodo      = { bold = true, fg = c.warn };
+  MiniHipatternsNote      = { bold = true, fg = c.note };
 
   -- CUTSOM GROUPS
   -- DebugFg                 = { fg = debug[10] };
@@ -729,13 +742,6 @@ NeoTreeWindowsHidden        = { '@debug' };
   SnippetChoiceIndicator  = { fg = c.hint };
   -- CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
   Camel                   = { 'WarningMsg' };
-
-  ModeNormal              = { fg = c.mg, bold = true };
-  ModeInsert              = { fg = c.del, bold = true };
-  ModeVisual              = { fg = c.add, bold = true };
-  ModeControl             = { fg = c.warn, bold = true };
-  ModeSelect              = { fg = c.add, bold = true };
-  ModeTerminal            = { fg = c.type, bold = true };
 }
 
 -- vim.cmd [[

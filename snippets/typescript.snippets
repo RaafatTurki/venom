@@ -1,0 +1,42 @@
+snippet nestServicePrisma a Nest CRUD service class that uses Prisma ORM
+        import { Injectable } from '@nestjs/common'
+        import { PrismaService } from '../prisma.service'
+        import { Prisma, ${1} } from '@prisma/client'
+
+        type ${1}ParamsFindMany = {
+                skip?: number
+                take?: number
+                cursor?: Prisma.${1}WhereUniqueInput
+                where?: Prisma.${1}WhereInput
+                orderBy?: Prisma.${1}OrderByWithRelationInput
+        }
+
+        type ${1}ParamsUpdate = {
+                where: Prisma.${1}WhereUniqueInput
+                data: Prisma.${1}UpdateInput
+        }
+
+        @Injectable()
+        export class ${1}Service {
+                constructor(private prisma: PrismaService) {}
+
+                async find${1}(where: Prisma.${1}WhereUniqueInput): Promise<${1} | null> {
+                        return this.prisma.${2}.findUnique({ where })
+                }
+
+                async find${1}s(params: ${1}ParamsFindMany): Promise<${1}[]> {
+                        return this.prisma.${2}.findMany(params)
+                }
+
+                async create${1}(data: Prisma.${1}CreateInput): Promise<${1}> {
+                        return this.prisma.${2}.create({ data })
+                }
+
+                async update${1}(params: ${1}ParamsUpdate): Promise<${1}> {
+                        return this.prisma.${2}.update(params)
+                }
+
+                async delete${1}(where: Prisma.${1}WhereUniqueInput): Promise<${1}> {
+                        return this.prisma.${2}.delete({ where })
+                }
+        }

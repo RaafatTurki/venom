@@ -4,7 +4,7 @@
 # 	end)
 
 snippet Service plugin service
-	M.${1} = U.Service({{FT.PLUGIN, '${2}'}}, function()
+	M.${1} = U.Service({{FT.CONF, '${2}'}}, {}, function()
 		require '${3}'.setup {${0}}
 	end)
 

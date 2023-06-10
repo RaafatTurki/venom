@@ -650,7 +650,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
         return filename
       end,
       hl = function(self)
-        return { underline = self.is_active or self.is_visible, strikethrough = not self.is_loaded }
+        return { underline = self.is_loaded }
       end,
     },
     -- indicators

@@ -49,11 +49,9 @@ M.setup = U.Service(function()
   --   au FileType * if index(['wipe', 'delete', 'unload'], &bufhidden) >= 0 | set nobuflisted | endif
   -- ]]
 
-  vim.api.nvim_create_user_command('HelpOpen', function(opts) M.open_help_buffer(opts.fargs[1]) end, { nargs = 1, complete='help' })
   vim.api.nvim_create_user_command('HelpClose', function(opts) M.close_help_buffer() end, {})
   vim.api.nvim_create_user_command('ManOpen', function(opts) M.open_man_buffer(opts.fargs[1]) end, { nargs = 1 })
 
-  vim.cmd [[cnoreabbrev h HelpOpen]]
   vim.cmd [[cnoreabbrev hc HelpClose]]
   vim.cmd [[cnoreabbrev m ManOpen]]
 end)
@@ -114,13 +112,6 @@ M.buf_switch_by_label = function(label)
   if i then vim.cmd.b(M.buflist[i]) end
 end
 
-
-M.open_help_buffer = function(term)
-  vim.cmd.help(term)
-  vim.cmd.wincmd('L')
-  -- vim.cmd.wincmd('|')
-  vim.cmd.wincmd('90 |')
-end
 
 M.close_help_buffer = function(term)
   vim.cmd.helpclose()

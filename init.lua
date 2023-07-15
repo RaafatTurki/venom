@@ -4,18 +4,30 @@ Features = U.FeatureList():new()
 
 -- TODO: make it the responsibility of the related service to instantiate events here
 Events = {
-  enter = U.Event():new(),
-  refresh = U.Event():new(),
-  clear = U.Event():new(),
-  write = U.Event():new(),
-  buflist_update = U.Event():new(),
-  fold_update = U.Event():new(),
-  fs_update = U.Event():new(),
-  install_post = U.Event():new(),
-  install_pre = U.Event():new(),
-  session_write_pre = U.Event():new(),
-  plugin_setup = U.Event():new(),
+  enter = U.Event("enter"):new(),
+  refresh = U.Event("refresh"):new(),
+  clear = U.Event("clear"):new(),
+  write = U.Event("write"):new(),
+  buflist_update = U.Event("buflist_update"):new(),
+  fold_update = U.Event("fold_update"):new(),
+  fs_update = U.Event("fs_update"):new(),
+  install_pre = U.Event("install_pre"):new(),
+  install_post = U.Event("install_post"):new(),
+  session_write_pre = U.Event("session_write_pre"):new(),
+  plugin_setup = U.Event("plugin_setup"):new(),
+  unga = U.Event("unga"):new(),
 }
+
+-- Events.unga:sub(function(asd)
+--   log(asd)
+-- end)
+
+-- Events.unga:sub(function()
+--   log("UNGAAA again")
+-- end)
+
+-- Events.unga:sub [[lua log('even more ungaaa')]]
+
 
 local icon_sets = require 'icons'.icon_sets
 Icons = {

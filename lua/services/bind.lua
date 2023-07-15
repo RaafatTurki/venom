@@ -108,8 +108,8 @@ M.setup = U.Service(function()
   M.key {'<S-Right>',         vim.cmd.tabnext}
   M.key {'<S-Left>',          vim.cmd.tabprevious}
   -- buffers
-  M.key {'<A-Right>',         vim.cmd.bnext}
-  M.key {'<A-Left>',          vim.cmd.bprevious}
+  M.key {'<A-Right>',         function() Buffers.focus_buf_rel_to_curr_buf_in_buflist(1) end}
+  M.key {'<A-Left>',          function() Buffers.focus_buf_rel_to_curr_buf_in_buflist(-1) end}
   for i, label in ipairs(Buffers.labels) do
     M.key {'<A-'..label..'>',      function() Buffers.buf_switch_by_label(label) end}
   end

@@ -162,6 +162,20 @@ M.buf_switch_by_label = function(label)
   if buffer then buffer:switch_to() end
 end
 
+M.focus_buf_in_buflist_by_index = function(index, delta)
+  local target_index = index + delta
+  if (index and target_index <= #M.buflist and target_index > 0) then
+    local buffer = M.buflist[target_index]:switch_to()
+  end
+  Events.buflist_update()
+end
+
+M.focus_buf_rel_to_curr_buf_in_buflist = function(delta)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local index = M.get_buflist_index_by_bufnr(bufnr)
+  M.focus_buf_in_buflist_by_index(index, delta)
+end
+
 M.shift_buf_in_buflist_by_index = function(index, delta)
   local target_index = index + delta
   if (index and target_index <= #M.buflist and target_index > 0) then

@@ -115,6 +115,8 @@ M.setup = U.Service(function()
   for i, label in ipairs(Buffers.labels) do
     M.key {'<A-'..label..'>',      function() Buffers.buf_switch_by_label(label) end}
   end
+  M.key {'<A-S-Left>',        function() Buffers.shift_curr_buf_in_buflist(-1) end}
+  M.key {'<A-S-Right>',       function() Buffers.shift_curr_buf_in_buflist(1) end}
 
   -- MOTIONS
   M.key {'aa',                ':<c-u>normal! ggVG<CR>', mode = 'o'}

@@ -359,10 +359,10 @@ M.setup_servers = U.Service({ { FT.PLUGIN, 'mason.nvim' } }, function(lsp_server
   if vim.fn.executable('dart') == 1 then
     M.setup_lspconfig_server('dartls', {})
   end
-  if vim.fn.executable('godot-ls') == 1 then
+  if vim.fn.executable('godot3-bin') == 1 then
     M.setup_lspconfig_server('gdscript', {
-      -- cmd = vim.lsp.rpc.connect('127.0.0.1', 6008),
-      cmd = { 'godot-ls' },
+      cmd = vim.lsp.rpc.connect('127.0.0.1', 6008),
+      -- cmd = { 'godot-ls' },
       flags = {
         debounce_text_changes = 150,
       },
@@ -395,7 +395,7 @@ M.setup = U.Service({ { FT.LSP, 'setup' } }, { { FT.PLUGIN, 'mason.nvim' }, { FT
   for type, icon in pairs(Icons.diagnostic_states) do
     local hl = "DiagnosticSign" .. type
     -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+    vim.fn.sign_define(hl, { text = icon, texthl = hl })
   end
 
   vim.api.nvim_create_user_command('LspRename', function() M.rename() end, {})

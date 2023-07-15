@@ -145,7 +145,7 @@ M.highlight_yank = U.Service(function()
   local hl = 'Search'
 
   vim.api.nvim_create_autocmd('TextYankPost', {
-    group = vim.api.nvim_create_augroup('highlight_yank', { clear = true }),
+    group = vim.api.nvim_create_augroup('highlight_yank', {}),
     callback = function(ctx)
       vim.highlight.on_yank({ higroup = hl, timeout = timeout })
     end
@@ -215,7 +215,7 @@ M.auto_install_ts_parser = U.Service(function()
   local blacklist = {}
 
   vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('auto_install_ts_parser', { clear = true }),
+    group = vim.api.nvim_create_augroup('auto_install_ts_parser', {}),
     callback = function(ctx)
       local parsers = require 'nvim-treesitter.parsers'
       local parser_name = parsers.get_buf_lang()
@@ -238,9 +238,9 @@ end)
 --- pets!
 M.pets = U.Service(function()
   local pets = {}
-  local conf = { character = 'x', speed = 2 }
+  local conf = { character = '#', speed = 1 }
 
-  local waddle = function(pet)
+  local function waddle(pet)
     local timer = vim.loop.new_timer()
     local new_pet = { name = pet, timer = timer }
     table.insert(pets, new_pet)
@@ -328,7 +328,7 @@ end)
 --- automatically create missing directories in the file path
 M.auto_create_dir = U.Service(function()
   vim.api.nvim_create_autocmd('BufWritePre', {
-    group = vim.api.nvim_create_augroup('auto_create_dir', { clear = true }),
+    group = vim.api.nvim_create_augroup('auto_create_dir', {}),
     callback = function(ctx)
       vim.fn.mkdir(vim.fn.fnamemodify(ctx.file, ':p:h'), 'p')
     end
@@ -392,7 +392,7 @@ M.auto_gitignore_io = U.Service(function()
 
   -- vim.api.nvim_create_autocmd('BufEnter', {
   --   pattern = {'.gitignore'},
-  --   group = vim.api.nvim_create_augroup('gitignore_io', { clear = true }),
+  --   group = vim.api.nvim_create_augroup('gitignore_io', {}),
   --   callback = function(ctx)
   --     if is_in_progress then return end
   --     local line_count = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
@@ -410,7 +410,7 @@ end)
 --- conceals html classes
 M.conceal_html_classes = U.Service({}, function()
   local namespace = vim.api.nvim_create_namespace("class_conceal")
-  local group = vim.api.nvim_create_augroup("class_conceal", { clear = true })
+  local group = vim.api.nvim_create_augroup("class_conceal", {})
 
   local conceal_html_class = function(bufnr)
     local language_tree = vim.treesitter.get_parser(bufnr, "html")
@@ -443,6 +443,18 @@ M.conceal_html_classes = U.Service({}, function()
       local bufnr = vim.api.nvim_get_current_buf()
       conceal_html_class(bufnr)
     end,
+  })
+end)
+
+--- higlights CursorLineNr with current mode highlight
+M.auto_curlinenr_mode = U.Service(function()
+  vim.api.nvim_create_autocmd('ModeChanged', {
+    group = vim.api.nvim_create_augroup('auto_curlinenr_mode', {}),
+    callback = function(ctx)
+      local hl = vim.api.nvim_get_hl(0, { name = U.get_mode_hi() })
+      local curline_hl = vim.api.nvim_get_hl(0, { name = 'CursorLine' })
+      vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = hl.fg, bg = curline_hl.bg })
+    end
   })
 end)
 

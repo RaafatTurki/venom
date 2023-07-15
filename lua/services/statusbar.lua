@@ -10,7 +10,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
 
   local align = { provider = "%=" }
   local space = { provider = " " }
-  
+
   local function hi_finalize(hi)
     if type(hi) == 'string' then hi = utils.get_highlight(hi) end
     return vim.tbl_deep_extend('force', hi, utils.get_highlight('StatusLine'))
@@ -34,37 +34,133 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
   end
 
 
+  -- NOTE: custom made make_buflist so it integrates with the Buffers module
+  -- TODO: simplify into something more bare bones
+  local NTABLINES = 0
+
+  local function get_bufs()
+    local res = {}
+    for i, buffer in ipairs(Buffers.buflist) do
+      table.insert(res, buffer.bufnr)
+    end
+    return res
+  end
+
+  local function bufs_in_tab(tabpage)
+    tabpage = tabpage or 0
+    local buf_set = {}
+    local wins = vim.api.nvim_tabpage_list_wins(tabpage)
+    for _, winid in ipairs(wins) do
+      local bufnr = vim.api.nvim_win_get_buf(winid)
+      buf_set[bufnr] = true
+    end
+    return buf_set
+  end
+
+  local function make_buflist(buffer_component, left_trunc, right_trunc, buf_func)
+    buf_func = buf_func or get_bufs
+
+    left_trunc = left_trunc or {
+      provider = "<",
+    }
+
+    right_trunc = right_trunc or {
+      provider = ">",
+    }
+
+    NTABLINES = NTABLINES + 1
+    left_trunc.on_click = {
+      callback = function(self)
+        self._buflist[1]._cur_page = self._cur_page - 1
+        self._buflist[1]._force_page = true
+        vim.cmd("redrawtabline")
+      end,
+      name = "Heirline_tabline_prev_" .. NTABLINES,
+    }
+
+    right_trunc.on_click = {
+      callback = function(self)
+        self._buflist[1]._cur_page = self._cur_page + 1
+        self._buflist[1]._force_page = true
+        vim.cmd("redrawtabline")
+      end,
+      name = "Heirline_tabline_next_" .. NTABLINES,
+    }
+
+    local bufferline = {
+      static = {
+        _left_trunc = left_trunc,
+        _right_trunc = right_trunc,
+        _cur_page = 1,
+        _force_page = false,
+      },
+      init = function(self)
+        -- register the buflist component reference as global statusline attr
+        if vim.tbl_isempty(self._buflist) then
+          table.insert(self._buflist, self)
+        end
+        if not self.left_trunc then
+          self.left_trunc = self:new(self._left_trunc)
+        end
+        if not self.right_trunc then
+          self.right_trunc = self:new(self._right_trunc)
+        end
+
+        if not self._once then
+          vim.api.nvim_create_autocmd({ "BufEnter" }, {
+            callback = function()
+              self._force_page = false
+            end,
+            desc = "Heirline release lock for next/prev buttons",
+          })
+          self._once = true
+        end
+
+        self.active_child = false
+        local bufs = vim.tbl_filter(function(bufnr)
+          return vim.api.nvim_buf_is_valid(bufnr)
+        end, buf_func())
+        local visible_buffers = bufs_in_tab()
+
+        for i, bufnr in ipairs(bufs) do
+          local child = self[i]
+          if not (child and child.bufnr == bufnr) then
+            self[i] = self:new(buffer_component, i)
+            child = self[i]
+            child.bufnr = bufnr
+          end
+
+          if bufnr == tonumber(vim.g.actual_curbuf) then
+            child.is_active = true
+            self.active_child = i
+          else
+            child.is_active = false
+          end
+
+          if visible_buffers[bufnr] then
+            child.is_visible = true
+          else
+            child.is_visible = false
+          end
+        end
+        if #self > #bufs then
+          for i = #bufs + 1, #self do
+            self[i] = nil
+          end
+        end
+      end,
+    }
+    return bufferline
+  end
+
+
+
   M.components.vimode = {
-    init = function(self)
-      self.mode = vim.fn.mode(1)
-      if not self.once then
-        vim.api.nvim_create_autocmd("ModeChanged", { command = 'redrawstatus' })
-        self.once = true
-      end
-    end,
-    static = {
-      mode_hls = {
-        n       = 'NormalMode',
-        i       = 'InsertMode',
-        v       = 'VisualMode',
-        V       = 'VisualMode',
-        ['\22'] = 'VisualMode',
-        c       = 'CommandMode',
-        s       = 'SelectMode',
-        S       = 'SelectMode',
-        ['\19'] = "SelectMode",
-        R       = 'ControlMode',
-        r       = 'ControlMode',
-        ['!']   = 'NormalMode',
-        t       = 'TerminalMode',
-      }
-    },
     provider = function(self)
       return U.get_mode_name()
     end,
     hl = function(self)
-      local mode = self.mode:sub(1, 1)
-      return hi_finalize(self.mode_hls[mode])
+      return hi_finalize(U.get_mode_hi())
     end,
     update = 'ModeChanged',
   }
@@ -457,7 +553,6 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     condition = function()
       return vim.bo.buftype == ''
     end,
-    M.components.vimode,
     M.components.fileinfo,
     M.components.gitsigns,
     align,
@@ -486,7 +581,6 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
         filetype = { "^git.*", "fugitive", "NvimTree" },
       })
     end,
-    M.components.vimode,
     M.components.helpfilename,
     align,
     M.components.root_user,
@@ -503,7 +597,6 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
         filetype = { "toggleterm" },
       }
     end,
-    M.components.vimode,
     M.components.terminalname,
     align,
     M.components.root_user,
@@ -618,7 +711,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
       provider = function(self)
         if self.bufnr == nil then return end
         -- return tostring(self.bufnr) .. ". "
-        return (Buffers.buf_get_label_from_bufnr(self.bufnr) or '') .. ' '
+        return (Buffers.get_label_by_bufnr(self.bufnr) or '') .. ' '
       end,
       hl = "ErrorMsg",
     },
@@ -664,7 +757,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
         condition = function(self)
           -- return (not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or vim.api.nvim_buf_get_option(self.bufnr, "readonly")) and not vim.api.nvim_buf_get_option(self.bufnr, 'buftype') == 'terminal'
           return not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or
-              vim.api.nvim_buf_get_option(self.bufnr, "readonly")
+            vim.api.nvim_buf_get_option(self.bufnr, "readonly")
         end,
         provider = ' ',
         hl = 'ErrorMsg',
@@ -673,7 +766,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
   }
 
   local bufferline = {
-    utils.make_buflist(utils.surround({ ' ', ' ' }, nil, buffer_abstract), { provider = '' }, { provider = '' })
+    make_buflist(utils.surround({ ' ', ' ' }, nil, buffer_abstract), { provider = '' }, { provider = '' })
   }
 
   local tabpage_abstract = {

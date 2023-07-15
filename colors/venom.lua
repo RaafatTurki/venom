@@ -741,7 +741,7 @@ NeoTreeWindowsHidden        = { '@debug' };
   SnippetInsertIndicator  = { fg = c.fg };
   SnippetChoiceIndicator  = { fg = c.hint };
   -- CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
-  Camel                   = { 'WarningMsg' };
+  Camel                   = { fg = c.warn };
 }
 
 -- vim.cmd [[

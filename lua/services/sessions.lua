@@ -2,37 +2,25 @@
 -- @module sessions
 local M = {}
 
-M.sessions_path = vim.fn.stdpath("data") .. '/session/'
+M.sessions_path = vim.fn.stdpath("data") .. '/sessions/'
+M.current_session_name = nil
 
-M.setup = U.Service({{FT.SESSION, "setup"}}, {{FT.PLUGIN, "mini.nvim"}}, function()
+M.setup = U.Service({{FT.SESSION, "setup"}}, {}, function()
   -- ensure sessions path exist
-  -- if vim.fn.isdirectory(M.sessions_path) == 0 then
-  --   vim.loop.fs_mkdir(M.sessions_path, 493)
-  --   log(M.sessions_path)
-  -- end
+  if vim.fn.isdirectory(M.sessions_path) == 0 then
+    vim.loop.fs_mkdir(M.sessions_path, 493)
+    log.info("no sessions dir found " .. M.sessions_path .. " created")
+  end
 
-  local mini_session = require 'mini.sessions'
-  mini_session.setup {
-    autoread = false,
-    autowrite = true,
-    directory = M.sessions_path,
-    force = { read = true, write = true, delete = true },
-    hooks = {
-      pre = {
-        read = nil,
-        write = function(session_data)
-          Events.session_write_pre()
-        end,
-        delete = nil
-      },
-      post = {
-        read = nil,
-        write = nil,
-        delete = nil
-      },
-    },
-    verbose = { read = false, write = false, delete = false },
-  }
+  -- auto save on leave
+  vim.api.nvim_create_autocmd('VimLeavePre', {
+    group = vim.api.nvim_create_augroup('auto_save_session_on_leave', {}),
+    callback = function(ctx)
+      if M.current_session_name then
+        M.save()
+      end
+    end
+  })
 
   -- save viewopts using mkview
   vim.cmd [[
@@ -43,39 +31,65 @@ M.setup = U.Service({{FT.SESSION, "setup"}}, {{FT.PLUGIN, "mini.nvim"}}, functio
       autocmd BufWinEnter *.* silent! loadview
     augroup persist_view
   ]]
+
+  Events.fs_update:sub(function()
+    if M.get_current() then
+      M.save()
+    end
+  end)
+
+  Events.buflist_update:sub(function()
+    if M.get_current() then
+      M.save()
+    end
+  end)
 end)
 
 M.get_current = U.Service(function()
-  local this_session = vim.v.this_session
-
-  if #this_session > 0 then
-    local session_file_path_arr = vim.split(vim.v.this_session, '/', {})
-    local session_name = session_file_path_arr[#session_file_path_arr]
-    return session_name
-  else
-    return nil
-  end
+  return M.current_session_name
 end)
 
 M.get_all = U.Service({{FT.SESSION, "setup"}}, function()
   local session_names = {}
-  for session_name, _ in pairs(MiniSessions.detected) do
-    table.insert(session_names, session_name)
+  
+  -- remove the .json extension (last 5 chars)
+  for i, session_file_name in ipairs(U.scan_dir(M.sessions_path)) do
+    table.insert(session_names, string.sub(session_file_name, 1, -6))
   end
+
   return session_names
 end)
 
 M.save = U.Service({{FT.SESSION, "setup"}}, function(session_name)
-  MiniSessions.write(session_name, {})
+  session_name = session_name or M.get_current()
+  if not session_name then
+    log.err("no session name found")
+    return
+  end
+  
+  local json = vim.fn.json_encode({
+    general = {
+      cwd = vim.fn.getcwd(),
+      -- globals = {},
+    },
+    buffers = Buffers.serialize()
+  })
+
+  U.file_write(M.sessions_path .. '/' .. session_name .. '.json', json)
 end)
 
 M.load = U.Service({{FT.SESSION, "setup"}}, function(session_name)
-  -- load last session if no session name provided
-  session_name = session_name or MiniSessions.get_latest()
-
-  ---@diagnostic disable-next-line: param-type-mismatch
   if vim.tbl_contains(M.get_all(), session_name) then
-    MiniSessions.read(session_name, {})
+    local json = U.file_read(M.sessions_path .. '/' .. session_name .. '.json')
+    local data = vim.fn.json_decode(json)
+    
+    if data then
+      vim.api.nvim_set_current_dir(data.general.cwd)
+      Buffers.deserialize(data.buffers)
+      M.current_session_name = session_name
+    else
+      log.err(session_name .. " session data is corrupted")
+    end
   else
     log.warn('session "' .. session_name .. '" does not exist')
   end
@@ -83,7 +97,13 @@ end)
 
 M.delete = U.Service({{FT.SESSION, "setup"}}, function(session_name)
   session_name = session_name or M.get_current()
-  MiniSessions.delete(session_name, {})
+  -- MiniSessions.delete(session_name, {})
+  local res = U.file_del(M.sessions_path .. '/' .. session_name .. '.json')
+  if res then
+    if session_name == M.current_session_name then
+      M.current_session_name = nil
+    end
+  end
 end)
 
 M.rename = U.Service({{FT.SESSION, "setup"}}, function(session_name, new_session_name)
@@ -91,14 +111,20 @@ M.rename = U.Service({{FT.SESSION, "setup"}}, function(session_name, new_session
   if new_session_name == nil then
     new_session_name = session_name
     session_name = M.get_current()
+    if not session_name then
+      log.err('no session name found')
+      return
+    end
   end
 
-  MiniSessions.delete(session_name, {})
-  MiniSessions.write(new_session_name, {})
+  local res = U.file_rename(M.sessions_path .. '/' .. session_name .. '.json', new_session_name .. '.json')
+  if res and M.current_session_name == session_name then
+    M.current_session_name = new_session_name
+  end
 end)
 
-vim.api.nvim_create_user_command('SessionSave',       function(opts) M.save(opts.fargs[1]) end,     { nargs = 1, complete = function() return M.get_all() end })
-vim.api.nvim_create_user_command('SessionLoad',       function(opts) M.load(opts.fargs[1]) end,     { nargs = '?', complete = function() return M.get_all() end })
+vim.api.nvim_create_user_command('SessionSave',       function(opts) M.save(opts.fargs[1]) end,     { nargs = '?', complete = function() return M.get_all() end })
+vim.api.nvim_create_user_command('SessionLoad',       function(opts) M.load(opts.fargs[1]) end,     { nargs = 1, complete = function() return M.get_all() end })
 vim.api.nvim_create_user_command('SessionDelete',     function(opts) M.delete(opts.fargs[1]) end,   { nargs = '?', complete = function() return M.get_all() end })
 vim.api.nvim_create_user_command('SessionRename',     function(opts) M.rename(opts.fargs[1], opts.fargs[2]) end,   { nargs = '+', complete = function() return M.get_all() end })
 

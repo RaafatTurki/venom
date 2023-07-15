@@ -78,6 +78,8 @@ M.telescope = U.Service({{FT.CONF, 'telescope.nvim'},{FT.CONF, 'telescope-fzf-na
       }
     },
     defaults = {
+      layout_strategy = 'vertical',
+      layout_config = { height = 0.99 },
       borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
       mappings = {
         i = {
@@ -152,7 +154,6 @@ M.gitsigns = U.Service({{FT.CONF, "gitsigns.nvim"}}, {}, function()
       topdelete    = { text = '‾' },
       changedelete = { text = '~' },
     },
-    keymaps = {},
     sign_priority = 9, -- because nvim diagnostic signs are 10
   }
 end)
@@ -244,6 +245,7 @@ M.cmp_ls = U.Service({{FT.CONF, "nvim-cmp"}}, {}, function()
       { name = 'buffer' },
       -- { name = 'rg', option = { additional_arguments = '--smart-case --hidden', }},
       { name = 'path' },
+      -- { name = 'codeium' },
       -- { name = 'omni' },
       -- { name = 'spell' },
       -- { name = 'nvim_lsp_signature_help' },
@@ -259,8 +261,11 @@ M.cmp_ls = U.Service({{FT.CONF, "nvim-cmp"}}, {}, function()
         --   end
         --   vim_item.kind = 'Ω'
         --   vim_item.kind_hl_group = 'CmpItemKindProperty'
+
+        -- if entry.source.name == 'codeium' then
+        --   vim_item.kind = ''
         -- else
-        vim_item.kind = Icons.item_kinds[vim_item.kind] or ''
+          vim_item.kind = Icons.item_kinds[vim_item.kind] or ''
         -- end
         return vim_item
       end
@@ -455,6 +460,9 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
     -- use_popups_for_input = false,
     popup_border_style = 'single',
     default_component_configs = {
+      container = {
+        enable_character_fade = false
+      },
       modified = {
         symbol = '•',
       },
@@ -560,13 +568,7 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
           local msg = "Are you sure you want to trash " .. path
           inputs.confirm(msg, function(confirmed)
             if not confirmed then return end
-
-            if vim.fn.executable('trash') == 1 then
-              vim.fn.system { "trash", vim.fn.fnameescape(path) }
-            elseif vim.fn.executable('gio') == 1 then
-              vim.fn.system { "gio", "trash", vim.fn.fnameescape(path) }
-            end
-
+            U.trash_file(path)
             require("neo-tree.sources.manager").refresh(state.name)
           end)
         end,
@@ -711,10 +713,6 @@ M.mini_starter = U.Service({{FT.CONF, "mini.nvim"}}, {}, function()
   }
 end)
 
-M.mini_surround = U.Service({{FT.CONF, "mini.nvim"}}, {}, function()
-  require 'mini.surround'.setup()
-end)
-
 M.mini_map = U.Service({{FT.CONF, "mini.nvim"}}, {}, function()
   local map = require('mini.map')
 
@@ -754,6 +752,23 @@ end)
 
 M.mini_move = U.Service({{FT.CONF, 'mini.nvim'}}, {}, function()
   require 'mini.move'.setup {}
+end)
+
+M.mini_hipatterns = U.Service({{FT.CONF, 'mini.nvim'}}, {}, function()
+  local hipatterns = require 'mini.hipatterns'
+
+  require 'mini.hipatterns'.setup {
+    highlighters = {
+      -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
+      fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
+      hack  = { pattern = '%f[%w]()HACK()%f[%W]',  group = 'MiniHipatternsHack'  },
+      todo  = { pattern = '%f[%w]()TODO()%f[%W]',  group = 'MiniHipatternsTodo'  },
+      note  = { pattern = '%f[%w]()NOTE()%f[%W]',  group = 'MiniHipatternsNote'  },
+
+      -- Highlight hex color strings (`#rrggbb`) using that color
+      hex_color = hipatterns.gen_highlighter.hex_color(),
+    }
+  }
 end)
 
 M.corn = U.Service({{FT.CONF, "corn.nvim"}}, {}, function()
@@ -1036,11 +1051,11 @@ M.hex = U.Service({{FT.CONF, 'hex.nvim'}}, {}, function()
   require 'hex'.setup {}
 end)
 
-M.image = U.Service({{FT.PLUGIN, 'image.nvim'}}, function()
+M.image = U.Service({{FT.CONF, 'image.nvim'}}, {}, function()
   require 'image'.setup {}
 end)
 
-M.peek = U.Service({{FT.PLUGIN, 'peek.nvim'}}, function()
+M.peek = U.Service({{FT.CONF, 'peek.nvim'}}, {}, function()
   require 'peek'.setup {
     -- auto_load = true,
     -- app = 'webview',
@@ -1051,6 +1066,41 @@ M.peek = U.Service({{FT.PLUGIN, 'peek.nvim'}}, function()
   
   vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})
   vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})
+end)
+
+M.otter = U.Service({{FT.CONF, 'otter.nvim'}}, {}, function()
+  local otter = require 'otter'
+
+  vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    pattern = { "*.md" },
+    callback = function()
+      otter.activate({ 'r', 'python', 'lua', 'javascript', 'typescript' }, true)
+      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>d', ":lua require 'otter'.ask_definition()<cr>", { silent = true })
+      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>v', ":lua require 'otter'.ask_hover()<cr>", { silent = true })
+    end,
+  })
+end)
+
+M.sentiment = U.Service({{FT.CONF, 'sentiment.nvim'}}, {}, function()
+  require 'sentiment'.setup {}
+end)
+
+M.modicator = U.Service({{FT.CONF, 'modicator.nvim'}}, {}, function()
+  require 'modicator'.setup {}
+end)
+
+M.edgy = U.Service({{FT.CONF, 'edgy.nvim'}}, {}, function()
+  require 'edgy'.setup {
+    bottom = {
+      { ft = "toggleterm", size = { height = 0.8 }, filter = function(buf, win) return vim.api.nvim_win_get_config(win).relative == "" end },
+      { ft = "qf", title = "QuickFix" },
+      { ft = "help", size = { height = 0.5 }, filter = function(buf) return vim.bo[buf].buftype == "help" end },
+    },
+    animate = {
+      fps = 120,
+      cps = 120,
+    },
+  }
 end)
 
 return M

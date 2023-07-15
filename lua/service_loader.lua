@@ -18,9 +18,10 @@ local p = {
   gitsigns = 'lewis6991/gitsigns.nvim',
   nui = 'MunifTanjim/nui.nvim',
   lspconfig = 'neovim/nvim-lspconfig',
+  cmp = 'hrsh7th/nvim-cmp',
 }
 local plugins = {
-  -- LSP: language server protocol related
+  -- NOTE LSP: language server protocol related
   { p.lspconfig },
   {'jose-elias-alvarez/null-ls.nvim',
     dependencies = p.plenary,
@@ -33,19 +34,14 @@ local plugins = {
     },
   },
   { 'mfussenegger/nvim-jdtls' },
+  { 'jose-elias-alvarez/typescript.nvim' },
   { 'b0o/schemastore.nvim',
     dependencies = p.lspconfig,
   },
   { 'folke/neodev.nvim',
     dependencies = p.lspconfig,
   },
-  -- { 'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
-  --   config = function()
-  --     require 'lsp_lines'.setup {}
-  --   end,
-  -- },
-  -- { 'Issafalcon/lsp-overloads.nvim' },
-  -- LANG: treesitter and language specific plugins
+  -- NOTE LANG: treesitter and language specific plugins
   { p.treesitter,
     build = ':TSUpdate',
   },
@@ -64,24 +60,23 @@ local plugins = {
       Events.plugin_setup:sub(Plugins.peek)
     end
   },
-  { 'rest-nvim/rest.nvim',
-    dependencies = p.plenary,
+  { 'utilyre/sentiment.nvim',
     config = function()
-      Events.plugin_setup:sub(Plugins.rest)
+      Events.plugin_setup:sub(Plugins.sentiment)
     end
   },
-  -- STATUSBAR:
+  -- NOTE STATUSBAR:
   { 'rebelot/heirline.nvim',
     dependencies = p.devicons,
   },
-  -- PLUGINS:
+  -- NOTE PLUGINS:
   { 'echasnovski/mini.nvim',
     config = function()
-      Events.plugin_setup:sub(Plugins.mini_starter)
-      Events.plugin_setup:sub(Plugins.mini_surround)
+      -- Events.plugin_setup:sub(Plugins.mini_starter)
       Events.plugin_setup:sub(Plugins.mini_map)
       Events.plugin_setup:sub(Plugins.mini_bufremove)
       Events.plugin_setup:sub(Plugins.mini_move)
+      Events.plugin_setup:sub(Plugins.mini_hipatterns)
     end
   },
   { 'RRethy/vim-illuminate',
@@ -113,12 +108,9 @@ local plugins = {
     end
   },
   { 'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
     dependencies = {
       p.plenary,
-      { 'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'make',
-      },
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
       'nvim-telescope/telescope-ui-select.nvim',
     },
     config = function()
@@ -136,18 +128,13 @@ local plugins = {
       Events.plugin_setup:sub(Plugins.fold_preview)
     end
   },
-  { 'NvChad/nvim-colorizer.lua',
-    config = function()
-      Events.plugin_setup:sub(Plugins.colorizer)
-    end
-  },
   { 'folke/noice.nvim',
     config = function()
       Events.plugin_setup:sub(Plugins.noice)
     end,
     dependencies = p.nui,
   },
-  { 'hrsh7th/nvim-cmp',
+  { p.cmp,
     dependencies = {
       'lukas-reineke/cmp-rg',
       'hrsh7th/cmp-path',
@@ -157,21 +144,28 @@ local plugins = {
       'L3MON4D3/LuaSnip',
       'hrsh7th/cmp-cmdline',
       'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
     },
     config = function()
       Events.plugin_setup:sub(Plugins.cmp_ls)
     end
   },
-  { 'mawkler/modicator.nvim',
-    config = function()
-      Events.plugin_setup:sub(Plugins.modicator)
-    end,
-  },
+  -- { 'mawkler/modicator.nvim',
+  --   config = function()
+  --     Events.plugin_setup:sub(Plugins.modicator)
+  --   end,
+  -- },
   { 'RaafatTurki/hex.nvim', dev = false,
     config = function()
       Events.plugin_setup:sub(Plugins.hex)
     end
   },
+  -- { 'sindrets/diffview.nvim' },
+  -- { 'folke/edgy.nvim',
+  --   config = function()
+  --     Events.plugin_setup:sub(Plugins.edgy)
+  --   end
+  -- },
   -- p.dap,
   -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
   -- UNCHARTED:
@@ -196,6 +190,7 @@ Events.install_pre:sub(function()
   Misc.pets()
   Misc.buffer_edits()
   Misc.auto_create_dir()
+  Misc.auto_curlinenr_mode()
 end)
 
 Events.install_post:sub(function()

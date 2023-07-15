@@ -49,6 +49,46 @@ function M.file_read(path)
   return content
 end
 
+--- deletes a file
+function M.file_del(path)
+  local success, error_message = os.remove(path)
+
+  if success then
+    return true
+  else
+    log.err("error deleting file: " .. error_message)
+    return false
+  end
+end
+
+--- renames a file
+function M.file_rename(path, new_file_name)
+  local old_file_path = path
+  local path_arr = vim.split(path, '/')
+  path_arr[#path_arr] = new_file_name
+  local new_file_path = table.concat(path_arr, '/')
+
+  local success, error_message = os.rename(old_file_path, new_file_path)
+
+  if success then
+    return true
+  else
+    log.err("error renaming file: " .. error_message)
+    return false
+  end
+end
+
+--- gets absolute path from a relative one
+function M.path_rel_to_abs(rel_path)
+  local fullpath = vim.api.nvim_call_function('fnamemodify', { rel_path, ':p' })
+end
+
+--- returns boolean if a file exists or not
+function M.is_file_exists(path)
+  local file_stat = vim.loop.fs_stat(path)
+  if file_stat and file_stat.type == "file" then return true else return false end
+end
+
 --- returns array of file_names within a path
 function M.scan_dir(path)
   local res = {}
@@ -93,6 +133,14 @@ function M.tbl_union(tbl1, tbl2)
   return result
 end
 
+--- returns the merge of 2 flat tables
+function M.tbl_merge(tbl1, tbl2)
+  for i = 1, #tbl2 do
+    table.insert(tbl1, tbl2[i])
+  end
+  return tbl1
+end
+
 -- Neovim Utils
 --- returns current vim mode name
 function M.get_mode_name()
@@ -132,7 +180,28 @@ function M.get_mode_name()
     ["!"]     = "!!",
     t         = "te",
   }
-  return mode_names[vim.fn.mode()]
+  return mode_names[vim.api.nvim_get_mode().mode]
+end
+
+--- returns current vim mode highlight
+function M.get_mode_hi()
+  mode_hls = {
+    n       = 'NormalMode',
+    i       = 'InsertMode',
+    v       = 'VisualMode',
+    V       = 'VisualMode',
+    ['\22'] = 'VisualMode',
+    c       = 'CommandMode',
+    s       = 'SelectMode',
+    S       = 'SelectMode',
+    ['\19'] = "SelectMode",
+    R       = 'ControlMode',
+    r       = 'ControlMode',
+    ['!']   = 'NormalMode',
+    t       = 'TerminalMode',
+  }
+
+  return mode_hls[vim.api.nvim_get_mode().mode]
 end
 
 --- returns a table containing the lsp changes counts from an lsp result
@@ -189,6 +258,24 @@ function M.request_jump(target_path, line, col)
   else
     print('jump attempt to ' .. tostring(line) .. ':' .. tostring(col) .. ' in ' .. vim.fs.basename(target_path))
   end
+end
+
+--- trashes a file
+function M.trash_file(file_path, trash_cmd)
+  local exec_cmd = {}
+
+  if trash_cmd and vim.fn.executable(trash_cmd[1]) == 1 then
+    M.tbl_merge(exec_cmd, trash_cmd)
+  elseif vim.fn.executable('gio') == 1 then
+    M.tbl_merge(exec_cmd, { 'gio', 'trash' })
+  elseif vim.fn.executable('trash') == 1 then
+    M.tbl_merge(exec_cmd, { 'trash' })
+  else
+    log.warn("no trashing utility present")
+  end
+
+  table.insert(exec_cmd, vim.fn.fnameescape(file_path))
+  vim.fn.system(exec_cmd)
 end
 
 -- Stateful Utils

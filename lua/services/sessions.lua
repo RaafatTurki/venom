@@ -1,5 +1,3 @@
---- defines session managment.
--- @module sessions
 local M = {}
 
 M.sessions_path = vim.fn.stdpath("data") .. '/sessions/'

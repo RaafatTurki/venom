@@ -1,5 +1,3 @@
---- defines buffer managment mechanisms
--- @module buffers
 local M = {}
 
 M.labels = {

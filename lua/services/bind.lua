@@ -1,5 +1,3 @@
---- defines vanilla and (a much as possible) plugin keybinds
--- @module bind
 local M = {}
 
 M.keys = {}

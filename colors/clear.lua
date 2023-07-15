@@ -1,6 +1,3 @@
---- clears defualt nvim highlight groups
--- @module hl_clear
-
 local M = {}
 
 M.clear_hl = function(group_name, opts)

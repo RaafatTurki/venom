@@ -1,8 +1,3 @@
---- entry point.
--- @module init
-
--- all globals must be defined here
-
 U = require 'utils'
 
 Features = U.FeatureList():new()

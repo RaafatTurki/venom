@@ -1,5 +1,3 @@
---- defines language servers setup and install mechanisms.
--- @module lsp
 local M = {}
 
 M.setup_lspconfig_server = U.Service({ { FT.PLUGIN, 'nvim-lspconfig' } }, function(server_name, opts)

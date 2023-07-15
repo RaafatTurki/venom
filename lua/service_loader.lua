@@ -1,5 +1,3 @@
---- invokes various services in order.
--- @module service_loader
 Buffers = require 'services.buffers'
 PluginManager = require 'plugin_manager'
 Sessions = require 'services.sessions'

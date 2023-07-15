@@ -1,5 +1,3 @@
---- defines language specific configurations
--- @module lang
 local M = {}
 
 M.ts_parsers_ensure_installed = {

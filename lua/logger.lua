@@ -1,5 +1,3 @@
---- defines logging module
--- @module logger
 local M = {}
 
 local cached_logs = {}

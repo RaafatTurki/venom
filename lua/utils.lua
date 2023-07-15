@@ -1,5 +1,3 @@
---- defines various utility functions and classes.
--- @module utils
 local M = {}
 
 -- Lua Utils

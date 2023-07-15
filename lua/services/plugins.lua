@@ -1,5 +1,3 @@
---- defines plugins configurations.
--- @module plugins
 local M = {}
 
 M.setup = U.Service(function()

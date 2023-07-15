@@ -1,5 +1,3 @@
---- defines various miscellanous features.
--- @module misc
 local M = {}
 
 -- TODO: add required and provided features

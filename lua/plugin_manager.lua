@@ -1,5 +1,3 @@
---- defines plugin managment mechanism.
--- @module plugin_manager
 local M = {}
 
 M.plugin_manager_name = 'lazy.nvim'

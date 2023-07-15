@@ -1,5 +1,3 @@
---- defines statusbar and winbar components.
--- @module statusbar
 local M = {}
 
 M.components = {}

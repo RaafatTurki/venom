@@ -89,7 +89,7 @@ local plugins = {
     end
   },
   { 'nvim-neo-tree/neo-tree.nvim',
-    branch = "v2.x",
+    branch = "v3.x",
     dependencies = {
       p.plenary,
       p.nui,

@@ -586,7 +586,9 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
           ["\\"] = "open_in_terminal",
         },
       },
-      follow_current_file = true,
+      follow_current_file = {
+        enable = true,
+      },
       use_libuv_file_watcher = true,
     },
     source_selector = {

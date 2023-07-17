@@ -20,15 +20,19 @@ M.setup = U.Service({{FT.SESSION, "setup"}}, {}, function()
     end
   })
 
-  -- save viewopts using mkview
-  vim.cmd [[
-    augroup persist_view
-      autocmd!
-      autocmd BufWritePost *.* mkview
-      autocmd BufWinLeave *.* mkview
-      autocmd BufWinEnter *.* silent! loadview
-    augroup persist_view
-  ]]
+  -- persist fold, curpos and pwd with mkview automatically
+  vim.api.nvim_create_autocmd({ 'BufWinLeave', 'BufWritePost' }, {
+    group = vim.api.nvim_create_augroup('persist_mkview', {}),
+    callback = function()
+      vim.cmd [[silent! mkview]]
+    end
+  })
+  vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
+    group = vim.api.nvim_create_augroup('persist_loadview', {}),
+    callback = function()
+      vim.cmd [[silent! loadview]]
+    end
+  })
 
   Events.fs_update:sub(function()
     if M.get_current() then

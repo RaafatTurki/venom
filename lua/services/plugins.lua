@@ -539,7 +539,7 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
     },
     filesystem = {
       filtered_items = {
-        hide_dotfiles = false,
+        hide_dotfiles = true,
         hide_by_name = {
           -- 'node_modules',
           -- '__pycache__',

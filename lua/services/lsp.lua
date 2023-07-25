@@ -213,6 +213,22 @@ M.setup_servers = U.Service({ { FT.PLUGIN, 'mason.nvim' } }, function(lsp_server
         }
       })
     end,
+    jedi_language_server = function()
+      M.setup_lspconfig_server('jedi_language_server', {
+        init_options = {
+          diagnostics = { enable = false },
+        },
+      })
+    end,
+    pyright = function()
+      M.setup_lspconfig_server('pyright', {
+        -- settings = {
+        --   python = {
+        --     venvPath = "./.env"
+        --   }
+        -- }
+      })
+    end,
     ltex = function()
       M.setup_lspconfig_server('ltex', {
         settings = {

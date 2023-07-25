@@ -28,6 +28,7 @@ M.ts_parsers_ensure_installed = {
   'latex',
   'lua',
   'make',
+  'markdown_inline',
   'markdown',
   'meson',
   'nix',
@@ -56,8 +57,8 @@ M.setup = U.Service({{FT.LANG, 'setup'}}, {}, function()
       ui = {
         border = 'single',
         icons = {
-          package_installed = " ",
-          package_pending = " ",
+          package_installed = " ",
+          package_pending = " ",
           package_uninstalled = "  ",
         },
         keymaps = {

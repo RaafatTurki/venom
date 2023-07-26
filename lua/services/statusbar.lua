@@ -384,9 +384,9 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
   }
 
   M.components.session = {
-    condition = function() return Sessions.get_current() end,
+    condition = function() return Sessions.is_in_local_session end,
     provider = function()
-      return ' ' .. Sessions.get_current()
+      return ' local'
     end,
     hl = hi_finalize('WarningMsg'),
   }

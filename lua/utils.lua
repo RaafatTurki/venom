@@ -83,8 +83,14 @@ end
 
 --- returns boolean if a file exists or not
 function M.is_file_exists(path)
-  local file_stat = vim.loop.fs_stat(path)
-  if file_stat and file_stat.type == "file" then return true else return false end
+  local stat = vim.loop.fs_stat(path)
+  return stat and stat.type == 'file'
+end
+
+--- returns boolean if a directory exists or not
+function M.is_dir_exists(path)
+  local stat = vim.loop.fs_stat(path)
+  return stat and stat.type == 'directory'
 end
 
 --- returns array of file_names within a path

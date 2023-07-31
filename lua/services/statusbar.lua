@@ -585,7 +585,7 @@ M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
     M.components.filetype,
     M.components.searchinfo,
     M.components.session,
-    -- M.components.ruler,
+    M.components.ruler,
   }
 
   local terminal_statusline = {

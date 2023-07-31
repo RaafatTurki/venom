@@ -69,8 +69,7 @@ M.load = U.Service({{FT.SESSION, "setup"}}, function()
       log.err("local session data is corrupted")
     end
   else
-    log.warn('local session file does not exist, creating')
-    M.save()
+    log.warn('local session file does not exist')
   end
 end)
 

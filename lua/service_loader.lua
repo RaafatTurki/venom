@@ -21,14 +21,10 @@ local p = {
 local plugins = {
   -- NOTE LSP: language server protocol related
   { p.lspconfig },
-  {'jose-elias-alvarez/null-ls.nvim',
-    dependencies = p.plenary,
-  },
   { 'williamboman/mason.nvim',
     dependencies = {
       p.lspconfig,
       'williamboman/mason-lspconfig.nvim',
-      'jayp0521/mason-null-ls.nvim',
     },
   },
   { 'mfussenegger/nvim-jdtls' },

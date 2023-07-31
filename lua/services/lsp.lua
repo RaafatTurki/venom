@@ -373,32 +373,23 @@ M.setup_servers = U.Service({ { FT.PLUGIN, 'mason.nvim' } }, function(lsp_server
   if vim.fn.executable('dart') == 1 then
     M.setup_lspconfig_server('dartls', {})
   end
+
   if vim.fn.executable('godot3-bin') == 1 then
     M.setup_lspconfig_server('gdscript', {
       cmd = vim.lsp.rpc.connect('127.0.0.1', 6008),
-      -- cmd = { 'godot-ls' },
       flags = {
         debounce_text_changes = 150,
       },
     })
   end
 
-  -- null-ls servers
-  if Features:has(FT.PLUGIN, 'null-ls.nvim') then
-    local null_ls = require 'null-ls'
-    require 'mason-null-ls'.setup {
-      automatic_setup = true,
-      handlers = {
-        function(source_name, methods)
-          -- if vim.tbl_contains(methods, "formatting") then
-          --   null_ls.register(null_ls.builtins.formatting[source_name])
-          -- else
-          --   log('the null-ls source '..source_name..' is installed but unused!')
-          -- end
-        end,
-      }
-    }
-    null_ls.setup({})
+  if vim.fn.executable('godot') == 1 then
+    M.setup_lspconfig_server('gdscript', {
+      cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
+      flags = {
+        debounce_text_changes = 150,
+      },
+    })
   end
 end)
 

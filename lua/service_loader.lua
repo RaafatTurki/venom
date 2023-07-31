@@ -19,7 +19,7 @@ local p = {
   cmp = 'hrsh7th/nvim-cmp',
 }
 local plugins = {
-  -- NOTE LSP: language server protocol related
+  -- NOTE LSP
   { p.lspconfig },
   { 'williamboman/mason.nvim',
     dependencies = {
@@ -35,7 +35,7 @@ local plugins = {
   { 'folke/neodev.nvim',
     dependencies = p.lspconfig,
   },
-  -- NOTE LANG: treesitter and language specific plugins
+  -- NOTE LANG
   { p.treesitter,
     build = ':TSUpdate',
   },
@@ -59,14 +59,13 @@ local plugins = {
       Events.plugin_setup:sub(Plugins.sentiment)
     end
   },
-  -- NOTE STATUSBAR:
+  -- NOTE STATUSBAR
   { 'rebelot/heirline.nvim',
     dependencies = p.devicons,
   },
-  -- NOTE PLUGINS:
+  -- NOTE PLUGINS
   { 'echasnovski/mini.nvim',
     config = function()
-      -- Events.plugin_setup:sub(Plugins.mini_starter)
       Events.plugin_setup:sub(Plugins.mini_map)
       Events.plugin_setup:sub(Plugins.mini_bufremove)
       Events.plugin_setup:sub(Plugins.mini_move)
@@ -144,11 +143,6 @@ local plugins = {
       Events.plugin_setup:sub(Plugins.cmp_ls)
     end
   },
-  -- { 'mawkler/modicator.nvim',
-  --   config = function()
-  --     Events.plugin_setup:sub(Plugins.modicator)
-  --   end,
-  -- },
   { 'RaafatTurki/hex.nvim', dev = false,
     config = function()
       Events.plugin_setup:sub(Plugins.hex)

@@ -15,19 +15,7 @@ Events = {
   install_post = U.Event("install_post"):new(),
   session_write_pre = U.Event("session_write_pre"):new(),
   plugin_setup = U.Event("plugin_setup"):new(),
-  unga = U.Event("unga"):new(),
 }
-
--- Events.unga:sub(function(asd)
---   log(asd)
--- end)
-
--- Events.unga:sub(function()
---   log("UNGAAA again")
--- end)
-
--- Events.unga:sub [[lua log('even more ungaaa')]]
-
 
 local icon_sets = require 'icons'.icon_sets
 Icons = {

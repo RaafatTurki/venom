@@ -228,6 +228,17 @@ end
 --- clears the command prompt
 function M.clear_prompt() vim.cmd([[echo '' | redraw]]) end
 
+--- changes the guifont by a step, with min and max bounds
+function M.change_guifont_size(amount, min, max, is_amount_delta)
+  is_amount_delta = is_amount_delta or false
+  vim.opt.guifont = string.gsub(vim.opt.guifont._value, ":h(%d+)", function(n)
+    local size = amount
+    if is_amount_delta then size = n + amount end
+    if size < min then size = min elseif size > max then size = max end
+    return string.format(":h%d", size)
+  end)
+end
+
 --- returns nth field of a segmented string (much like unix cut) (omit field to return full array, fields <= 0 count from the end)
 function M.cut(str, delimiter, field)
   delimiter = delimiter or ' '

@@ -16,16 +16,6 @@ M.base = U.Service(function()
 
   -- log
   vim.cmd [[cnoreabbrev l lua log]]
-
-  --- variables
-  vim.g.neovide_cursor_vfx_mode = 'pixiedust'
-  -- vim.g.neovide_fullscreen = true
-  -- vim.g.neovide_profiler = true
-  vim.g.gui_font_size = 16
-  vim.g.gui_font_face = "Iosevka"
-  vim.opt.guifont = string.format("%s:h%s", vim.g.gui_font_face, vim.g.gui_font_size)
-
-
   -- TODO: use vim.filetype.add
 
   --- auto groups
@@ -454,6 +444,31 @@ M.auto_curlinenr_mode = U.Service(function()
       vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = hl.fg, bg = curline_hl.bg })
     end
   })
+end)
+
+--- configure neovide
+M.neovide = U.Service(function()
+  -- local function set_gui_font(name, size) vim.o.guifont = string.format("%s:h%s", name, size) end
+  if vim.g.neovide then
+    vim.o.guifont="BlexMono Nerd Font Mono:h8"
+    -- vim.g.neovide_font_size = 8
+    -- vim.g.neovide_font_name = "BlexMono Nerd Font Mono"
+    -- set_gui_font(vim.g.neovide_font_name, vim.g.neovide_font_size)
+
+    vim.g.neovide_scale_factor = 1.0
+    vim.g.neovide_hide_mouse_when_typing = true
+    vim.g.neovide_refresh_rate = 120
+    vim.g.neovide_refresh_rate_idle = 5
+    vim.g.neovide_no_idle = false
+    
+    vim.g.neovide_cursor_vfx_mode = "pixiedust"
+    vim.g.neovide_cursor_vfx_particle_density = 10.0
+
+    -- vim.g.neovide_cursor_animate_in_insert_mode = false
+    -- vim.g.neovide_profiler = true
+    -- vim.g.neovide_fullscreen = true
+    -- vim.g.neovide_padding_left = 600
+  end
 end)
 
 return M

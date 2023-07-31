@@ -115,6 +115,10 @@ M.setup = U.Service(function()
   end
   M.key {'<A-S-Left>',        function() Buffers.shift_curr_buf_in_buflist(-1) end}
   M.key {'<A-S-Right>',       function() Buffers.shift_curr_buf_in_buflist(1) end}
+  -- guifont ()
+  M.key {'<C-)>',             function() U.change_guifont_size(10, 8, 30) end}
+  M.key {'<C-_>',             function() U.change_guifont_size(-1, 8, 30, true) end}
+  M.key {'<C-+>',             function() U.change_guifont_size(1, 8, 30, true) end}
 
   -- MOTIONS
   M.key {'aa',                ':<c-u>normal! ggVG<CR>', mode = 'o'}

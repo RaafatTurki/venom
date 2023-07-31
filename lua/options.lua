@@ -29,7 +29,6 @@ vim.o.cmdheight      = 1
 vim.o.showtabline    = 2
 vim.o.laststatus     = 3
 vim.o.scrolloff      = 4
-vim.o.scroll         = 15
 vim.o.updatetime     = 100
 vim.o.timeoutlen     = 200
 vim.o.conceallevel   = 1

@@ -185,6 +185,7 @@ Events.install_pre:sub(function()
   Misc.buffer_edits()
   Misc.auto_create_dir()
   Misc.auto_curlinenr_mode()
+  Misc.neovide()
 end)
 
 Events.install_post:sub(function()

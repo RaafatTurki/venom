@@ -54,6 +54,9 @@ M.base = service(function()
     au FileType sxhkdrc setlocal commentstring=#%s
     au FileType dart setlocal commentstring=//%s
 
+    au BufEnter xorg.conf* setlocal ft=xf86conf
+    au BufRead,BufNewFile */xorg.conf.d/*.conf* setlocal ft=xf86conf
+
     " terminal
     au FileType terminal setlocal nocursorline
     au TermOpen * setlocal nonumber

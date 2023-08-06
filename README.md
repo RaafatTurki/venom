@@ -77,27 +77,17 @@ clear:wrap() -- returns `function() return invoke() end`
 Subscribing events conditionally based on features is not enough,
 we need functions that conditionally execute depending on what features they require
 and register the features they provide once executed.
-Implemented as the LUA class `Service`
+Implemented as the function `service()`
 
 **Usage:**
 ```lua
-local impatient = U.Service():require(FT.PLUGIN, "impatient.nvim"):new(function()
+local impatient = U.service({{ FT.CONF, "impatient.nvim" }}, {{ FT.PLUGIN, "impatient.nvim" }}, function()
   require 'impatient'
   require 'impatient'.enable_profile()
 end)
 
 impatient()
 ```
-**Extras:**
-```lua
-impatient:required_features -- table of features this service requires
-impatient:provided_features -- 
-impatient:callback -- the callback to be executed once service called all requirments are met
-impatient:provide() -- a feature that gets registered once service is finished excuting
-impatient:invoke() -- same as impatient()
-impatient:wrap() -- returns `function() return invoke() end`
-```
-
 
 ## Notes
 - The rest of the config is just normal nvim/lua stuff that utilize the above machanisms.

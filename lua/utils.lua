@@ -349,39 +349,39 @@ function M.Event(event_name)
 end
 
 --- returns a service function
-function M.Service(...)
-  local prov_feats = {}
-  local req_feats = {}
-  local cb = function(...) log.warn("empty service callback called", { stack_level_offset = 2 }) end
-
+function M.service(...)
   local argc = select("#", ...)
+  local prov_feats, req_feats, callback
+
   if argc == 1 then
-    cb = ...
+    callback = ...
   elseif argc == 2 then
-    req_feats, cb = ...
+    req_feats, callback = ...
   elseif argc == 3 then
-    prov_feats, req_feats, cb = ...
+    prov_feats, req_feats, callback = ...
   end
 
-  return function(...)
-    local is_invokable = true
+  prov_feats = prov_feats or {}
+  req_feats = req_feats or {}
+  callback = callback or function(...) log.warn("empty service callback called", { stack_level_offset = 2 }) end
 
+  return function(...)
     -- ensure required features
     for _, req_feat in pairs(req_feats) do
       if (not Features:has(req_feat[1], req_feat[2])) then
         log.warn("missing feature: " .. table.concat(req_feat, ' / '), { stack_level_offset = 1 })
-        is_invokable = false
+        return
       end
     end
 
-    -- invoke and add provided features
-    if is_invokable then
-      local return_val = cb(...)
-      for _, prov_feat in pairs(prov_feats) do
-        Features:add(prov_feat[1], prov_feat[2])
-      end
-      return return_val
+    -- invoke callback
+    local return_val = callback(...)
+
+    -- add provided features
+    for _, prov_feat in pairs(prov_feats) do
+      Features:add(prov_feat[1], prov_feat[2])
     end
+    return return_val
   end
 end
 

@@ -2,7 +2,7 @@ local M = {}
 
 M.components = {}
 
-M.setup = U.Service({{FT.PLUGIN, "heirline.nvim"}}, function()
+M.setup = service({{FT.PLUGIN, "heirline.nvim"}}, function()
   local utils = require 'heirline/utils'
   local conditions = require 'heirline/conditions'
 

@@ -46,7 +46,7 @@ function M.Buffer()
   )
 end
 
-M.setup = U.Service(function()
+M.setup = service(function()
   vim.api.nvim_create_autocmd('VimEnter', {
     callback = function()
       for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do

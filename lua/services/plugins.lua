@@ -1,15 +1,15 @@
 local M = {}
 
-M.setup = U.Service(function()
+M.setup = service(function()
   Events.plugin_setup()
 end)
 
-M.impatient = U.Service({{FT.CONF, "impatient.nvim"}}, {}, function()
+M.impatient = service({{FT.CONF, "impatient.nvim"}}, nil, function()
   require 'impatient'
   require 'impatient'.enable_profile()
 end)
 
-M.illuminate = U.Service({{FT.CONF, 'vim-illuminate'}}, {}, function()
+M.illuminate = service({{FT.CONF, 'vim-illuminate'}}, nil, function()
   -- default configuration
   require('illuminate').configure {
     filetypes_denylist = {
@@ -27,7 +27,7 @@ M.illuminate = U.Service({{FT.CONF, 'vim-illuminate'}}, {}, function()
   }
 end)
 
-M.devicons = U.Service({{FT.CONF, "nvim-web-devicons"}}, {}, function()
+M.devicons = service({{FT.CONF, "nvim-web-devicons"}}, nil, function()
   require 'nvim-web-devicons'.setup {
     override = {
       default_icon = {
@@ -40,7 +40,7 @@ M.devicons = U.Service({{FT.CONF, "nvim-web-devicons"}}, {}, function()
   }
 end)
 
-M.dressing = U.Service({{FT.CONF, "dressing.nvim"}}, {}, function()
+M.dressing = service({{FT.CONF, "dressing.nvim"}}, nil, function()
   require 'dressing'.setup {
     input = {
       border = 'single',
@@ -61,7 +61,7 @@ M.dressing = U.Service({{FT.CONF, "dressing.nvim"}}, {}, function()
   }
 end)
 
-M.telescope = U.Service({{FT.CONF, 'telescope.nvim'},{FT.CONF, 'telescope-fzf-native.nvim'}}, {}, function()
+M.telescope = service({{FT.CONF, 'telescope.nvim'},{FT.CONF, 'telescope-fzf-native.nvim'}}, nil, function()
   require 'telescope'.setup {
     extensions = {
       fzf = {
@@ -95,7 +95,7 @@ M.telescope = U.Service({{FT.CONF, 'telescope.nvim'},{FT.CONF, 'telescope-fzf-na
   require("telescope").load_extension("ui-select")
 end)
 
-M.notify = U.Service({{FT.CONF, "nvim-notify"}}, {}, function()
+M.notify = service({{FT.CONF, "nvim-notify"}}, nil, function()
   local notify = require 'notify'
 
   notify.setup {
@@ -107,7 +107,7 @@ M.notify = U.Service({{FT.CONF, "nvim-notify"}}, {}, function()
   vim.notify = notify
 end)
 
-M.bqf = U.Service({{FT.CONF, 'nvim-bqf'}}, {}, function()
+M.bqf = service({{FT.CONF, 'nvim-bqf'}}, nil, function()
   require 'bqf'.setup {
     -- magic_window = false,
     -- auto_resize_height = true,
@@ -132,18 +132,18 @@ M.bqf = U.Service({{FT.CONF, 'nvim-bqf'}}, {}, function()
   }
 end)
 
-M.reach = U.Service({{FT.CONF, 'reach.nvim'}}, {}, function()
+M.reach = service({{FT.CONF, 'reach.nvim'}}, nil, function()
   require 'reach'.setup {
     notifications = false
   }
 end)
 
-M.grapple = U.Service({{FT.CONF, 'grapple.nvim'}}, {}, function()
+M.grapple = service({{FT.CONF, 'grapple.nvim'}}, nil, function()
   require 'grapple'.setup {
   }
 end)
 
-M.gitsigns = U.Service({{FT.CONF, "gitsigns.nvim"}}, {}, function()
+M.gitsigns = service({{FT.CONF, "gitsigns.nvim"}}, nil, function()
   require 'gitsigns'.setup {
     signs = {
       add          = { text = '│' },
@@ -156,7 +156,7 @@ M.gitsigns = U.Service({{FT.CONF, "gitsigns.nvim"}}, {}, function()
   }
 end)
 
-M.cmp_ls = U.Service({{FT.CONF, "nvim-cmp"}}, {}, function()
+M.cmp_ls = service({{FT.CONF, "nvim-cmp"}}, nil, function()
   -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
   local ls = require 'luasnip'
   local ls_types = require 'luasnip.util.types'
@@ -314,11 +314,11 @@ M.cmp_ls = U.Service({{FT.CONF, "nvim-cmp"}}, {}, function()
   })
 end)
 
-M.coq = U.Service({{FT.CONF, 'coq_nvim'}}, {}, function()
+M.coq = service({{FT.CONF, 'coq_nvim'}}, nil, function()
   vim.cmd [[COQnow --shut-up]]
 end)
 
-M.nvim_tree = U.Service({{FT.CONF, "nvim-tree.lua"}}, {}, function()
+M.nvim_tree = service({{FT.CONF, "nvim-tree.lua"}}, nil, function()
   vim.g.nvim_tree_allow_resize = 1
 
   local nvimtree_keybindings = {
@@ -437,7 +437,7 @@ M.nvim_tree = U.Service({{FT.CONF, "nvim-tree.lua"}}, {}, function()
   }
 end)
 
-M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
+M.neo_tree = service({{FT.CONF, "neo-tree.nvim"}}, nil, function()
   require 'window-picker'.setup {
     autoselect_one = true,
     include_current = false,
@@ -600,7 +600,7 @@ M.neo_tree = U.Service({{FT.CONF, "neo-tree.nvim"}}, {}, function()
   Events.session_write_pre:sub [[NeoTreeClose]]
 end)
 
-M.bufferline = U.Service({{FT.CONF, 'bufferline.nvim'}}, {}, function()
+M.bufferline = service({{FT.CONF, 'bufferline.nvim'}}, nil, function()
   require 'bufferline'.setup {
     options = {
       mode = 'tabs',
@@ -623,7 +623,7 @@ M.bufferline = U.Service({{FT.CONF, 'bufferline.nvim'}}, {}, function()
   }
 end)
 
-M.toggle_term = U.Service({{FT.CONF, "toggleterm.nvim"}}, {}, function()
+M.toggle_term = service({{FT.CONF, "toggleterm.nvim"}}, nil, function()
   require 'toggleterm'.setup {
     open_mapping = [[<C-\>]],
     insert_mappings = true,
@@ -650,7 +650,7 @@ M.toggle_term = U.Service({{FT.CONF, "toggleterm.nvim"}}, {}, function()
   }
 end)
 
-M.fidget = U.Service({{FT.CONF, "fidget.nvim"}}, {}, function()
+M.fidget = service({{FT.CONF, "fidget.nvim"}}, nil, function()
   require 'fidget'.setup {
     window = {
       blend = 0,
@@ -658,7 +658,7 @@ M.fidget = U.Service({{FT.CONF, "fidget.nvim"}}, {}, function()
   }
 end)
 
-M.mini_starter = U.Service({{FT.CONF, "mini.nvim"}}, {}, function()
+M.mini_starter = service({{FT.CONF, "mini.nvim"}}, nil, function()
   local starter = require 'mini.starter'
 
   local new_item = function(section, key, title, action)
@@ -713,7 +713,7 @@ M.mini_starter = U.Service({{FT.CONF, "mini.nvim"}}, {}, function()
   }
 end)
 
-M.mini_map = U.Service({{FT.CONF, "mini.nvim"}}, {}, function()
+M.mini_map = service({{FT.CONF, "mini.nvim"}}, nil, function()
   local map = require('mini.map')
 
   require 'mini.map'.setup {
@@ -742,19 +742,19 @@ M.mini_map = U.Service({{FT.CONF, "mini.nvim"}}, {}, function()
   Events.fold_update:sub(map.refresh)
 end)
 
-M.mini_bufremove = U.Service({{FT.CONF, "mini.nvim"}}, {}, function()
+M.mini_bufremove = service({{FT.CONF, "mini.nvim"}}, nil, function()
   require 'mini.bufremove'.setup()
 end)
 
-M.mini_pairs = U.Service({{FT.CONF, 'mini.nvim'}}, {}, function()
+M.mini_pairs = service({{FT.CONF, 'mini.nvim'}}, nil, function()
   require 'mini.pairs'.setup {}
 end)
 
-M.mini_move = U.Service({{FT.CONF, 'mini.nvim'}}, {}, function()
+M.mini_move = service({{FT.CONF, 'mini.nvim'}}, nil, function()
   require 'mini.move'.setup {}
 end)
 
-M.mini_hipatterns = U.Service({{FT.CONF, 'mini.nvim'}}, {}, function()
+M.mini_hipatterns = service({{FT.CONF, 'mini.nvim'}}, nil, function()
   local hipatterns = require 'mini.hipatterns'
 
   require 'mini.hipatterns'.setup {
@@ -771,7 +771,7 @@ M.mini_hipatterns = U.Service({{FT.CONF, 'mini.nvim'}}, {}, function()
   }
 end)
 
-M.corn = U.Service({{FT.CONF, "corn.nvim"}}, {}, function()
+M.corn = service({{FT.CONF, "corn.nvim"}}, nil, function()
   require 'corn'.setup()
   -- require 'corn'.setup {
   --   -- win_opts = {
@@ -786,7 +786,7 @@ M.corn = U.Service({{FT.CONF, "corn.nvim"}}, {}, function()
   -- }
 end)
 
-M.trld = U.Service({{FT.CONF, "trld.nvim"}}, {}, function()
+M.trld = service({{FT.CONF, "trld.nvim"}}, nil, function()
   local function get_icon_by_severity(severity)
     local icon_set = Icons.diagnostic_states
     local icons = {
@@ -822,11 +822,11 @@ M.trld = U.Service({{FT.CONF, "trld.nvim"}}, {}, function()
   }
 end)
 
-M.dirty_talk = U.Service({{FT.CONF, 'vim-dirtytalk'}}, {}, function()
+M.dirty_talk = service({{FT.CONF, 'vim-dirtytalk'}}, nil, function()
   vim.opt.spelllang:append 'programming'
 end)
 
-M.hover = U.Service({{FT.CONF, 'hover.nvim'}}, {}, function()
+M.hover = service({{FT.CONF, 'hover.nvim'}}, nil, function()
   require 'hover'.setup {
     init = function()
       require('hover.providers.lsp')
@@ -841,7 +841,7 @@ M.hover = U.Service({{FT.CONF, 'hover.nvim'}}, {}, function()
   }
 end)
 
-M.paperplanes = U.Service({{FT.CONF, 'paperplanes.nvim'}}, {}, function()
+M.paperplanes = service({{FT.CONF, 'paperplanes.nvim'}}, nil, function()
   require 'paperplanes'.setup {
     register = '+',
     -- provider = "0x0.st",
@@ -853,7 +853,7 @@ M.paperplanes = U.Service({{FT.CONF, 'paperplanes.nvim'}}, {}, function()
   }
 end)
 
-M.fold_cycle = U.Service({{FT.CONF, 'fold-cycle.nvim'}}, {}, function()
+M.fold_cycle = service({{FT.CONF, 'fold-cycle.nvim'}}, nil, function()
   require 'fold-cycle'.setup {
     open_if_max_closed = false,
     close_if_max_opened = false,
@@ -861,7 +861,7 @@ M.fold_cycle = U.Service({{FT.CONF, 'fold-cycle.nvim'}}, {}, function()
   }
 end)
 
-M.fold_preview = U.Service({{FT.CONF, 'fold-preview.nvim'}}, {}, function()
+M.fold_preview = service({{FT.CONF, 'fold-preview.nvim'}}, nil, function()
   local fold_preview = require 'fold-preview'
 
   fold_preview.setup {
@@ -872,11 +872,11 @@ M.fold_preview = U.Service({{FT.CONF, 'fold-preview.nvim'}}, {}, function()
   Events.fold_update:sub(fold_preview.close_preview)
 end)
 
-M.icon_picker = U.Service({{FT.CONF, 'icon-picker.nvim'}}, {}, function()
+M.icon_picker = service({{FT.CONF, 'icon-picker.nvim'}}, nil, function()
   require 'icon-picker'
 end)
 
-M.fzf_lua = U.Service({{FT.CONF, 'fzf-lua'}}, {}, function()
+M.fzf_lua = service({{FT.CONF, 'fzf-lua'}}, nil, function()
   require 'fzf-lua'.setup {
     winopts = {
       border  = 'single',
@@ -891,17 +891,17 @@ M.fzf_lua = U.Service({{FT.CONF, 'fzf-lua'}}, {}, function()
   }
 end)
 
-M.guess_indent = U.Service({{FT.CONF, 'guess-indent.nvim'}}, {}, function()
+M.guess_indent = service({{FT.CONF, 'guess-indent.nvim'}}, nil, function()
   require 'guess-indent'.setup {}
 end)
 
-M.gomove = U.Service({{FT.CONF, 'nvim-gomove'}}, {}, function()
+M.gomove = service({{FT.CONF, 'nvim-gomove'}}, nil, function()
   require 'gomove'.setup {
     map_defaults = false,
   }
 end)
 
-M.colorizer = U.Service({{FT.CONF, 'nvim-colorizer.lua'}}, {}, function()
+M.colorizer = service({{FT.CONF, 'nvim-colorizer.lua'}}, nil, function()
   require 'colorizer'.setup {
     filetypes = {
       '*',
@@ -923,7 +923,7 @@ M.colorizer = U.Service({{FT.CONF, 'nvim-colorizer.lua'}}, {}, function()
   }
 end)
 
-M.vim_markdown_composer = U.Service({{FT.CONF, 'vim-markdown-composer'}}, {}, function()
+M.vim_markdown_composer = service({{FT.CONF, 'vim-markdown-composer'}}, nil, function()
   vim.g.markdown_composer_autostart = 0
   -- vim.g.markdown_composer_custom_css = 'file:///home/potato/markdown.css'
   -- vim.g.markdown_composer_syntax_theme = 'github-dark'
@@ -932,11 +932,11 @@ M.vim_markdown_composer = U.Service({{FT.CONF, 'vim-markdown-composer'}}, {}, fu
   end
 end)
 
-M.overseer = U.Service({{FT.CONF, 'overseer.nvim'}}, {}, function()
+M.overseer = service({{FT.CONF, 'overseer.nvim'}}, nil, function()
   require 'overseer'.setup {}
 end)
 
-M.rest = U.Service({{FT.CONF, 'rest.nvim'}}, {}, function()
+M.rest = service({{FT.CONF, 'rest.nvim'}}, nil, function()
   require 'rest-nvim'.setup {
     -- skip_ssl_verification = false,
     -- result = {
@@ -951,7 +951,7 @@ M.rest = U.Service({{FT.CONF, 'rest.nvim'}}, {}, function()
   }
 end)
 
-M.paint = U.Service({{FT.CONF, 'paint.nvim'}}, {}, function()
+M.paint = service({{FT.CONF, 'paint.nvim'}}, nil, function()
   require 'paint'.setup {
     highlights = {
       -- snippets
@@ -991,7 +991,7 @@ M.paint = U.Service({{FT.CONF, 'paint.nvim'}}, {}, function()
   }
 end)
 
-M.noice = U.Service({{FT.CONF, 'noice.nvim'}}, {}, function()
+M.noice = service({{FT.CONF, 'noice.nvim'}}, nil, function()
   require 'noice'.setup {
     cmdline = {
       format = {
@@ -1047,15 +1047,15 @@ M.noice = U.Service({{FT.CONF, 'noice.nvim'}}, {}, function()
   }
 end)
 
-M.hex = U.Service({{FT.CONF, 'hex.nvim'}}, {}, function()
+M.hex = service({{FT.CONF, 'hex.nvim'}}, nil, function()
   require 'hex'.setup {}
 end)
 
-M.image = U.Service({{FT.CONF, 'image.nvim'}}, {}, function()
+M.image = service({{FT.CONF, 'image.nvim'}}, nil, function()
   require 'image'.setup {}
 end)
 
-M.peek = U.Service({{FT.CONF, 'peek.nvim'}}, {}, function()
+M.peek = service({{FT.CONF, 'peek.nvim'}}, nil, function()
   require 'peek'.setup {
     -- auto_load = true,
     -- app = 'webview',
@@ -1068,7 +1068,7 @@ M.peek = U.Service({{FT.CONF, 'peek.nvim'}}, {}, function()
   vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})
 end)
 
-M.otter = U.Service({{FT.CONF, 'otter.nvim'}}, {}, function()
+M.otter = service({{FT.CONF, 'otter.nvim'}}, nil, function()
   local otter = require 'otter'
 
   vim.api.nvim_create_autocmd({ "BufEnter" }, {
@@ -1081,15 +1081,15 @@ M.otter = U.Service({{FT.CONF, 'otter.nvim'}}, {}, function()
   })
 end)
 
-M.sentiment = U.Service({{FT.CONF, 'sentiment.nvim'}}, {}, function()
+M.sentiment = service({{FT.CONF, 'sentiment.nvim'}}, nil, function()
   require 'sentiment'.setup {}
 end)
 
-M.modicator = U.Service({{FT.CONF, 'modicator.nvim'}}, {}, function()
+M.modicator = service({{FT.CONF, 'modicator.nvim'}}, nil, function()
   require 'modicator'.setup {}
 end)
 
-M.edgy = U.Service({{FT.CONF, 'edgy.nvim'}}, {}, function()
+M.edgy = service({{FT.CONF, 'edgy.nvim'}}, nil, function()
   require 'edgy'.setup {
     bottom = {
       { ft = "toggleterm", size = { height = 0.8 }, filter = function(buf, win) return vim.api.nvim_win_get_config(win).relative == "" end },

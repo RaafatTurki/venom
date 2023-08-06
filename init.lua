@@ -1,4 +1,5 @@
 U = require 'utils'
+service = U.service
 
 Features = U.FeatureList():new()
 

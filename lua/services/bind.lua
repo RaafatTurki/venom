@@ -3,7 +3,7 @@ local M = {}
 M.keys = {}
 
 -- a keymap object is {lhs, rhs, opts = {}, mode = string}
-M.key = U.Service(function(keymap)
+M.key = service(function(keymap)
   keymap.opts = vim.tbl_deep_extend('force', keymap.opts or {}, { noremap = true, silent = true })
   ---@diagnostic disable-next-line: param-type-mismatch
   keymap.mode = keymap.mode and vim.split(keymap.mode, ' ', {}) or 'n'
@@ -12,7 +12,7 @@ M.key = U.Service(function(keymap)
   table.insert(M.keys, keymap)
 end)
 
-M.setup = U.Service(function()
+M.setup = service(function()
   -- LEADER KEY
   M.key({'<Space>', '<Nop>', mode = ''})
   vim.g.mapleader = ' '
@@ -135,7 +135,7 @@ M.setup = U.Service(function()
 end)
 
 -- TODO load each conditionally depending on registered features
-M.setup_plugins = U.Service(function()
+M.setup_plugins = service(function()
   -- Builtins
   -- open uri under cursor
   M.key {'gx',                OpenURIUnderCursor }

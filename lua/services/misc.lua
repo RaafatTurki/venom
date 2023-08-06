@@ -3,7 +3,7 @@ local M = {}
 -- TODO: add required and provided features
 
 --- defines command aliases
-M.base = U.Service(function()
+M.base = service(function()
   --- commands
   -- write as sudo
   vim.cmd [[cnoreabbrev w!! w !sudo tee > /dev/null %]]
@@ -66,7 +66,7 @@ M.base = U.Service(function()
 end)
 
 --- shows diagnostics on cursor hold
-M.diag_on_hold = U.Service(function()
+M.diag_on_hold = service(function()
   vim.cmd [[
     augroup diag_on_hold
     autocmd!
@@ -78,7 +78,7 @@ M.diag_on_hold = U.Service(function()
 end)
 
 --- defines OpenURIUnderCursor(), works on urls, uris, vim plugins
-M.open_uri = U.Service(function()
+M.open_uri = service(function()
   local open_cmd = nil
 
   if vim.fn.has("unix") == 1 then
@@ -122,13 +122,13 @@ M.open_uri = U.Service(function()
 end)
 
 --- sets color colorcolumn on the below filetypes
-M.color_col = U.Service(function()
+M.color_col = service(function()
   local seq_str = U.seq(120, 999, ',', 1)
   vim.wo.colorcolumn = seq_str
 end)
 
 --- highlights yanked text for a period of time
-M.highlight_yank = U.Service(function()
+M.highlight_yank = service(function()
   local timeout = 150
   local hl = 'Search'
 
@@ -141,7 +141,7 @@ M.highlight_yank = U.Service(function()
 end)
 
 --- disables some of the builtin neovim plugins
-M.disable_builtin_plugins = U.Service(function()
+M.disable_builtin_plugins = service(function()
   local disabled_built_ins = {
     "gzip",
     "tar",
@@ -173,7 +173,7 @@ M.disable_builtin_plugins = U.Service(function()
 end)
 
 --- defines TermSmartEsc(), conditionally escapes term mode depending on the running process
-M.term_smart_esc = U.Service(function()
+M.term_smart_esc = service(function()
   local exclude_process_names = { 'nvim', 'lazygit', 'gitui' }
 
   function TermSmartEsc(fallback_key, term_pid)
@@ -199,7 +199,7 @@ M.term_smart_esc = U.Service(function()
 end)
 
 --- prompts to install ts parsers upon opening new file types with available ones.
-M.auto_install_ts_parser = U.Service(function()
+M.auto_install_ts_parser = service(function()
   local blacklist = {}
 
   vim.api.nvim_create_autocmd('FileType', {
@@ -224,7 +224,7 @@ M.auto_install_ts_parser = U.Service(function()
 end)
 
 --- pets!
-M.pets = U.Service(function()
+M.pets = service(function()
   local pets = {}
   local conf = { character = '#', speed = 1 }
 
@@ -289,7 +289,7 @@ M.pets = U.Service(function()
 end)
 
 --- buffer edits (remove trailing spaces, EOLs)
-M.buffer_edits = U.Service(function()
+M.buffer_edits = service(function()
   function RemoveTrailingWS()
     -- Save cursor position to later restore
     local curpos = vim.api.nvim_win_get_cursor(0)
@@ -314,7 +314,7 @@ M.buffer_edits = U.Service(function()
 end)
 
 --- automatically create missing directories in the file path
-M.auto_create_dir = U.Service(function()
+M.auto_create_dir = service(function()
   vim.api.nvim_create_autocmd('BufWritePre', {
     group = vim.api.nvim_create_augroup('auto_create_dir', {}),
     callback = function(ctx)
@@ -325,7 +325,7 @@ end)
 
 --- defines LoremPicsum(), inserts a random image with prompted dimensions
 -- TODO: add :require(FT.PLUGIN, 'plenary.nvim')
-M.lorem_picsum = U.Service(function()
+M.lorem_picsum = service(function()
   local curl = require 'plenary.curl'
 
   local function parse_int(str) return str:match("^%-?%d+$") end
@@ -352,7 +352,7 @@ end)
 
 --- defines GitIgnoreFill(), prompts for a gitignore template and inserts it
 -- TODO: add :require(FT.PLUGIN, 'plenary.nvim')
-M.auto_gitignore_io = U.Service(function()
+M.auto_gitignore_io = service(function()
   local curl = require 'plenary.curl'
   -- local is_in_progress = false
 
@@ -396,7 +396,7 @@ M.auto_gitignore_io = U.Service(function()
 end)
 
 --- conceals html classes
-M.conceal_html_classes = U.Service({}, function()
+M.conceal_html_classes = service(function()
   local namespace = vim.api.nvim_create_namespace("class_conceal")
   local group = vim.api.nvim_create_augroup("class_conceal", {})
 
@@ -435,7 +435,7 @@ M.conceal_html_classes = U.Service({}, function()
 end)
 
 --- higlights CursorLineNr with current mode highlight
-M.auto_curlinenr_mode = U.Service(function()
+M.auto_curlinenr_mode = service(function()
   vim.api.nvim_create_autocmd('ModeChanged', {
     group = vim.api.nvim_create_augroup('auto_curlinenr_mode', {}),
     callback = function(ctx)
@@ -447,7 +447,7 @@ M.auto_curlinenr_mode = U.Service(function()
 end)
 
 --- configure neovide
-M.neovide = U.Service(function()
+M.neovide = service(function()
   -- local function set_gui_font(name, size) vim.o.guifont = string.format("%s:h%s", name, size) end
   if vim.g.neovide then
     vim.o.guifont="BlexMono Nerd Font Mono:h8"

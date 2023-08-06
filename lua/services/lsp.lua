@@ -1,6 +1,6 @@
 local M = {}
 
-M.setup_lspconfig_server = U.Service({ { FT.PLUGIN, 'nvim-lspconfig' } }, function(server_name, opts)
+M.setup_lspconfig_server = service({{ FT.PLUGIN, 'nvim-lspconfig' }}, function(server_name, opts)
   local lspconf = require 'lspconfig'
 
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -52,7 +52,7 @@ M.setup_lspconfig_server = U.Service({ { FT.PLUGIN, 'nvim-lspconfig' } }, functi
 end)
 
 -- TODO: require mason-lspconfig.nvim instead once PM registers deps
-M.setup_servers = U.Service({ { FT.PLUGIN, 'mason.nvim' } }, function(lsp_servers_configs)
+M.setup_servers = service({{ FT.PLUGIN, 'mason.nvim' }}, function(lsp_servers_configs)
   local lspconfig_util = require 'lspconfig.util'
 
   -- lsp servers
@@ -393,7 +393,7 @@ M.setup_servers = U.Service({ { FT.PLUGIN, 'mason.nvim' } }, function(lsp_server
   end
 end)
 
-M.setup = U.Service({ { FT.LSP, 'setup' } }, { { FT.PLUGIN, 'mason.nvim' }, { FT.PLUGIN, 'nvim-lspconfig' } }, function()
+M.setup = service({{ FT.LSP, 'setup' }}, {{ FT.PLUGIN, 'mason.nvim' }, { FT.PLUGIN, 'nvim-lspconfig' }}, function()
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- per line nvim diagnostics
@@ -419,7 +419,7 @@ M.setup = U.Service({ { FT.LSP, 'setup' } }, { { FT.PLUGIN, 'mason.nvim' }, { FT
   end
 end)
 
-M.rename = U.Service(function()
+M.rename = service(function()
   if Features:has(FT.CONF, 'inc-rename.nvim') then
     vim.api.nvim_feedkeys(':IncRename ' .. vim.fn.expand('<cword>'), '', false)
     -- require 'inc_rename'.setup()
@@ -465,7 +465,7 @@ M.rename = U.Service(function()
   end
 end)
 
-M.references = U.Service(function()
+M.references = service(function()
   if Features:has(FT.CONF, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_references]]
   else
@@ -473,7 +473,7 @@ M.references = U.Service(function()
   end
 end)
 
-M.definition = U.Service(function()
+M.definition = service(function()
   if Features:has(FT.CONF, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_definitions]]
   else
@@ -481,28 +481,28 @@ M.definition = U.Service(function()
   end
 end)
 
-M.code_action = U.Service(function()
+M.code_action = service(function()
   vim.lsp.buf.code_action()
 end)
 
-M.hover = U.Service(function()
+M.hover = service(function()
   vim.lsp.buf.hover()
 end)
 
-M.format = U.Service(function()
+M.format = service(function()
   vim.lsp.buf.format()
 end)
 
-M.diags_list = U.Service(function()
+M.diags_list = service(function()
   vim.diagnostic.setloclist()
   -- vim.diagnostic.setqflist()
 end)
 
-M.diags_hover = U.Service(function()
+M.diags_hover = service(function()
   vim.diagnostic.open_float()
 end)
 
-M.setup_buf_fmt_on_save = U.Service(function(client, bufnr)
+M.setup_buf_fmt_on_save = service(function(client, bufnr)
   local augroup_fmt_on_save = vim.api.nvim_create_augroup('format_on_save', {})
   if client.supports_method("textDocument/formatting") then
     vim.api.nvim_clear_autocmds({ group = augroup_fmt_on_save, buffer = bufnr })
@@ -514,7 +514,7 @@ M.setup_buf_fmt_on_save = U.Service(function(client, bufnr)
   end
 end)
 
-M.toggle_diags = U.Service({}, function()
+M.toggle_diags = service({}, function()
   -- TODO ...
 end)
 

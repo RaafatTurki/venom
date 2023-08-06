@@ -50,7 +50,7 @@ M.ts_parsers_ensure_installed = {
   'yaml',
 }
 
-M.setup = U.Service({{FT.LANG, 'setup'}}, {}, function()
+M.setup = service({{FT.LANG, 'setup'}}, nil, function()
   -- mason
   if Features:has(FT.PLUGIN, 'mason.nvim') then
     require 'mason'.setup {
@@ -132,7 +132,7 @@ M.setup = U.Service({{FT.LANG, 'setup'}}, {}, function()
   end
 end)
 
-M.toggle_spell = U.Service(function()
+M.toggle_spell = service(function()
   vim.wo.spell = not vim.wo.spell
 end)
 
@@ -140,7 +140,7 @@ end)
 M.texab_build_status = 0
 
 M.builders = {
-  texlab = U.Service(function(bufnr)
+  texlab = service(function(bufnr)
     -- local build_status = vim.tbl_add_reverse_lookup { Success = 0, Error = 1, Failure = 2, Cancelled = 3, }
     local util = require 'lspconfig.util'
     bufnr = util.validate_bufnr(bufnr)

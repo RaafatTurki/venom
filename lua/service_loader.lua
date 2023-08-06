@@ -156,12 +156,6 @@ local plugins = {
   -- },
   -- p.dap,
   -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
-  -- UNCHARTED:
-  -- { 'folke/paint.nvim',
-  --   config = function()
-  --     Events.plugin_setup:sub(Plugins.paint)
-  --   end,
-  -- },
 }
 
 Events.install_pre:sub(function()

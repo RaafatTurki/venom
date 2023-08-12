@@ -26,14 +26,17 @@ local mod = function(hex, amt)
   return string.format("#%06x", rgb)
 end
 
-local mix = function(color1, color2)
+local mix = function(color1, color2, weight1, weight2)
   color1 = string.sub(color1, 2)
   color2 = string.sub(color2, 2)
   -- convert hex colors to decimal values
   local r1, g1, b1 = tonumber("0x"..string.sub(color1, 1, 2)), tonumber("0x"..string.sub(color1, 3, 4)), tonumber("0x"..string.sub(color1, 5, 6))
   local r2, g2, b2 = tonumber("0x"..string.sub(color2, 1, 2)), tonumber("0x"..string.sub(color2, 3, 4)), tonumber("0x"..string.sub(color2, 5, 6))
-  -- average the values to get the mixed color
-  local r, g, b = (r1 + r2) / 2, (g1 + g2) / 2, (b1 + b2) / 2
+  -- calculate weighted average values to get the mixed color
+  local totalWeight = weight1 + weight2
+  local r = (r1 * weight1 + r2 * weight2) / totalWeight
+  local g = (g1 * weight1 + g2 * weight2) / totalWeight
+  local b = (b1 * weight1 + b2 * weight2) / totalWeight
   -- convert decimal values back to hex
   return string.format("#%02x%02x%02x", r, g, b)
 end
@@ -128,6 +131,10 @@ local c = {
   mod       = blue[1],
   del       = red[1],
   mod_alt   = cyan[1],
+  add_dim   = mix(green[1], black[1], 1, 1),
+  mod_dim   = mix(blue[1], black[1], 1, 1),
+  del_dim   = mix(red[1], black[1], 1, 1),
+  mod_alt_dim = mix(cyan[1], black[1], 1, 1),
 
   -- vsc
   dirty     = orange[4],
@@ -465,6 +472,14 @@ healthBar               = { '@debug' };
   GitSignsDelete          = { fg = c.del };
   GitSignsDeleteNr        = { fg = c.del };
   GitSignsDeleteLn        = { fg = c.del };
+
+  -- git-conflict
+  GitConflictIncomingLabel= { bg = c.add_dim, fg = c.add, bold = true };
+  GitConflictCurrentLabel = { bg = c.mod_dim, fg = c.mod, bold = true };
+  GitConflictAncestorLabel= { bg = c.mod_alt_dim, fg = c.mod_alt, bold = true };
+  GitConflictIncoming     = { bg = c.add_dim };
+  GitConflictCurrent      = { bg = c.mod_dim };
+  GitConflictAncestor     = { bg = c.mod_alt_dim };
 
   -- cmp
   CmpItemAbbr             = { fg = c.fold };

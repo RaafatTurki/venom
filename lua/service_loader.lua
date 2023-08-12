@@ -83,6 +83,7 @@ local plugins = {
       Events.plugin_setup:sub(Plugins.gitsigns)
     end
   },
+  { 'akinsho/git-conflict.nvim' },
   { 'nvim-neo-tree/neo-tree.nvim',
     branch = "v3.x",
     dependencies = {
@@ -194,6 +195,13 @@ Events.install_post:sub(function()
   Statusbar.setup()
 
   Bind.setup_plugins()
+
+  require 'git-conflict'.setup {
+    debug = false,
+    default_commands = true, -- disable commands created by this plugin
+    default_mappings = false,
+    disable_diagnostics = true,
+  }
 end)
 
 PluginManager.setup(plugins)

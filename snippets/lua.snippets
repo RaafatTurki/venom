@@ -3,8 +3,8 @@
 # 		require '${3}'.setup {${0}}
 # 	end)
 
-snippet Service plugin service
-	M.${1} = U.Service({{FT.CONF, '${2}'}}, {}, function()
+snippet service plugin service
+	M.${1} = U.service({{FT.CONF, '${2}'}}, nil, function()
 		require '${3}'.setup {${0}}
 	end)
 

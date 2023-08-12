@@ -2,6 +2,7 @@ local M = {}
 
 M.plugin_manager_name = 'lazy.nvim'
 M.install_path = vim.fn.stdpath("data") .. '/lazy/'
+M.dev_path = '~/sectors/nvim/'
 
 --- bootstraps the plugin manager if not installed
 M.bootstrap = service(function()
@@ -30,7 +31,7 @@ M.setup = service(function(plugins)
   require 'lazy'.setup(plugins, {
     root = M.install_path,
     dev = {
-      path = '~/sectors/nvim/',
+      path = M.dev_path,
     },
     install = {
       colorscheme = { 'venom' }

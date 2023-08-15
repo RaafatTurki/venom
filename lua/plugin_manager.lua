@@ -34,7 +34,7 @@ M.setup = service(function(plugins)
       path = M.dev_path,
     },
     install = {
-      colorscheme = { 'venom' }
+      colorscheme = { default_colorscheme }
     },
     ui = {
       size = { width = 142, height = 0.8 },

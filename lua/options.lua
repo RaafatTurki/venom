@@ -2,7 +2,7 @@
 -- vim.g.did_load_filetypes = 0
 -- vim.g.do_filetype_lua   = 1
 
-vim.cmd.colorscheme 'venom'
+vim.cmd.colorscheme(default_colorscheme)
 
 -- vim builtin options
 vim.o.number         = true

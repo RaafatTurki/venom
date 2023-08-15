@@ -3,6 +3,7 @@ service = U.service
 
 Features = U.FeatureList():new()
 
+default_colorscheme = 'venom'
 -- TODO: make it the responsibility of the related service to instantiate events here
 Events = {
   enter = U.Event("enter"):new(),

@@ -1,9 +1,11 @@
 local M = {}
 
+event.session_write_pre = U.Event("session_write_pre"):new()
+
 M.local_session_file = vim.fn.getcwd() .. '/.venom.json'
 M.is_in_local_session = false
 
-M.setup = service({{FT.SESSION, "setup"}}, nil, function()
+M.setup = service({{feat.SESSION, "setup"}}, nil, function()
   -- auto save on leave
   vim.api.nvim_create_autocmd('VimLeavePre', {
     group = vim.api.nvim_create_augroup('auto_save_session_on_leave', {}),
@@ -27,21 +29,21 @@ M.setup = service({{FT.SESSION, "setup"}}, nil, function()
   })
 
   -- save session on fs update event
-  Events.fs_update:sub(function()
+  event.fs_update:sub(function()
     if M.is_in_local_session then
       M.save()
     end
   end)
 
   -- save session on buflist update
-  Events.buflist_update:sub(function()
+  event.buflist_update:sub(function()
     if M.is_in_local_session then
       M.save()
     end
   end)
 end)
 
-M.save = service({{FT.SESSION, "setup"}}, function()
+M.save = service({{feat.SESSION, "setup"}}, function()
   local json = vim.fn.json_encode({
     general = {
       -- cwd = vim.fn.getcwd(),
@@ -56,7 +58,7 @@ M.save = service({{FT.SESSION, "setup"}}, function()
   end
 end)
 
-M.load = service({{FT.SESSION, "setup"}}, function()
+M.load = service({{feat.SESSION, "setup"}}, function()
   if U.is_file_exists(M.local_session_file) then
     local json = U.file_read(M.local_session_file)
     local data = vim.fn.json_decode(json)
@@ -73,7 +75,7 @@ M.load = service({{FT.SESSION, "setup"}}, function()
   end
 end)
 
-M.delete = service({{FT.SESSION, "setup"}}, function()
+M.delete = service({{feat.SESSION, "setup"}}, function()
   local del_result = U.file_del(M.local_session_file)
   if del_result then
     if M.is_in_local_session then

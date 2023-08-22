@@ -290,6 +290,13 @@ function M.trash_file(file_path, trash_cmd)
   end
 
   table.insert(exec_cmd, vim.fn.fnameescape(file_path))
+
+  -- local proc_exit_code = 0
+  -- vim.fn.jobstart(exec_cmd, {
+  --   on_exit = function(job_id, exit_code, event_type)
+  --     proc_exit_code = exit_code
+  --   end
+  -- })
   vim.fn.system(exec_cmd)
 end
 
@@ -315,6 +322,16 @@ function M.FeatureList()
     {}
   )
 end
+
+--- @enum feat
+feat = {
+  PLUGIN = "PLUGIN",
+  CONF = "CONF",
+  KEY = "KEY",
+  LANG = "LANG",
+  LSP = "LSP",
+  SESSION = "SESSION",
+}
 
 --- event class
 function M.Event(event_name)
@@ -368,7 +385,7 @@ function M.service(...)
   return function(...)
     -- ensure required features
     for _, req_feat in pairs(req_feats) do
-      if (not Features:has(req_feat[1], req_feat[2])) then
+      if (not feat_list:has(req_feat[1], req_feat[2])) then
         log.warn("missing feature: " .. table.concat(req_feat, ' / '), { stack_level_offset = 1 })
         return
       end
@@ -379,7 +396,7 @@ function M.service(...)
 
     -- add provided features
     for _, prov_feat in pairs(prov_feats) do
-      Features:add(prov_feat[1], prov_feat[2])
+      feat_list:add(prov_feat[1], prov_feat[2])
     end
     return return_val
   end

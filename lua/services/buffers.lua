@@ -1,5 +1,7 @@
 local M = {}
 
+event.buflist_update = U.Event("buflist_update"):new()
+
 M.labels = {
   '1', '2', '3',
   'q', 'w', 'e',
@@ -33,7 +35,7 @@ function M.Buffer()
         self.event_listener:start(self.file_path, {}, vim.schedule_wrap(function(err, _fname, status)
           if status.rename then
             M.buf_del(self.bufnr)
-            Events.fs_update()
+            event.fs_update()
           else
             vim.cmd.checktime()
             self.event_listener:stop()
@@ -141,14 +143,14 @@ end
 M.buf_add = function(bufnr)
   local buffer = M.Buffer():new(bufnr)
   table.insert(M.buflist, buffer)
-  Events.buflist_update()
+  event.buflist_update()
 end
 
 M.buf_del = function(bufnr)
   for i, buf in ipairs(M.buflist) do
     if bufnr == buf.bufnr then
       table.remove(M.buflist, i)
-      Events.buflist_update()
+      event.buflist_update()
     end
   end
 end
@@ -167,7 +169,7 @@ M.focus_buf_in_buflist_by_index = function(index, delta)
   if (index and target_index <= #M.buflist and target_index > 0) then
     local buffer = M.buflist[target_index]:switch_to()
   end
-  Events.buflist_update()
+  event.buflist_update()
 end
 
 M.focus_buf_rel_to_curr_buf_in_buflist = function(delta)
@@ -183,7 +185,7 @@ M.shift_buf_in_buflist_by_index = function(index, delta)
     table.insert(M.buflist, target_index, buffer)
   end
   vim.cmd.redrawtabline()
-  Events.buflist_update()
+  event.buflist_update()
 end
 
 M.shift_curr_buf_in_buflist = function(delta)

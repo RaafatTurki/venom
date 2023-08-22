@@ -1,12 +1,12 @@
 local M = {}
 
-M.setup_lspconfig_server = service({{ FT.PLUGIN, 'nvim-lspconfig' }}, function(server_name, opts)
+M.setup_lspconfig_server = service({{ feat.PLUGIN, 'nvim-lspconfig' }}, function(server_name, opts)
   local lspconf = require 'lspconfig'
 
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
-  if Features:has(FT.CONF, 'nvim-cmp') then
+  if feat_list:has(feat.CONF, 'nvim-cmp') then
     shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities()
-  elseif Features:has(FT.CONF, 'coq_nvim') then
+  elseif feat_list:has(feat.CONF, 'coq_nvim') then
     opts = require 'coq'.lsp_ensure_capabilities(opts)
   end
 
@@ -22,12 +22,12 @@ M.setup_lspconfig_server = service({{ FT.PLUGIN, 'nvim-lspconfig' }}, function(s
       -- Lsp.setup_buf_fmt_on_save(client, bufnr)
 
       -- navic
-      if Features:has(FT.CONF, 'nvim-navic') then
+      if feat_list:has(feat.CONF, 'nvim-navic') then
         require 'nvim-navic'.attach(client, bufnr)
       end
 
       -- lsp-overloads
-      if Features:has(FT.CONF, 'lsp-overloads.nvim') and client.server_capabilities.signatureHelpProvider then
+      if feat_list:has(feat.CONF, 'lsp-overloads.nvim') and client.server_capabilities.signatureHelpProvider then
         require 'lsp-overloads'.setup(client, {
           ui = {
             border = "single"
@@ -51,8 +51,7 @@ M.setup_lspconfig_server = service({{ FT.PLUGIN, 'nvim-lspconfig' }}, function(s
   lspconf[server_name].setup(vim.tbl_deep_extend('force', opts, shared_opts))
 end)
 
--- TODO: require mason-lspconfig.nvim instead once PM registers deps
-M.setup_servers = service({{ FT.PLUGIN, 'mason.nvim' }}, function(lsp_servers_configs)
+M.setup_servers = service({{feat.PLUGIN, 'mason.nvim'}, {feat.PLUGIN, 'mason-lspconfig.nvim'}}, function(lsp_servers_configs)
   local lspconfig_util = require 'lspconfig.util'
 
   -- lsp servers
@@ -62,7 +61,7 @@ M.setup_servers = service({{ FT.PLUGIN, 'mason.nvim' }}, function(lsp_servers_co
       M.setup_lspconfig_server(server_name, {})
     end,
     lua_ls = function()
-      if Features:has(FT.PLUGIN, 'neodev.nvim') then
+      if feat_list:has(feat.PLUGIN, 'neodev.nvim') then
         require("neodev").setup {
           library = {
             -- plugins = false,
@@ -75,9 +74,9 @@ M.setup_servers = service({{ FT.PLUGIN, 'mason.nvim' }}, function(lsp_servers_co
             diagnostics = {
               disable = { 'lowercase-global', 'trailing-space', 'unused-local' },
             },
-            -- workspace = {
-            --   checkThirdParty = false,
-            -- },
+            workspace = {
+              checkThirdParty = false,
+            },
             completion = {
               -- keywordSnippet="Disable",
               -- keywordSnippet="Replace",
@@ -255,7 +254,7 @@ M.setup_servers = service({{ FT.PLUGIN, 'mason.nvim' }}, function(lsp_servers_co
       })
     end,
     jdtls = function()
-      if Features:has(FT.PLUGIN, 'nvim-jdtls') then
+      if feat_list:has(feat.PLUGIN, 'nvim-jdtls') then
         function JDTLSSetup()
           local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
           local workspace_dir = vim.env['XDG_CACHE_HOME'] .. '/jdtls/workspaces/' .. project_name
@@ -345,7 +344,7 @@ M.setup_servers = service({{ FT.PLUGIN, 'mason.nvim' }}, function(lsp_servers_co
         -- single_file_support = true,
       }
 
-      if Features:has(FT.PLUGIN, 'typescript.nvim') then
+      if feat_list:has(feat.PLUGIN, 'typescript.nvim') then
         require("typescript").setup({
             disable_commands = false, -- prevent the plugin from creating Vim commands
             debug = false, -- enable debug logging for commands
@@ -393,11 +392,11 @@ M.setup_servers = service({{ FT.PLUGIN, 'mason.nvim' }}, function(lsp_servers_co
   end
 end)
 
-M.setup = service({{ FT.LSP, 'setup' }}, {{ FT.PLUGIN, 'mason.nvim' }, { FT.PLUGIN, 'nvim-lspconfig' }}, function()
+M.setup = service({{ feat.LSP, 'setup' }}, {{ feat.PLUGIN, 'mason.nvim' }, { feat.PLUGIN, 'nvim-lspconfig' }}, function()
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- per line nvim diagnostics
-  for type, icon in pairs(Icons.diagnostic_states) do
+  for type, icon in pairs(icons.diagnostic_states) do
     local hl = "DiagnosticSign" .. type
     -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
     vim.fn.sign_define(hl, { text = icon, texthl = hl })
@@ -414,13 +413,13 @@ M.setup = service({{ FT.LSP, 'setup' }}, {{ FT.PLUGIN, 'mason.nvim' }, { FT.PLUG
   -- vim.api.nvim_create_user_command('LspDiagsToggle', function() M.diags_toggle() end, {})
 
   -- inc-rename
-  if Features:has(FT.CONF, 'inc-rename.nvim') then
+  if feat_list:has(feat.CONF, 'inc-rename.nvim') then
     require 'inc_rename'.setup()
   end
 end)
 
 M.rename = service(function()
-  if Features:has(FT.CONF, 'inc-rename.nvim') then
+  if feat_list:has(feat.CONF, 'inc-rename.nvim') then
     vim.api.nvim_feedkeys(':IncRename ' .. vim.fn.expand('<cword>'), '', false)
     -- require 'inc_rename'.setup()
     -- inc-rename.nvim
@@ -466,7 +465,7 @@ M.rename = service(function()
 end)
 
 M.references = service(function()
-  if Features:has(FT.CONF, 'telescope.nvim') then
+  if feat_list:has(feat.CONF, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_references]]
   else
     vim.lsp.buf.references()
@@ -474,7 +473,7 @@ M.references = service(function()
 end)
 
 M.definition = service(function()
-  if Features:has(FT.CONF, 'telescope.nvim') then
+  if feat_list:has(feat.CONF, 'telescope.nvim') then
     vim.cmd [[Telescope lsp_definitions]]
   else
     vim.lsp.buf.definition()

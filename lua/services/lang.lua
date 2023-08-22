@@ -50,9 +50,9 @@ M.ts_parsers_ensure_installed = {
   'yaml',
 }
 
-M.setup = service({{FT.LANG, 'setup'}}, nil, function()
+M.setup = service({{feat.LANG, 'setup'}}, nil, function()
   -- mason
-  if Features:has(FT.PLUGIN, 'mason.nvim') then
+  if feat_list:has(feat.PLUGIN, 'mason.nvim') then
     require 'mason'.setup {
       ui = {
         border = 'single',
@@ -77,7 +77,7 @@ M.setup = service({{FT.LANG, 'setup'}}, nil, function()
   end
 
   -- mini.comment
-  if Features:has(FT.CONF, 'mini.nvim') then
+  if feat_list:has(feat.PLUGIN, 'mini.nvim') then
     require 'mini.comment'.setup {
       mappings = {
         comment = '<space>c',
@@ -99,9 +99,9 @@ M.setup = service({{FT.LANG, 'setup'}}, nil, function()
   end
 
   -- navic
-  if Features:has(FT.CONF, 'nvim-navic') then
+  if feat_list:has(feat.CONF, 'nvim-navic') then
     local navic_icons = {}
-    for name, icon in pairs(Icons.item_kinds) do navic_icons[name] = icon .. ' ' end
+    for name, icon in pairs(icons.item_kinds) do navic_icons[name] = icon .. ' ' end
     vim.g.navic_silence = true
     require 'nvim-navic'.setup {
       highlight = true,
@@ -111,7 +111,7 @@ M.setup = service({{FT.LANG, 'setup'}}, nil, function()
   end
 
   -- treesitter
-  if Features:has(FT.PLUGIN, 'nvim-treesitter') then
+  if feat_list:has(feat.PLUGIN, 'nvim-treesitter') then
     require 'nvim-treesitter.configs'.setup {
       -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       ensure_installed = M.ts_parsers_ensure_installed,

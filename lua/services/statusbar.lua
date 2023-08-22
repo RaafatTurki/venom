@@ -2,7 +2,7 @@ local M = {}
 
 M.components = {}
 
-M.setup = service({{FT.PLUGIN, "heirline.nvim"}}, function()
+M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
   local utils = require 'heirline/utils'
   local conditions = require 'heirline/conditions'
 
@@ -219,7 +219,7 @@ M.setup = service({{FT.PLUGIN, "heirline.nvim"}}, function()
     end,
     hl = hi_finalize('GitSignsDelete'),
     condition = function()
-      return conditions.is_git_repo() and Features:has(FT.CONF, 'gitsigns.nvim')
+      return conditions.is_git_repo() and feat_list:has(feat.CONF, 'gitsigns.nvim')
     end,
     -- branch
     {
@@ -259,7 +259,7 @@ M.setup = service({{FT.PLUGIN, "heirline.nvim"}}, function()
   M.components.navic = {
     {
       condition = function()
-        if Features:has(FT.PLUGIN, 'nvim-navic') then
+        if feat_list:has(feat.PLUGIN, 'nvim-navic') then
           return require("nvim-navic").is_available()
         end
       end,
@@ -273,7 +273,7 @@ M.setup = service({{FT.PLUGIN, "heirline.nvim"}}, function()
 
   M.components.luasnip = {
     condition = function()
-      if Features:has(FT.PLUGIN, 'LuaSnip') then
+      if feat_list:has(feat.PLUGIN, 'LuaSnip') then
         return require 'luasnip'.jumpable()
       else
         return false
@@ -282,7 +282,7 @@ M.setup = service({{FT.PLUGIN, "heirline.nvim"}}, function()
     provider = function()
       local forward = require 'luasnip'.jumpable(1) and '' or ''
       local backward = require 'luasnip'.jumpable(-1) and '' or ''
-      return backward .. Icons.item_kinds.Snippet .. forward
+      return backward .. icons.item_kinds.Snippet .. forward
     end,
     hl = hi_finalize('CmpItemKindSnippet'),
   }
@@ -291,7 +291,7 @@ M.setup = service({{FT.PLUGIN, "heirline.nvim"}}, function()
     condition = function()
       return vim.wo.spell
     end,
-    provider = Icons.item_kinds.Text,
+    provider = icons.item_kinds.Text,
   }
 
   M.components.root_user = {
@@ -316,10 +316,10 @@ M.setup = service({{FT.PLUGIN, "heirline.nvim"}}, function()
       self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
     end,
     static = {
-      error_icon = Icons.diagnostic_states.Error,
-      warn_icon = Icons.diagnostic_states.Warn,
-      info_icon = Icons.diagnostic_states.Info,
-      hint_icon = Icons.diagnostic_states.Hint,
+      error_icon = icons.diagnostic_states.Error,
+      warn_icon = icons.diagnostic_states.Warn,
+      info_icon = icons.diagnostic_states.Info,
+      hint_icon = icons.diagnostic_states.Hint,
     },
     update = { "DiagnosticChanged", "BufEnter" },
     condition = conditions.has_diagnostics,
@@ -657,8 +657,8 @@ M.setup = service({{FT.PLUGIN, "heirline.nvim"}}, function()
       self.winid = win
 
       local ft_to_title = {
-        ['neo-tree'] = "File Explorer",
-        ['NvimTree'] = "File Explorer",
+        ['neo-tree'] = "",
+        ['NvimTree'] = "",
       }
 
       for ft, title in pairs(ft_to_title) do

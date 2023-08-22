@@ -1,15 +1,17 @@
 local M = {}
 
+event.plugin_setup = U.Event("plugin_setup"):new()
+
 M.setup = service(function()
-  Events.plugin_setup()
+  event.plugin_setup()
 end)
 
-M.impatient = service({{FT.CONF, "impatient.nvim"}}, nil, function()
+M.impatient = service({{feat.CONF, "impatient.nvim"}}, nil, function()
   require 'impatient'
   require 'impatient'.enable_profile()
 end)
 
-M.illuminate = service({{FT.CONF, 'vim-illuminate'}}, nil, function()
+M.illuminate = service({{feat.CONF, 'vim-illuminate'}}, nil, function()
   -- default configuration
   require('illuminate').configure {
     filetypes_denylist = {
@@ -27,7 +29,7 @@ M.illuminate = service({{FT.CONF, 'vim-illuminate'}}, nil, function()
   }
 end)
 
-M.devicons = service({{FT.CONF, "nvim-web-devicons"}}, nil, function()
+M.devicons = service({{feat.CONF, "nvim-web-devicons"}}, nil, function()
   require 'nvim-web-devicons'.setup {
     override = {
       default_icon = {
@@ -40,7 +42,7 @@ M.devicons = service({{FT.CONF, "nvim-web-devicons"}}, nil, function()
   }
 end)
 
-M.dressing = service({{FT.CONF, "dressing.nvim"}}, nil, function()
+M.dressing = service({{feat.CONF, "dressing.nvim"}}, nil, function()
   require 'dressing'.setup {
     input = {
       border = 'single',
@@ -61,7 +63,7 @@ M.dressing = service({{FT.CONF, "dressing.nvim"}}, nil, function()
   }
 end)
 
-M.telescope = service({{FT.CONF, 'telescope.nvim'},{FT.CONF, 'telescope-fzf-native.nvim'}}, nil, function()
+M.telescope = service({{feat.CONF, 'telescope.nvim'},{feat.CONF, 'telescope-fzf-native.nvim'}}, nil, function()
   require 'telescope'.setup {
     extensions = {
       fzf = {
@@ -95,7 +97,7 @@ M.telescope = service({{FT.CONF, 'telescope.nvim'},{FT.CONF, 'telescope-fzf-nati
   require("telescope").load_extension("ui-select")
 end)
 
-M.notify = service({{FT.CONF, "nvim-notify"}}, nil, function()
+M.notify = service({{feat.CONF, "nvim-notify"}}, nil, function()
   local notify = require 'notify'
 
   notify.setup {
@@ -107,7 +109,7 @@ M.notify = service({{FT.CONF, "nvim-notify"}}, nil, function()
   vim.notify = notify
 end)
 
-M.bqf = service({{FT.CONF, 'nvim-bqf'}}, nil, function()
+M.bqf = service({{feat.CONF, 'nvim-bqf'}}, nil, function()
   require 'bqf'.setup {
     -- magic_window = false,
     -- auto_resize_height = true,
@@ -132,18 +134,18 @@ M.bqf = service({{FT.CONF, 'nvim-bqf'}}, nil, function()
   }
 end)
 
-M.reach = service({{FT.CONF, 'reach.nvim'}}, nil, function()
+M.reach = service({{feat.CONF, 'reach.nvim'}}, nil, function()
   require 'reach'.setup {
     notifications = false
   }
 end)
 
-M.grapple = service({{FT.CONF, 'grapple.nvim'}}, nil, function()
+M.grapple = service({{feat.CONF, 'grapple.nvim'}}, nil, function()
   require 'grapple'.setup {
   }
 end)
 
-M.gitsigns = service({{FT.CONF, "gitsigns.nvim"}}, nil, function()
+M.gitsigns = service({{feat.CONF, "gitsigns.nvim"}}, nil, function()
   require 'gitsigns'.setup {
     signs = {
       add          = { text = '│' },
@@ -156,7 +158,21 @@ M.gitsigns = service({{FT.CONF, "gitsigns.nvim"}}, nil, function()
   }
 end)
 
-M.cmp_ls = service({{FT.CONF, "nvim-cmp"}}, nil, function()
+M.git_conflict = U.service({{feat.CONF, 'git-conflict.nvim'}}, nil, function()
+  require 'git-conflict'.setup {
+    debug = false,
+    default_commands = true, -- disable commands created by this plugin
+    default_mappings = false,
+    disable_diagnostics = true,
+    highlights = {
+      current = 'diffOldFile',
+      incoming = 'diffNewFile',
+      -- ancestor = ''
+    }
+  }
+end)
+
+M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
   -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
   local ls = require 'luasnip'
   local ls_types = require 'luasnip.util.types'
@@ -164,12 +180,12 @@ M.cmp_ls = service({{FT.CONF, "nvim-cmp"}}, nil, function()
   require 'luasnip'.config.setup({
     ext_opts = {
       [ls_types.choiceNode] = {
-        active = { virt_text = { { Icons.item_kinds.Snippet, 'SnippetChoiceIndicator' } } },
-        passive = { virt_text = { { Icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
+        active = { virt_text = { { icons.item_kinds.Snippet, 'SnippetChoiceIndicator' } } },
+        passive = { virt_text = { { icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
       },
       [ls_types.insertNode] = {
-        active = { virt_text = { { Icons.item_kinds.Snippet, 'SnippetInsertIndicator' } } },
-        passive = { virt_text = { { Icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
+        active = { virt_text = { { icons.item_kinds.Snippet, 'SnippetInsertIndicator' } } },
+        passive = { virt_text = { { icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
       }
     },
   })
@@ -263,7 +279,7 @@ M.cmp_ls = service({{FT.CONF, "nvim-cmp"}}, nil, function()
         -- if entry.source.name == 'codeium' then
         --   vim_item.kind = ''
         -- else
-          vim_item.kind = Icons.item_kinds[vim_item.kind] or ''
+          vim_item.kind = icons.item_kinds[vim_item.kind] or ''
         -- end
         return vim_item
       end
@@ -314,11 +330,11 @@ M.cmp_ls = service({{FT.CONF, "nvim-cmp"}}, nil, function()
   })
 end)
 
-M.coq = service({{FT.CONF, 'coq_nvim'}}, nil, function()
+M.coq = service({{feat.CONF, 'coq_nvim'}}, nil, function()
   vim.cmd [[COQnow --shut-up]]
 end)
 
-M.nvim_tree = service({{FT.CONF, "nvim-tree.lua"}}, nil, function()
+M.nvim_tree = service({{feat.CONF, "nvim-tree.lua"}}, nil, function()
   vim.g.nvim_tree_allow_resize = 1
 
   local nvimtree_keybindings = {
@@ -400,10 +416,10 @@ M.nvim_tree = service({{FT.CONF, "nvim-tree.lua"}}, nil, function()
     diagnostics         = {
       enable = true,
       icons = {
-        hint    = Icons.diagnostic_states.Hint,
-        info    = Icons.diagnostic_states.Info,
-        warning = Icons.diagnostic_states.Warn,
-        error   = Icons.diagnostic_states.Error,
+        hint    = icons.diagnostic_states.Hint,
+        info    = icons.diagnostic_states.Info,
+        warning = icons.diagnostic_states.Warn,
+        error   = icons.diagnostic_states.Error,
       },
     },
     filters             = {
@@ -437,26 +453,13 @@ M.nvim_tree = service({{FT.CONF, "nvim-tree.lua"}}, nil, function()
   }
 end)
 
-M.neo_tree = service({{FT.CONF, "neo-tree.nvim"}}, nil, function()
-  require 'window-picker'.setup {
-    autoselect_one = true,
-    include_current = false,
-    filter_rules = {
-      bo = {
-        filetype = { 'neo-tree', "neo-tree-popup", "notify", "quickfix" },
-        buftype = { 'terminal' },
-      },
-    },
-    -- other_win_hl_color = '#e35e4f',
-  }
-
+M.neo_tree = service({{feat.CONF, "neo-tree.nvim"}}, nil, function()
   vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
   require 'neo-tree'.setup {
     add_blank_line_at_top = true,
     close_if_last_window = true,
-    -- use_popups_for_input = false,
-    popup_border_style = 'single',
+    use_popups_for_input = false,
     default_component_configs = {
       container = {
         enable_character_fade = false
@@ -464,80 +467,61 @@ M.neo_tree = service({{FT.CONF, "neo-tree.nvim"}}, nil, function()
       modified = {
         symbol = '•',
       },
-      name = {
-        -- trailing_slash = false,
-      },
       git_status = {
         symbols = {
           -- Change type
-          added     = '',
-          modified  = '',
-          deleted   = "✖",
-          renamed   = "⭢",
+          added     = "A",
+          deleted   = "D",
+          modified  = "M",
+          renamed   = "R",
           -- Status type
-          untracked = "?",
-          ignored   = "☒",
-          unstaged  = "☐",
-          staged    = "☑",
-          conflict  = "",
+          untracked = "??",
+          ignored   = "!!",
+          unstaged  = "",
+          staged    = "*",
+          conflict  = "CONFLICT",
         }
       },
       window = {
-        mappings = {
-          ["S"] = "split_with_window_picker",
-          ["s"] = "vsplit_with_window_picker",
-          ["t"] = "open_tabnew",
-          ["w"] = "open_with_window_picker",
-          ["C"] = "close_node",
-          ["z"] = "close_all_nodes",
-          -- ["Z"] = "expand_all_nodes",
-          ["a"] = {
-            "add",
-            -- some commands may take optional config options, see `:h neo-tree-mappings` for details
-            config = {
-              show_path = "none" -- "none", "relative", "absolute"
-            }
-          },
-          ["A"] = "add_directory", -- also accepts the optional config.show_path option like "add".
-          ["d"] = "delete",
-          ["r"] = "rename",
-          ["y"] = "copy_to_clipboard",
-          ["x"] = "cut_to_clipboard",
-          ["p"] = "paste_from_clipboard",
-          ["c"] = "copy", -- takes text input for destination, also accepts the optional config.show_path option like "add":
-          -- ["c"] = {
-          --  "copy",
-          --  config = {
-          --    show_path = "none" -- "none", "relative", "absolute"
-          --  }
-          --}
-          ['m'] = "move", -- takes text input for destination, also accepts the optional config.show_path option like "add".
-          ['q'] = "close_window",
-          ['R'] = "refresh",
-          ['?'] = "show_help",
-          ['<'] = "prev_source",
-          ['>'] = "next_source",
-        }
+      --   mappings = {
+      --     ["S"] = "split",
+      --     ["s"] = "vsplit",
+      --     ["t"] = "open_tabnew",
+      --     ["w"] = "open",
+      --     ["C"] = "close_node",
+      --     ["z"] = "close_all_nodes",
+      --     -- ["Z"] = "expand_all_nodes",
+      --     ["a"] = {
+      --       "add",
+      --       -- some commands may take optional config options, see `:h neo-tree-mappings` for details
+      --       config = {
+      --         show_path = "none" -- "none", "relative", "absolute"
+      --       }
+      --     },
+      --     ["A"] = "add_directory", -- also accepts the optional config.show_path option like "add".
+      --     ["d"] = "delete",
+      --     ["r"] = "rename",
+      --     ["y"] = "copy_to_clipboard",
+      --     ["x"] = "cut_to_clipboard",
+      --     ["p"] = "paste_from_clipboard",
+      --     ["c"] = "copy", -- takes text input for destination, also accepts the optional config.show_path option like "add":
+      --     -- ["c"] = {
+      --     --  "copy",
+      --     --  config = {
+      --     --    show_path = "none" -- "none", "relative", "absolute"
+      --     --  }
+      --     --}
+      --     ['m'] = "move", -- takes text input for destination, also accepts the optional config.show_path option like "add".
+      --     ['q'] = "close_window",
+      --     ['R'] = "refresh",
+      --     ['?'] = "show_help",
+      --     ['<'] = "prev_source",
+      --     ['>'] = "next_source",
+      --   }
       },
-      indent = {
-        with_expanders = true,
-        expander_collapsed = '>',
-        expander_expanded = 'v',
-        expander_highlight = 'NeoTreeExpander',
-      },
-    },
-    nesting_rules = {
-      -- js = { 'js.map', 'd.ts' },
-      -- ['+layout.svelte'] = { '+layout.js', '+layout.ts', '+layout.server.js', '+layout.server.js' },
-      -- ['+page.svelte'] = { '+page.js', '+page.ts', '+page.server.js', '+page.server.js' },
-
-      -- ["js"] = { "js.map" },
-      -- ['svelte'] = { 'svelte.js', 'svelte.ts' },
-      -- ['*.svelte'] = { '*.js', '*.ts', '*.svelte.ts' },
-
-      -- ['+page.svelte'] = { '+page.js', '+page.ts', '+page.server.js', '+page.server.js' },
     },
     filesystem = {
+      -- hijack_netrw_behavior = "open_current",
       filtered_items = {
         hide_dotfiles = true,
         hide_by_name = {
@@ -581,26 +565,86 @@ M.neo_tree = service({{FT.CONF, "neo-tree.nvim"}}, nil, function()
       },
       window = {
         mappings = {
-          ["s"] = "system_open",
-          ["v"] = "open_vsplit",
-          ["\\"] = "open_in_terminal",
+          ["o"] = "system_open",
+          -- ["v"] = "open_vsplit",
+          -- ["\\"] = "open_in_terminal",
         },
-      },
-      follow_current_file = {
-        enable = true,
       },
       use_libuv_file_watcher = true,
     },
     source_selector = {
       winbar = true,
-      -- statusline = true,
+      separator = { left = "", right= "" },
+      content_layout = "center",
+      sources = {
+        {
+          source = "filesystem",
+          display_name = "󰉓 Files"
+        },
+        {
+          source = "git_status",
+          display_name = "󰊢 Git"
+        }
+      }
     }
   }
 
-  Events.session_write_pre:sub [[NeoTreeClose]]
+  event.session_write_pre:sub [[NeoTreeClose]]
 end)
 
-M.bufferline = service({{FT.CONF, 'bufferline.nvim'}}, nil, function()
+M.sfm = service({{feat.CONF, 'sfm.nvim'}}, nil, function()
+  local sfm_explorer = require 'sfm'.setup({
+    mappings = {
+      list = {
+        {
+          key = "dd",
+          action = "trash",
+        },
+        {
+          key = "dD",
+          action = "trash_selections",
+        },
+        {
+          key = 'a',
+          action = 'create',
+        },
+        {
+          key = 'c',
+          action = 'copy',
+        },
+        {
+          key = 'C',
+          action = 'copy_selections',
+        },
+        {
+          key = 'x',
+          action = 'move'
+        },
+        {
+          key = 'X',
+          action = 'move_selections'
+        },
+      },
+    },
+  })
+
+  if feat_list:has(feat.PLUGIN, 'sfm-git.nvim') then
+    sfm_explorer:load_extension("sfm-git", {
+      debounce_interval_ms = 100,
+      icons = {
+        unstaged = "",
+        staged = "*",
+        unmerged = "CONFLICT",
+        renamed = "R",
+        untracked = "??",
+        deleted = "D",
+        ignored = "!!"
+      },
+    })
+  end
+end)
+
+M.bufferline = service({{feat.CONF, 'bufferline.nvim'}}, nil, function()
   require 'bufferline'.setup {
     options = {
       mode = 'tabs',
@@ -623,7 +667,7 @@ M.bufferline = service({{FT.CONF, 'bufferline.nvim'}}, nil, function()
   }
 end)
 
-M.toggle_term = service({{FT.CONF, "toggleterm.nvim"}}, nil, function()
+M.toggle_term = service({{feat.CONF, "toggleterm.nvim"}}, nil, function()
   require 'toggleterm'.setup {
     open_mapping = [[<C-\>]],
     insert_mappings = true,
@@ -650,7 +694,7 @@ M.toggle_term = service({{FT.CONF, "toggleterm.nvim"}}, nil, function()
   }
 end)
 
-M.fidget = service({{FT.CONF, "fidget.nvim"}}, nil, function()
+M.fidget = service({{feat.CONF, "fidget.nvim"}}, nil, function()
   require 'fidget'.setup {
     window = {
       blend = 0,
@@ -658,7 +702,7 @@ M.fidget = service({{FT.CONF, "fidget.nvim"}}, nil, function()
   }
 end)
 
-M.mini_starter = service({{FT.CONF, "mini.nvim"}}, nil, function()
+M.mini_starter = service({{feat.CONF, "mini.nvim.starter"}}, nil, function()
   local starter = require 'mini.starter'
 
   local new_item = function(section, key, title, action)
@@ -681,7 +725,7 @@ M.mini_starter = service({{FT.CONF, "mini.nvim"}}, nil, function()
     new_item('Browse', 'r', 'Recent', 'Telescope oldfiles'),
   }
 
-  if Features:has(FT.SESSION, 'setup') then
+  if feat_list:has(feat.SESSION, 'setup') then
     -- last session
     table.insert(items, new_item('Session', 'x', 'Last session', function() Sessions.load() end))
     -- all other sessions
@@ -713,7 +757,7 @@ M.mini_starter = service({{FT.CONF, "mini.nvim"}}, nil, function()
   }
 end)
 
-M.mini_map = service({{FT.CONF, "mini.nvim"}}, nil, function()
+M.mini_map = service({{feat.CONF, "mini.nvim.map"}}, nil, function()
   local map = require('mini.map')
 
   require 'mini.map'.setup {
@@ -739,22 +783,22 @@ M.mini_map = service({{FT.CONF, "mini.nvim"}}, nil, function()
   })
 
   -- refresh on folding/unfolding
-  Events.fold_update:sub(map.refresh)
+  event.fold_update:sub(map.refresh)
 end)
 
-M.mini_bufremove = service({{FT.CONF, "mini.nvim"}}, nil, function()
+M.mini_bufremove = service({{feat.CONF, "mini.nvim.bufremove"}}, nil, function()
   require 'mini.bufremove'.setup()
 end)
 
-M.mini_pairs = service({{FT.CONF, 'mini.nvim'}}, nil, function()
+M.mini_pairs = service({{feat.CONF, 'mini.nvim.pairs'}}, nil, function()
   require 'mini.pairs'.setup {}
 end)
 
-M.mini_move = service({{FT.CONF, 'mini.nvim'}}, nil, function()
+M.mini_move = service({{feat.CONF, 'mini.nvim.move'}}, nil, function()
   require 'mini.move'.setup {}
 end)
 
-M.mini_hipatterns = service({{FT.CONF, 'mini.nvim'}}, nil, function()
+M.mini_hipatterns = service({{feat.CONF, 'mini.nvim.hipatterns'}}, nil, function()
   local hipatterns = require 'mini.hipatterns'
 
   require 'mini.hipatterns'.setup {
@@ -771,7 +815,25 @@ M.mini_hipatterns = service({{FT.CONF, 'mini.nvim'}}, nil, function()
   }
 end)
 
-M.corn = service({{FT.CONF, "corn.nvim"}}, nil, function()
+M.mini_files = service({{feat.CONF, 'mini.nvim.files'}}, nil, function()
+  require 'mini.files'.setup {
+    mappings = {
+      close       = 'q',
+      go_in       = '<Right>',
+      go_in_plus  = '',
+      go_out      = '<Left>',
+      go_out_plus = '',
+      reset       = '<Esc>',
+      reveal_cwd  = '<Space>',
+      show_help   = 'g?',
+      synchronize = '<CR>',
+      trim_left   = '<S-Left>',
+      trim_right  = '<S-Right>',
+    },
+  }
+end)
+
+M.corn = service({{feat.CONF, "corn.nvim"}}, nil, function()
   require 'corn'.setup()
   -- require 'corn'.setup {
   --   -- win_opts = {
@@ -786,9 +848,9 @@ M.corn = service({{FT.CONF, "corn.nvim"}}, nil, function()
   -- }
 end)
 
-M.trld = service({{FT.CONF, "trld.nvim"}}, nil, function()
+M.trld = service({{feat.CONF, "trld.nvim"}}, nil, function()
   local function get_icon_by_severity(severity)
-    local icon_set = Icons.diagnostic_states
+    local icon_set = icons.diagnostic_states
     local icons = {
       icon_set.Error,
       icon_set.Warn,
@@ -822,11 +884,11 @@ M.trld = service({{FT.CONF, "trld.nvim"}}, nil, function()
   }
 end)
 
-M.dirty_talk = service({{FT.CONF, 'vim-dirtytalk'}}, nil, function()
+M.dirty_talk = service({{feat.CONF, 'vim-dirtytalk'}}, nil, function()
   vim.opt.spelllang:append 'programming'
 end)
 
-M.hover = service({{FT.CONF, 'hover.nvim'}}, nil, function()
+M.hover = service({{feat.CONF, 'hover.nvim'}}, nil, function()
   require 'hover'.setup {
     init = function()
       require('hover.providers.lsp')
@@ -841,7 +903,7 @@ M.hover = service({{FT.CONF, 'hover.nvim'}}, nil, function()
   }
 end)
 
-M.paperplanes = service({{FT.CONF, 'paperplanes.nvim'}}, nil, function()
+M.paperplanes = service({{feat.CONF, 'paperplanes.nvim'}}, nil, function()
   require 'paperplanes'.setup {
     register = '+',
     -- provider = "0x0.st",
@@ -853,7 +915,7 @@ M.paperplanes = service({{FT.CONF, 'paperplanes.nvim'}}, nil, function()
   }
 end)
 
-M.fold_cycle = service({{FT.CONF, 'fold-cycle.nvim'}}, nil, function()
+M.fold_cycle = service({{feat.CONF, 'fold-cycle.nvim'}}, nil, function()
   require 'fold-cycle'.setup {
     open_if_max_closed = false,
     close_if_max_opened = false,
@@ -861,7 +923,7 @@ M.fold_cycle = service({{FT.CONF, 'fold-cycle.nvim'}}, nil, function()
   }
 end)
 
-M.fold_preview = service({{FT.CONF, 'fold-preview.nvim'}}, nil, function()
+M.fold_preview = service({{feat.CONF, 'fold-preview.nvim'}}, nil, function()
   local fold_preview = require 'fold-preview'
 
   fold_preview.setup {
@@ -869,14 +931,14 @@ M.fold_preview = service({{FT.CONF, 'fold-preview.nvim'}}, nil, function()
     border = 'single',
   }
 
-  Events.fold_update:sub(fold_preview.close_preview)
+  event.fold_update:sub(fold_preview.close_preview)
 end)
 
-M.icon_picker = service({{FT.CONF, 'icon-picker.nvim'}}, nil, function()
+M.icon_picker = service({{feat.CONF, 'icon-picker.nvim'}}, nil, function()
   require 'icon-picker'
 end)
 
-M.fzf_lua = service({{FT.CONF, 'fzf-lua'}}, nil, function()
+M.fzf_lua = service({{feat.CONF, 'fzf-lua'}}, nil, function()
   require 'fzf-lua'.setup {
     winopts = {
       border  = 'single',
@@ -891,17 +953,17 @@ M.fzf_lua = service({{FT.CONF, 'fzf-lua'}}, nil, function()
   }
 end)
 
-M.guess_indent = service({{FT.CONF, 'guess-indent.nvim'}}, nil, function()
+M.guess_indent = service({{feat.CONF, 'guess-indent.nvim'}}, nil, function()
   require 'guess-indent'.setup {}
 end)
 
-M.gomove = service({{FT.CONF, 'nvim-gomove'}}, nil, function()
+M.gomove = service({{feat.CONF, 'nvim-gomove'}}, nil, function()
   require 'gomove'.setup {
     map_defaults = false,
   }
 end)
 
-M.colorizer = service({{FT.CONF, 'nvim-colorizer.lua'}}, nil, function()
+M.colorizer = service({{feat.CONF, 'nvim-colorizer.lua'}}, nil, function()
   require 'colorizer'.setup {
     filetypes = {
       '*',
@@ -923,7 +985,7 @@ M.colorizer = service({{FT.CONF, 'nvim-colorizer.lua'}}, nil, function()
   }
 end)
 
-M.vim_markdown_composer = service({{FT.CONF, 'vim-markdown-composer'}}, nil, function()
+M.vim_markdown_composer = service({{feat.CONF, 'vim-markdown-composer'}}, nil, function()
   vim.g.markdown_composer_autostart = 0
   -- vim.g.markdown_composer_custom_css = 'file:///home/potato/markdown.css'
   -- vim.g.markdown_composer_syntax_theme = 'github-dark'
@@ -932,11 +994,11 @@ M.vim_markdown_composer = service({{FT.CONF, 'vim-markdown-composer'}}, nil, fun
   end
 end)
 
-M.overseer = service({{FT.CONF, 'overseer.nvim'}}, nil, function()
+M.overseer = service({{feat.CONF, 'overseer.nvim'}}, nil, function()
   require 'overseer'.setup {}
 end)
 
-M.rest = service({{FT.CONF, 'rest.nvim'}}, nil, function()
+M.rest = service({{feat.CONF, 'rest.nvim'}}, nil, function()
   require 'rest-nvim'.setup {
     -- skip_ssl_verification = false,
     -- result = {
@@ -951,7 +1013,7 @@ M.rest = service({{FT.CONF, 'rest.nvim'}}, nil, function()
   }
 end)
 
-M.paint = service({{FT.CONF, 'paint.nvim'}}, nil, function()
+M.paint = service({{feat.CONF, 'paint.nvim'}}, nil, function()
   require 'paint'.setup {
     highlights = {
       -- snippets
@@ -991,7 +1053,7 @@ M.paint = service({{FT.CONF, 'paint.nvim'}}, nil, function()
   }
 end)
 
-M.noice = service({{FT.CONF, 'noice.nvim'}}, nil, function()
+M.noice = service({{feat.CONF, 'noice.nvim'}}, nil, function()
   require 'noice'.setup {
     cmdline = {
       format = {
@@ -1047,15 +1109,18 @@ M.noice = service({{FT.CONF, 'noice.nvim'}}, nil, function()
   }
 end)
 
-M.hex = service({{FT.CONF, 'hex.nvim'}}, nil, function()
-  require 'hex'.setup {}
+M.hex = service({{feat.CONF, 'hex.nvim'}}, nil, function()
+  require 'hex'.setup {
+    -- is_file_binary_pre_read = function() return false end,
+    -- is_file_binary_post_read = function() return false end,
+  }
 end)
 
-M.image = service({{FT.CONF, 'image.nvim'}}, nil, function()
+M.image = service({{feat.CONF, 'image.nvim'}}, nil, function()
   require 'image'.setup {}
 end)
 
-M.peek = service({{FT.CONF, 'peek.nvim'}}, nil, function()
+M.peek = service({{feat.CONF, 'peek.nvim'}}, nil, function()
   require 'peek'.setup {
     -- auto_load = true,
     -- app = 'webview',
@@ -1068,7 +1133,7 @@ M.peek = service({{FT.CONF, 'peek.nvim'}}, nil, function()
   vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})
 end)
 
-M.otter = service({{FT.CONF, 'otter.nvim'}}, nil, function()
+M.otter = service({{feat.CONF, 'otter.nvim'}}, nil, function()
   local otter = require 'otter'
 
   vim.api.nvim_create_autocmd({ "BufEnter" }, {
@@ -1081,15 +1146,15 @@ M.otter = service({{FT.CONF, 'otter.nvim'}}, nil, function()
   })
 end)
 
-M.sentiment = service({{FT.CONF, 'sentiment.nvim'}}, nil, function()
+M.sentiment = service({{feat.CONF, 'sentiment.nvim'}}, nil, function()
   require 'sentiment'.setup {}
 end)
 
-M.modicator = service({{FT.CONF, 'modicator.nvim'}}, nil, function()
+M.modicator = service({{feat.CONF, 'modicator.nvim'}}, nil, function()
   require 'modicator'.setup {}
 end)
 
-M.edgy = service({{FT.CONF, 'edgy.nvim'}}, nil, function()
+M.edgy = service({{feat.CONF, 'edgy.nvim'}}, nil, function()
   require 'edgy'.setup {
     bottom = {
       { ft = "toggleterm", size = { height = 0.8 }, filter = function(buf, win) return vim.api.nvim_win_get_config(win).relative == "" end },

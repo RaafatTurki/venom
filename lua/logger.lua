@@ -87,7 +87,7 @@ setmetatable(M.log, {
 })
 
 -- process all cached_logs on enter
-Events.enter:sub(function()
+event.enter:sub(function()
   for i, log in ipairs(cached_logs) do
     process(log.val, log.opts, log.src)
   end

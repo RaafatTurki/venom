@@ -131,17 +131,13 @@ local c = {
   mod       = blue[1],
   del       = red[1],
   mod_alt   = cyan[1],
-  add_dim   = mix(green[1], black[1], 1, 1),
-  mod_dim   = mix(blue[1], black[1], 1, 1),
-  del_dim   = mix(red[1], black[1], 1, 1),
-  mod_alt_dim = mix(cyan[1], black[1], 1, 1),
 
-  -- vsc
-  dirty     = orange[4],
-  staged    = yellow[4],
-  merge     = purple[1],
-  renamed   = orange[1],
+  -- vcs
+  staged    = green[4],
+  unstaged  = grey[2],
+  conflict  = red[1],
   deleted   = red[1],
+  renamed   = blue[1],
 
   -- syntax
   comment   = grey[2],
@@ -204,7 +200,7 @@ local highlights = {
   ['@keyword.return']     = { '@keyword' },
   ['@conditional']        = { '@keyword' },
   ['@repeat']             = { '@keyword' },
-  ['@debug']              = { fg = c.debug },
+  ['@debug']              = { fg = c.debug, bg = c.debug },
   ['@label']              = { '@keyword' },
   ['@include']            = { fg = c.include },
   ['@exception']          = { '@keyword' },
@@ -319,7 +315,7 @@ local highlights = {
   LineNr          = { fg = c.comment, italic = true },
   LineNrAbove     = { }, --
   LineNrBelow     = { }, --
-  MatchParen      = { bold = true },
+  MatchParen      = { fg = c.fg, bold = true },
   ModeMsg         = { fg = c.fg, bold = true },
   MoreMsg         = { fg = c.info },
   MsgArea         = { fg = c.match },
@@ -342,7 +338,6 @@ local highlights = {
   SpellCap        = { }, --
   SpellLocal      = { }, --
   SpellRare       = { }, --
--- StatusLine      = { bg = c.debug }, --
   StatusLine      = { 'NormalFloat' }, --
   StatusLineNC    = { reverse = true },
   Substitute      = { 'CurSearch' },
@@ -355,7 +350,7 @@ local highlights = {
   Visual          = { bg = c.fold, bold = true },
   VisualNOS       = { }, --
   WarningMsg      = { fg = c.warn },
-Whitespace      = { 'Debug' },
+Whitespace      = { '@debug' },
   WildMenu        = { 'Pmenu' },
   WinBar          = { 'NormalFloat' },
   WinBarNC        = { }, --
@@ -473,14 +468,6 @@ healthBar               = { '@debug' };
   GitSignsDeleteNr        = { fg = c.del };
   GitSignsDeleteLn        = { fg = c.del };
 
-  -- git-conflict
-  GitConflictIncomingLabel= { bg = c.add_dim, fg = c.add, bold = true };
-  GitConflictCurrentLabel = { bg = c.mod_dim, fg = c.mod, bold = true };
-  GitConflictAncestorLabel= { bg = c.mod_alt_dim, fg = c.mod_alt, bold = true };
-  GitConflictIncoming     = { bg = c.add_dim };
-  GitConflictCurrent      = { bg = c.mod_dim };
-  GitConflictAncestor     = { bg = c.mod_alt_dim };
-
   -- cmp
   CmpItemAbbr             = { fg = c.fold };
   CmpItemAbbrDeprecated   = { fg = c.fold, strikethrough = true };
@@ -543,9 +530,9 @@ healthBar               = { '@debug' };
   NvimTreeIndentMarker    = { fg = c.mg };
   NvimTreeImageFile       = { fg = c.fg };
   NvimTreeOpenedFile      = { fg = c.fg };
-  NvimTreeGitDirty        = { fg = c.dirty };
-  NvimTreeGitStaged       = { fg = c.staged };
-  NvimTreeGitMerge        = { fg = c.merge };
+  NvimTreeGitDirty        = { fg = c.err };
+  NvimTreeGitStaged       = { fg = c.add };
+  NvimTreeGitMerge        = { fg = c.conflict };
   NvimTreeGitRenamed      = { fg = c.renamed };
   NvimTreeGitDeleted      = { fg = c.deleted };
   NvimTreeLspDiagnosticsError       = { 'DiagnosticSignError' };
@@ -567,14 +554,14 @@ healthBar               = { '@debug' };
   NeoTreeFilterTerm           = {};
   NeoTreeFloatBorder          = { 'FloatBorder' };
   NeoTreeFloatTitle           = { 'Title' };
-  NeoTreeGitAdded             = { 'NvimTreeGit' };
-  NeoTreeGitConflict          = { 'NvimTreeGitMerge' };
-  NeoTreeGitDeleted           = { 'NvimTreeGitDeleted' };
-  NeoTreeGitIgnored           = { fg = c.mg };
-  NeoTreeGitModified          = { 'NeoTreeModified' };
-  NeoTreeGitUnstaged          = { fg = c.dirty };
-  NeoTreeGitUntracked         = { fg = c.dirty };
-  NeoTreeGitStaged            = { 'NvimTreeGitStaged' };
+  NeoTreeGitAdded             = { fg = c.add };
+  NeoTreeGitConflict          = { fg = c.err };
+  NeoTreeGitDeleted           = { fg = c.del };
+  NeoTreeGitModified          = { fg = c.mod };
+  NeoTreeGitUntracked         = { fg = c.err };
+  NeoTreeGitIgnored           = { 'Comment' };
+  NeoTreeGitUnstaged          = { fg = c.unstaged };
+  NeoTreeGitStaged            = { fg = c.add, bold = true };
   NeoTreeHiddenByName         = { 'Comment' };
   NeoTreeIndentMarker         = { 'NvimTreeIndentMarker' };
   NeoTreeExpander             = { 'NvimTreeIndentMarker' };
@@ -585,7 +572,7 @@ healthBar               = { '@debug' };
   NeoTreeStatusLineNC         = {}; --
   NeoTreeVertSplit            = {}; --
   NeoTreeWinSeparator         = {}; --
-NeoTreeEndOfBuffer          = { '@debug' };
+  NeoTreeEndOfBuffer          = {};
   NeoTreeRootName             = { 'Title' };
 NeoTreeSymbolicLinkTarget   = { '@debug' };
 NeoTreeTitleBar             = { '@debug' };
@@ -594,6 +581,15 @@ NeoTreeWindowsHidden        = { '@debug' };
   NeoTreeTabInactive          = { 'Comment' };
   NeoTreeTabSeparatorActive   = { 'Ignore' };
   NeoTreeTabSeparatorInactive = { 'Ignore' };
+
+  -- sfm
+  SFMGitStaged    = { fg = c.add };
+  SFMGitUnstaged  = { fg = c.err };
+  SFMGitRenamed   = { fg = c.renamed };
+  SFMGitDeleted   = { fg = c.del };
+  SFMGitMerged    = { fg = c.conflict };
+  SFMGitNew       = { fg = c.add };
+  SFMGitIgnored   = { fg = c.comment };
 
   -- vim-quickui
   QuickBG                 = { bg = c.bg_float, fg = c.fg };
@@ -748,9 +744,6 @@ NeoTreeWindowsHidden        = { '@debug' };
   MiniHipatternsNote      = { bold = true, fg = c.note };
 
   -- CUTSOM GROUPS
-  -- DebugFg                 = { fg = debug[10] };
-  -- DebugBg                 = { bg = debug[1] };
-  -- DebugAll                = { bg = debug[1], fg = debug[10] };
   -- NormalAlt               = { bg = c.bg_alt };
   SnippetPassiveIndicator = { 'Comment' };
   SnippetInsertIndicator  = { fg = c.fg };

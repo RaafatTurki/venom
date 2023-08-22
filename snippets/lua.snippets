@@ -4,12 +4,12 @@
 # 	end)
 
 snippet service plugin service
-	M.${1} = U.service({{FT.CONF, '${2}'}}, nil, function()
+	M.${1} = service({{feat.CONF, '${2}'}}, nil, function()
 		require '${3}'.setup {${0}}
 	end)
 
-snippet Feature feature check
-  if Features:has(FT.PLUGIN, '${1}') then
+snippet feature feature check
+  if feat_list:has(feat.PLUGIN, '${1}') then
   	${0}
   end
 

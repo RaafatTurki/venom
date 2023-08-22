@@ -1,5 +1,8 @@
 local M = {}
 
+event.install_pre = U.Event("install_pre"):new()
+event.install_post = U.Event("install_post"):new()
+
 M.plugin_manager_name = 'lazy.nvim'
 M.install_path = vim.fn.stdpath("data") .. '/lazy/'
 M.dev_path = '~/sectors/nvim/'
@@ -26,7 +29,7 @@ end)
 M.setup = service(function(plugins)
   M.bootstrap()
 
-  Events.install_pre()
+  event.install_pre()
 
   require 'lazy'.setup(plugins, {
     root = M.install_path,
@@ -54,7 +57,7 @@ M.setup = service(function(plugins)
     M.register_plugin(v)
   end
 
-  Events.install_post()
+  event.install_post()
 end)
 
 --- returns plugin short name from a single plugin spec
@@ -92,10 +95,10 @@ end
 
 --- registers a plugin into the feature list as PLUGIN:<plugin short name>
 M.register_plugin = service(function(short_name)
-  if Features:has(FT.PLUGIN, short_name) then
+  if feat_list:has(feat.PLUGIN, short_name) then
     log.warn('attempt to feature re-register a plugin "' .. short_name .. '"')
   else
-    Features:add(FT.PLUGIN, short_name)
+    feat_list:add(feat.PLUGIN, short_name)
   end
 end)
 

@@ -51,9 +51,10 @@ M.setup = service(function(plugins)
 
   -- registering plugins that are both installed and listed
   local instaled_plugins = U.scan_dir(M.install_path)
+  local dev_plugins = M.get_dev_plugin_names_from_plugin_spec_tree(plugins)
   local listed_plugins = M.get_short_plugin_names_from_plugin_spec_tree(plugins)
 
-  for _, v in ipairs(U.tbl_intersect(instaled_plugins, listed_plugins)) do
+  for _, v in ipairs(U.tbl_intersect(U.tbl_union(instaled_plugins, dev_plugins), listed_plugins)) do
     M.register_plugin(v)
   end
 
@@ -70,9 +71,17 @@ M.get_short_name_from_plugin_spec = function(spec)
     name = spec[1]
   end
 
-  ---@diagnostic disable-next-line: missing-parameter
   local name_arr = vim.split(name, '/')
   return name_arr[#name_arr]
+end
+
+--- returns plugin dev bool from a single plugin spec
+M.get_dev_bool_from_plugin_spec = function(spec)
+  if type(spec) == 'table' and spec.dev ~= nil then
+    return spec.dev
+  end
+
+  return false
 end
 
 --- recurses through the plugin spec tree to extract plugin short names
@@ -86,6 +95,24 @@ M.get_short_plugin_names_from_plugin_spec_tree = function(specs)
       table.insert(names, M.get_short_name_from_plugin_spec(spec))
       if spec.dependencies ~= nil then
         names = U.tbl_union(names, M.get_short_plugin_names_from_plugin_spec_tree(spec.dependencies))
+      end
+    end
+  end
+
+  return names
+end
+
+--- recurses through the plugin spec tree to extract plugin short names
+M.get_dev_plugin_names_from_plugin_spec_tree = function(specs)
+  local names = {}
+
+  if type(specs) == 'table' then
+    for _, spec in ipairs(specs) do
+      if M.get_dev_bool_from_plugin_spec(spec) then
+        table.insert(names, M.get_short_name_from_plugin_spec(spec))
+      end
+      if spec.dependencies ~= nil then
+        names = U.tbl_union(names, M.get_dev_plugin_names_from_plugin_spec_tree(spec.dependencies))
       end
     end
   end

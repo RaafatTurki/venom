@@ -594,14 +594,26 @@ end)
 
 M.sfm = service({{feat.CONF, 'sfm.nvim'}}, nil, function()
   local sfm_explorer = require 'sfm'.setup({
+    view = {
+      width = 35,
+      selection_render_method = 'highlight',
+    },
     mappings = {
       list = {
         {
-          key = "dd",
+          key = "s",
+          action = "system_open",
+        },
+        {
+          key = "S",
+          action = "system_open_selections",
+        },
+        {
+          key = "d",
           action = "trash",
         },
         {
-          key = "dD",
+          key = "D",
           action = "trash_selections",
         },
         {
@@ -632,13 +644,21 @@ M.sfm = service({{feat.CONF, 'sfm.nvim'}}, nil, function()
     sfm_explorer:load_extension("sfm-git", {
       debounce_interval_ms = 100,
       icons = {
-        unstaged = "",
-        staged = "*",
+        unstaged = "M",
+        staged = "A",
         unmerged = "CONFLICT",
         renamed = "R",
         untracked = "??",
         deleted = "D",
         ignored = "!!"
+      },
+    })
+  end
+
+  if feat_list:has(feat.PLUGIN, 'sfm-telescope.nvim') then
+    sfm_explorer:load_extension("sfm-telescope", {
+      mappings = {
+        search = { "/" },
       },
     })
   end

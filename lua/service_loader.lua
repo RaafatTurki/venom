@@ -32,7 +32,7 @@ local plugins = {
   },
   { 'utilyre/sentiment.nvim',
     config = function()
-      event.plugin_setup:sub(Plugins.sentiment)
+      events.plugin_setup:sub(Plugins.sentiment)
     end
   },
   -- NOTE STATUSBAR
@@ -42,25 +42,25 @@ local plugins = {
   -- NOTE PLUGINS
   { 'echasnovski/mini.nvim',
     config = function()
-      event.plugin_setup:sub(Plugins.mini_map)
-      event.plugin_setup:sub(Plugins.mini_bufremove)
-      event.plugin_setup:sub(Plugins.mini_move)
-      event.plugin_setup:sub(Plugins.mini_hipatterns)
+      events.plugin_setup:sub(Plugins.mini_map)
+      events.plugin_setup:sub(Plugins.mini_bufremove)
+      events.plugin_setup:sub(Plugins.mini_move)
+      events.plugin_setup:sub(Plugins.mini_hipatterns)
     end
   },
   { 'RRethy/vim-illuminate',
     config = function()
-      event.plugin_setup:sub(Plugins.illuminate)
+      events.plugin_setup:sub(Plugins.illuminate)
     end
   },
   { 'lewis6991/gitsigns.nvim',
     config = function()
-      event.plugin_setup:sub(Plugins.gitsigns)
+      events.plugin_setup:sub(Plugins.gitsigns)
     end
   },
   { 'akinsho/git-conflict.nvim',
     config = function()
-      event.plugin_setup:sub(Plugins.git_conflict)
+      events.plugin_setup:sub(Plugins.git_conflict)
     end
   },
   { 'dinhhuy258/sfm.nvim', dev = false,
@@ -68,12 +68,12 @@ local plugins = {
       'dinhhuy258/sfm-git.nvim',
     },
     config = function()
-      event.plugin_setup:sub(Plugins.sfm)
+      events.plugin_setup:sub(Plugins.sfm)
     end
   },
   { 'akinsho/toggleterm.nvim',
     config = function()
-      event.plugin_setup:sub(Plugins.toggle_term)
+      events.plugin_setup:sub(Plugins.toggle_term)
     end
   },
   { 'nvim-telescope/telescope.nvim',
@@ -83,23 +83,23 @@ local plugins = {
       'nvim-telescope/telescope-ui-select.nvim',
     },
     config = function()
-      event.plugin_setup:sub(Plugins.telescope)
+      events.plugin_setup:sub(Plugins.telescope)
     end
   },
   { 'jghauser/fold-cycle.nvim',
     config = function()
-      event.plugin_setup:sub(Plugins.fold_cycle)
+      events.plugin_setup:sub(Plugins.fold_cycle)
     end
   },
   { 'anuvyklack/fold-preview.nvim',
     dependencies = 'anuvyklack/keymap-amend.nvim',
     config = function()
-      event.plugin_setup:sub(Plugins.fold_preview)
+      events.plugin_setup:sub(Plugins.fold_preview)
     end
   },
   { 'folke/noice.nvim',
     config = function()
-      event.plugin_setup:sub(Plugins.noice)
+      events.plugin_setup:sub(Plugins.noice)
     end,
     dependencies = p.nui,
   },
@@ -116,12 +116,12 @@ local plugins = {
       'hrsh7th/cmp-nvim-lsp-signature-help',
     },
     config = function()
-      event.plugin_setup:sub(Plugins.cmp_ls)
+      events.plugin_setup:sub(Plugins.cmp_ls)
     end
   },
   { 'RaafatTurki/hex.nvim', dev = false,
     config = function()
-      event.plugin_setup:sub(Plugins.hex)
+      events.plugin_setup:sub(Plugins.hex)
     end
   },
   -- { 'sindrets/diffview.nvim' },
@@ -134,7 +134,7 @@ local plugins = {
   -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
 }
 
-event.install_pre:sub(function()
+events.install_pre:sub(function()
   Buffers.setup()
 
   Misc.base()
@@ -153,7 +153,7 @@ event.install_pre:sub(function()
   Bind.setup()
 end)
 
-event.install_post:sub(function()
+events.install_post:sub(function()
   Sessions.setup()
 
   Misc.auto_install_ts_parser()

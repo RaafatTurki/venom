@@ -1,7 +1,9 @@
+local U = require 'utils'
+
 local M = {}
 
-event.install_pre = U.Event("install_pre"):new()
-event.install_post = U.Event("install_post"):new()
+events.install_pre = U.Event("install_pre"):new()
+events.install_post = U.Event("install_post"):new()
 
 M.plugin_manager_name = 'lazy.nvim'
 M.install_path = vim.fn.stdpath("data") .. '/lazy/'
@@ -29,7 +31,7 @@ end)
 M.setup = service(function(plugins)
   M.bootstrap()
 
-  event.install_pre()
+  events.install_pre()
 
   require 'lazy'.setup(plugins, {
     root = M.install_path,
@@ -58,7 +60,7 @@ M.setup = service(function(plugins)
     M.register_plugin(v)
   end
 
-  event.install_post()
+  events.install_post()
 end)
 
 --- returns plugin short name from a single plugin spec

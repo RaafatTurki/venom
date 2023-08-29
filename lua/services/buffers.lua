@@ -1,6 +1,8 @@
+local U = require 'utils'
+
 local M = {}
 
-event.buflist_update = U.Event("buflist_update"):new()
+events.buflist_update = U.Event("buflist_update"):new()
 
 M.labels = {
   '1', '2', '3',
@@ -35,7 +37,7 @@ function M.Buffer()
         self.event_listener:start(self.file_path, {}, vim.schedule_wrap(function(err, _fname, status)
           if status.rename then
             M.buf_del(self.bufnr)
-            event.fs_update()
+            events.fs_update()
           else
             vim.cmd.checktime()
             self.event_listener:stop()
@@ -143,14 +145,14 @@ end
 M.buf_add = function(bufnr)
   local buffer = M.Buffer():new(bufnr)
   table.insert(M.buflist, buffer)
-  event.buflist_update()
+  events.buflist_update()
 end
 
 M.buf_del = function(bufnr)
   for i, buf in ipairs(M.buflist) do
     if bufnr == buf.bufnr then
       table.remove(M.buflist, i)
-      event.buflist_update()
+      events.buflist_update()
     end
   end
 end
@@ -169,7 +171,7 @@ M.focus_buf_in_buflist_by_index = function(index, delta)
   if (index and target_index <= #M.buflist and target_index > 0) then
     local buffer = M.buflist[target_index]:switch_to()
   end
-  event.buflist_update()
+  events.buflist_update()
 end
 
 M.focus_buf_rel_to_curr_buf_in_buflist = function(delta)
@@ -185,7 +187,7 @@ M.shift_buf_in_buflist_by_index = function(index, delta)
     table.insert(M.buflist, target_index, buffer)
   end
   vim.cmd.redrawtabline()
-  event.buflist_update()
+  events.buflist_update()
 end
 
 M.shift_curr_buf_in_buflist = function(delta)
@@ -201,7 +203,7 @@ M.serialize = function()
   }
 
   for i, buffer in ipairs(M.buflist) do
-    table.insert(data.file_paths, buffer.file_path)
+    table.insert(data.file_paths, U.get_relative_path(buffer.file_path))
     if (buffer.bufnr == vim.api.nvim_get_current_buf()) then
       data.active_file_path = i
     end

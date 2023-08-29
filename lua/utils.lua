@@ -77,8 +77,13 @@ function M.file_rename(path, new_file_name)
 end
 
 --- gets absolute path from a relative one
-function M.path_rel_to_abs(rel_path)
-  local fullpath = vim.api.nvim_call_function('fnamemodify', { rel_path, ':p' })
+function M.get_absolute_path(rel_path)
+  return vim.fn.fnamemodify(rel_path, ':p')
+end
+
+--- gets relative path from an absolute one
+function M.get_relative_path(abs_path)
+  return vim.fn.fnamemodify(abs_path, ':.')
 end
 
 --- returns boolean if a file exists or not

@@ -101,7 +101,7 @@ M.setup = service({{feat.LANG, 'setup'}}, nil, function()
   -- navic
   if feat_list:has(feat.CONF, 'nvim-navic') then
     local navic_icons = {}
-    for name, icon in pairs(icons.item_kinds) do navic_icons[name] = icon .. ' ' end
+    for name, icon in pairs(icons.lsp) do navic_icons[name] = icon .. ' ' end
     vim.g.navic_silence = true
     require 'nvim-navic'.setup {
       highlight = true,

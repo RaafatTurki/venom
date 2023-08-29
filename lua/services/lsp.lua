@@ -1,3 +1,5 @@
+local U = require 'utils'
+
 local M = {}
 
 M.setup_lspconfig_server = service({{ feat.PLUGIN, 'nvim-lspconfig' }}, function(server_name, opts)
@@ -106,8 +108,7 @@ M.setup_servers = service({{feat.PLUGIN, 'mason.nvim'}, {feat.PLUGIN, 'mason-lsp
                 '%l:1:%f',
 
                 '--synctex-editor-command',
-                [[nvim --server ]] ..
-                vim.v.servername .. [[ --remote-send "<CMD>lua U.request_jump('%{input}', %{line}, 1)<CR>"]],
+                [[nvim --server ]] .. vim.v.servername .. [[ --remote-send "<CMD>lua require('utils').request_jump('%{input}', %{line}, 1)<CR>"]],
 
                 '%p',
               },
@@ -396,7 +397,7 @@ M.setup = service({{ feat.LSP, 'setup' }}, {{ feat.PLUGIN, 'mason.nvim' }, { fea
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- per line nvim diagnostics
-  for type, icon in pairs(icons.diagnostic_states) do
+  for type, icon in pairs(icons.diag) do
     local hl = "DiagnosticSign" .. type
     -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
     vim.fn.sign_define(hl, { text = icon, texthl = hl })

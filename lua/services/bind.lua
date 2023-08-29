@@ -1,3 +1,5 @@
+local U = require 'utils'
+
 local M = {}
 
 -- a keymap object is {lhs, rhs, opts = {}, mode = string}
@@ -36,9 +38,9 @@ M.setup = service(function()
 
   -- BASE
   -- write, undo, quit
-  event.write:sub(vim.cmd.write)
-  event.write:sub(vim.cmd.stopinsert)
-  bind {'<C-s>',             function() event.write() end, mode = 'n x i'}
+  events.write:sub(vim.cmd.write)
+  events.write:sub(vim.cmd.stopinsert)
+  bind {'<C-s>',             function() events.write() end, mode = 'n x i'}
   bind {'<C-z>',             function() vim.cmd.undo() end, mode = 'n x i'}
   bind {'<C-c>',             function() vim.cmd.quit() end, mode = 'n x i'}
   -- M.key {'<A-c>',             function() vim.cmd.bdelete() end, mode = 'n v i'}
@@ -88,9 +90,9 @@ M.setup = service(function()
   -- M.key {'<F5>',              function() venom.events.refresh() end}
   -- clear action
   -- venom.actions.clear:sub [[let @/ = ""]]
-  event.clear:sub [[noh]]
-  event.clear:sub(U.clear_prompt)
-  bind {'<C-l>',             function() event.clear() end}
+  events.clear:sub [[noh]]
+  events.clear:sub(U.clear_prompt)
+  bind {'<C-l>',             function() events.clear() end}
   bind {'<C-l>',             '<ESC>', mode = 'i'}
   -- undo breakpoints
   local undo_break_points = {',', '.', '!', '?', '-'}
@@ -164,11 +166,11 @@ M.setup_plugins = service(function()
   end
 
   if feat_list:has(feat.CONF, 'fold-cycle.nvim') then
-    bind {'za',                function() require 'fold-cycle'.toggle_all() event.fold_update() end }
-    bind {'z<Right>',          function() require 'fold-cycle'.open() event.fold_update() end }
-    bind {'z<Left>',           function() require 'fold-cycle'.close() event.fold_update() end }
-    bind {'z<Down>',           function() require 'fold-cycle'.open_all() event.fold_update() end }
-    bind {'z<Up>',             function() require 'fold-cycle'.close_all() event.fold_update() end }
+    bind {'za',                function() require 'fold-cycle'.toggle_all() events.fold_update() end }
+    bind {'z<Right>',          function() require 'fold-cycle'.open() events.fold_update() end }
+    bind {'z<Left>',           function() require 'fold-cycle'.close() events.fold_update() end }
+    bind {'z<Down>',           function() require 'fold-cycle'.open_all() events.fold_update() end }
+    bind {'z<Up>',             function() require 'fold-cycle'.close_all() events.fold_update() end }
   end
 
   if feat_list:has(feat.CONF, 'fold-preview.nvim') then

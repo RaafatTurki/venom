@@ -1,3 +1,5 @@
+local U = require 'utils'
+
 local M = {}
 
 M.components = {}
@@ -155,10 +157,10 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
 
   M.components.vimode = {
     provider = function(self)
-      return U.get_mode_name()
+      return utils.get_mode_name()
     end,
     hl = function(self)
-      return hi_finalize(U.get_mode_hi())
+      return hi_finalize(utils.get_mode_hi())
     end,
     update = 'ModeChanged',
   }
@@ -282,7 +284,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     provider = function()
       local forward = require 'luasnip'.jumpable(1) and '' or ''
       local backward = require 'luasnip'.jumpable(-1) and '' or ''
-      return backward .. icons.item_kinds.Snippet .. forward
+      return backward .. icons.lsp.Snippet .. forward
     end,
     hl = hi_finalize('CmpItemKindSnippet'),
   }
@@ -291,7 +293,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     condition = function()
       return vim.wo.spell
     end,
-    provider = icons.item_kinds.Text,
+    provider = icons.lsp.Text,
   }
 
   M.components.root_user = {
@@ -316,10 +318,10 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
     end,
     static = {
-      error_icon = icons.diagnostic_states.Error,
-      warn_icon = icons.diagnostic_states.Warn,
-      info_icon = icons.diagnostic_states.Info,
-      hint_icon = icons.diagnostic_states.Hint,
+      error_icon = icons.diag.Error,
+      warn_icon = icons.diag.Warn,
+      info_icon = icons.diag.Info,
+      hint_icon = icons.diag.Hint,
     },
     update = { "DiagnosticChanged", "BufEnter" },
     condition = conditions.has_diagnostics,

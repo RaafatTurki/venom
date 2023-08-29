@@ -1,6 +1,8 @@
+local U = require 'utils'
+
 local M = {}
 
-event.session_write_pre = U.Event("session_write_pre"):new()
+events.session_write_pre = U.Event("session_write_pre"):new()
 
 M.local_session_file = vim.fn.getcwd() .. '/.venom.json'
 M.is_in_local_session = false
@@ -29,14 +31,14 @@ M.setup = service({{feat.SESSION, "setup"}}, nil, function()
   })
 
   -- save session on fs update event
-  event.fs_update:sub(function()
+  events.fs_update:sub(function()
     if M.is_in_local_session then
       M.save()
     end
   end)
 
   -- save session on buflist update
-  event.buflist_update:sub(function()
+  events.buflist_update:sub(function()
     if M.is_in_local_session then
       M.save()
     end

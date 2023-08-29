@@ -1,9 +1,11 @@
+local U = require 'utils'
+
 local M = {}
 
-event.plugin_setup = U.Event("plugin_setup"):new()
+events.plugin_setup = U.Event("plugin_setup"):new()
 
 M.setup = service(function()
-  event.plugin_setup()
+  events.plugin_setup()
 end)
 
 M.impatient = service({{feat.CONF, "impatient.nvim"}}, nil, function()
@@ -180,12 +182,12 @@ M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
   require 'luasnip'.config.setup({
     ext_opts = {
       [ls_types.choiceNode] = {
-        active = { virt_text = { { icons.item_kinds.Snippet, 'SnippetChoiceIndicator' } } },
-        passive = { virt_text = { { icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
+        active = { virt_text = { { icons.lsp.Snippet, 'SnippetChoiceIndicator' } } },
+        passive = { virt_text = { { icons.lsp.Snippet, 'SnippetPassiveIndicator' } } }
       },
       [ls_types.insertNode] = {
-        active = { virt_text = { { icons.item_kinds.Snippet, 'SnippetInsertIndicator' } } },
-        passive = { virt_text = { { icons.item_kinds.Snippet, 'SnippetPassiveIndicator' } } }
+        active = { virt_text = { { icons.lsp.Snippet, 'SnippetInsertIndicator' } } },
+        passive = { virt_text = { { icons.lsp.Snippet, 'SnippetPassiveIndicator' } } }
       }
     },
   })
@@ -279,7 +281,7 @@ M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
         -- if entry.source.name == 'codeium' then
         --   vim_item.kind = ''
         -- else
-          vim_item.kind = icons.item_kinds[vim_item.kind] or ''
+          vim_item.kind = icons.lsp[vim_item.kind] or ''
         -- end
         return vim_item
       end
@@ -398,11 +400,11 @@ M.nvim_tree = service({{feat.CONF, "nvim-tree.lua"}}, nil, function()
           git = {
             unstaged = "",
             staged = "",
-            unmerged = "",
-            renamed = "r ",
-            untracked = "-",
-            deleted = "d",
-            ignored = "i",
+            unmerged = icons.vcs.conflicted,
+            renamed = icons.vcs.renamed,
+            untracked = icons.vcs.untracked,
+            deleted = icons.vcs.deleted,
+            ignored = icons.vcs.ignored,
           },
         }
       },
@@ -416,10 +418,10 @@ M.nvim_tree = service({{feat.CONF, "nvim-tree.lua"}}, nil, function()
     diagnostics         = {
       enable = true,
       icons = {
-        hint    = icons.diagnostic_states.Hint,
-        info    = icons.diagnostic_states.Info,
-        warning = icons.diagnostic_states.Warn,
-        error   = icons.diagnostic_states.Error,
+        hint    = icons.diag.Hint,
+        info    = icons.diag.Info,
+        warning = icons.diag.Warn,
+        error   = icons.diag.Error,
       },
     },
     filters             = {
@@ -470,16 +472,16 @@ M.neo_tree = service({{feat.CONF, "neo-tree.nvim"}}, nil, function()
       git_status = {
         symbols = {
           -- Change type
-          added     = "A",
-          deleted   = "D",
-          modified  = "M",
-          renamed   = "R",
+          added     = icons.vcs.staged,
+          deleted   = icons.vcs.deleted,
+          modified  = icons.vcs.modified,
+          renamed   = icons.vcs.renamed,
           -- Status type
-          untracked = "??",
-          ignored   = "!!",
+          untracked = icons.vcs.untracked,
+          ignored   = icons.vcs.ignored,
           unstaged  = "",
-          staged    = "*",
-          conflict  = "CONFLICT",
+          staged    = "",
+          conflict  = icons.vcs.conflicted,
         }
       },
       window = {
@@ -589,7 +591,7 @@ M.neo_tree = service({{feat.CONF, "neo-tree.nvim"}}, nil, function()
     }
   }
 
-  event.session_write_pre:sub [[NeoTreeClose]]
+  events.session_write_pre:sub [[NeoTreeClose]]
 end)
 
 M.sfm = service({{feat.CONF, 'sfm.nvim'}}, nil, function()
@@ -644,13 +646,13 @@ M.sfm = service({{feat.CONF, 'sfm.nvim'}}, nil, function()
     sfm_explorer:load_extension("sfm-git", {
       debounce_interval_ms = 100,
       icons = {
-        unstaged = "M",
-        staged = "A",
-        unmerged = "CONFLICT",
-        renamed = "R",
-        untracked = "??",
-        deleted = "D",
-        ignored = "!!"
+        unstaged = icons.vcs.modified,
+        staged = icons.vcs.staged,
+        unmerged = icons.vcs.conflicted,
+        renamed = icons.vcs.renamed,
+        untracked = icons.vcs.untracked,
+        deleted = icons.vcs.deleted,
+        ignored = icons.vcs.ignored,
       },
     })
   end
@@ -803,7 +805,7 @@ M.mini_map = service({{feat.CONF, "mini.nvim.map"}}, nil, function()
   })
 
   -- refresh on folding/unfolding
-  event.fold_update:sub(map.refresh)
+  events.fold_update:sub(map.refresh)
 end)
 
 M.mini_bufremove = service({{feat.CONF, "mini.nvim.bufremove"}}, nil, function()
@@ -870,7 +872,7 @@ end)
 
 M.trld = service({{feat.CONF, "trld.nvim"}}, nil, function()
   local function get_icon_by_severity(severity)
-    local icon_set = icons.diagnostic_states
+    local icon_set = icons.diag
     local icons = {
       icon_set.Error,
       icon_set.Warn,
@@ -951,7 +953,7 @@ M.fold_preview = service({{feat.CONF, 'fold-preview.nvim'}}, nil, function()
     border = 'single',
   }
 
-  event.fold_update:sub(fold_preview.close_preview)
+  events.fold_update:sub(fold_preview.close_preview)
 end)
 
 M.icon_picker = service({{feat.CONF, 'icon-picker.nvim'}}, nil, function()

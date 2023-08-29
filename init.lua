@@ -1,21 +1,23 @@
-U = require 'utils'
+local U = require 'utils'
 
 service = U.service
 feat_list = U.FeatureList():new()
 
-event = {}
-event.enter = U.Event("enter"):new()
-event.refresh = U.Event("refresh"):new()
-event.clear = U.Event("clear"):new()
-event.write = U.Event("write"):new()
-event.fold_update = U.Event("fold_update"):new()
-event.fs_update = U.Event("fs_update"):new()
+events = {}
+events.enter = U.Event("enter"):new()
+events.refresh = U.Event("refresh"):new()
+events.clear = U.Event("clear"):new()
+events.write = U.Event("write"):new()
+events.fold_update = U.Event("fold_update"):new()
+events.fs_update = U.Event("fs_update"):new()
 
 local icon_sets = require 'icons'.icon_sets
 icons = {
-  diagnostic_states = icon_sets.diagnostic_states.codicons,
-  item_kinds = icon_sets.item_kinds.codicons,
-  debugging = icon_sets.ui.codicons,
+  diag = icon_sets.diag.codicons,
+  lsp = icon_sets.lsp.codicons,
+  dap = icon_sets.dap.codicons,
+  navic = icon_sets.navic.codicons,
+  vcs = icon_sets.vcs.ascii,
 }
 
 -- initializing logger
@@ -29,4 +31,4 @@ require 'options'
 require 'service_loader'
 
 -- invoke enter event on VimEnter
-vim.api.nvim_create_autocmd({ 'VimEnter' }, { callback = event.enter:wrap() })
+vim.api.nvim_create_autocmd({ 'VimEnter' }, { callback = events.enter:wrap() })

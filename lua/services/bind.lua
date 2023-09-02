@@ -107,13 +107,13 @@ M.setup = service(function()
   bind {'<S-Right>',         vim.cmd.tabnext}
   bind {'<S-Left>',          vim.cmd.tabprevious}
   -- buffers
-  bind {'<A-Right>',         function() Buffers.focus_buf_rel_to_curr_buf_in_buflist(1) end}
-  bind {'<A-Left>',          function() Buffers.focus_buf_rel_to_curr_buf_in_buflist(-1) end}
-  for i, label in ipairs(Buffers.labels) do
-    bind {'<A-'..label..'>',      function() Buffers.buf_switch_by_label(label) end}
+  bind {'<A-Left>',          function() Buffers.buflist:set_active_buf({ rel_index = 1 }) end}
+  bind {'<A-Right>',         function() Buffers.buflist:set_active_buf({ rel_index = -1 }) end}
+  for i, label in ipairs(Buffers.buflist.labels) do
+    bind {'<A-'..label..'>',      function() Buffers.buflist:set_active_buf({ label = label }) end}
   end
-  bind {'<A-S-Left>',        function() Buffers.shift_curr_buf_in_buflist(-1) end}
-  bind {'<A-S-Right>',       function() Buffers.shift_curr_buf_in_buflist(1) end}
+  bind {'<A-S-Left>',        function() Buffers.buflist:shift_active_buf(-1) end}
+  bind {'<A-S-Right>',       function() Buffers.buflist:shift_active_buf(1) end}
   -- guifont ()
   bind {'<C-)>',             function() U.change_guifont_size(10, 8, 30) end}
   bind {'<C-_>',             function() U.change_guifont_size(-1, 8, 30, true) end}

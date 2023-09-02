@@ -4,19 +4,7 @@ local M = {}
 
 events.buflist_update = U.Event("buflist_update"):new()
 
-M.labels = {
-  '1', '2', '3',
-  'q', 'w', 'e',
-  'a', 's', 'd',
-  -- 'z', 'x', 'c',
-  'Q', 'W', 'E',
-  'A', 'S', 'D',
-  -- 'Z', 'X', 'C'
-}
-
-M.buflist = {}
-
-function M.Buffer()
+M.Buf = function()
   return setmetatable(
     {
       bufnr = nil,
@@ -25,15 +13,15 @@ function M.Buffer()
 
       new = function(self, bufnr)
         self.bufnr = bufnr
-        self.event_listener = vim.loop.new_fs_event()
         self.file_path = vim.api.nvim_buf_get_name(self.bufnr)
-        self:watch_file()
+        self.event_listener = vim.loop.new_fs_event()
+        self:watch()
         return self
       end,
-      switch_to = function(self)
+      switch = function(self)
         vim.cmd.b(self.bufnr)
       end,
-      watch_file = function(self)
+      watch = function(self)
         self.event_listener:start(self.file_path, {}, vim.schedule_wrap(function(err, _fname, status)
           if status.rename then
             M.buf_del(self.bufnr)
@@ -41,7 +29,7 @@ function M.Buffer()
           else
             vim.cmd.checktime()
             self.event_listener:stop()
-            self:watch_file()
+            self:watch()
           end
         end))
       end,
@@ -50,13 +38,171 @@ function M.Buffer()
   )
 end
 
+M.BufList = function()
+  return setmetatable(
+    {
+      bufs = {},
+      labels = {
+        '1', '2', '3',
+        'q', 'w', 'e',
+        'a', 's', 'd',
+        'Q', 'W', 'E',
+        'A', 'S', 'D',
+      },
+
+      is_buf_acceptable = function(self, bufnr)
+        -- if vim.api.nvim_buf_is_loaded(bufnr) then return false end
+        -- if not vim.fn.bufexists(bufnr) == 1 then return false end
+        -- if not vim.fn.buflisted(bufnr) == 1 then return false end
+        -- log(self:get_buf_data({ bufnr == bufnr }).buf)
+
+        if self:get_buf_data({ bufnr = bufnr }) then return false end
+        if vim.api.nvim_buf_get_name(bufnr) == '' then return false end
+
+        return true
+      end,
+      add_buf = function(self, bufnr, opts)
+        opts = opts or {}
+        opts = {
+          index = opts.index or #self.bufs
+        }
+
+        if self:is_buf_acceptable(bufnr) then
+          local buf = M.Buf():new(bufnr)
+          -- table.insert(self.bufs, opts.index, buf)
+          table.insert(self.bufs, buf)
+          events.buflist_update()
+        else
+          -- log("UNACCEPTABLE BUFFER " .. bufnr)
+        end
+      end,
+      remove_buf = function(self, opts)
+        opts = {
+          bufnr = opts.bufnr,
+          index = opts.index,
+          label = opts.label,
+        }
+
+        if opts.bufnr then
+          for i, buf in ipairs(self.bufs) do
+            if buf.bufnr == opts.bufnr then table.remove(self.bufs, i) end
+            events.buflist_update()
+          end
+        elseif opts.index then
+          table.remove(self.bufs, opts.index)
+          events.buflist_update()
+        elseif opts.label then
+          table.remove(self.bufs, self:get_buf_data({ label = opts.label }).index)
+          events.buflist_update()
+        end
+      end,
+      set_active_buf = function(self, opts)
+        opts = {
+          bufnr = opts.bufnr,
+          index = opts.index,
+          rel_index = opts.rel_index,
+          label = opts.label,
+        }
+
+        if opts.bufnr then
+          for i, buf in ipairs(self.bufs) do
+            if buf.bufnr == opts.bufnr then buf:switch() end
+          end
+        elseif opts.index then
+          self.bufs[opts.index]:switch()
+        elseif opts.rel_index then
+          local target_index = self:get_buf_data({ active = true }).index - opts.rel_index
+          if U.is_within_range(target_index, 1, #self.bufs) then
+            self.bufs[target_index]:switch()
+          end
+        elseif opts.label then
+          local buf_data = self:get_buf_data({ label = opts.label })
+          if buf_data then buf_data.buf:switch() end
+        end
+      end,
+      swap_bufs = function(self, index1, index2)
+        if (U.is_within_range(index1, 1, #self.bufs) and U.is_within_range(index1, 1, #self.bufs)) then
+          local buf_tmp = self.bufs[index1]
+          self.bufs[index1] = self.bufs[index2]
+          self.bufs[index2] = buf_tmp
+          vim.cmd.redrawtabline()
+          events.buflist_update()
+        end
+      end,
+      shift_buf = function(self, index, rel_index)
+        local target_index = index + rel_index
+        if U.is_within_range(target_index, 1, #self.bufs) then
+          self:swap_bufs(index, target_index)
+        end
+      end,
+      shift_active_buf = function(self, rel_index)
+        local buf_data = self:get_buf_data({ active = true })
+        local target_index = buf_data.index + rel_index
+        if U.is_within_range(target_index, 1, #self.bufs) then
+          self:swap_bufs(buf_data.index, target_index)
+        end
+      end,
+      get_buf_data = function(self, opts)
+        opts = {
+          bufnr = opts.bufnr,
+          index = opts.index,
+          label = opts.label,
+          active = opts.active,
+        }
+
+        if opts.bufnr then
+          for i, buf in ipairs(self.bufs) do
+            if buf.bufnr == opts.bufnr then
+              return {
+                buf = buf,
+                index = i,
+                label = self.labels[i],
+                active = opts.bufnr == vim.api.nvim_get_current_buf(),
+              }
+            end
+          end
+          return nil
+        elseif opts.index then
+          if U.is_within_range(opts.index, 1, #self.bufs) then
+            local buf = self.bufs[opts.index]
+            return {
+              buf = buf,
+              index = opts.index,
+              label = self.labels[opts.index],
+              active = buf.bufnr == vim.api.nvim_get_current_buf(),
+            }
+          else
+            return nil
+          end
+        elseif opts.label then
+          for i, buf in ipairs(self.bufs) do
+            local curr_label = self.labels[i]
+            if curr_label == opts.label then
+              return {
+                buf = buf,
+                index = i,
+                label = curr_label,
+                active = buf.bufnr == vim.api.nvim_get_current_buf(),
+              }
+            end
+          end
+          return nil
+        elseif opts.active then
+          return self:get_buf_data({ bufnr = vim.api.nvim_get_current_buf() })
+        end
+      end,
+    },
+    {}
+  )
+end
+
+M.buflist = M.BufList()
+
 M.setup = service(function()
   vim.api.nvim_create_autocmd('VimEnter', {
     callback = function()
       for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-        if M.is_buf_listable(bufnr) then
-          M.buf_add(bufnr)
-        end
+        M.buflist:add_buf(bufnr)
       end
     end
   })
@@ -64,17 +210,14 @@ M.setup = service(function()
   vim.api.nvim_create_autocmd('BufAdd', {
     callback = function()
       local bufnr = tonumber(vim.fn.expand('<abuf>'))
-      if M.is_buf_listable(bufnr) then
-        M.buf_add(bufnr)
-      end
+      M.buflist:add_buf(bufnr)
     end
   })
 
   vim.api.nvim_create_autocmd('BufDelete', {
     callback = function()
       local bufnr = tonumber(vim.fn.expand('<abuf>'))
-      M.buf_del(bufnr)
-      -- local index = M.buf_get_index_from_bufnr(bufnr)
+      M.buflist:remove_buf({ bufnr = bufnr })
       -- print(index)
       -- if index and index > 1 then M.buf_switch_by_index(index - 1) end
     end
@@ -84,148 +227,42 @@ M.setup = service(function()
   --   au FileType * if index(['wipe', 'delete', 'unload'], &bufhidden) >= 0 | set nobuflisted | endif
   -- ]]
 
-  vim.api.nvim_create_user_command('HelpClose', function(opts) vim.cmd.helpclose() end, {})
-  vim.api.nvim_create_user_command('ManOpen', function(opts)
-    vim.cmd.Man(opts.fargs[1])
-    vim.cmd.wincmd('o')
-  end, { nargs = 1 })
+  -- vim.api.nvim_create_user_command('HelpClose', function(opts) vim.cmd.helpclose() end, {})
+  -- vim.api.nvim_create_user_command('ManOpen', function(opts)
+  --   vim.cmd.Man(opts.fargs[1])
+  --   vim.cmd.wincmd('o')
+  -- end, { nargs = 1 })
 
-  vim.cmd [[cnoreabbrev hc HelpClose]]
-  vim.cmd [[cnoreabbrev m ManOpen]]
+  -- vim.cmd [[cnoreabbrev hc HelpClose]]
+  -- vim.cmd [[cnoreabbrev m ManOpen]]
 end)
 
-M.is_buf_listable = function(bufnr)
-  -- local buftype = vim.api.nvim_buf_get_option(bufnr, 'buftype')
-
-  if 
-    not M.get_buflist_index_by_bufnr(bufnr)
-    and vim.api.nvim_buf_get_name(bufnr) ~= ''
-    -- and vim.api.nvim_buf_is_valid(bufnr)
-    -- and (buftype == '' or buftype == 'terminal')
-  then
-    return true
-  else
-    return false
-  end
-
-  -- return true
-end
-
-M.get_buflist_index_by_label = function(label)
-  for i, cur_label in ipairs(M.labels) do
-    if label == cur_label then return i end
-  end
-  return nil
-end
-
-M.get_buflist_index_by_bufnr = function(bufnr)
-  for i, cur_buf in ipairs(M.buflist) do
-    if cur_buf.bufnr == bufnr then return i end
-  end
-  return nil
-end
-
-M.get_buf_by_label = function(label)
-  local index = M.get_buflist_index_by_label(label)
-  if index then return M.buflist[index] else return nil end
-end
-
-M.get_label_by_bufnr = function(bufnr)
-  local index = M.get_buflist_index_by_bufnr(bufnr)
-  local label = M.labels[index]
-  if label then return label else return nil end
-end
-
-M.get_current_buf = function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local index = M.get_buflist_index_by_bufnr(bufnr)
-  if index then return M.buflist[index] else return nil end
-end
-
-M.buf_add = function(bufnr)
-  local buffer = M.Buffer():new(bufnr)
-  table.insert(M.buflist, buffer)
-  events.buflist_update()
-end
-
-M.buf_del = function(bufnr)
-  for i, buf in ipairs(M.buflist) do
-    if bufnr == buf.bufnr then
-      table.remove(M.buflist, i)
-      events.buflist_update()
-    end
-  end
-end
-
-M.buf_switch_by_buflist_index = function(i)
-  if i then M.buflist[i]:switch_to() end
-end
-
-M.buf_switch_by_label = function(label)
-  local buffer = M.get_buf_by_label(label)
-  if buffer then buffer:switch_to() end
-end
-
-M.focus_buf_in_buflist_by_index = function(index, delta)
-  local target_index = index + delta
-  if (index and target_index <= #M.buflist and target_index > 0) then
-    local buffer = M.buflist[target_index]:switch_to()
-  end
-  events.buflist_update()
-end
-
-M.focus_buf_rel_to_curr_buf_in_buflist = function(delta)
-  local bufnr = vim.api.nvim_get_current_buf()
-  local index = M.get_buflist_index_by_bufnr(bufnr)
-  M.focus_buf_in_buflist_by_index(index, delta)
-end
-
-M.shift_buf_in_buflist_by_index = function(index, delta)
-  local target_index = index + delta
-  if (index and target_index <= #M.buflist and target_index > 0) then
-    local buffer = table.remove(M.buflist, index)
-    table.insert(M.buflist, target_index, buffer)
-  end
-  vim.cmd.redrawtabline()
-  events.buflist_update()
-end
-
-M.shift_curr_buf_in_buflist = function(delta)
-  local bufnr = vim.api.nvim_get_current_buf()
-  local index = M.get_buflist_index_by_bufnr(bufnr)
-  M.shift_buf_in_buflist_by_index(index, delta)
-end
-
-M.serialize = function()
+M.aggregate = function()
   local data = {
     file_paths = {},
     active_file_path = nil
   }
 
-  for i, buffer in ipairs(M.buflist) do
-    table.insert(data.file_paths, U.get_relative_path(buffer.file_path))
-    if (buffer.bufnr == vim.api.nvim_get_current_buf()) then
-      data.active_file_path = i
-    end
+  for i, buf in ipairs(M.buflist.bufs) do
+    table.insert(data.file_paths, U.get_relative_path(buf.file_path))
+    
+    local buf_data = M.buflist:get_buf_data({ index = i })
+    if buf_data and buf_data.active then data.active_file_path = i end
   end
 
   return data
 end
 
-M.deserialize = function(data)
-  -- local data = {
-  --   file_paths = {},
-  --   active_file_path = nil
-  -- }
-
+M.populate = function(data)
   -- populating the buflist
   for i, file_path in ipairs(data.file_paths) do
     vim.cmd.edit(file_path)
   end
 
-  for i, buffer in ipairs(M.buflist) do
+  -- swtich to active buf
+  for i, buf in ipairs(M.buflist.bufs) do
     if i == data.active_file_path then
-      buffer:switch_to()
+      buf:switch()
     end
   end
 end

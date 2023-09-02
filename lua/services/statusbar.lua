@@ -38,27 +38,27 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
   -- TODO: simplify into something more bare bones
   local NTABLINES = 0
 
-  local function get_bufs()
-    local res = {}
-    for i, buffer in ipairs(Buffers.buflist) do
-      table.insert(res, buffer.bufnr)
+  local function get_bufnrs()
+    local bufnrs = {}
+    for i, buf in ipairs(Buffers.buflist.bufs) do
+      table.insert(bufnrs, buf.bufnr)
     end
-    return res
+    return bufnrs
   end
 
   local function bufs_in_tab(tabpage)
     tabpage = tabpage or 0
-    local buf_set = {}
+    local bufnr_bool_map = {}
     local wins = vim.api.nvim_tabpage_list_wins(tabpage)
     for _, winid in ipairs(wins) do
       local bufnr = vim.api.nvim_win_get_buf(winid)
-      buf_set[bufnr] = true
+      bufnr_bool_map[bufnr] = true
     end
-    return buf_set
+    return bufnr_bool_map
   end
 
   local function make_buflist(buffer_component, left_trunc, right_trunc, buf_func)
-    buf_func = buf_func or get_bufs
+    buf_func = buf_func or get_bufnrs
 
     left_trunc = left_trunc or {
       provider = "<",
@@ -73,7 +73,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       callback = function(self)
         self._buflist[1]._cur_page = self._cur_page - 1
         self._buflist[1]._force_page = true
-        vim.cmd("redrawtabline")
+        vim.cmd.redrawtabline()
       end,
       name = "Heirline_tabline_prev_" .. NTABLINES,
     }
@@ -711,7 +711,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       provider = function(self)
         if self.bufnr == nil then return end
         -- return tostring(self.bufnr) .. ". "
-        return (Buffers.get_label_by_bufnr(self.bufnr) or '') .. ' '
+        return (Buffers.buflist:get_buf_data({bufnr = self.bufnr}).label or '') .. ' '
       end,
       hl = "ErrorMsg",
     },

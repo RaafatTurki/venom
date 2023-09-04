@@ -48,9 +48,10 @@ vim.o.shell          = '/usr/bin/fish'
 
 
 -- folding
--- vim.o.foldcolumn        = '1'
--- vim.o.foldenable        = true
--- vim.o.foldlevel         = 99
+-- vim.o.foldcolumn     = '1'
+-- vim.o.foldenable     = true
+-- vim.o.foldlevel      = 99
+-- vim.o.foldlevelstart = -1
 vim.o.foldmethod     = 'expr' -- Tree sitter folding
 vim.o.foldexpr       = 'nvim_treesitter#foldexpr()' -- Tree sitter folding
 vim.o.foldtext       = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))" -- Sexy minimal folds

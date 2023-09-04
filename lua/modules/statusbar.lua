@@ -33,42 +33,37 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     return statusline
   end
 
-
-  -- NOTE: custom made make_buflist so it integrates with the Buffers module
-  -- TODO: simplify into something more bare bones
-  local NTABLINES = 0
-
-  local function get_bufnrs()
-    local bufnrs = {}
-    for i, buf in ipairs(Buffers.buflist.bufs) do
-      table.insert(bufnrs, buf.bufnr)
-    end
-    return bufnrs
-  end
-
-  local function bufs_in_tab(tabpage)
-    tabpage = tabpage or 0
-    local bufnr_bool_map = {}
-    local wins = vim.api.nvim_tabpage_list_wins(tabpage)
-    for _, winid in ipairs(wins) do
-      local bufnr = vim.api.nvim_win_get_buf(winid)
-      bufnr_bool_map[bufnr] = true
-    end
-    return bufnr_bool_map
-  end
-
+  -- a custom made make_buflist that integrates with the Buffers module instead of the vanilla :ls
+  -- FIXME: refactor to something generic
   local function make_buflist(buffer_component, left_trunc, right_trunc, buf_func)
+    local NTABLINES = 0
+
+    local function get_bufnrs()
+      local bufnrs = {}
+      for i, buf in ipairs(Buffers.buflist.bufs) do
+        table.insert(bufnrs, buf.bufnr)
+      end
+      return bufnrs
+    end
+
+    local function bufs_in_tab(tabpage)
+      tabpage = tabpage or 0
+      local bufnr_bool_map = {}
+      local wins = vim.api.nvim_tabpage_list_wins(tabpage)
+      for _, winid in ipairs(wins) do
+        local bufnr = vim.api.nvim_win_get_buf(winid)
+        bufnr_bool_map[bufnr] = true
+      end
+      return bufnr_bool_map
+    end
+
     buf_func = buf_func or get_bufnrs
-
-    left_trunc = left_trunc or {
-      provider = "<",
-    }
-
-    right_trunc = right_trunc or {
-      provider = ">",
-    }
-
+    
+    left_trunc = left_trunc or { provider = "<" }
+    right_trunc = right_trunc or { provider = ">" }
+    
     NTABLINES = NTABLINES + 1
+
     left_trunc.on_click = {
       callback = function(self)
         self._buflist[1]._cur_page = self._cur_page - 1
@@ -77,7 +72,6 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       end,
       name = "Heirline_tabline_prev_" .. NTABLINES,
     }
-
     right_trunc.on_click = {
       callback = function(self)
         self._buflist[1]._cur_page = self._cur_page + 1
@@ -150,10 +144,9 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         end
       end,
     }
+    
     return bufferline
   end
-
-
 
   M.components.vimode = {
     provider = function(self)
@@ -661,6 +654,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       local ft_to_title = {
         ['neo-tree'] = "",
         ['NvimTree'] = "",
+        ['sfm'] = "",
       }
 
       for ft, title in pairs(ft_to_title) do

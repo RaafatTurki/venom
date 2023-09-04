@@ -112,21 +112,27 @@ local black     = gen_shades '#07080f'
 local debug     = gen_shades '#FF00FF'
 
 local c = {
-  -- ui
+  -- common
   bg        = black[1],
   bg_float  = black[4],
-  line      = black[2],
   mg        = grey[1],
   fg        = white[1],
+  line      = black[2],
   match     = grey[10],
   fold      = grey[8],
 
-  -- general
+  -- diag
   err       = red[4],
   info      = cyan[4],
   warn      = yellow[4],
   hint      = purple[4],
 
+  err_dim   = mix(red[4], black[1], 0.1, 0.9),
+  info_dim  = mix(cyan[4], black[1], 0.1, 0.9),
+  warn_dim  = mix(yellow[4], black[1], 0.1, 0.9),
+  hint_dim  = mix(purple[4], black[1], 0.1, 0.9),
+
+  -- diff
   add       = green[2],
   mod       = blue[1],
   del       = red[1],
@@ -298,9 +304,9 @@ local highlights = {
   CursorColumn    = { 'CursorLine' }, --
   CursorIM        = { }, --
   CursorLine      = { bg = c.line },
-  CursorLineFold  = { 'CursorLine' },
+  CursorLineFold  = { }, --
   CursorLineNr    = { 'CursorLine' },
-  CursorLineSign  = { 'CursorLine' },
+  CursorLineSign  = { }, --
   DiffAdd         = { fg = c.add },
   DiffChange      = { fg = c.mod },
   DiffDelete      = { fg = c.del },
@@ -308,8 +314,8 @@ local highlights = {
   Directory       = { }, --
   EndOfBuffer     = { }, --
   ErrorMsg        = { fg = c.err },
-  FoldColumn      = { }, --
   Folded          = { fg = c.fold, bold = true },
+  FoldColumn      = { 'Folded' }, --
   lCursor         = { }, --
   IncSearch       = { 'Search' },
   LineNr          = { fg = c.comment, italic = true },
@@ -750,6 +756,12 @@ NeoTreeWindowsHidden        = { '@debug' };
   SnippetChoiceIndicator  = { fg = c.hint };
   -- CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
   Camel                   = { fg = c.warn };
+  -- DAP
+  DapBreakpoint           = { fg = c.err };
+  DapBreakpointCondition  = { fg = c.err };
+  DapBreakpointRejected   = { fg = c.warn };
+  DapLogPoint             = { fg = c.type };
+  DapStopped              = { bg = c.warn_dim };
 }
 
 -- vim.cmd [[

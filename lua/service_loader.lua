@@ -1,44 +1,58 @@
-Buffers = require 'services.buffers'
 PluginManager = require 'plugin_manager'
-Sessions = require 'services.sessions'
-Misc = require 'services.misc'
-Plugins = require 'services.plugins'
-Lang = require 'services.lang'
-Lsp = require 'services.lsp'
-Statusbar = require 'services.statusbar'
-Bind = require 'services.bind'
+Buffers = require 'modules.buffers'
+Sessions = require 'modules.sessions'
+Misc = require 'modules.misc'
+Plugins = require 'modules.plugins'
+Lang = require 'modules.lang'
+Dap = require 'modules.dap'
+Lsp = require 'modules.lsp'
+Statusbar = require 'modules.statusbar'
+Keybinds = require 'modules.keybinds'
 
 local p = {
   plenary = 'nvim-lua/plenary.nvim',
   devicons = 'nvim-tree/nvim-web-devicons',
-  dap = 'mfussenegger/nvim-dap',
   nui = 'MunifTanjim/nui.nvim',
+  lspconfig = 'neovim/nvim-lspconfig',
+  mason = 'williamboman/mason.nvim',
+  treesitter = 'nvim-treesitter/nvim-treesitter',
+  dap = 'mfussenegger/nvim-dap',
 }
 local plugins = {
   -- NOTE LSP
-  { 'neovim/nvim-lspconfig' },
-  { 'williamboman/mason.nvim' },
-  { 'williamboman/mason-lspconfig.nvim' },
-  { 'mfussenegger/nvim-jdtls' },
-  { 'jose-elias-alvarez/typescript.nvim' },
-  { 'b0o/schemastore.nvim' },
-  { 'folke/neodev.nvim' },
-  -- NOTE LANG
-  { 'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    dependencies = {
-      'JoosepAlviste/nvim-ts-context-commentstring',
-    }
+  { 'williamboman/mason-lspconfig.nvim',
+    dependencies = p.mason,
   },
-  { 'utilyre/sentiment.nvim',
-    config = function()
-      events.plugin_setup:sub(Plugins.sentiment)
-    end
+  { 'mfussenegger/nvim-jdtls',
+    dependencies = p.lspconfig
+  },
+  { 'jose-elias-alvarez/typescript.nvim',
+    dependencies = p.lspconfig
+  },
+  { 'b0o/schemastore.nvim',
+    dependencies = p.lspconfig
+  },
+  { 'folke/neodev.nvim',
+    dependencies = p.lspconfig
+  },
+  -- NOTE LANG
+  { 'JoosepAlviste/nvim-ts-context-commentstring',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
   },
   -- NOTE STATUSBAR
   { 'rebelot/heirline.nvim',
     dependencies = p.devicons,
   },
+  -- NOTE DAP
+  { 'jay-babu/mason-nvim-dap.nvim',
+    dependencies = {
+      p.dap,
+      p.mason,
+    },
+  },
+  -- { 'rcarriga/nvim-dap-ui',
+  --   dependencies = p.dap
+  -- },
   -- NOTE PLUGINS
   { 'echasnovski/mini.nvim',
     config = function()
@@ -119,19 +133,33 @@ local plugins = {
       events.plugin_setup:sub(Plugins.cmp_ls)
     end
   },
+  { 'wintermute-cell/gitignore.nvim' },
+  { 'utilyre/sentiment.nvim',
+    config = function()
+      events.plugin_setup:sub(Plugins.sentiment)
+    end
+  },
   { 'RaafatTurki/hex.nvim', dev = false,
     config = function()
       events.plugin_setup:sub(Plugins.hex)
     end
   },
+  { 'RaafatTurki/corn.nvim', dev = false,
+    config = function()
+      events.plugin_setup:sub(Plugins.corn)
+    end
+  },
+  -- { "m-demare/hlargs.nvim",
+  --   config = function()
+  --     require "hlargs".setup()
+  --   end,
+  -- }
   -- { 'sindrets/diffview.nvim' },
   -- { 'folke/edgy.nvim',
   --   config = function()
   --     Events.plugin_setup:sub(Plugins.edgy)
   --   end
   -- },
-  -- p.dap,
-  -- {'rcarriga/nvim-dap-ui',                            dependencies = p.dap },
 }
 
 events.install_pre:sub(function()
@@ -150,7 +178,7 @@ events.install_pre:sub(function()
   Misc.auto_curlinenr_mode()
   Misc.neovide()
 
-  Bind.setup()
+  Keybinds.setup()
 end)
 
 events.install_post:sub(function()
@@ -158,7 +186,7 @@ events.install_post:sub(function()
 
   Misc.auto_install_ts_parser()
   Misc.lorem_picsum()
-  Misc.auto_gitignore_io()
+  -- Misc.auto_gitignore_io()
   Misc.conceal_html_classes()
 
   Plugins.setup()
@@ -168,9 +196,11 @@ events.install_post:sub(function()
   Lsp.setup()
   Lsp.setup_servers()
 
+  Dap.setup()
+
   Statusbar.setup()
 
-  Bind.setup_plugins()
+  Keybinds.setup_plugins()
 end)
 
 PluginManager.setup(plugins)

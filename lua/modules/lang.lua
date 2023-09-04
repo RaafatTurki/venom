@@ -113,17 +113,20 @@ M.setup = service({{feat.LANG, 'setup'}}, nil, function()
   -- treesitter
   if feat_list:has(feat.PLUGIN, 'nvim-treesitter') then
     require 'nvim-treesitter.configs'.setup {
-      -- to add more parsers https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       ensure_installed = M.ts_parsers_ensure_installed,
+      auto_install = true,
+      sync_install = false,
+      ignore_install = {},
+      modules = {},
       highlight = { enable = true },
       indent = { enable = true }, -- indentexpr (=)
       incremental_selection = {
         enable = true,
         keymaps = {
           init_selection = "<CR>",
-          -- node_incremental = "grn",
-          scope_incremental = "<CR>",
+          node_incremental = "<CR>",
           node_decremental = "<BS>",
+          -- scope_incremental = "<CR>",
         },
       },
       -- TODO: ensure the plgu is installed

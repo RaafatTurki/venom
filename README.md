@@ -5,36 +5,53 @@ A chill take at configuring neovim.
 > Crafting a neovim config is like maintaining a muscle car,
 it breaks one too many times and you get a Toyota, Which is the emacs of cars.
 
-I dislike over-engineering, Keeping things simple is its own reward.
-However some safety nets must be put in place to ensure our code won't break under unexpected conditions.
+## Layout
+```text
+venom
+├── init.lua                    entry point
+├── lua/
+│   ├── icons.lua               icon sets
+│   ├── logger.lua              logger
+│   ├── options.lua             vim.o, vim.opt ... etc
+│   ├── plugin_manager.lua      
+│   ├── service_loader.lua      
+│   ├── utils.lua               utilities
+│   └── modules/                
+│       └── *.lua               each module builds a certain ascpect of nvim
+├── colors/                     colorchemes
+└── snippets/                   snippets
+```
 
-Hence the introduction of the following mechanisims:
+## Mechanisims
+Due to the rolling nature of neovim and some infrastructure must be put in place to ensure our code editor won't break under unexpected conditions:
 
 
-## 1. Features
-(N)vim already provides `:help has()` and this is it's equivalent for user defined features.
-At the end of the day it's just a table of strings and each represents the availability of a certain feature.
-Implemented as the LUA class `FeatureList`
+### FeatureList
+Features are classes that contain a table of strings where each string represents the availability of a certain feature.
+
+A feature is a string in the form of `<TYPE>:<NAME>`.
 
 **Usage:**
 ```lua
 local features = FeatureList():new()
 
 -- plugin_manager.lua automatically registers all installed plugins
-features:add_str("PLUGIN:nvim-jdtls")
+features:add_str("PLUGIN:nvim-cmp")
 
-if features:has_str("PLUGIN:nvim-jdtls") then
+if features:has_str("PLUGIN:nvim-cmp") then
   -- setup nvim jdtls and what not
 end
 ```
-**Extras:**
+<details>
+<summary>Extras</summary>
+
 ```lua
 --- an "enum" of feature types
 FT = {
-  PLUGIN = "PLUGIN", -- installed plugins
-  LSP = "LSP", -- lsp module
-  BIN = "BIN", -- binaries present on system (rg, find, wget, curl, xxd, rg ... etc)
-  MISC = "MISC", -- miscellanous stuff
+    PLUGIN = "PLUGIN", -- installed plugins
+    LSP = "LSP", -- lsp module
+    BIN = "BIN", -- binaries present on system (rg, find, wget, curl, xxd, rg ... etc)
+    MISC = "MISC", -- miscellanous stuff
 }
 
 features:list -- table of features
@@ -43,11 +60,11 @@ features:has(FT.PLUGIN, "nvim-jdtls") -- same as has_str but uses FT
 features:stitch(FT.PLUGIN, "nvim-jdtls") -- returns "PLUGIN:nvim-jdtls"
 features:unstitch("PLUGIN:nvim-jdtls") -- { FT.PLUGIN, "nvim-jdtls" }
 ```
+</details>
 
 
-## 2. Events
-Much like C# events/delegates events are invokable and subscribable (accepts lua funcs and vim cmds).
-Implemented as the LUA class `Event`
+### Events
+Events are glorified auto commands, they provide a more streamlines way of using them like how one would use C# events/delegates.
 
 **Usage:**
 ```lua
@@ -60,7 +77,9 @@ clear:sub(function() print("cleared highlights") end)
 
 clear() -- calls all subscribers in order
 ```
-**Extras:**
+<details>
+<summary>Extras</summary>
+
 ```lua
 clear:front_sub() -- puts a subsriber infront of all the others
 clear:subscribers -- table of subscribers
@@ -69,35 +88,23 @@ clear:wrap() -- returns `function() return invoke() end`
 
 -- clear()/clear:invoke() are variadic and passes everything to all lua func subs (vim cmds are WIP)
 ```
+</details>
 
-> With the recent introduction of LUA autocmds the implementation can be further simplified.
 
+### Service
 
-## 3. Services
-Subscribing events conditionally based on features is not enough,
-we need functions that conditionally execute depending on what features they require
-and register the features they provide once executed.
-Implemented as the function `service()`
+a service integrates with `FeatureList` heavily, it takes 3 arguments `provides: {string}`, `requires: {string}` and `callback: function` and returns a function.
+
+all strings must be formatted as features (feature tuples are also supported).
+the returned function can be called to execute the `callback` however it will fail if one of the features in `requires` doesn't exist.
+otherwise it registers all features in `provides`.
 
 **Usage:**
 ```lua
-local impatient = U.service({{ FT.CONF, "impatient.nvim" }}, {{ FT.PLUGIN, "impatient.nvim" }}, function()
+local impatient = U.service({ "CONF:impatient.nvim" }, { "PLUGIN:impatient.nvim" }, function()
   require 'impatient'
   require 'impatient'.enable_profile()
 end)
 
 impatient()
 ```
-
-## Notes
-- The rest of the config is just normal nvim/lua stuff that utilize the above machanisms.
-- Some parts of the config aren't utilizing the above mechanisms yet.
-- There's a builtin colorscheme that's built around `vim.api.nvim_set_hl()`
-- Lazy loading is not a priority
-
-
-## Final Thoughts:
-As featurful as one might want to make their nvim,
-at the end of the day adding more code/plugins does increase the number of moving parts.
-
-With Murphy's law in mind, trying to make the most out of what we have in order to minimize that number should be a goal.

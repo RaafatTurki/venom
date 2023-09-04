@@ -66,13 +66,17 @@ M.icon_sets = {
   dap = {
     codicons = {
       breakpoint = '',
-      expanded = '',
-      collapsed = '',
+      breakpoint_conditional = '',
+      breakpoint_rejected = '',
+      logpoint = '',
+      stoppoint = '', --'→'
     },
     ascii = {
-      breakpoint = 'o',
-      expanded = '>',
-      collapsed = 'v',
+      breakpoint = '**',
+      breakpoint_conditional = 'c*',
+      breakpoint_rejected = 'r*',
+      logpoint = 'l*',
+      stoppoint = '->',
     },
   },
   vcs = {

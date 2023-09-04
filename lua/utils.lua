@@ -150,6 +150,15 @@ function M.tbl_merge(tbl1, tbl2)
   return tbl1
 end
 
+--- returns the reverse of a table
+function M.tbl_reverse(tbl)
+  for i = 1, math.floor(#tbl / 2) do
+    local j = #tbl - i + 1
+    tbl[i], tbl[j] = tbl[j], tbl[i]
+  end
+  return tbl
+end
+
 -- Neovim Utils
 --- returns current vim mode name
 function M.get_mode_name()
@@ -335,6 +344,7 @@ feat = {
   KEY = "KEY",
   LANG = "LANG",
   LSP = "LSP",
+  DAP = "DAP",
   SESSION = "SESSION",
 }
 

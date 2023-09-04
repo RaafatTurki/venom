@@ -72,20 +72,23 @@ M.telescope = service({{feat.CONF, 'telescope.nvim'},{feat.CONF, 'telescope-fzf-
         fuzzy = true, -- false will only do exact matching
         override_generic_sorter = true, -- override the generic sorter
         override_file_sorter = true, -- override the file sorter
-        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-        -- the default case_mode is "smart_case"
       },
       ['ui-select'] = {
         require 'telescope.themes'.get_dropdown {}
       }
     },
     defaults = {
-      layout_strategy = 'vertical',
-      layout_config = { height = 0.99 },
+      layout_strategy = 'horizontal',
+      layout_config = {
+        height = 0.9,
+        width = 0.9,
+        prompt_position = 'top',
+        -- preview_width = 0.66,
+      },
       borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
       mappings = {
         i = {
-          -- NOTE: fixes the folds not applying issue
+          -- NOTE: fixes and issue where folds do not apply when selecting an entry
           ["<CR>"] = function()
             vim.cmd [[:stopinsert]]
             vim.cmd [[call feedkeys("\<CR>")]]
@@ -597,6 +600,7 @@ end)
 M.sfm = service({{feat.CONF, 'sfm.nvim'}}, nil, function()
   local sfm_explorer = require 'sfm'.setup({
     view = {
+      -- side = "right",
       width = 35,
       selection_render_method = 'highlight',
     },
@@ -856,18 +860,15 @@ M.mini_files = service({{feat.CONF, 'mini.nvim.files'}}, nil, function()
 end)
 
 M.corn = service({{feat.CONF, "corn.nvim"}}, nil, function()
-  require 'corn'.setup()
-  -- require 'corn'.setup {
-  --   -- win_opts = {
-  --   --   anchor = 'NE',
-  --   -- },
-  --   icons = {
-  --     error = venom.icons.diagnostic_states.Error,
-  --     warn = venom.icons.diagnostic_states.Warn,
-  --     hint = venom.icons.diagnostic_states.Hint,
-  --     info = venom.icons.diagnostic_states.Info,
-  --   },
-  -- }
+  require 'corn'.setup {
+    -- auto_cmds = false,
+    icons = {
+      error = icons.diag.Error,
+      warn = icons.diag.Warn,
+      hint = icons.diag.Hint,
+      info = icons.diag.Info,
+    }
+  }
 end)
 
 M.trld = service({{feat.CONF, "trld.nvim"}}, nil, function()

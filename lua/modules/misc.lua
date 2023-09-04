@@ -359,10 +359,8 @@ end)
 -- TODO: add :require(FT.PLUGIN, 'plenary.nvim')
 M.auto_gitignore_io = service(function()
   local curl = require 'plenary.curl'
-  -- local is_in_progress = false
 
   function GitIgnoreFill()
-    -- is_in_progress = true
     local res_list = curl.get("https://www.toptal.com/developers/gitignore/api/list", {})
 
     if res_list.status == 200 then
@@ -378,7 +376,6 @@ M.auto_gitignore_io = service(function()
         end
       end)
     end
-    -- is_in_progress = false
   end
 
   vim.api.nvim_create_user_command('GitIgnoreFill', GitIgnoreFill, {})

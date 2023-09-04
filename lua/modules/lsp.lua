@@ -12,6 +12,17 @@ M.setup_lspconfig_server = service({{ feat.PLUGIN, 'nvim-lspconfig' }}, function
     opts = require 'coq'.lsp_ensure_capabilities(opts)
   end
 
+  if feat_list:has(feat.CONF, 'nvim-ufo') then
+    shared_capabilities.textDocument.foldingRange = {
+      dynamicRegistration = false,
+      lineFoldingOnly = true
+    }
+  end 
+
+  for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+    vim.api.nvim_set_hl(0, group, {})
+  end
+
   local shared_opts = {
     capabilities = shared_capabilities,
     handlers = {
@@ -91,6 +102,9 @@ M.setup_servers = service({{feat.PLUGIN, 'mason.nvim'}, {feat.PLUGIN, 'mason-lsp
         --   Lsp.setup_buf_fmt_on_save(client, bufnr)
         -- end
       })
+    end,
+    teal_ls = function()
+      M.setup_lspconfig_server('teal_ls', {})
     end,
     texlab = function()
       M.setup_lspconfig_server('texlab', {
@@ -486,7 +500,16 @@ M.code_action = service(function()
 end)
 
 M.hover = service(function()
-  vim.lsp.buf.hover()
+  -- try to preview folds if ufo installed
+  if feat_list:has(feat.CONF, 'nvim-ufo') then
+    local winid = require('ufo').peekFoldedLinesUnderCursor()
+    if not winid then vim.lsp.buf.hover() end
+  elseif feat_list:has(feat.CONF, 'fold-preview.nvim') then
+    local res = require 'fold-preview'.toggle_preview()
+    if not res then vim.lsp.buf.hover() end
+  else
+    vim.lsp.buf.hover()
+  end
 end)
 
 M.format = service(function()

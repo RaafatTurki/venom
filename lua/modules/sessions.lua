@@ -48,11 +48,8 @@ end)
 M.save = service({{feat.SESSION, "setup"}}, function()
   -- write session file
   U.file_write(M.local_session_file, vim.fn.json_encode({
-    general = {
-      -- cwd = vim.fn.getcwd(),
-      -- globals = {},
-    },
     buffers = Buffers.aggregate(),
+    dap = Dap.aggregate(),
   }))
 
   -- load if session isn't loaded
@@ -66,8 +63,11 @@ M.load = service({{feat.SESSION, "setup"}}, function()
     local decoded_data = vim.fn.json_decode(json)
     
     if decoded_data then
-      -- vim.api.nvim_set_current_dir(data.general.cwd)
+      -- populate modules with decoded data
       Buffers.populate(decoded_data.buffers)
+      Dap.populate(decoded_data.dap)
+
+      -- set local session bool
       M.is_in_local_session = true
     else
       log.err("local session data is corrupted")

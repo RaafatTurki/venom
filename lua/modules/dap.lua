@@ -20,16 +20,153 @@ M.setup = service({{ feat.DAP, 'setup' }}, {{ feat.PLUGIN, 'nvim-dap' }, { feat.
     },
   })
 
-  -- local widgets = require('dap.ui.widgets')
-  -- local dap_scopes = widgets.sidebar(widgets.scopes)
-  -- local dap_frames = widgets.sidebar(widgets.frames)
+  local widgets = require('dap.ui.widgets')
+  local dap_scopes = widgets.sidebar(widgets.scopes)
+  local dap_frames = widgets.sidebar(widgets.frames)
+  local dap_sessions = widgets.sidebar(widgets.sessions)
+  local dap_expression = widgets.sidebar(widgets.expression)
+  local dap_threads = widgets.sidebar(widgets.threads)
 
-  -- dap_scopes.open()
-  -- dap_frames.open()
+  local dap_win_scopes = widgets.builder(widgets.scopes)
+  .new_buf(function()
+    local BUFFER_OPTIONS = {
+      swapfile = false,
+      buftype = "nofile",
+      modifiable = false,
+      filetype = "sfm",
+      bufhidden = "wipe",
+      buflisted = false,
+    }
 
-  -- sessions
+    local bufnr = vim.api.nvim_create_buf(false, false)
+    
+    for option, value in pairs(BUFFER_OPTIONS) do
+      vim.bo[bufnr][option] = value
+    end
+
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'a', "<Cmd>lua require('dap.ui').trigger_actions()<CR>", {})
+
+    -- api.nvim_buf_set_keymap( buf, "n", "<CR>", "<Cmd>lua require('dap.ui').trigger_actions({ mode = 'first' })<CR>", {})
+    -- api.nvim_buf_set_keymap( buf, "n", "a", "<Cmd>lua require('dap.ui').trigger_actions()<CR>", {})
+    -- api.nvim_buf_set_keymap( buf, "n", "o", "<Cmd>lua require('dap.ui').trigger_actions()<CR>", {})
+    -- api.nvim_buf_set_keymap( buf, "n", "<2-LeftMouse>", "<Cmd>lua require('dap.ui').trigger_actions()<CR>", {})
+
+    return bufnr
+  end)
+  .new_win(function()
+    local WIN_OPTIONS = {
+      relativenumber = false,
+      number = false,
+      list = false,
+      foldenable = false,
+      winfixwidth = true,
+      winfixheight = true,
+      spell = false,
+      signcolumn = "no",
+      foldmethod = "manual",
+      foldcolumn = "0",
+      cursorcolumn = false,
+      cursorline = true,
+      cursorlineopt = "both",
+      colorcolumn = "0",
+      wrap = false,
+    }
+
+    vim.api.nvim_command "vsp"
+    vim.api.nvim_command "wincmd L" -- right
+
+    for option, value in pairs(WIN_OPTIONS) do
+      vim.wo[option] = value
+    end
+
+    return vim.api.nvim_get_current_win()
+  end)
+  .build()
+
+  local dap_win_frames = widgets.builder(widgets.frames)
+  .new_buf(function()
+    local BUFFER_OPTIONS = {
+      swapfile = false,
+      buftype = "nofile",
+      modifiable = false,
+      filetype = "sfm",
+      bufhidden = "wipe",
+      buflisted = false,
+    }
+
+    local bufnr = vim.api.nvim_create_buf(false, false)
+    
+    for option, value in pairs(BUFFER_OPTIONS) do
+      vim.bo[bufnr][option] = value
+    end
+
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'a', "<Cmd>lua require('dap.ui').trigger_actions()<CR>", {})
+
+    -- api.nvim_buf_set_keymap( buf, "n", "<CR>", "<Cmd>lua require('dap.ui').trigger_actions({ mode = 'first' })<CR>", {})
+    -- api.nvim_buf_set_keymap( buf, "n", "a", "<Cmd>lua require('dap.ui').trigger_actions()<CR>", {})
+    -- api.nvim_buf_set_keymap( buf, "n", "o", "<Cmd>lua require('dap.ui').trigger_actions()<CR>", {})
+    -- api.nvim_buf_set_keymap( buf, "n", "<2-LeftMouse>", "<Cmd>lua require('dap.ui').trigger_actions()<CR>", {})
+
+    return bufnr
+  end)
+  .new_win(function()
+    local WIN_OPTIONS = {
+      relativenumber = false,
+      number = false,
+      list = false,
+      foldenable = false,
+      winfixwidth = true,
+      winfixheight = true,
+      spell = false,
+      signcolumn = "no",
+      foldmethod = "manual",
+      foldcolumn = "0",
+      cursorcolumn = false,
+      cursorline = true,
+      cursorlineopt = "both",
+      colorcolumn = "0",
+      wrap = false,
+    }
+
+    vim.api.nvim_command "vsp"
+    vim.api.nvim_command "wincmd L" -- right
+
+    for option, value in pairs(WIN_OPTIONS) do
+      vim.wo[option] = value
+    end
+
+    return vim.api.nvim_get_current_win()
+  end)
+  .build()
+
+  vim.api.nvim_create_user_command('DapToggleTest', function(opts)
+    local widget_name = opts.fargs[1]
+
+    local widget_wins = {
+      scopes = dap_win_scopes,
+      frames = dap_win_frames,
+    }
+
+    for name, widget in pairs(widget_wins) do
+      widget.close()
+      -- if name ~=  widget_name then end
+    end
+
+    if widget_name then
+      widget_wins[widget_name].open()
+    end
+
+  end, { nargs = '?' })
+  -- vim.api.nvim_create_user_command('DapToggleTest', dap_test.toggle, {})
+  vim.api.nvim_create_user_command('DapToggleScopes', dap_scopes.toggle, {})
+  vim.api.nvim_create_user_command('DapToggleFrames', dap_frames.toggle, {})
+  vim.api.nvim_create_user_command('DapToggleSessions', dap_sessions.toggle, {})
+  vim.api.nvim_create_user_command('DapToggleExpression', dap_expression.toggle, {})
+  vim.api.nvim_create_user_command('DapToggleThreads', dap_threads.toggle, {})
+
   -- scopes
   -- frames
+  -- sessions
   -- expression
   -- threads
 
@@ -45,5 +182,50 @@ M.setup = service({{ feat.DAP, 'setup' }}, {{ feat.PLUGIN, 'nvim-dap' }, { feat.
   --   terminate = ""
   -- }
 end)
+
+M.aggregate = function()
+  local data = {
+    files_breakpoints = {},
+    -- other_type_of_breakpoints = {},
+  }
+
+  -- list dap breakpoint signs for every currently open buffer
+  for i, buf in ipairs(Buffers.buflist.bufs) do
+    local signs = vim.fn.sign_getplaced(buf.bufnr, { group = 'dap_breakpoints' })[1].signs
+
+    local file_breakpoints = {
+      file_index = i,
+      breakpoints = {},
+    }
+
+    for _, sign in ipairs(signs) do
+      if sign.name == 'DapBreakpoint' then
+        table.insert(file_breakpoints.breakpoints, { lnum = sign.lnum })
+      end
+    end
+
+    if #file_breakpoints.breakpoints > 0 then
+      table.insert(data.files_breakpoints, file_breakpoints)
+    end
+  end
+
+  return data
+end
+
+M.populate = function(data)
+  local dap_bp = require 'dap.breakpoints'
+  data = data or {}
+
+  if data.files_breakpoints then
+    for i, file_breakpoints in ipairs(data.files_breakpoints) do
+      local buf_data = Buffers.buflist:get_buf_data({ index = file_breakpoints.file_index })
+
+      for _, file_breakpoint in ipairs(file_breakpoints.breakpoints) do
+        dap_bp.set({}, buf_data.buf.bufnr, file_breakpoint.lnum)
+      end
+    end
+  end
+
+end
 
 return M

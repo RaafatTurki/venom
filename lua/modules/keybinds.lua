@@ -227,6 +227,10 @@ M.setup_plugins = service(function()
     keybind {'<leader>l',         '<CMD>Mason<CR>'}
   end
 
+  if feat_list:has(feat.PLUGIN, 'nvim-dap') then
+    keybind {'<leader>b',         '<CMD>DapToggleBreakpoint<CR>'}
+  end
+
   if feat_list:has(feat.CONF, 'telescope.nvim') then
     keybind {'<leader><CR>',      '<CMD>Telescope resume<CR>'}
     keybind {'<leader>f',         '<CMD>Telescope find_files<CR>'}

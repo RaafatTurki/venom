@@ -56,6 +56,7 @@ M.BufList = function()
         -- if not vim.fn.buflisted(bufnr) == 1 then return false end
         -- log(self:get_buf_data({ bufnr == bufnr }).buf)
 
+        if vim.api.nvim_buf_get_option(bufnr, 'buftype') ~= '' then return false end
         if self:get_buf_data({ bufnr = bufnr }) then return false end
         if vim.api.nvim_buf_get_name(bufnr) == '' then return false end
 
@@ -240,14 +241,14 @@ end)
 M.aggregate = function()
   local data = {
     file_paths = {},
-    active_file_path = nil
+    active_file_index = nil
   }
 
   for i, buf in ipairs(M.buflist.bufs) do
     table.insert(data.file_paths, U.get_relative_path(buf.file_path))
     
     local buf_data = M.buflist:get_buf_data({ index = i })
-    if buf_data and buf_data.active then data.active_file_path = i end
+    if buf_data and buf_data.active then data.active_file_index = i end
   end
 
   return data
@@ -261,9 +262,7 @@ M.populate = function(data)
 
   -- swtich to active buf
   for i, buf in ipairs(M.buflist.bufs) do
-    if i == data.active_file_path then
-      buf:switch()
-    end
+    if i == data.active_file_index then buf:switch() end
   end
 end
 

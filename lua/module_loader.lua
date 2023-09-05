@@ -50,9 +50,6 @@ local plugins = {
       p.mason,
     },
   },
-  -- { 'rcarriga/nvim-dap-ui',
-  --   dependencies = p.dap
-  -- },
   -- NOTE PLUGINS
   { 'echasnovski/mini.nvim',
     config = function()
@@ -133,7 +130,6 @@ local plugins = {
       events.plugin_setup:sub(Plugins.cmp_ls)
     end
   },
-  { 'wintermute-cell/gitignore.nvim' },
   { 'utilyre/sentiment.nvim',
     config = function()
       events.plugin_setup:sub(Plugins.sentiment)

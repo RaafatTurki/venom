@@ -13,8 +13,8 @@ venom
 │   ├── icons.lua               icon sets
 │   ├── logger.lua              logger
 │   ├── options.lua             vim.o, vim.opt ... etc
-│   ├── plugin_manager.lua      
-│   ├── service_loader.lua      
+│   ├── plugin_manager.lua      lazy.nvim bootstrap and setup
+│   ├── module_loader.lua       declarative style control center
 │   ├── utils.lua               utilities
 │   └── modules/                
 │       └── *.lua               each module builds a certain ascpect of nvim

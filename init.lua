@@ -28,7 +28,7 @@ default_colorscheme = 'venom'
 
 -- Loading Modules
 require 'options'
-require 'service_loader'
+require 'module_loader'
 
 -- invoke enter event on VimEnter
 vim.api.nvim_create_autocmd({ 'VimEnter' }, { callback = events.enter:wrap() })

@@ -368,9 +368,9 @@ Whitespace      = { '@debug' },
 
 
   -- LSP
-  LspReferenceText            = { underline = true };
-  LspReferenceRead            = { underline = true };
-  LspReferenceWrite           = { underline = true };
+  LspReferenceText            = { bg = c.info_dim };
+  LspReferenceRead            = { bg = c.info_dim };
+  LspReferenceWrite           = { bg = c.info_dim };
   LspCodeLens                 = { 'Comment' },
 LspCodeLensSeparator        = { '@debug' },
   LspSignatureActiveParameter = { underline = true, bold = true },

@@ -705,7 +705,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       provider = function(self)
         if self.bufnr == nil then return end
         -- return tostring(self.bufnr) .. ". "
-        return (Buffers.buflist:get_buf_data({bufnr = self.bufnr}).label or '') .. ' '
+        return (Buffers.buflist:get_buf_info(Buffers.buflist:get_buf_index({bufnr = self.bufnr})).label or '') .. ' '
       end,
       hl = "ErrorMsg",
     },

@@ -112,8 +112,8 @@ M.setup = service(function()
   for i, label in ipairs(Buffers.buflist.labels) do
     keybind {'<A-'..label..'>',      function() Buffers.buflist:set_active_buf({ label = label }) end}
   end
-  keybind {'<A-S-Left>',        function() Buffers.buflist:shift_active_buf(-1) end}
-  keybind {'<A-S-Right>',       function() Buffers.buflist:shift_active_buf(1) end}
+  keybind {'<A-S-Left>',        function() Buffers.buflist:shift_buf(0, -1) end}
+  keybind {'<A-S-Right>',       function() Buffers.buflist:shift_buf(0, 1) end}
   -- guifont ()
   keybind {'<C-)>',             function() U.change_guifont_size(10, 8, 30) end}
   keybind {'<C-_>',             function() U.change_guifont_size(-1, 8, 30, true) end}

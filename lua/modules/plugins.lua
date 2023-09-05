@@ -862,12 +862,18 @@ end)
 M.corn = service({{feat.CONF, "corn.nvim"}}, nil, function()
   require 'corn'.setup {
     -- auto_cmds = false,
+    -- sort_method = 'line_number',
+    sort_method = 'column',
+    -- scope = 'file',
     icons = {
       error = icons.diag.Error,
       warn = icons.diag.Warn,
       hint = icons.diag.Hint,
       info = icons.diag.Info,
-    }
+    },
+    on_toggle = function(is_hidden)
+      vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
+    end,
   }
 end)
 

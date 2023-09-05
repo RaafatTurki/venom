@@ -218,10 +218,11 @@ M.populate = function(data)
 
   if data.files_breakpoints then
     for i, file_breakpoints in ipairs(data.files_breakpoints) do
-      local buf_data = Buffers.buflist:get_buf_data({ index = file_breakpoints.file_index })
+      local buf_info = Buffers.buflist:get_buf_info(file_breakpoints.file_index)
+      if not buf_info then break end
 
       for _, file_breakpoint in ipairs(file_breakpoints.breakpoints) do
-        dap_bp.set({}, buf_data.buf.bufnr, file_breakpoint.lnum)
+        dap_bp.set({}, buf_info.buf.bufnr, file_breakpoint.lnum)
       end
     end
   end

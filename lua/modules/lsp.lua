@@ -86,6 +86,9 @@ M.setup_servers = service({{feat.PLUGIN, 'mason.nvim'}, {feat.PLUGIN, 'mason-lsp
           Lua = {
             diagnostics = {
               disable = { 'lowercase-global', 'trailing-space', 'unused-local' },
+              groupSeverity = {
+                ['type-check'] = "Error",
+              }
             },
             workspace = {
               checkThirdParty = false,

@@ -85,7 +85,7 @@ vim.opt.whichwrap:append '<,>,[,],h,l' -- Move to next line with theses keys
 -- diagnostic options
 vim.diagnostic.config {
   signs = true,
-  update_in_insert = true,
+  update_in_insert = false,
   severity_sort = true,
   -- underline = {
   --   -- severity = vim.diagnostic.severity.INFO,

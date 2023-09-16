@@ -1139,9 +1139,19 @@ M.noice = service({{feat.CONF, 'noice.nvim'}}, nil, function()
 end)
 
 M.hex = service({{feat.CONF, 'hex.nvim'}}, nil, function()
-  require 'hex'.setup {
-    -- is_file_binary_pre_read = function() return false end,
-    -- is_file_binary_post_read = function() return false end,
+  require 'hex'.setup {}
+end)
+
+M.view = service({{feat.CONF, 'view.nvim'}}, nil, function()
+  local augroup_hex_nvim = vim.api.nvim_create_augroup('hex.nvim', { clear = true })
+  local viewers = {}
+
+  if feat_list:has(feat.PLUGIN, 'hex.nvim') then
+    viewers.hex = require 'hex'.view
+  end
+
+  require 'view'.setup {
+    viewers = viewers
   }
 end)
 

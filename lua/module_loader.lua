@@ -145,11 +145,11 @@ local plugins = {
       events.plugin_setup:sub(Plugins.corn)
     end
   },
-  -- { "m-demare/hlargs.nvim",
+  -- { 'RaafatTurki/view.nvim', dev = false,
   --   config = function()
-  --     require "hlargs".setup()
-  --   end,
-  -- }
+  --     events.plugin_setup:sub(Plugins.view)
+  --   end
+  -- },
   -- { 'sindrets/diffview.nvim' },
   -- { 'folke/edgy.nvim',
   --   config = function()

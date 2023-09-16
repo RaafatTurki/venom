@@ -33,121 +33,6 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     return statusline
   end
 
-  -- a custom made make_buflist that integrates with the Buffers module instead of the vanilla :ls
-  -- FIXME: refactor to something generic
-  local function make_buflist(buffer_component, left_trunc, right_trunc, buf_func)
-    local NTABLINES = 0
-
-    local function get_bufnrs()
-      local bufnrs = {}
-      for i, buf in ipairs(Buffers.buflist.bufs) do
-        table.insert(bufnrs, buf.bufnr)
-      end
-      return bufnrs
-    end
-
-    local function bufs_in_tab(tabpage)
-      tabpage = tabpage or 0
-      local bufnr_bool_map = {}
-      local wins = vim.api.nvim_tabpage_list_wins(tabpage)
-      for _, winid in ipairs(wins) do
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        bufnr_bool_map[bufnr] = true
-      end
-      return bufnr_bool_map
-    end
-
-    buf_func = buf_func or get_bufnrs
-    
-    left_trunc = left_trunc or { provider = "<" }
-    right_trunc = right_trunc or { provider = ">" }
-    
-    NTABLINES = NTABLINES + 1
-
-    left_trunc.on_click = {
-      callback = function(self)
-        self._buflist[1]._cur_page = self._cur_page - 1
-        self._buflist[1]._force_page = true
-        vim.cmd.redrawtabline()
-      end,
-      name = "Heirline_tabline_prev_" .. NTABLINES,
-    }
-    right_trunc.on_click = {
-      callback = function(self)
-        self._buflist[1]._cur_page = self._cur_page + 1
-        self._buflist[1]._force_page = true
-        vim.cmd("redrawtabline")
-      end,
-      name = "Heirline_tabline_next_" .. NTABLINES,
-    }
-
-    local bufferline = {
-      static = {
-        _left_trunc = left_trunc,
-        _right_trunc = right_trunc,
-        _cur_page = 1,
-        _force_page = false,
-      },
-      init = function(self)
-        -- register the buflist component reference as global statusline attr
-        if vim.tbl_isempty(self._buflist) then
-          table.insert(self._buflist, self)
-        end
-        if not self.left_trunc then
-          self.left_trunc = self:new(self._left_trunc)
-        end
-        if not self.right_trunc then
-          self.right_trunc = self:new(self._right_trunc)
-        end
-
-        if not self._once then
-          vim.api.nvim_create_autocmd({ "BufEnter" }, {
-            callback = function()
-              self._force_page = false
-            end,
-            desc = "Heirline release lock for next/prev buttons",
-          })
-          self._once = true
-        end
-
-        self.active_child = false
-        local bufs = vim.tbl_filter(function(bufnr)
-          return vim.api.nvim_buf_is_valid(bufnr)
-        end, buf_func())
-        local visible_buffers = bufs_in_tab()
-
-        for i, bufnr in ipairs(bufs) do
-          local child = self[i]
-          if not (child and child.bufnr == bufnr) then
-            self[i] = self:new(buffer_component, i)
-            child = self[i]
-            child.bufnr = bufnr
-          end
-
-          if bufnr == tonumber(vim.g.actual_curbuf) then
-            child.is_active = true
-            self.active_child = i
-          else
-            child.is_active = false
-          end
-
-          if visible_buffers[bufnr] then
-            child.is_visible = true
-          else
-            child.is_visible = false
-          end
-        end
-        if #self > #bufs then
-          for i = #bufs + 1, #self do
-            self[i] = nil
-          end
-        end
-      end,
-    }
-    
-    return bufferline
-  end
-
   M.components.vimode = {
     provider = function(self)
       return utils.get_mode_name()
@@ -503,7 +388,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       return vim.fn.reg_recording() ~= ''
     end,
     provider = function (self)
-      return '' .. ' ' .. self.reg_recording
+      return '' .. ' ' .. self.reg_recording
     end,
     hl = hi_finalize('Error'),
     update = {
@@ -757,10 +642,36 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         hl = 'ErrorMsg',
       },
     },
+    -- view.nvim views
+    {
+      condition = function(self)
+        if feat_list:has(feat.PLUGIN, 'view.nvim') then
+          return require 'view.utils'.get_main_bufnr(self.bufnr)
+        end
+      end,
+      provider = function(self)
+        local indicator = ""
+        local viewers = require 'view'.get_buf_data(self.bufnr)
+        -- local view_utils = require 'view.utils'
+        -- local view = require 'view'
+        -- local original_bufnr = vim.b[self.bufnr][view_utils.bvar_name_bufnr]
+        for _, vbuffer in ipairs(viewers.vbuffers) do
+          -- log(vbuffer)
+          indicator = indicator .. ' ' .. vbuffer.vbuffer_maker_name
+        end
+
+        return indicator
+      end,
+      hl = function(self)
+        return 'Comment'
+      end,
+    },
   }
 
   local bufferline = {
-    make_buflist(utils.surround({ ' ', ' ' }, nil, buffer_abstract), { provider = '' }, { provider = '' })
+    utils.make_buflist(utils.surround({ ' ', ' ' }, nil, buffer_abstract), { provider = '' }, { provider = '' }, function()
+      return vim.tbl_map(function(buf) return buf.bufnr end, Buffers.buflist.bufs)
+    end, false)
   }
 
   local tabpage_abstract = {

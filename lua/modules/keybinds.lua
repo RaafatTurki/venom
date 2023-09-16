@@ -237,6 +237,10 @@ M.setup_plugins = service(function()
     keybind {'<leader>g',         '<CMD>Telescope live_grep<CR>'}
   end
 
+  if feat_list:has(feat.CONF, 'view.nvim') then
+    keybind {'<A-v>',      require 'view'.next}
+  end
+
   -- neotest
   -- M.key {'<leader>t',         '<CMD>NeotestToggleTree<CR>'}
 

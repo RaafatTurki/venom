@@ -15,9 +15,10 @@ local icon_sets = require 'icons'.icon_sets
 icons = {
   diag = icon_sets.diag.codicons,
   lsp = icon_sets.lsp.codicons,
-  dap = icon_sets.dap.codicons,
-  navic = icon_sets.navic.codicons,
+  dap = icon_sets.dap.nerdfont,
   vcs = icon_sets.vcs.ascii,
+  navic = icon_sets.navic.codicons,
+  misc = icon_sets.misc.nerdfont,
 }
 
 -- initializing logger

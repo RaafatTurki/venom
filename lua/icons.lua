@@ -64,6 +64,13 @@ M.icon_sets = {
     },
   },
   dap = {
+    nerdfont = {
+      breakpoint = "",
+      breakpoint_conditional = "",
+      breakpoint_rejected = "",
+      logpoint = ".>",
+      stoppoint = "󰁕",
+    },
     codicons = {
       breakpoint = '',
       breakpoint_conditional = '',
@@ -112,6 +119,17 @@ M.icon_sets = {
       Object    = 'obj',
       Key       = 'key',
       Null      = 'nil',
+    },
+  },
+  misc = {
+    nerdfont = {
+      sessions = '󱂬',
+      spellcheck = '󰓆',
+      lsp = '',
+      ts = '',
+      terminal = '',
+      clock = '',
+      ellipsis = '',
     },
   },
   -- TODO: WIP

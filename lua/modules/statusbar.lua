@@ -11,7 +11,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
   local align = { provider = "%=" }
   local space = { provider = " " }
 
-  local function hi_finalize(hi)
+  local function stl_hl(hi)
     if type(hi) == 'string' then hi = utils.get_highlight(hi) end
     return vim.tbl_deep_extend('force', hi, utils.get_highlight('StatusLine'))
   end
@@ -38,7 +38,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       return utils.get_mode_name()
     end,
     hl = function(self)
-      return hi_finalize(utils.get_mode_hi())
+      return stl_hl(utils.get_mode_hl())
     end,
     update = 'ModeChanged',
   }
@@ -58,7 +58,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         return self.icon and (self.icon .. ' ')
       end,
       hl = function(self)
-        return hi_finalize({ fg = self.icon_color })
+        return stl_hl({ fg = self.icon_color })
       end
     },
     -- name
@@ -67,27 +67,27 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         -- first, trim the pattern relative to the current directory. For other
         -- options, see :h filename-modifers
         local filename = vim.fn.fnamemodify(self.filename, ":.")
-        if filename == "" then return "[No Name]" end
+        -- if filename == "" then return "[No Name]" end
         -- now, if the filename would occupy more than 1/4th of the available
         -- space, we trim the file path to its initials
         -- See Flexible Components section below for dynamic truncation
-        if not conditions.width_percent_below(#filename, 0.25) then
-          filename = vim.fn.pathshorten(filename)
-        end
+        -- if not conditions.width_percent_below(#filename, 0.25) then
+        --   filename = vim.fn.pathshorten(filename)
+        -- end
         return filename
       end,
-      hl = hi_finalize('Normal')
+      hl = stl_hl('Normal')
     },
     -- modified
     {
       provider = function() if vim.bo.modified then return ' •' end end,
-      hl = hi_finalize('DiffAdd')
+      hl = stl_hl('DiffAdd')
     },
     -- readonly
     {
       -- 
       provider = function() if (not vim.bo.modifiable) or vim.bo.readonly then return ' ' end end,
-      hl = hi_finalize("ErrorMsg"),
+      hl = stl_hl("ErrorMsg"),
     },
   }
 
@@ -97,7 +97,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       self.status_dict = vim.b.gitsigns_status_dict
       -- self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
     end,
-    hl = hi_finalize('GitSignsDelete'),
+    hl = stl_hl('GitSignsDelete'),
     condition = function()
       return conditions.is_git_repo() and feat_list:has(feat.CONF, 'gitsigns.nvim')
     end,
@@ -116,7 +116,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         local count = self.status_dict.added or 0
         return count > 0 and ("+" .. count)
       end,
-      hl = hi_finalize("GitSignsAdd"),
+      hl = stl_hl("GitSignsAdd"),
     },
     -- changes
     {
@@ -124,7 +124,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         local count = self.status_dict.changed or 0
         return count > 0 and ("~" .. count)
       end,
-      hl = hi_finalize("GitSignsChange"),
+      hl = stl_hl("GitSignsChange"),
     },
     -- deletes
     {
@@ -132,7 +132,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         local count = self.status_dict.removed or 0
         return count > 0 and ("-" .. count)
       end,
-      hl = hi_finalize("GitSignsDelete"),
+      hl = stl_hl("GitSignsDelete"),
     },
   }
 
@@ -146,45 +146,41 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       provider = function()
         return require 'nvim-navic'.get_location()
       end,
-      hl = hi_finalize('Folded'),
+      hl = stl_hl('Folded'),
       update = 'CursorMoved'
     },
   }
 
   M.components.luasnip = {
     condition = function()
-      if feat_list:has(feat.PLUGIN, 'LuaSnip') then
-        return require 'luasnip'.jumpable()
-      else
-        return false
-      end
+      if feat_list:has(feat.PLUGIN, 'LuaSnip') then return require 'luasnip'.jumpable() end
     end,
     provider = function()
       local forward = require 'luasnip'.jumpable(1) and '' or ''
       local backward = require 'luasnip'.jumpable(-1) and '' or ''
       return backward .. icons.lsp.Snippet .. forward
     end,
-    hl = hi_finalize('CmpItemKindSnippet'),
+    hl = stl_hl('CmpItemKindSnippet'),
   }
 
   M.components.spell = {
     condition = function()
       return vim.wo.spell
     end,
-    provider = icons.lsp.Text,
+    provider = icons.misc.spellcheck,
   }
 
-  M.components.root_user = {
+  M.components.user = {
     condition = function()
       return vim.env['USER'] == 'root'
     end,
     provider = 'ROOT',
-    hl = hi_finalize('ErrorMsg'),
+    hl = stl_hl('ErrorMsg'),
   }
 
   M.components.showcmd = {
     provider = "%S",
-    hl = hi_finalize('Comment'),
+    hl = stl_hl('Comment'),
     -- update = 'CursorMoved',
   }
 
@@ -208,74 +204,61 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       provider = function(self)
         return self.errors > 0 and (self.error_icon .. ' ' .. self.errors .. " ")
       end,
-      hl = hi_finalize('DiagnosticError'),
+      hl = stl_hl('DiagnosticError'),
     },
     -- warns
     {
       provider = function(self)
         return self.warnings > 0 and (self.warn_icon .. ' ' .. self.warnings .. " ")
       end,
-      hl = hi_finalize('DiagnosticWarn'),
+      hl = stl_hl('DiagnosticWarn'),
     },
     -- infos
     {
       provider = function(self)
         return self.info > 0 and (self.info_icon .. ' ' .. self.info .. " ")
       end,
-      hl = hi_finalize('DiagnosticInfo'),
+      hl = stl_hl('DiagnosticInfo'),
     },
     -- hints
     {
       provider = function(self)
         return self.hints > 0 and (self.hint_icon .. ' ' .. self.hints)
       end,
-      hl = hi_finalize('DiagnosticHint'),
+      hl = stl_hl('DiagnosticHint'),
     },
   }
 
   M.components.lsp_servers = {
     condition = conditions.lsp_attached,
-    provider = function()
-      local servers = {}
-      local res = ''
-      for i, server in pairs(vim.lsp.buf_get_clients(0)) do
-        if servers[server.name] == nil then
-          servers[server.name] = {
-            count = 1
-          }
-        else
-          local count = servers[server.name].count
-          servers[server.name].count = count + 1
+    provider = function(self)
+      local client_names = {}
+
+      for _, client in ipairs(vim.lsp.get_active_clients()) do
+        if vim.tbl_contains(vim.lsp.get_buffers_by_client_id(client.id), vim.api.nvim_get_current_buf()) then
+          table.insert(client_names, client.name)
         end
       end
-      for server_name, server in pairs(servers) do
-        -- state_icon = ''
-        -- ⏳ 
-        if server.count > 1 then
-          res = res .. '  ' .. server.count
-        end
-        res = res .. ' ' .. server_name
-        -- if (i ~= #servers) then res = res .. ' ' end
-      end
-      return res
+
+      return icons.misc.lsp .. ' ' .. U.join(client_names, ' ')
     end,
-    -- update = {'LspAttach', 'LspDetach', 'User LspProgressUpdate'},
-    hl = hi_finalize('Folded'),
+    update = { 'LspAttach', 'LspDetach', 'User LspProgressUpdate', 'BufWinEnter' },
+    hl = stl_hl('Type'),
   }
 
   M.components.session = {
     condition = function() return Sessions.is_in_local_session end,
     provider = function()
-      return ' local'
+      return icons.misc.sessions
     end,
-    hl = hi_finalize('WarningMsg'),
+    hl = stl_hl('WarningMsg'),
   }
 
   M.components.filetype = {
     provider = function()
       return vim.bo.filetype
     end,
-    hl = hi_finalize('Comment'),
+    hl = stl_hl('Comment'),
   }
 
   M.components.fileencoding = {
@@ -312,7 +295,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       local curr_col = vim.api.nvim_win_get_cursor(0)[2]
       return string.format("%s:%s", curr_line, curr_col)
     end,
-    hl = hi_finalize('Comment'),
+    hl = stl_hl('Comment'),
     update = 'CursorMoved',
   }
 
@@ -323,7 +306,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     end,
     {
       provider = ' ',
-      hl = hi_finalize('Todo'),
+      hl = stl_hl('Todo'),
     },
     {
       provider = function()
@@ -334,15 +317,16 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
   }
 
   -- TODO merge into fileinfo
-  M.components.terminalname = {
+  M.components.toggleterm = {
     condition = function()
       return vim.bo.buftype == "terminal"
     end,
     {
-      provider = ' ',
+      provider = icons.misc.terminal,
       -- 
-      hl = hi_finalize('Type'),
+      hl = stl_hl('Type'),
     },
+    space,
     {
       provider = function()
         local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
@@ -359,7 +343,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         .shiftwidth) end
       return indent_type .. ':' .. indent_width
     end,
-    hl = hi_finalize('Comment'),
+    hl = stl_hl('Comment'),
   }
 
   M.components.searchinfo = {
@@ -390,7 +374,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     provider = function (self)
       return '' .. ' ' .. self.reg_recording
     end,
-    hl = hi_finalize('Error'),
+    hl = stl_hl('Error'),
     update = {
       "RecordingEnter",
       "RecordingLeave",
@@ -415,14 +399,14 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         WarningMsg = 2,
         Folded = 3,
       }
-      return hi_finalize(build_status_hls[Lang.texab_build_status])
+      return stl_hl(build_status_hls[Lang.texab_build_status])
     end
   }
 
   M.components.lazy = {
     condition = require("lazy.status").has_updates,
     provider = function() return require 'lazy.status'.updates() end,
-    hl = hi_finalize('Type'),
+    hl = stl_hl('Type'),
     update = { "User", pattern = "LazyUpdate" },
   }
 
@@ -438,7 +422,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     M.components.texlab_status,
     M.components.luasnip,
     M.components.spell,
-    M.components.root_user,
+    M.components.user,
     M.components.showcmd,
     M.components.lsp_diags,
     M.components.lsp_servers,
@@ -461,7 +445,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     end,
     M.components.helpfilename,
     align,
-    M.components.root_user,
+    M.components.user,
     M.components.filetype,
     M.components.searchinfo,
     M.components.session,
@@ -475,9 +459,9 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
         filetype = { "toggleterm" },
       }
     end,
-    M.components.terminalname,
+    M.components.toggleterm,
     align,
-    M.components.root_user,
+    M.components.user,
     M.components.filetype,
     M.components.searchinfo,
     M.components.session,
@@ -493,42 +477,21 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
 
   local default_winbar = {
     condition = function()
-      return vim.bo.buftype == ''
+      return vim.bo.buftype == '' and vim.bo.ft ~= 'noice'
     end,
     space,
-    -- M.components.navic,
-    align,
-  }
-
-  local special_winbar = {
-    condition = function()
-      return conditions.buffer_matches({
-        buftype = { "nofile", "prompt", "help", "quickfix" },
-        filetype = { "^git.*", "fugitive", "NvimTree" },
-      })
-    end,
-    space,
-    align,
-  }
-
-  local terminal_winbar = {
-    condition = function()
-      return conditions.buffer_matches {
-        buftype = { "terminal" },
-        filetype = { "toggleterm" },
-      }
-    end,
-    space,
+    {
+      provider = "grug face >:(",
+      hl = "Comment"
+    },
+    M.components.navic,
     align,
   }
 
   local winbars = {
-    fallthrough = false,
+    -- fallthrough = false,
     default_winbar,
-    special_winbar,
-    terminal_winbar,
   }
-
 
   local tabline_offset = {
     condition = function(self)
@@ -697,11 +660,27 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
 
   local tabline = { tabline_offset, bufferline, tabpages }
 
+
+  local statuscolumns = {
+    {
+      provider = "x"
+    }
+  }
+
+
   require 'heirline'.setup {
     statusline = statuslines,
     tabline = tabline,
-    -- winbar = winbars,
-    -- statuscolumn = {}
+    winbar = winbars,
+    -- statuscolumn = statuscolumns,
+    opts = {
+      disable_winbar_cb = function(args)
+        return conditions.buffer_matches({
+          buftype = { "nofile", "prompt", "help", "quickfix" },
+          filetype = { "^git.*", "fugitive", "Trouble", "dashboard", "noice" },
+        }, args.buf)
+      end,
+    },
   }
 
 end)

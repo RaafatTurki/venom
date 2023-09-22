@@ -250,7 +250,7 @@ M.setup_plugins = service(function()
   end
   
   if feat_list:has(feat.CONF, 'rest.nvim') then
-    keybind {'h<CR>',             '<Plug>RestNvim'}
+    keybind {'<leader>',             '<Plug>RestNvim'}
   end
 
   -- M.key {'<C-Right>', '<Plug>luasnip-next-choice'}

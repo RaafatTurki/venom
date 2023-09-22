@@ -145,6 +145,14 @@ local plugins = {
       events.plugin_setup:sub(Plugins.corn)
     end
   },
+  { 'rest-nvim/rest.nvim',
+    dependencies = {
+      p.plenary,
+    },
+    config = function()
+      events.plugin_setup:sub(Plugins.rest)
+    end
+  },
   -- { 'RaafatTurki/view.nvim', dev = false,
   --   config = function()
   --     events.plugin_setup:sub(Plugins.view)

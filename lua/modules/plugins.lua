@@ -1035,16 +1035,28 @@ end)
 
 M.rest = service({{feat.CONF, 'rest.nvim'}}, nil, function()
   require 'rest-nvim'.setup {
-    -- skip_ssl_verification = false,
-    -- result = {
-    --   show_url = true,
-    --   show_http_info = true,
-    --   show_headers = true,
-    -- },
-    -- jump_to_request = false,
-    env_file = '.env.development',
-    -- custom_dynamic_variables = {},
-    -- yank_dry_run = true,
+    result_split_horizontal = false,
+    result_split_in_place = true,
+    -- skip_ssl_verification = true,
+    -- encode_url = true,
+    highlight = {
+      enabled = true,
+      timeout = 150,
+    },
+    result = {
+      show_url = true,
+      show_curl_command = false,
+      show_http_info = false,
+      show_headers = false,
+      formatters = {
+        json = "jq",
+        html = function(body) return vim.fn.system({"tidy", "-i", "-q", "-"}, body) end
+      },
+    },
+    jump_to_request = true,
+    -- env_file = '.env',
+    custom_dynamic_variables = {},
+    yank_dry_run = true,
   }
 end)
 

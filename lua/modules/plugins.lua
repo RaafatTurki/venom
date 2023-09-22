@@ -698,7 +698,7 @@ M.toggle_term = service({{feat.CONF, "toggleterm.nvim"}}, nil, function()
     open_mapping = [[<C-\>]],
     insert_mappings = true,
     terminal_mappings = true,
-    direction = 'horizontal',
+    direction = 'float',
     autochdir = true,
     size = function(term)
       if term.direction == "horizontal" then
@@ -707,8 +707,14 @@ M.toggle_term = service({{feat.CONF, "toggleterm.nvim"}}, nil, function()
         return vim.o.columns * 0.5
       end
     end,
+    persist_size = false,
+    float_opts = {
+      border = "single",
+      width = vim.o.columns,
+      height = math.floor(vim.o.lines * 0.9)
+    },
     highlights = {
-      CursorLine = {},
+      FloatBorder = { link = "FloatBorder" },
     },
     -- winbar = {
     --   enabled = true,

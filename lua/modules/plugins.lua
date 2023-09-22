@@ -164,6 +164,7 @@ M.gitsigns = service({{feat.CONF, "gitsigns.nvim"}}, nil, function()
 end)
 
 M.git_conflict = U.service({{feat.CONF, 'git-conflict.nvim'}}, nil, function()
+  ---@diagnostic disable-next-line: missing-fields
   require 'git-conflict'.setup {
     debug = false,
     default_commands = true, -- disable commands created by this plugin
@@ -212,6 +213,7 @@ M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
     else fb() end
   end
 
+  ---@diagnostic disable-next-line: missing-fields
   cmp.setup {
     -- TODO: conditionally load luasnip realted stuff depending on features (requries plugin manager dependency feature registering)
     snippet = { expand = function(args) ls.lsp_expand(args.body) end },
@@ -270,6 +272,7 @@ M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
       -- { name = 'nvim_lsp_signature_help' },
       -- { name = 'digraphs' },
     },
+    ---@diagnostic disable-next-line: missing-fields
     formatting = {
       fields = { "kind", "abbr", "menu" },
       format = function(entry, vim_item)
@@ -291,17 +294,20 @@ M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
     },
     window = {
       -- completion = cmp.config.window.bordered(),
+      ---@diagnostic disable-next-line: missing-fields
       completion = {
         border = 'single',
         winhighlight = '',
         -- winhighlight = 'CursorLine:Normal',
       },
+      ---@diagnostic disable-next-line: missing-fields
       documentation = {
         border = 'single',
         winhighlight = '',
       },
       -- scrollbar = '║',
     },
+    ---@diagnostic disable-next-line: missing-fields
     completion = {
       get_trigger_characters = function(trigger_chars)
         local new_trigger_chars = {}
@@ -318,6 +324,7 @@ M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
     }
   }
 
+  ---@diagnostic disable-next-line: missing-fields
   cmp.setup.cmdline({ '/', '?' }, {
     -- mapping = cmp.mapping.preset.cmdline(),
     sources = {
@@ -326,6 +333,7 @@ M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
     }
   })
 
+  ---@diagnostic disable-next-line: missing-fields
   cmp.setup.cmdline(':', {
     -- mapping = cmp.mapping.preset.cmdline(),
     sources = {

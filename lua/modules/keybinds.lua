@@ -245,8 +245,8 @@ M.setup_plugins = service(function()
   -- M.key {'<leader>t',         '<CMD>NeotestToggleTree<CR>'}
 
   if feat_list:has(feat.CONF, 'vim-illuminate') then
-    keybind {'r<Right>',          function() require('illuminate').goto_next_reference() end}
-    keybind {'r<Left>',           function() require('illuminate').goto_prev_reference() end}
+    keybind {'r<Right>',          require('illuminate').goto_next_reference}
+    keybind {'r<Left>',           require('illuminate').goto_prev_reference}
   end
   
   if feat_list:has(feat.CONF, 'rest.nvim') then

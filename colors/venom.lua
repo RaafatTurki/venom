@@ -114,7 +114,7 @@ local debug     = gen_shades '#FF00FF'
 local c = {
   -- common
   bg        = black[1],
-  bg_float  = black[4],
+  bg_float  = black[3],
   mg        = grey[1],
   fg        = white[1],
   line      = black[2],

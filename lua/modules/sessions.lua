@@ -61,7 +61,7 @@ M.load = service({{feat.SESSION, "setup"}}, function()
     -- read session file
     local json = U.file_read(M.local_session_file)
     local decoded_data = vim.fn.json_decode(json)
-    
+
     if decoded_data then
       -- populate modules with decoded data
       Buffers.populate(decoded_data.buffers)
@@ -73,7 +73,11 @@ M.load = service({{feat.SESSION, "setup"}}, function()
       log.err("local session data is corrupted")
     end
   else
-    log.warn('local session file does not exist')
+    vim.schedule(function()
+      if U.confirm_yes_no('Local session file does not exist. Create one?') then
+        M.save()
+      end
+    end)
   end
 end)
 

@@ -48,6 +48,8 @@ M.setup = service(function(plugins)
     },
     checker = {
       enabled = true,
+      notify = false,
+      frequency = 1800,
     },
   })
 

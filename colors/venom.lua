@@ -136,7 +136,9 @@ local c = {
   add       = green[2],
   mod       = blue[1],
   del       = red[1],
-  mod_alt   = cyan[1],
+  add_alt   = mix(green[2], black[1], 0.2, 0.8),
+  mod_alt   = mix(blue[1], black[1], 0.2, 0.8),
+  del_alt   = mix(red[1], black[1], 0.2, 0.8),
 
   -- vcs
   staged    = green[4],
@@ -279,22 +281,36 @@ local highlights = {
   -- ['@reference']
 
 
-  -- LSP SEMANTIC HIGHLIGHT
-  ['@lsp.type.namespace']   = { '@namespace' },
-  ['@lsp.type.type']        = { '@type' },
-  ['@lsp.type.class']       = { '@type' },
-  ['@lsp.type.enum']        = { '@type' },
-  ['@lsp.type.interface']   = { '@type' },
-  ['@lsp.type.struct']      = { '@structure' },
-  ['@lsp.type.parameter']   = { '@parameter' },
-  ['@lsp.type.variable']    = { '@variable' },
-  ['@lsp.type.property']    = { '@property' },
-  ['@lsp.type.enumMember']  = { '@constant' },
-  ['@lsp.type.function']    = { '@function' },
-  ['@lsp.type.method']      = { '@method' },
-  ['@lsp.type.macro']       = { '@macro' },
-  ['@lsp.type.decorator']   = { '@function' },
-
+  -- LSP SEMANTIC HIGHLIGHT (turrning off lsp highlights, but keeping the unused imports on)
+  -- visit https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
+  ['@lsp.type.namespace']   = { },
+  ['@lsp.type.type']        = { },
+  ['@lsp.type.class']       = { },
+  ['@lsp.type.enum']        = { },
+  ['@lsp.type.interface']   = { },
+  ['@lsp.type.struct']      = { },
+  ['@lsp.type.parameter']   = { },
+  ['@lsp.type.variable']    = { },
+  ['@lsp.type.property']    = { },
+  ['@lsp.type.enumMember']  = { },
+  ['@lsp.type.function']    = { },
+  ['@lsp.type.method']      = { },
+  ['@lsp.type.macro']       = { },
+  ['@lsp.type.decorator']   = { },
+  -- ['@lsp.type.namespace']   = { '@namespace' },
+  -- ['@lsp.type.type']        = { '@type' },
+  -- ['@lsp.type.class']       = { '@type' },
+  -- ['@lsp.type.enum']        = { '@type' },
+  -- ['@lsp.type.interface']   = { '@type' },
+  -- ['@lsp.type.struct']      = { '@structure' },
+  -- ['@lsp.type.parameter']   = { '@parameter' },
+  -- ['@lsp.type.variable']    = { '@variable' },
+  -- ['@lsp.type.property']    = { '@property' },
+  -- ['@lsp.type.enumMember']  = { '@constant' },
+  -- ['@lsp.type.function']    = { '@function' },
+  -- ['@lsp.type.method']      = { '@method' },
+  -- ['@lsp.type.macro']       = { '@macro' },
+  -- ['@lsp.type.decorator']   = { '@function' }, 
 
   -- N/VIM
   ColorColumn	    = { 'CursorLine' },
@@ -308,17 +324,17 @@ local highlights = {
   CursorLineNr    = { 'CursorLine' },
   CursorLineSign  = { }, --
   DiffAdd         = { fg = c.add },
-  DiffChange      = { fg = c.mod },
+  DiffChange      = { fg = c.mod_alt },
   DiffDelete      = { fg = c.del },
-  DiffText        = { fg = c.mod_alt },
+  DiffText        = { fg = c.mod },
   Directory       = { }, --
   EndOfBuffer     = { }, --
   ErrorMsg        = { fg = c.err },
-  Folded          = { fg = c.fold, bold = true },
+  Folded          = { fg = c.fold },
   FoldColumn      = { 'Folded' }, --
   lCursor         = { }, --
   IncSearch       = { 'Search' },
-  LineNr          = { fg = c.comment, italic = true },
+  LineNr          = { fg = c.comment },
   LineNrAbove     = { }, --
   LineNrBelow     = { }, --
   MatchParen      = { fg = c.fg, bold = true },
@@ -755,6 +771,8 @@ NeoTreeWindowsHidden        = { '@debug' };
   SnippetInsertIndicator  = { fg = c.fg };
   SnippetChoiceIndicator  = { fg = c.hint };
   -- CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
+  GitConflictCurrent      = { bg = c.add_alt };
+  GitConflictIncoming     = { bg = c.mod_alt };
   Camel                   = { fg = c.warn };
   -- DAP
   DapBreakpoint           = { fg = c.err };

@@ -19,9 +19,13 @@ M.setup_lspconfig_server = service({{ feat.PLUGIN, 'nvim-lspconfig' }}, function
     }
   end 
 
-  for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
-    vim.api.nvim_set_hl(0, group, {})
-  end
+  -- strip off lsp highlights
+  -- local lsp_hl_groups = vim.fn.getcompletion("@lsp", "highlight")
+  -- if lsp_hl_groups then
+  --   for _, hl_group in ipairs(lsp_hl_groups) do
+  --     vim.api.nvim_set_hl(0, hl_group, { })
+  --   end
+  -- end
 
   local shared_opts = {
     capabilities = shared_capabilities,

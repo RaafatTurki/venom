@@ -3,11 +3,25 @@ local M = {}
 -- icons collection
 M.icon_sets = {
   diag = {
-    cozette  = { Error = "", Warn = "", Hint = "", Info = "" },
-    codicons = { Error = "", Warn = "", Hint = "", Info = "" },
-    ascii    = { Error = "E", Warn = "W", Hint = "H", Info = "I" },
+    cozette  = { Error = "", Warn = "", Hint = "", Info = "" },
+    codicons = { Error = "", Warn = "", Hint = "", Info = "" },
+    ascii    = { Error = "E", Warn = "W", Hint = "", Info = "I" },
   },
   lsp = {
+    nerdfont = {
+      server = '',
+    }
+-- 
+-- H
+  },
+  code_action = {
+    nerdfont = {
+      code_action = "󰛨",
+      quickfix = "󰖷",
+      source = "",
+    }
+  },
+  kind = {
     codicons = {
       Text          = '',
       Method        = '',
@@ -125,7 +139,6 @@ M.icon_sets = {
     nerdfont = {
       sessions = '󱂬',
       spellcheck = '󰓆',
-      lsp = '',
       ts = '',
       terminal = '',
       clock = '',

@@ -186,12 +186,12 @@ M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
   require 'luasnip'.config.setup({
     ext_opts = {
       [ls_types.choiceNode] = {
-        active = { virt_text = { { icons.lsp.Snippet, 'SnippetChoiceIndicator' } } },
-        passive = { virt_text = { { icons.lsp.Snippet, 'SnippetPassiveIndicator' } } }
+        active = { virt_text = { { icons.kind.Snippet, 'SnippetChoiceIndicator' } } },
+        passive = { virt_text = { { icons.kind.Snippet, 'SnippetPassiveIndicator' } } }
       },
       [ls_types.insertNode] = {
-        active = { virt_text = { { icons.lsp.Snippet, 'SnippetInsertIndicator' } } },
-        passive = { virt_text = { { icons.lsp.Snippet, 'SnippetPassiveIndicator' } } }
+        active = { virt_text = { { icons.kind.Snippet, 'SnippetInsertIndicator' } } },
+        passive = { virt_text = { { icons.kind.Snippet, 'SnippetPassiveIndicator' } } }
       }
     },
   })
@@ -287,7 +287,7 @@ M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
         -- if entry.source.name == 'codeium' then
         --   vim_item.kind = ''
         -- else
-          vim_item.kind = icons.lsp[vim_item.kind] or ''
+          vim_item.kind = icons.kind[vim_item.kind] or ''
         -- end
         return vim_item
       end

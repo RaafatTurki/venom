@@ -158,7 +158,7 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     provider = function()
       local forward = require 'luasnip'.jumpable(1) and '' or ''
       local backward = require 'luasnip'.jumpable(-1) and '' or ''
-      return backward .. icons.lsp.Snippet .. forward
+      return backward .. icons.kind.Snippet .. forward
     end,
     hl = stl_hl('CmpItemKindSnippet'),
   }
@@ -234,13 +234,13 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
     provider = function(self)
       local client_names = {}
 
-      for _, client in ipairs(vim.lsp.get_active_clients()) do
+      for _, client in ipairs(vim.lsp.get_clients()) do
         if vim.tbl_contains(vim.lsp.get_buffers_by_client_id(client.id), vim.api.nvim_get_current_buf()) then
           table.insert(client_names, client.name)
         end
       end
 
-      return icons.misc.lsp .. ' ' .. U.join(client_names, ' ')
+      return icons.lsp.server .. ' ' .. U.join(client_names, ' ')
     end,
     update = { 'LspAttach', 'LspDetach', 'User LspProgressUpdate', 'BufWinEnter' },
     hl = stl_hl('Type'),

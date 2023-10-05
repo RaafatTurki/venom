@@ -164,18 +164,36 @@ M.gitsigns = service({{feat.CONF, "gitsigns.nvim"}}, nil, function()
 end)
 
 M.git_conflict = U.service({{feat.CONF, 'git-conflict.nvim'}}, nil, function()
-  ---@diagnostic disable-next-line: missing-fields
   require 'git-conflict'.setup {
     debug = false,
-    default_commands = true, -- disable commands created by this plugin
+    default_commands = true,
     default_mappings = false,
-    disable_diagnostics = true,
+    disable_diagnostics = false,
     highlights = {
-      current = 'diffOldFile',
-      incoming = 'diffNewFile',
-      -- ancestor = ''
+      current = 'GitConflictCurrent',
+      incoming = 'GitConflictIncoming',
     }
   }
+
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'GitConflictDetected',
+    callback = function()
+      events.git_merge_mode()
+    end
+  })
+
+  events.git_merge_mode:sub(function()
+    vim.o.foldenable = false
+    vim.diagnostic.disable()
+  end)
+
+  -- vim.api.nvim_create_autocmd('User', {
+  --   pattern = 'GitConflictResolved',
+  --   callback = function()
+  --     -- vim.cmd [[LspStart]]
+  --     vim.o.foldenable = true
+  --   end
+  -- })
 end)
 
 M.cmp_ls = service({{feat.CONF, "nvim-cmp"}}, nil, function()
@@ -875,7 +893,8 @@ M.mini_files = service({{feat.CONF, 'mini.nvim.files'}}, nil, function()
 end)
 
 M.corn = service({{feat.CONF, "corn.nvim"}}, nil, function()
-  require 'corn'.setup {
+  local corn = require 'corn'
+  corn.setup {
     -- auto_cmds = false,
     -- sort_method = 'line_number',
     sort_method = 'column',
@@ -890,6 +909,10 @@ M.corn = service({{feat.CONF, "corn.nvim"}}, nil, function()
       vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
     end,
   }
+
+  events.git_merge_mode:sub(function()
+    corn.toggle(false)
+  end)
 end)
 
 M.trld = service({{feat.CONF, "trld.nvim"}}, nil, function()

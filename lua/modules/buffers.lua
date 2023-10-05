@@ -24,7 +24,7 @@ M.Buf = function()
       watch = function(self)
         self.event_listener:start(self.file_path, {}, vim.schedule_wrap(function(err, _fname, status)
           if status.rename then
-            M.buf_del(self.bufnr)
+            M.buflist:remove_buf(self.bufnr)
             events.fs_update()
           else
             vim.cmd.checktime()

@@ -632,42 +632,21 @@ M.sfm = service({{feat.CONF, 'sfm.nvim'}}, nil, function()
     },
     mappings = {
       list = {
-        {
-          key = "s",
-          action = "system_open",
-        },
-        {
-          key = "S",
-          action = "system_open_selections",
-        },
-        {
-          key = "d",
-          action = "trash",
-        },
-        {
-          key = "D",
-          action = "trash_selections",
-        },
-        {
-          key = 'a',
-          action = 'create',
-        },
-        {
-          key = 'c',
-          action = 'copy',
-        },
-        {
-          key = 'C',
-          action = 'copy_selections',
-        },
-        {
-          key = 'x',
-          action = 'move'
-        },
-        {
-          key = 'X',
-          action = 'move_selections'
-        },
+        { key = 'za', action = 'toggle_entry' },
+        { key = 'zc', action = 'close_entry' },
+        { key = 'a', action = 'create' },
+        { key = 's', action = 'system_open' },
+        { key = 'd', action = 'trash' },
+        { key = 'c', action = 'copy' },
+        { key = 'x', action = 'move' },
+      },
+    },
+    file_nesting = {
+      enabled = true,
+      -- expand = true,
+      patterns = {
+        { "go.mod", { "go.sum" } },
+        { "*.tex", { "$(capture).aux", "$(capture).out", "$(capture).synctex.gz" } },
       },
     },
   })

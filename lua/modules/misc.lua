@@ -62,6 +62,8 @@ M.base = service(function()
     " terminal
     au FileType terminal setlocal nocursorline
     au TermOpen * setlocal nonumber
+    au TermOpen * setlocal norelativenumber
+    au TermOpen * setlocal signcolumn=no
 
     " au InsertLeave,TextChanged * set foldmethod=expr
     " au BufWritePost * set foldmethod=expr

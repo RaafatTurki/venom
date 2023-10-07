@@ -5,6 +5,7 @@ local M = {}
 M.setup_lspconfig_server = service({{ feat.PLUGIN, 'nvim-lspconfig' }}, function(server_name, opts)
   local lspconf = require 'lspconfig'
 
+  -- set base shared capabilities
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
   if feat_list:has(feat.CONF, 'nvim-cmp') then
     shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities()
@@ -81,7 +82,7 @@ M.setup_servers = service({{feat.PLUGIN, 'mason.nvim'}, {feat.PLUGIN, 'mason-lsp
       if feat_list:has(feat.PLUGIN, 'neodev.nvim') then
         require("neodev").setup {
           library = {
-            -- plugins = false,
+            plugins = false,
           }
         }
       end
@@ -91,7 +92,7 @@ M.setup_servers = service({{feat.PLUGIN, 'mason.nvim'}, {feat.PLUGIN, 'mason-lsp
             diagnostics = {
               disable = { 'lowercase-global', 'trailing-space', 'unused-local' },
               groupSeverity = {
-                ['type-check'] = "Error",
+                -- ['type-check'] = "Error",
               }
             },
             workspace = {

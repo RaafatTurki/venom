@@ -20,7 +20,7 @@ function M.is_within_range(n, min, max) return ((n >= min) and (n <= max)) end
 
 --- returns joined array into string
 function M.join(arr, delimiter)
-  if (delimiter == nil) then delimiter = ' ' end
+  delimiter = delimiter or ' '
   local str = ""
   for i, v in ipairs(arr) do
     str = str .. arr[i]

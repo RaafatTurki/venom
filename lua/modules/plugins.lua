@@ -1071,46 +1071,6 @@ M.rest = service({{feat.CONF, 'rest.nvim'}}, nil, function()
   }
 end)
 
-M.paint = service({{feat.CONF, 'paint.nvim'}}, nil, function()
-  require 'paint'.setup {
-    highlights = {
-      -- snippets
-      {
-        filter = { filetype = 'snippets' },
-        pattern = "snippet",
-        hl = "Keyword",
-      },
-      {
-        filter = { filetype = 'snippets' },
-        pattern = "extends",
-        hl = "Keyword",
-      },
-      {
-        filter = { filetype = 'snippets' },
-        pattern = "snippet%s%w+%s(.*)",
-        hl = "Comment",
-      },
-      -- license files
-      {
-        filter = function()
-          local file_name = vim.fn.fnamemodify(vim.fn.bufname(), ':t')
-          return string.match(file_name, "LICENSE.*")
-        end,
-        pattern = "Copyright%s+.*(%d%d%d%d%s+.+)",
-        hl = "Label",
-      },
-      -- TODOs, FIXMEs .. etc
-      -- {
-      --   filter = { filetype = 'xxd' },
-      --   -- pattern = "%s00%s",
-      --   -- pattern = "%s(%x%x)%s",
-      --   pattern = "%s(00)%s",
-      --   hl = "Comment",
-      -- },
-    },
-  }
-end)
-
 M.noice = service({{feat.CONF, 'noice.nvim'}}, nil, function()
   require 'noice'.setup {
     cmdline = {

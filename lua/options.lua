@@ -53,8 +53,11 @@ vim.o.shell          = '/usr/bin/fish'
 -- vim.o.foldlevel      = 99
 -- vim.o.foldlevelstart = -1
 vim.o.foldmethod     = 'expr' -- Tree sitter folding
-vim.o.foldexpr       = 'nvim_treesitter#foldexpr()' -- Tree sitter folding
+-- vim.o.foldexpr       = 'nvim_treesitter#foldexpr()' -- Tree sitter folding
 vim.o.foldtext       = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))" -- Sexy minimal folds
+vim.o.foldexpr       = "v:lua.vim.treesitter.foldexpr()"
+-- vim.o.foldtext       = "v:lua.vim.treesitter.foldtext()"
+
 vim.o.foldnestmax    = 10 -- Maximum amount of nested folds
 vim.o.foldminlines   = 1 -- Minimum amount of lines per fold
 vim.o.sessionoptions = 'blank,buffers,curdir,help,tabpages,winsize,globals'

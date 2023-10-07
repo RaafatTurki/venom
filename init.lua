@@ -3,13 +3,15 @@ local U = require 'utils'
 service = U.service
 feat_list = U.FeatureList():new()
 
-events = {}
-events.enter = U.Event("enter"):new()
-events.refresh = U.Event("refresh"):new()
-events.clear = U.Event("clear"):new()
-events.write = U.Event("write"):new()
-events.fold_update = U.Event("fold_update"):new()
-events.fs_update = U.Event("fs_update"):new()
+events = {
+  enter = U.Event("enter"):new(),
+  refresh = U.Event("refresh"):new(),
+  clear = U.Event("clear"):new(),
+  write = U.Event("write"):new(),
+  fold_update = U.Event("fold_update"):new(),
+  fs_update = U.Event("fs_update"):new(),
+  git_merge_mode = U.Event("git_merge_mode"):new(),
+}
 
 local icon_sets = require 'icons'.icon_sets
 icons = {

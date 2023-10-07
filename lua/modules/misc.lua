@@ -166,7 +166,7 @@ M.disable_builtin_plugins = service(function()
     "rrhelper",
 
     "spellfile_plugin",
-    -- "matchit",
+    "matchit",
 
     "netrw",
     "netrwPlugin",

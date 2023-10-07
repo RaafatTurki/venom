@@ -135,30 +135,21 @@ local plugins = {
       events.plugin_setup:sub(Plugins.sentiment)
     end
   },
-  { 'RaafatTurki/hex.nvim', dev = false,
+  { 'RaafatTurki/hex.nvim', dev = true,
     config = function()
       events.plugin_setup:sub(Plugins.hex)
     end
   },
-  { 'RaafatTurki/corn.nvim', dev = false,
+  { 'RaafatTurki/corn.nvim', dev = true,
     config = function()
       events.plugin_setup:sub(Plugins.corn)
     end
   },
-  { 'rest-nvim/rest.nvim',
-    dependencies = {
-      p.plenary,
-    },
+  { 'RaafatTurki/view.nvim', dev = true,
     config = function()
-      events.plugin_setup:sub(Plugins.rest)
+      events.plugin_setup:sub(Plugins.view)
     end
   },
-  -- { 'RaafatTurki/view.nvim', dev = false,
-  --   config = function()
-  --     events.plugin_setup:sub(Plugins.view)
-  --   end
-  -- },
-  -- { 'sindrets/diffview.nvim' },
   -- { 'folke/edgy.nvim',
   --   config = function()
   --     Events.plugin_setup:sub(Plugins.edgy)
@@ -189,9 +180,9 @@ events.install_post:sub(function()
   Sessions.setup()
 
   Misc.auto_install_ts_parser()
-  Misc.lorem_picsum()
+  -- Misc.lorem_picsum()
   -- Misc.auto_gitignore_io()
-  Misc.conceal_html_classes()
+  -- Misc.conceal_html_classes()
 
   Plugins.setup()
 

@@ -480,10 +480,10 @@ M.setup = service({{feat.PLUGIN, "heirline.nvim"}}, function()
       return vim.bo.buftype == '' and vim.bo.ft ~= 'noice'
     end,
     space,
-    {
-      provider = "grug face >:(",
-      hl = "Comment"
-    },
+    -- {
+    --   provider = "grug face >:(",
+    --   hl = "Comment"
+    -- },
     M.components.navic,
     align,
   }

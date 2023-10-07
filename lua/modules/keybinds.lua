@@ -3,13 +3,24 @@ local U = require 'utils'
 local M = {}
 
 -- a keymap object is {lhs, rhs, opts = {}, mode = string}
-keybind = service(function(keybind)
-  keybind.opts = vim.tbl_deep_extend('force', keybind.opts or {}, { noremap = true, silent = true })
+keybind = function(data)
+  data.opts = vim.tbl_deep_extend('force', data.opts or {}, { noremap = true, silent = true })
   ---@diagnostic disable-next-line: param-type-mismatch
-  keybind.mode = keybind.mode and vim.split(keybind.mode, ' ', {}) or 'n'
+  data.mode = data.mode and vim.split(data.mode, ' ', {}) or 'n'
 
-  vim.keymap.set(keybind.mode, keybind[1], keybind[2], keybind.opts)
-end)
+  -- check if mapping is global or buffer local
+  if data.buf == nil then
+    vim.keymap.set(data.mode, data[1], data[2], data.opts)
+  else
+    -- set a key bind for each mode since nvim_buf_set_keymap can't do multiple modes in one call
+    for i, mode in ipairs(data.mode) do
+      -- set callback if rhs is a function
+      if type(data[2]) == 'function' then data.opts.callback = data[2] end
+
+      vim.api.nvim_buf_set_keymap(data.buf, mode, data[1], data[2], data.opts)
+    end
+  end
+end
 
 M.setup = service(function()
   -- LEADER KEY
@@ -248,9 +259,14 @@ M.setup_plugins = service(function()
     keybind {'r<Right>',          require('illuminate').goto_next_reference}
     keybind {'r<Left>',           require('illuminate').goto_prev_reference}
   end
-  
+ 
   if feat_list:has(feat.CONF, 'rest.nvim') then
-    keybind {'<leader>',             '<Plug>RestNvim'}
+    vim.api.nvim_create_autocmd('Filetype', {
+      pattern = { "http" },
+      callback = function()
+        keybind {'<leader>',             '<Plug>RestNvim', buf = 0, mode = 'n'}
+      end
+    })
   end
 
   -- M.key {'<C-Right>', '<Plug>luasnip-next-choice'}

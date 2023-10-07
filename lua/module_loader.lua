@@ -51,6 +51,14 @@ local plugins = {
     },
   },
   -- NOTE PLUGINS
+  { 'rest-nvim/rest.nvim',
+    dependencies = {
+      p.plenary,
+    },
+    config = function()
+      events.plugin_setup:sub(Plugins.rest)
+    end
+  },
   { 'echasnovski/mini.nvim',
     config = function()
       events.plugin_setup:sub(Plugins.mini_map)

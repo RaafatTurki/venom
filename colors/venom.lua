@@ -324,9 +324,9 @@ local highlights = {
   CursorLineNr    = { 'CursorLine' },
   CursorLineSign  = { }, --
   DiffAdd         = { fg = c.add },
-  DiffChange      = { fg = c.mod_alt },
+  DiffChange      = { fg = c.mod },
   DiffDelete      = { fg = c.del },
-  DiffText        = { fg = c.mod },
+  DiffText        = { fg = c.mod_alt },
   Directory       = { }, --
   EndOfBuffer     = { }, --
   ErrorMsg        = { fg = c.err },
@@ -372,7 +372,7 @@ local highlights = {
   Visual          = { bg = c.fold, bold = true },
   VisualNOS       = { }, --
   WarningMsg      = { fg = c.warn },
-Whitespace      = { '@debug' },
+  Whitespace      = { 'Folded' },
   WildMenu        = { 'Pmenu' },
   WinBar          = { 'NormalFloat' },
   WinBarNC        = { }, --
@@ -764,6 +764,8 @@ NeoTreeWindowsHidden        = { '@debug' };
   MiniHipatternsHack      = { bold = true, fg = c.hint };
   MiniHipatternsTodo      = { bold = true, fg = c.warn };
   MiniHipatternsNote      = { bold = true, fg = c.note };
+
+  MiniTrailspace          = { "Whitespace" };
 
   -- CUTSOM GROUPS
   -- NormalAlt               = { bg = c.bg_alt };

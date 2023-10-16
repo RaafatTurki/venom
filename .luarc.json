@@ -1,0 +1,7 @@
+{
+  "diagnostics.globals": [
+    "prequire",
+    "log",
+    "large_filesize",
+  ]
+}

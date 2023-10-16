@@ -159,6 +159,8 @@ function M.tbl_reverse(tbl)
   return tbl
 end
 
+
+
 -- Neovim Utils
 --- returns current vim mode name
 function M.get_mode_name()
@@ -202,8 +204,8 @@ function M.get_mode_name()
 end
 
 --- returns current vim mode highlight
-function M.get_mode_hi()
-  mode_hls = {
+function M.get_mode_hl()
+  local mode_hls = {
     n       = 'NormalMode',
     i       = 'InsertMode',
     v       = 'VisualMode',
@@ -288,135 +290,4 @@ function M.request_jump(target_path, line, col)
     print('jump attempt to ' .. tostring(line) .. ':' .. tostring(col) .. ' in ' .. vim.fs.basename(target_path))
   end
 end
-
---- trashes a file
-function M.trash_file(file_path, trash_cmd)
-  local exec_cmd = {}
-
-  if trash_cmd and vim.fn.executable(trash_cmd[1]) == 1 then
-    M.tbl_merge(exec_cmd, trash_cmd)
-  elseif vim.fn.executable('gio') == 1 then
-    M.tbl_merge(exec_cmd, { 'gio', 'trash' })
-  elseif vim.fn.executable('trash') == 1 then
-    M.tbl_merge(exec_cmd, { 'trash' })
-  else
-    log.warn("no trashing utility present")
-  end
-
-  table.insert(exec_cmd, vim.fn.fnameescape(file_path))
-
-  -- local proc_exit_code = 0
-  -- vim.fn.jobstart(exec_cmd, {
-  --   on_exit = function(job_id, exit_code, event_type)
-  --     proc_exit_code = exit_code
-  --   end
-  -- })
-  vim.fn.system(exec_cmd)
-end
-
--- Stateful Utils
--- feature list class
-function M.FeatureList()
-  return setmetatable(
-    {
-      list = {},
-      new = function(self) return self end,
-      add = function(self, feat_type, feat_name) table.insert(self.list, feat_type .. ":" .. feat_name) end,
-      add_str = function(self, feat_str) table.insert(self.list, feat_str) end,
-      has = function(self, feat_type, feat_name) return vim.tbl_contains(self.list, feat_type .. ":" .. feat_name) end,
-      has_str = function(self, feat_str) return vim.tbl_contains(self.list, feat_str) end,
-      stitch = function(self, feat_type, feat_name) return feat_type .. ':' .. feat_name end,
-      unstitch = function(self, feat)
-        local feat_tbl = vim.split(feat, ':')
-        if #feat_tbl == 2 then return feat_tbl end
-        log.err('invalid feature', { stack_level_offset = 2 })
-        return nil
-      end,
-    },
-    {}
-  )
-end
-
---- @enum feat
-feat = {
-  PLUGIN = "PLUGIN",
-  CONF = "CONF",
-  KEY = "KEY",
-  LANG = "LANG",
-  LSP = "LSP",
-  DAP = "DAP",
-  SESSION = "SESSION",
-}
-
---- event class
-function M.Event(event_name)
-  return setmetatable(
-    {
-      event_name = event_name,
-      subscribers = {},
-      new = function(self)
-        vim.api.nvim_create_autocmd('User', {
-          group = vim.api.nvim_create_augroup(self.event_name, {}),
-          pattern = { self.event_name },
-          callback = function() self:invoke() end
-        })
-        return self
-      end,
-      sub = function(self, subscriber) table.insert(self.subscribers, subscriber) end,
-      -- sub_front = function(self, subscriber) table.insert(self.subscribers, 1, subscriber) end,
-      invoke = function(self)
-        for _, subscribers in pairs(self.subscribers) do
-          if type(subscribers) == 'string' then vim.cmd(subscribers)
-          elseif type(subscribers) == 'function' then subscribers() end
-        end
-      end,
-      wrap = function(self) return function() return self:invoke() end end
-    },
-    {
-      __call = function(self)
-        return self:invoke()
-      end
-    }
-  )
-end
-
---- returns a service function
-function M.service(...)
-  local argc = select("#", ...)
-  local prov_feats, req_feats, callback
-
-  if argc == 1 then
-    callback = ...
-  elseif argc == 2 then
-    req_feats, callback = ...
-  elseif argc == 3 then
-    prov_feats, req_feats, callback = ...
-  end
-
-  prov_feats = prov_feats or {}
-  req_feats = req_feats or {}
-  callback = callback or function(...) log.warn("empty service callback called", { stack_level_offset = 2 }) end
-
-  return function(...)
-    -- ensure required features
-    for _, req_feat in pairs(req_feats) do
-      if (not feat_list:has(req_feat[1], req_feat[2])) then
-        log.warn("missing feature: " .. table.concat(req_feat, ' / '), { stack_level_offset = 1 })
-        return
-      end
-    end
-
-    -- invoke callback
-    local return_val = callback(...)
-
-    -- add provided features
-    for _, prov_feat in pairs(prov_feats) do
-      feat_list:add(prov_feat[1], prov_feat[2])
-    end
-    return return_val
-  end
-end
-
--- vim.cmd [[autocmd User MyPlugin lua log('got MyPlugin event')]]
-
 return M

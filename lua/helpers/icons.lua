@@ -1,18 +1,10 @@
 local M = {}
 
--- icons collection
-M.icon_sets = {
+local icon_sets = {
   diag = {
     cozette  = { Error = "", Warn = "", Hint = "", Info = "" },
     codicons = { Error = "", Warn = "", Hint = "", Info = "" },
     ascii    = { Error = "E", Warn = "W", Hint = "", Info = "I" },
-  },
-  lsp = {
-    nerdfont = {
-      server = '',
-    }
--- 
--- H
   },
   code_action = {
     nerdfont = {
@@ -138,43 +130,59 @@ M.icon_sets = {
   misc = {
     nerdfont = {
       sessions = '󱂬',
+      record = '󰑊',
+      modified = '•',
       spellcheck = '󰓆',
-      ts = '',
       terminal = '',
       clock = '',
+      git_branch = '',
+      cogwheel = '',
+      search = '',
+      package = '',
       ellipsis = '',
+      expanded = '',
+      collapsed = '',
     },
   },
-  -- TODO: WIP
-  fs = {
-    some_icon_set = {
-      file = '',
-      dir = '',
-      dir_open = '',
-      dir_empty = '',
-      dir_empty_open = '',
-      symlink = '',
-      symlink_open = '',
-      symlink_empty = '',
-      symlink_empty_open = '',
-    },
-    ascii = {
-    }
-  },
-  common = {
-    some_icon_set = {
-      arrow_left = '',
-      arrow_right = '',
-      arrow_up = '',
-      arrow_down = '',
-      dot = '',
-      big_dot = '',
-      tree_start = '│',
-      tree_stem = '│',
-      tree_branch = '├',
-      tree_end = '└',
-    }
-  },
+  -- fs = {
+  --   some_icon_set = {
+  --     file = '',
+  --     dir = '',
+  --     dir_open = '',
+  --     dir_empty = '',
+  --     dir_empty_open = '',
+  --     symlink = '',
+  --     symlink_open = '',
+  --     symlink_empty = '',
+  --     symlink_empty_open = '',
+  --   },
+  --   ascii = {
+  --   }
+  -- },
+  -- common = {
+  --   some_icon_set = {
+  --     arrow_left = '',
+  --     arrow_right = '',
+  --     arrow_up = '',
+  --     arrow_down = '',
+  --     dot = '',
+  --     big_dot = '',
+  --     tree_start = '│',
+  --     tree_stem = '│',
+  --     tree_branch = '├',
+  --     tree_end = '└',
+  --   }
+  -- },
+}
+
+M.icons = {
+  diag = icon_sets.diag.cozette,
+  code_action = icon_sets.code_action.nerdfont,
+  kind = icon_sets.kind.codicons,
+  dap = icon_sets.dap.nerdfont,
+  vcs = icon_sets.vcs.ascii,
+  navic = icon_sets.navic.codicons,
+  misc = icon_sets.misc.nerdfont,
 }
 
 return M

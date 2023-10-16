@@ -1,39 +1,37 @@
-local U = require 'utils'
+log = require "helpers.logger"
 
-service = U.service
-feat_list = U.FeatureList():new()
+large_filesize = 100 * 1024 -- 100 KB
+colorscheme = "default"
 
-events = {
-  enter = U.Event("enter"):new(),
-  refresh = U.Event("refresh"):new(),
-  clear = U.Event("clear"):new(),
-  write = U.Event("write"):new(),
-  fold_update = U.Event("fold_update"):new(),
-  fs_update = U.Event("fs_update"):new(),
-  git_merge_mode = U.Event("git_merge_mode"):new(),
-}
+function prequire(name)
+  local ok, val = pcall(require, name)
+  if ok then
+    return val
+  else
+    return nil
+  end
+end
 
-local icon_sets = require 'icons'.icon_sets
-icons = {
-  diag = icon_sets.diag.codicons,
-  lsp = icon_sets.lsp.nerdfont,
-  code_action = icon_sets.code_action.nerdfont,
-  kind = icon_sets.kind.codicons,
-  dap = icon_sets.dap.nerdfont,
-  vcs = icon_sets.vcs.ascii,
-  navic = icon_sets.navic.codicons,
-  misc = icon_sets.misc.nerdfont,
-}
+require "core.options"
+require "core.keymaps"
+require "core.autocmds"
 
--- initializing logger
-log = require 'logger'.log
+require "helpers.colorschemes".set_a_colorscheme({ "venom", "industry" })
+require "helpers.keys".set_leader(" ")
+require "helpers.disable_builtins"
+require "helpers.buffers"
+require "helpers.sessions"
+require "helpers.open_uri"
+require "helpers.pretty_qflist"
 
--- setting default colorscheme
-default_colorscheme = 'venom'
+require "core.lazy"
 
--- Loading Modules
-require 'options'
-require 'module_loader'
+-- required external tools
+-- python-pynvim (nvim)
+-- pnpm -g install neovim (nvim)
+-- git (lazy.nvim, treesitter)
+-- gcc (treesitter)
+-- rg (telescope & mini.pick)
+-- fzf (telescope-fzf)
 
--- invoke enter event on VimEnter
-vim.api.nvim_create_autocmd({ 'VimEnter' }, { callback = events.enter:wrap() })
+

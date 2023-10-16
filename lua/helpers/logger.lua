@@ -49,7 +49,7 @@ M.log = {
   off   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.OFF })) end,
 }
 
-setmetatable(M.log, {
+return setmetatable(M.log, {
   __call = function(self, val, opts)
     ---@diagnostic disable-next-line: redefined-local
     local opts = opts or {}
@@ -58,4 +58,4 @@ setmetatable(M.log, {
   end
 })
 
-return M
+-- return M

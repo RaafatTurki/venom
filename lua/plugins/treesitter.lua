@@ -46,6 +46,7 @@ M.config = function()
       'nix',
       'org',
       'php',
+      'prisma',
       'pug',
       'python',
       'query',

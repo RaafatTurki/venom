@@ -16,6 +16,7 @@ M.config = function()
       augend.semver.alias.semver,
       augend.date.alias["%Y-%m-%d"],
       augend.constant.alias.bool,
+      augend.constant.new{ elements = {"TRUE", "FALSE"} },
     },
   }
 

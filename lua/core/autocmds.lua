@@ -1,5 +1,4 @@
 local U = require "helpers.utils"
-local log = require "helpers.logger"
 
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   callback = function(ev)
@@ -50,4 +49,3 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     vim.highlight.on_yank({ higroup = "Search", timeout = vim.o.timeoutlen })
   end
 })
-

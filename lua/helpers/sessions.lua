@@ -1,6 +1,5 @@
 local U = require "helpers.utils"
 local buffers = require "helpers.buffers"
-local log = require "helpers.logger"
 
 local M = {}
 

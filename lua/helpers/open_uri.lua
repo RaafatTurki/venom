@@ -1,4 +1,3 @@
-local log = require "helpers.logger"
 local keys = require "helpers.keys"
 
 local M = {}

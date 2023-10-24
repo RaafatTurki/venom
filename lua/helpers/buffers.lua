@@ -10,12 +10,14 @@ M.Buf = function()
     bufnr = nil,
     is_persistable = true,
     file_path = nil,
+    is_huge = false,
     -- event_listener = nil,
 
     new = function(self, bufnr, is_persistable)
       self.bufnr = bufnr
       self.file_path = vim.api.nvim_buf_get_name(self.bufnr)
       self.is_persistable = is_persistable
+      if vim.fn.getfsize(self.file_path) >= huge_buffer_size then self.is_huge = true end
       -- self.event_listener = vim.loop.new_fs_event()
       -- self:watch()
       return self
@@ -83,7 +85,7 @@ M.BufList = function()
         end
       end
     end,
-    set_active_buf = function(self, opts)
+    set_current_buf = function(self, opts)
       opts = {
         bufnr = opts.bufnr,
         index = opts.index,
@@ -98,7 +100,7 @@ M.BufList = function()
       elseif opts.index then
         self.bufs[opts.index]:switch()
       elseif opts.rel_index then
-        local target_index = self:get_buf_index({ active = true }) - opts.rel_index
+        local target_index = self:get_buf_index({ current = true }) - opts.rel_index
         if U.is_within_range(target_index, 1, #self.bufs) then
           self.bufs[target_index]:switch()
         end
@@ -117,8 +119,8 @@ M.BufList = function()
       end
     end,
     shift_buf = function(self, i, rel_i)
-      -- shift active buf if i == 0
-      if i == 0 then i = self:get_buf_index({ active = true }) end
+      -- shift current buf if i == 0
+      if i == 0 then i = self:get_buf_index({ current = true }) end
       -- shift i by rel_i
       local target_index = i + rel_i
       if U.is_within_range(target_index, 1, #self.bufs) then
@@ -127,7 +129,7 @@ M.BufList = function()
     end,
     get_buf_index = function(self, opts)
       opts = opts or {}
-      opts = { bufnr = opts.bufnr, label = opts.label, active = opts.active }
+      opts = { bufnr = opts.bufnr, label = opts.label, current = opts.current }
 
       if opts.bufnr then
         for i, buf in ipairs(self.bufs) do
@@ -137,7 +139,7 @@ M.BufList = function()
         for i, buf in ipairs(self.bufs) do
           if self.labels[i] == opts.label then return i end
         end
-      elseif opts.active then
+      elseif opts.current then
         return self:get_buf_index({ bufnr = vim.api.nvim_get_current_buf() })
       end
       return nil
@@ -150,7 +152,7 @@ M.BufList = function()
           buf = buf,
           index = i,
           label = self.labels[i],
-          active = buf.bufnr == vim.api.nvim_get_current_buf(),
+          current = buf.bufnr == vim.api.nvim_get_current_buf(),
         }
       else
         return nil
@@ -192,8 +194,8 @@ vim.api.nvim_create_autocmd('FileType', {
 
 
 -- override vanilla buffer navigation
-keys.map("n", '<A-Left>',          function() M.buflist:set_active_buf({ rel_index = 1 }) end, "")
-keys.map("n", '<A-Right>',         function() M.buflist:set_active_buf({ rel_index = -1 }) end, "")
+keys.map("n", '<A-Left>',          function() M.buflist:set_current_buf({ rel_index = 1 }) end, "")
+keys.map("n", '<A-Right>',         function() M.buflist:set_current_buf({ rel_index = -1 }) end, "")
 
 -- buffer shifting
 keys.map("n", '<A-S-Left>',        function() M.buflist:shift_buf(0, -1) end, "")
@@ -201,14 +203,14 @@ keys.map("n", '<A-S-Right>',       function() M.buflist:shift_buf(0, 1) end, "")
 
 -- buffer navigation by label
 for i, label in ipairs(M.buflist.labels) do
-  keys.map("n", '<A-'..label..'>',      function() M.buflist:set_active_buf({ label = label }) end, "")
+  keys.map("n", '<A-'..label..'>',      function() M.buflist:set_current_buf({ label = label }) end, "")
 end
 
 
 M.aggregate = function()
   local data = {
     file_paths = {},
-    active_file_index = nil
+    current_file_index = nil
   }
 
   for i, buf in ipairs(M.buflist.bufs) do
@@ -217,7 +219,7 @@ M.aggregate = function()
     table.insert(data.file_paths, U.get_relative_path(buf.file_path))
 
     local buf_info = M.buflist:get_buf_info(i)
-    if buf_info and buf_info.active then data.active_file_index = i end
+    if buf_info and buf_info.current then data.current_file_index = i end
     ::buffer_aggregate_loop_continue::
   end
 
@@ -234,7 +236,7 @@ M.populate = function(data)
         vim.cmd.badd(vim.fn.fnameescape(file_path))
       end
 
-      if i == data.active_file_index then
+      if i == data.current_file_index then
         M.buflist:get_buf_info(i).buf:switch()
       end
     else

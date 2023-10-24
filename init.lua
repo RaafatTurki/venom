@@ -1,6 +1,6 @@
 log = require "helpers.logger"
 
-large_filesize = 100 * 1024 -- 100 KB
+huge_buffer_size = 1000000 -- 1MB
 colorscheme = "default"
 
 function prequire(name)
@@ -21,8 +21,13 @@ require "helpers.keys".set_leader(" ")
 require "helpers.disable_builtins"
 require "helpers.buffers"
 require "helpers.sessions"
+require "helpers.mkview"
+require "helpers.mkdir_parents"
 require "helpers.open_uri"
+require "helpers.curlinenr_vimode"
+require "helpers.highlight_yank"
 require "helpers.pretty_qflist"
+require "helpers.normal_mode_on_write"
 
 require "core.lazy"
 

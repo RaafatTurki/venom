@@ -55,6 +55,7 @@ M.config = function()
     hl = function(self)
       return self.is_active and 'TablineSel' or 'Tabline'
     end,
+    -- label
     {
       provider = function(self)
         if self.bufnr == nil then return end
@@ -106,6 +107,14 @@ M.config = function()
         end,
         provider = '',
         hl = 'ErrorMsg',
+      },
+      {
+        condition = function(self)
+          if self.bufnr == nil then return end
+          return (buffers.buflist:get_buf_info(buffers.buflist:get_buf_index({bufnr = self.bufnr})).buf.is_huge)
+        end,
+        provider = '',
+        hl = 'WarningMsg',
       },
     },
   }

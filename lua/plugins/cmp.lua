@@ -6,12 +6,12 @@ local M = { plugins_info.cmp.url }
 M.dependencies = {
   plugins_info.lspconfig.url,
   plugins_info.luasnip.url,
-  plugins_info.cmp_rg.url,
+  plugins_info.cmp_buffer.url,
+  -- plugins_info.cmp_rg.url,
   plugins_info.cmp_path.url,
   plugins_info.cmp_nvim_lsp.url,
   plugins_info.cmp_luasnip.url,
   plugins_info.cmp_cmdline.url,
-  -- plugins_info.cmp_buffer.url,
   -- plugins_info.cmp_nvim_lsp_signature_help.url,
 }
 
@@ -75,8 +75,8 @@ M.config = function()
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
       -- { name = 'nvim_lua' },
-      -- { name = 'buffer' },
-      { name = 'rg', option = { additional_arguments = '--smart-case --hidden', }},
+      { name = 'buffer' },
+      -- { name = 'rg', option = { additional_arguments = '--smart-case --hidden', }},
       { name = 'path' },
       -- { name = 'codeium' },
       -- { name = 'omni' },

@@ -1,51 +1,37 @@
 local U = require "helpers.utils"
+-- local buffers = require "helpers.buffers"
 
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-  callback = function(ev)
-    local vimode = vim.api.nvim_get_mode().mode
-    -- exit insert mode if insert mode
-    if vimode == 'i' then
-      vim.cmd.stopinsert()
-    end
+-- vim.api.nvim_create_autocmd({ "BufRead" }, {
+--   callback = function(ev)
+--     if vim.fn.getfsize(ev.match) >= huge_buffer_size then
+--       -- print("AUTOCMDDDDDD")
+--       -- vim.cmd [[syntax clear]]
+--       -- vim.cmd [[filetype off]]
+--       -- log(ev)
 
-    -- recompute folds if normal mode
-    -- if vimode == 'n' then
-    --   vim.cmd.edit()
-    --   vim.api.nvim_feedkeys("zx", '', true)
-    -- end
-  end,
-})
+--       -- vim.cmd [[setlocal foldmethod=manual]]
+--       -- vim.bo[ev.buf].undofile = false
+--       -- vim.bo[ev.buf].swapfile = false
+--       -- vim.wo.foldenable = false
+--     end
+--   end
+-- })
 
-vim.api.nvim_create_autocmd({ "ModeChanged" }, {
-  callback = function(ev)
-    -- make it work on statuscolumn custom numbering (with ranges over visual selection)
+-- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+--   callback = function(ev)
+--     local buf_i = buffers.buflist:get_buf_index({bufnr = ev.buf})
+--     if not buf_i then return end
+--     if buffers.buflist:get_buf_info(buf_i).buf.is_huge then
+--     end
+--   end
+-- })
 
-    local hl = vim.api.nvim_get_hl(0, { name = U.get_mode_hl() or "Normal" })
-    local curline_hl = vim.api.nvim_get_hl(0, { name = 'CursorLine' })
-    vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = hl.fg, bg = curline_hl.bg })
-  end
-})
-
-vim.api.nvim_create_autocmd({ "BufWinLeave", "BufWritePost" }, {
-  callback = function(ev)
-    vim.cmd [[silent! mkview]]
-  end
-})
-
-vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-  callback = function(ev)
-    vim.cmd [[silent! loadview]]
-  end
-})
-
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-  callback = function(ev)
-    vim.fn.mkdir(vim.fn.fnamemodify(ev.file, ':p:h'), 'p')
-  end
-})
-
-vim.api.nvim_create_autocmd({ "TextYankPost" }, {
-  callback = function(ev)
-    vim.highlight.on_yank({ higroup = "Search", timeout = vim.o.timeoutlen })
-  end
-})
+-- recompute folds if normal mode
+-- vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+--   callback = function(ev)
+--     -- if vimode == 'n' then
+--     --   vim.cmd.edit()
+--     --   vim.api.nvim_feedkeys("zx", '', true)
+--     -- end
+--   end,
+-- })

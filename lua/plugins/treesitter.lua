@@ -1,4 +1,5 @@
 local plugins_info = require "helpers.plugins_info"
+local buffers = require "helpers.buffers"
 
 local M = { plugins_info.treesitter.url }
 
@@ -11,6 +12,12 @@ M.build = function()
 end
 
 M.config = function()
+  local function ts_module_huge_buffer_disable(lang, buf)
+    local buf_i = buffers.buflist:get_buf_index({bufnr = buf})
+    if not buf_i then return false end
+    if buffers.buflist:get_buf_info(buf_i).buf.is_huge then return true else return false end
+  end
+
   require 'nvim-treesitter.configs'.setup {
     ensure_installed = {
       'bash',
@@ -65,18 +72,16 @@ M.config = function()
     },
     highlight = {
       enable = true,
-      disable = function(lang, buf)
-        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-        if ok and stats and stats.size > large_filesize then return true end
-      end,
+      disable = ts_module_huge_buffer_disable
     },
     indent = {
-      enable = true
+      enable = true,
+      disable = ts_module_huge_buffer_disable
     },
   }
 
-  vim.o.foldmethod = "expr"
-  vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+  vim.opt.foldmethod = "expr"
+  vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 end
 
 return M

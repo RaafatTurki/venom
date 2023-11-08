@@ -1,6 +1,18 @@
 local U = require "helpers.utils"
 -- local buffers = require "helpers.buffers"
 
+-- set window based options on BufEnter depending if a buffer is huge or not
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+  callback = function(ev)
+    if not U.is_buf_huge(ev.buf) then
+      vim.opt.wrap = false
+    else
+      vim.opt.foldmethod = "manual"
+      vim.opt.wrap = true
+    end
+  end
+})
+
 -- vim.api.nvim_create_autocmd({ "BufRead" }, {
 --   callback = function(ev)
 --     if vim.fn.getfsize(ev.match) >= huge_buffer_size then

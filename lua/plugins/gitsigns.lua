@@ -14,6 +14,7 @@ M.config = function()
       changedelete = { text = '~' },
     },
     _extmark_signs = false, -- NOTE: using legacy signs to make them visible in statuscol.nvim
+    max_file_length = 40000,
   }
 
   keys.map("n", "g<Left>",  gitsigns.prev_hunk, "")
@@ -45,4 +46,3 @@ M.config = function()
 end
 
 return M
-

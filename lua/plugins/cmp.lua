@@ -16,6 +16,8 @@ M.dependencies = {
 }
 
 M.config = function()
+  -- TODO: optimize for huge buffers
+
   local ls = require "luasnip"
   local ls_types = require "luasnip.util.types"
   local ls_loaders_from_snipmate = require "luasnip.loaders.from_snipmate"

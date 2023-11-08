@@ -1,6 +1,5 @@
 log = require "helpers.logger"
 
-huge_buffer_size = 1000000 -- 1MB
 colorscheme = "default"
 
 function prequire(name)
@@ -38,5 +37,4 @@ require "core.lazy"
 -- gcc (treesitter)
 -- rg (telescope & mini.pick)
 -- fzf (telescope-fzf)
-
 

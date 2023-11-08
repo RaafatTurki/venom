@@ -162,6 +162,18 @@ end
 
 
 -- Neovim Utils
+--- return if a buffer size is considered huge
+function M.is_file_huge(file_path)
+  local huge_buffer_size = 1000000 -- 1MB
+  local ok, stats = pcall(vim.loop.fs_stat, file_path)
+  if ok and stats then return stats.size > huge_buffer_size end
+end
+
+--- return if a buffer size is considered huge
+function M.is_buf_huge(buf)
+  return M.is_file_huge(vim.api.nvim_buf_get_name(buf))
+end
+
 --- returns current vim mode name
 function M.get_mode_name()
   local mode_names = {

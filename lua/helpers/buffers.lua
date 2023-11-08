@@ -17,7 +17,7 @@ M.Buf = function()
       self.bufnr = bufnr
       self.file_path = vim.api.nvim_buf_get_name(self.bufnr)
       self.is_persistable = is_persistable
-      if vim.fn.getfsize(self.file_path) >= huge_buffer_size then self.is_huge = true end
+      self.is_huge = U.is_file_huge(self.file_path)
       -- self.event_listener = vim.loop.new_fs_event()
       -- self:watch()
       return self

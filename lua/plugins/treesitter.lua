@@ -1,5 +1,6 @@
 local plugins_info = require "helpers.plugins_info"
 local buffers = require "helpers.buffers"
+local U = require "helpers.utils"
 
 local M = { plugins_info.treesitter.url }
 
@@ -12,12 +13,6 @@ M.build = function()
 end
 
 M.config = function()
-  local function ts_module_huge_buffer_disable(lang, buf)
-    local buf_i = buffers.buflist:get_buf_index({bufnr = buf})
-    if not buf_i then return false end
-    if buffers.buflist:get_buf_info(buf_i).buf.is_huge then return true else return false end
-  end
-
   require 'nvim-treesitter.configs'.setup {
     ensure_installed = {
       'bash',
@@ -72,16 +67,24 @@ M.config = function()
     },
     highlight = {
       enable = true,
-      disable = ts_module_huge_buffer_disable
+      disable = function(lang, buf) return U.is_buf_huge(buf) end,
     },
     indent = {
       enable = true,
-      disable = ts_module_huge_buffer_disable
+      disable = function(lang, buf) return U.is_buf_huge(buf) end,
     },
   }
 
-  vim.opt.foldmethod = "expr"
-  vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+  vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    callback = function(ev)
+      if not U.is_buf_huge(ev.buf) then
+        vim.opt.foldmethod = "expr"
+        vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+      else
+        -- vim.opt.foldmethod = "manual"
+      end
+    end
+  })
 end
 
 return M

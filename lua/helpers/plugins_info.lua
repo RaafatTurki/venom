@@ -28,7 +28,7 @@ local M = {
   gitsigns                    = { url = "lewis6991/gitsigns.nvim" },
   git_conflict                = { url = "akinsho/git-conflict.nvim" },
   dressing                    = { url = "stevearc/dressing.nvim" },
-  dial                        = { url = "monaqa/dial.nvim" },
+  -- dial                        = { url = "monaqa/dial.nvim" },
   -- nvim_bqf                    = { url = "kevinhwang91/nvim-bqf" },
 }
 

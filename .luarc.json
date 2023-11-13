@@ -3,5 +3,6 @@
     "prequire",
     "log",
     "large_filesize",
-  ]
+  ],
+  "workspace.checkThirdParty": "Disable"
 }

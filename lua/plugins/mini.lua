@@ -101,6 +101,8 @@ M.config = function()
     end, {})
   end
 
+  local mini_extra = require "mini.extra"
+
   local mini_pick = require 'mini.pick'
   if mini_pick then
     mini_pick.setup {
@@ -127,6 +129,16 @@ M.config = function()
     keys.map("n", "<leader>f",    "<CMD>Pick files<CR>", "Pick find files")
     keys.map("n", "<leader>g",    "<CMD>Pick grep_live<CR>", "Pick grep string")
     keys.map("n", "<leader>h",    "<CMD>Pick help<CR>", "Pick help pages")
+
+    -- if mini_extra then
+      -- keys.map("n", "<leader>b",    "<CMD>Pick buffer_lines<CR>", "Pick buffer lines")
+      -- keys.map("n", "<leader>b",    "<CMD>Pick diagnostic<CR>", "Pick lsp diagnostics")
+      -- keys.map("n", "<leader>b",    "<CMD>Pick explorer<CR>", "Pick file tree explorer")
+      -- keys.map("n", "<leader>b",    "<CMD>Pick git_branches<CR>", "Pick git branches")
+      -- keys.map("n", "<leader>b",    "<CMD>Pick git_commits<CR>", "Pick git commits")
+      -- keys.map("n", "<leader>b",    "<CMD>Pick git_files<CR>", "Pick git files")
+      -- keys.map("n", "<leader>b",    "<CMD>Pick git_hunks<CR>", "Pick git hunks")
+    -- end
 
     -- vim.ui.select = MiniPick.ui_select
   end

@@ -118,7 +118,29 @@ M.config = function()
         },
       })
     end,
+    texlab = function()
+      setup_lspconfig_server('texlab', {
+        settings = {
+          texlab = {
+            build = {
+              onSave = true,
+              executable = 'tectonic',
+              args = { '%f', '--synctex', '-k' },
+            },
+          }
+        }
+      })
+    end,
   }
+
+  if vim.fn.executable('godot') == 1 then
+    setup_lspconfig_server('gdscript', {
+      cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
+      flags = {
+        debounce_text_changes = 150,
+      },
+    })
+  end
 
 
   local function lsp_rename()

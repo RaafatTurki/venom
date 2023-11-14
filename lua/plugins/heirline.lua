@@ -286,7 +286,7 @@ M.config = function()
     end,
     space,
     hl = "Type",
-    update = {'LspAttach', 'LspDetach'},
+    update = {'LspAttach', 'LspDetach', 'BufEnter'},
   }
 
   local search_count = {

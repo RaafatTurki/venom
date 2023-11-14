@@ -23,7 +23,14 @@ M.Buf = function()
       return self
     end,
     switch = function(self)
-      vim.cmd.b(self.bufnr)
+      -- vim.cmd.b(self.bufnr)
+      vim.cmd.edit(self.file_path)
+    end,
+    rename = function(self, new_name)
+      vim.api.nvim_buf_set_name(self.bufnr, new_name)
+      self.file_path = new_name
+      -- Perform a forced write for the specified buffer
+      -- vim.cmd('execute "write! " .. bufname(' .. self.bufnr .. ')')
     end,
     -- watch = function(self)
     --   self.event_listener:start(self.file_path, {}, vim.schedule_wrap(function(err, _fname, status)
@@ -129,7 +136,7 @@ M.BufList = function()
     end,
     get_buf_index = function(self, opts)
       opts = opts or {}
-      opts = { bufnr = opts.bufnr, label = opts.label, current = opts.current }
+      opts = { bufnr = opts.bufnr, label = opts.label, name = opts.file_path, current = opts.current }
 
       if opts.bufnr then
         for i, buf in ipairs(self.bufs) do
@@ -138,6 +145,10 @@ M.BufList = function()
       elseif opts.label then
         for i, buf in ipairs(self.bufs) do
           if self.labels[i] == opts.label then return i end
+        end
+      elseif opts.name then
+        for i, buf in ipairs(self.bufs) do
+          if self.file_path == opts.file_path then return i end
         end
       elseif opts.current then
         return self:get_buf_index({ bufnr = vim.api.nvim_get_current_buf() })

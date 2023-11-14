@@ -1,6 +1,7 @@
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
+local buffers = require "helpers.buffers"
 
 local M = { plugins_info.sfm.url }
 
@@ -13,6 +14,7 @@ M.dependencies = {
 M.config = function()
   local sfm = require "sfm"
   local sfm_api = require "sfm.api"
+  local sfm_event = require "sfm.event"
 
   local sfm_explorer = sfm.setup({
     view = {
@@ -58,6 +60,17 @@ M.config = function()
   })
 
   keys.map("n", "<C-e>", sfm_api.explorer.toggle, "Toggle SFM")
+
+  -- rename the buffer that has the renamed file open if found
+  sfm_explorer:subscribe(sfm_event.EntryRenamed, function(payload)
+    local from_path = payload["from_path"]
+    local to_path = payload["to_path"]
+
+    local bufnr = buffers.buflist:get_buf_index({ file_path = from_path })
+    if bufnr then
+      buffers.buflist:get_buf_info(bufnr).buf:rename(to_path)
+    end
+  end)
 end
 
 return M

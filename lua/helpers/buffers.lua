@@ -136,7 +136,7 @@ M.BufList = function()
     end,
     get_buf_index = function(self, opts)
       opts = opts or {}
-      opts = { bufnr = opts.bufnr, label = opts.label, name = opts.file_path, current = opts.current }
+      opts = { bufnr = opts.bufnr, label = opts.label, file_path = opts.file_path, current = opts.current }
 
       if opts.bufnr then
         for i, buf in ipairs(self.bufs) do
@@ -146,9 +146,9 @@ M.BufList = function()
         for i, buf in ipairs(self.bufs) do
           if self.labels[i] == opts.label then return i end
         end
-      elseif opts.name then
+      elseif opts.file_path then
         for i, buf in ipairs(self.bufs) do
-          if self.file_path == opts.file_path then return i end
+          if buf.file_path == opts.file_path then return i end
         end
       elseif opts.current then
         return self:get_buf_index({ bufnr = vim.api.nvim_get_current_buf() })

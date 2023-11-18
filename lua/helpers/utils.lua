@@ -159,6 +159,12 @@ function M.tbl_reverse(tbl)
   return tbl
 end
 
+--- returns current git branch name
+function M.get_curr_git_branch()
+  local branch = vim.fn.system("git branch --show-current 2> /dev/null | tr -d '\n'")
+  if branch == "" then return nil end
+  return branch
+end
 
 
 -- Neovim Utils

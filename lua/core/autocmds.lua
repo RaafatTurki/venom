@@ -13,6 +13,22 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
   end
 })
 
+-- filetype based autocmd
+vim.api.nvim_create_autocmd({ "Filetype" }, {
+  callback = function(ev)
+
+    ft_handlers = {
+      cs = function()
+        vim.bo.commentstring = "// %s"
+      end,
+    }
+
+    if vim.tbl_contains(vim.tbl_keys(ft_handlers), ev.match) then
+      ft_handlers[ev.match]()
+    end
+  end
+})
+
 -- vim.api.nvim_create_autocmd({ "BufRead" }, {
 --   callback = function(ev)
 --     if vim.fn.getfsize(ev.match) >= huge_buffer_size then

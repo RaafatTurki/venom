@@ -224,7 +224,7 @@ M.config = function()
   end
 
   local function lsp_diags_hover()
-    vim.diagnostic.open_float()
+    vim.diagnostic.open_float({ border = "single" })
   end
 
 

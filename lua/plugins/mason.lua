@@ -9,6 +9,7 @@ M.dependencies = {
   plugins_info.lspconfig.url,
   plugins_info.mason_lspconfig.url,
   plugins_info.neodev.url,
+  plugins_info.lsp_signature.url,
 }
 
 M.config = function()
@@ -63,6 +64,17 @@ M.config = function()
     }
 
     lspconf[server_name].setup(vim.tbl_deep_extend('force', opts, shared_opts))
+  end
+
+  local lsp_signature = prequire "lsp_signature"
+  if lsp_signature then
+    lsp_signature.setup({
+      hint_enable = false,
+      bind = true,
+      border = "rounded",
+      wrap = false,
+      max_width = 1000,
+    })
   end
 
   local lspconfig_util = require 'lspconfig.util'

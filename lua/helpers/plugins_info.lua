@@ -29,6 +29,8 @@ local M = {
   git_conflict                = { url = "akinsho/git-conflict.nvim" },
   dressing                    = { url = "stevearc/dressing.nvim" },
   corn                        = { url = "RaafatTurki/corn.nvim" },
+  lsp_signature               = { url = "ray-x/lsp_signature.nvim" },
+  -- lsp_overloads               = { url = "Issafalcon/lsp-overloads.nvim" },
   -- dial                        = { url = "monaqa/dial.nvim" },
   -- nvim_bqf                    = { url = "kevinhwang91/nvim-bqf" },
 }

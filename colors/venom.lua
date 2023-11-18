@@ -389,7 +389,7 @@ local highlights = {
   LspReferenceWrite           = { bg = c.info_dim };
   LspCodeLens                 = { 'Comment' },
 LspCodeLensSeparator        = { '@debug' },
-  LspSignatureActiveParameter = { underline = true, bold = true },
+  LspSignatureActiveParameter = { "Search" },
 
 
   -- Diagnostics

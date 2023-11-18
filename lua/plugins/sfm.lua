@@ -61,14 +61,27 @@ M.config = function()
 
   keys.map("n", "<C-e>", sfm_api.explorer.toggle, "Toggle SFM")
 
-  -- rename the buffer that has the renamed file open if found
+  -- rename any related open buffers on file rename
   sfm_explorer:subscribe(sfm_event.EntryRenamed, function(payload)
     local from_path = payload["from_path"]
     local to_path = payload["to_path"]
 
-    local bufnr = buffers.buflist:get_buf_index({ file_path = from_path })
-    if bufnr then
-      buffers.buflist:get_buf_info(bufnr).buf:rename(to_path)
+    local index = buffers.buflist:get_buf_index({ file_path = from_path })
+    if index then
+      buffers.buflist:get_buf_info(index).buf:rename(to_path)
+    end
+  end)
+
+  -- remove any related open buffers on file delete
+  sfm_explorer:subscribe(sfm_event.EntryDeleted, function(payload)
+    local path = payload["path"]
+
+    local index = buffers.buflist:get_buf_index({ file_path = path })
+
+    -- TODO: make mini bufremove a dependency or find a vanilla way to remove buffers
+    local mini_bufremove = require 'mini.bufremove'
+    if mini_bufremove then
+      mini_bufremove.delete(buffers.buflist:get_buf_info(index).buf.bufnr)
     end
   end)
 end

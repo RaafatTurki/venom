@@ -38,26 +38,6 @@ M.config = function()
         vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
         -- Lsp.setup_buf_fmt_on_save(client, bufnr)
 
-        -- navic
-        -- if feat_list:has(feat.CONF, 'nvim-navic') then
-        --   require 'nvim-navic'.attach(client, bufnr)
-        -- end
-
-        -- lsp-overloads
-        -- if feat_list:has(feat.CONF, 'lsp-overloads.nvim') and client.server_capabilities.signatureHelpProvider then
-        --   require 'lsp-overloads'.setup(client, {
-        --     ui = {
-        --       border = "single"
-        --     },
-        --     keymaps = {
-        --       next_signature = "<S-Down>",
-        --       previous_signature = "<S-Up>",
-        --       next_parameter = "<S-Right>",
-        --       previous_parameter = "<S-Left>",
-        --     },
-        --   })
-        -- end
-
         -- calling the server specific on attach
         if opts.on_attach then
           opts.on_attach(client, bufnr)
@@ -186,43 +166,43 @@ M.config = function()
 
 
   local function lsp_rename()
-      local curr_name = vim.fn.expand("<cword>")
-      local input_opts = {
-        prompt = 'LSP Rename: ',
-        default = curr_name
-      }
-      -- ask user input
-      vim.ui.input(input_opts, function(new_name)
-        -- check new_name is valid
-        if not new_name or #new_name == 0 or curr_name == new_name then return end
+    local curr_name = vim.fn.expand("<cword>")
+    local input_opts = {
+      prompt = 'LSP Rename: ',
+      default = curr_name
+    }
+    -- ask user input
+    vim.ui.input(input_opts, function(new_name)
+      -- check new_name is valid
+      if not new_name or #new_name == 0 or curr_name == new_name then return end
 
-        -- request lsp rename
-        local params = vim.lsp.util.make_position_params()
-        params.newName = new_name
+      -- request lsp rename
+      local params = vim.lsp.util.make_position_params()
+      params.newName = new_name
 
-        vim.lsp.buf_request(0, "textDocument/rename", params, function(err, res, ctx, _)
-          if err then
-            if err.message then log.err(err.message) end
-            return
-          end
-          if not res then return end
+      vim.lsp.buf_request(0, "textDocument/rename", params, function(err, res, ctx, _)
+        if err then
+          if err.message then log.err(err.message) end
+          return
+        end
+        if not res then return end
 
-          -- apply renames
-          local client = vim.lsp.get_client_by_id(ctx.client_id)
-          vim.lsp.util.apply_workspace_edit(res, client.offset_encoding)
+        -- apply renames
+        local client = vim.lsp.get_client_by_id(ctx.client_id)
+        vim.lsp.util.apply_workspace_edit(res, client.offset_encoding)
 
-          -- display a message
-          local changes = U.count_lsp_res_changes(res)
-          local message = string.format("renamed %s instance%s in %s file%s. %s",
-            changes.instances,
-            changes.instances == 1 and '' or 's',
-            changes.files,
-            changes.files == 1 and '' or 's',
-            changes.files > 1 and "To save them run ':wa'" or ''
-          )
-          vim.notify(message)
-        end)
+        -- display a message
+        local changes = U.count_lsp_res_changes(res)
+        local message = string.format("renamed %s instance%s in %s file%s. %s",
+          changes.instances,
+          changes.instances == 1 and '' or 's',
+          changes.files,
+          changes.files == 1 and '' or 's',
+          changes.files > 1 and "To save them run ':wa'" or ''
+        )
+        vim.notify(message)
       end)
+    end)
   end
 
   local function lsp_references()

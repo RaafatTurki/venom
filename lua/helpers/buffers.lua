@@ -29,6 +29,10 @@ M.Buf = function()
     rename = function(self, new_name)
       vim.api.nvim_buf_set_name(self.bufnr, new_name)
       self.file_path = new_name
+
+      -- vim.cmd(":bunload " .. self.bufnr)
+      -- vim.cmd(":badd " .. vim.fn.fnameescape(new_name))
+
       -- Perform a forced write for the specified buffer
       -- vim.cmd('execute "write! " .. bufname(' .. self.bufnr .. ')')
     end,

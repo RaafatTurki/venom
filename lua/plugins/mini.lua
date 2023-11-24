@@ -62,6 +62,23 @@ M.config = function()
     }
   end
 
+
+
+  -- local ts_ctx_cms = prequire 'ts_context_commentstring'
+  -- if ts_ctx_cms then
+  --   ts_ctx_cms.setup {
+  --     languages = {
+  --       javascript = {
+  --         __default = '# %s',
+  --         jsx_element = '# %s',
+  --         jsx_fragment = '# %s',
+  --         jsx_attribute = '# %s',
+  --         comment = '# %s',
+  --       },
+  --     },
+  --   }
+  -- end
+
   local mini_comment = require 'mini.comment'
   if mini_comment then
     mini_comment.setup {

@@ -64,7 +64,13 @@ M.config = function()
       }),
       ['<PageDown>']  = cmp.mapping.scroll_docs(4),
       ['<PageUp>']    = cmp.mapping.scroll_docs(-4),
-      ['<C-Space>']   = cmp.mapping.complete({}),
+      ['<C-Space>']   = function(fb)
+        if cmp.visible() then
+          if cmp.visible_docs() then cmp.close_docs() else cmp.open_docs() end
+        else
+          cmp.complete({})
+        end
+      end,
       ['<C-e>']       = cmp.mapping.abort(),
       ['<Esc>']       = cmp.mapping.close(),
       ['<CR>']        = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace }),
@@ -86,7 +92,6 @@ M.config = function()
       -- { name = 'nvim_lsp_signature_help' },
       -- { name = 'digraphs' },
     },
-    ---@diagnostic disable-next-line: missing-fields
     formatting = {
       fields = { "kind", "abbr", "menu" },
       format = function(entry, vim_item)
@@ -96,20 +101,16 @@ M.config = function()
     },
     window = {
       -- completion = cmp.config.window.bordered(),
-      ---@diagnostic disable-next-line: missing-fields
       completion = {
         border = 'single',
         winhighlight = '',
         -- winhighlight = 'CursorLine:Normal',
       },
-      ---@diagnostic disable-next-line: missing-fields
       documentation = {
         border = 'single',
         winhighlight = '',
       },
-      -- scrollbar = '║',
     },
-    ---@diagnostic disable-next-line: missing-fields
     completion = {
       get_trigger_characters = function(trigger_chars)
         local new_trigger_chars = {}
@@ -120,6 +121,11 @@ M.config = function()
         end
         return new_trigger_chars
       end
+    },
+    view = {
+      docs = {
+        auto_open = false
+      }
     },
     experimental = {
       ghost_text = { hl_group = 'LspCodeLens' },

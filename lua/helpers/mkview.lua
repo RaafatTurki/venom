@@ -1,11 +1,8 @@
-local buffers = require "helpers.buffers"
-
+local U = require "helpers.utils"
 
 vim.api.nvim_create_autocmd({ "BufWinLeave", "BufWritePost" }, {
   callback = function(ev)
-    local buf_i = buffers.buflist:get_buf_index({bufnr = ev.buf})
-    if not buf_i then return end
-    if not buffers.buflist:get_buf_info(buf_i).buf.is_huge then
+    if not U.is_buf_huge(ev.buf) then
       vim.cmd [[silent! mkview]]
     end
   end
@@ -13,9 +10,7 @@ vim.api.nvim_create_autocmd({ "BufWinLeave", "BufWritePost" }, {
 
 vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
   callback = function(ev)
-    local buf_i = buffers.buflist:get_buf_index({bufnr = ev.buf})
-    if not buf_i then return end
-    if not buffers.buflist:get_buf_info(buf_i).buf.is_huge then
+    if not U.is_buf_huge(ev.buf) then
       vim.cmd [[silent! loadview]]
     end
   end

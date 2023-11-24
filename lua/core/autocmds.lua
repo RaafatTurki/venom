@@ -21,6 +21,9 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
       cs = function()
         vim.bo.commentstring = "// %s"
       end,
+      dosini = function()
+        vim.bo.commentstring = "# %s"
+      end,
     }
 
     if vim.tbl_contains(vim.tbl_keys(ft_handlers), ev.match) then

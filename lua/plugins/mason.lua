@@ -10,6 +10,8 @@ M.dependencies = {
   plugins_info.mason_lspconfig.url,
   plugins_info.neodev.url,
   plugins_info.lsp_signature.url,
+  plugins_info.omnisharp_ext.url,
+  plugins_info.lightbulb.url,
 }
 
 M.config = function()
@@ -77,6 +79,22 @@ M.config = function()
     })
   end
 
+  local lightbulb = prequire "nvim-lightbulb"
+  if lightbulb then
+    lightbulb.setup({
+      autocmd = { enabled = true },
+      virtual_text = {
+        enabled = true,
+        text = icons.code_action.code_action,
+        -- Highlight group to highlight the virtual text.
+        hl = "DiagnosticSignWarn",
+        -- How to combine other highlights with text highlight.
+        -- See `hl_mode` of |nvim_buf_set_extmark|.
+        hl_mode = "combine",
+      }
+    })
+  end
+
   local lspconfig_util = require 'lspconfig.util'
 
   require "mason".setup {
@@ -129,6 +147,18 @@ M.config = function()
           }
         },
       })
+    end,
+    omnisharp = function()
+      local opt = {}
+
+      local omnisharp_ext = prequire "omnisharp_extended"
+      if omnisharp_ext then
+        opt.handlers = {
+          ["textDocument/definition"] = require('omnisharp_extended').handler,
+        }
+      end
+
+      setup_lspconfig_server('omnisharp', opt)
     end,
     texlab = function()
       setup_lspconfig_server('texlab', {

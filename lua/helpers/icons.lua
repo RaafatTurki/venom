@@ -8,7 +8,7 @@ local icon_sets = {
   },
   code_action = {
     nerdfont = {
-      code_action = "󰛨",
+      code_action = "",
       quickfix = "󰖷",
       source = "",
     }

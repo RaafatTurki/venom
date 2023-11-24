@@ -30,6 +30,8 @@ local M = {
   dressing                    = { url = "stevearc/dressing.nvim" },
   corn                        = { url = "RaafatTurki/corn.nvim" },
   lsp_signature               = { url = "ray-x/lsp_signature.nvim" },
+  omnisharp_ext               = { url = "Hoffs/omnisharp-extended-lsp.nvim" },
+  lightbulb                   = { url = "kosayoda/nvim-lightbulb" },
   -- lsp_overloads               = { url = "Issafalcon/lsp-overloads.nvim" },
   -- dial                        = { url = "monaqa/dial.nvim" },
   -- nvim_bqf                    = { url = "kevinhwang91/nvim-bqf" },

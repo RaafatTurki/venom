@@ -276,7 +276,7 @@ M.config = function()
   }
 
   local lsp_active = {
-    condition = conditions.lsp_attached,
+    -- condition = conditions.lsp_attached,
     provider = function()
       local names = {}
       for i, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
@@ -286,7 +286,10 @@ M.config = function()
     end,
     space,
     hl = "Type",
-    update = {'LspAttach', 'LspDetach', 'BufEnter'},
+    update = {
+      'LspAttach', 'LspDetach',
+      callback = vim.schedule_wrap(function() vim.cmd.redrawstatus() end)
+    },
   }
 
   local search_count = {

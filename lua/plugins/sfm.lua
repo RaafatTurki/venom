@@ -78,9 +78,10 @@ M.config = function()
 
     local index = buffers.buflist:get_buf_index({ file_path = path })
 
+    -- TODO: if deleted path is a dir, remove all buffer for children files
     -- TODO: make mini bufremove a dependency or find a vanilla way to remove buffers
     local mini_bufremove = require 'mini.bufremove'
-    if mini_bufremove then
+    if mini_bufremove and index then
       mini_bufremove.delete(buffers.buflist:get_buf_info(index).buf.bufnr)
     end
   end)

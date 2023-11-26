@@ -27,6 +27,7 @@ require "helpers.curlinenr_vimode"
 require "helpers.highlight_yank"
 require "helpers.pretty_qflist"
 require "helpers.normal_mode_on_write"
+require "helpers.lsp"
 
 require "core.lazy"
 

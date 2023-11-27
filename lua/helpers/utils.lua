@@ -159,6 +159,22 @@ function M.tbl_reverse(tbl)
   return tbl
 end
 
+--- returns the string left padded
+function M.str_pad(str, width, char, right_side)
+  right_side = right_side or false
+  local pad_len = width - #str
+
+  if pad_len > 0 then
+    if not right_side then
+      return string.rep(char, pad_len) .. str
+    else
+      return str .. string.rep(char, pad_len)
+    end
+  else
+    return str
+  end
+end
+
 --- returns current git branch name
 function M.get_curr_git_branch()
   local branch = vim.fn.system("git branch --show-current 2> /dev/null | tr -d '\n'")

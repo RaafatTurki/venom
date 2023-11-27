@@ -33,7 +33,7 @@ local opts = {
 
   number          = true,
   foldcolumn      = '1',
-  -- signcolumn       = 'yes',
+  signcolumn      = 'no',
 
   -- colorcolumn     = U.seq(120, 999, ',', 1),
   -- colorcolumn     = "120",

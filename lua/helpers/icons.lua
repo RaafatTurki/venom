@@ -140,8 +140,8 @@ local icon_sets = {
       search = '',
       package = '',
       ellipsis = '',
-      expanded = '',
-      collapsed = '',
+      expanded = '',
+      collapsed = '',
     },
   },
   -- fs = {

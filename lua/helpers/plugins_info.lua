@@ -23,7 +23,7 @@ local M = {
   devicons                    = { url = "nvim-tree/nvim-web-devicons" },
   -- telescope                   = { url = "nvim-telescope/telescope.nvim" },
   -- telescope_fzf               = { url = "nvim-telescope/telescope-fzf-native.nvim" },
-  statuscol                   = { url = "luukvbaal/statuscol.nvim" },
+  -- statuscol                   = { url = "luukvbaal/statuscol.nvim" },
   heirline                    = { url = "rebelot/heirline.nvim" },
   gitsigns                    = { url = "lewis6991/gitsigns.nvim" },
   git_conflict                = { url = "akinsho/git-conflict.nvim" },

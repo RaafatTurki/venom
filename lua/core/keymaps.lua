@@ -34,10 +34,6 @@ map("v", "<Tab>",     ">gv", "Visual indent")
 map("n", "<C-Up>",    "<C-y>k", "Shift page up one line")
 map("n", "<C-Down>",  "<C-e>j", "Shift page down one line")
 
--- quic fix list
-map("n", "<S-Up>",    vim.cmd.cprevious, "QFList previous")
-map("n", "<S-Down>",  vim.cmd.cnext, "QFList next")
-
 -- beginning and end of line
 map("n", "<S-Left>", "^", "Go to beginning of line")
 map("n", "<S-Right>", "$", "Go to end of line")

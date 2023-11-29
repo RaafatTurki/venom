@@ -1,13 +1,13 @@
-local fn = vim.fn
+local map = require "helpers.keys".map
 
 function _G.qftf(info)
   local items
   local res = {}
 
   if info.quickfix == 1 then
-    items = fn.getqflist({id = info.id, items = 0}).items
+    items = vim.fn.getqflist({id = info.id, items = 0}).items
   else
-    items = fn.getloclist(info.winid, {id = info.id, items = 0}).items
+    items = vim.fn.getloclist(info.winid, {id = info.id, items = 0}).items
   end
 
   local limit = 31
@@ -20,7 +20,7 @@ function _G.qftf(info)
 
     if e.valid == 1 then
       if e.bufnr > 0 then
-        fname = fn.bufname(e.bufnr)
+        fname = vim.fn.bufname(e.bufnr)
         if fname == '' then
           fname = '[No Name]'
         else
@@ -63,3 +63,13 @@ vim.o.quickfixtextfunc = '{info -> v:lua._G.qftf(info)}'
 
 -- let b:current_syntax = 'qf'
 -- ]]
+
+-- keybinds
+-- TODO: disable cnext and cprevious errors when going out of range
+map("n", "<S-Up>",    vim.cmd.cprevious, "QFList previous")
+map("n", "<S-Down>",  vim.cmd.cnext, "QFList next")
+map("n", "<S-q>",  function()
+  local winid = vim.fn.getqflist({winid = true}).winid
+  if winid and vim.fn.win_gotoid(winid) > 0 then vim.cmd("cclose") else vim.cmd("copen") end
+end, "QFList next")
+

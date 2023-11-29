@@ -25,7 +25,7 @@ require "helpers.mkdir_parents"
 require "helpers.open_uri"
 require "helpers.curlinenr_vimode"
 require "helpers.highlight_yank"
-require "helpers.pretty_qflist"
+require "helpers.better_qflist"
 require "helpers.normal_mode_on_write"
 require "helpers.lsp"
 

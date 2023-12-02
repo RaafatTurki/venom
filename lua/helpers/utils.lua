@@ -258,6 +258,19 @@ function M.get_mode_hl()
   return mode_hls[vim.api.nvim_get_mode().mode]
 end
 
+--- returns cursor line number/s
+function M.get_cursor_pos()
+  local _, ls, cs = unpack(vim.fn.getpos('v'))
+  local _, le, ce = unpack(vim.fn.getpos('.'))
+  return ls, cs, le, ce
+end
+
+--- returns cursor line text
+function M.get_cursor_text()
+  local ls, cs, le, ce = M.get_cursor_pos()
+  return vim.api.nvim_buf_get_text(0, ls-1, cs-1, le-1, ce, {})
+end
+
 --- returns a table containing the lsp changes counts from an lsp result
 function M.count_lsp_res_changes(lsp_res)
   local count = { instances = 0, files = 0 }

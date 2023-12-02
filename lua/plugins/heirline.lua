@@ -354,7 +354,24 @@ M.config = function()
       local num_count = vim.api.nvim_buf_line_count(0)
       return U.str_pad(tostring(vim.v.lnum), #tostring(num_count), ' ')
     end,
-    -- space,
+    hl = function()
+      local ls, _, le, _ = U.get_cursor_pos()
+      local lnums = {}
+
+      if ls > le then
+        local tmp = le
+        le = ls
+        ls = tmp
+      end
+
+      for i = ls, le do
+        table.insert(lnums, i)
+      end
+
+      if vim.tbl_contains(lnums, vim.v.lnum) then
+        return vim.api.nvim_get_hl(0, { name = U.get_mode_hl() or "Normal" })
+      end
+    end,
   }
 
   local sc_fold = {

@@ -18,33 +18,43 @@ M.dependencies = {
 M.config = function()
   -- TODO: optimize for huge buffers
 
-  local ls = require "luasnip"
-  local ls_types = require "luasnip.util.types"
-  local ls_loaders_from_snipmate = require "luasnip.loaders.from_snipmate"
+  local ls = prequire "luasnip"
+  local ls_types, ls_loaders_from_snipmate
+  if ls then
+    ls_types = require "luasnip.util.types"
+    ls_loaders_from_snipmate = require "luasnip.loaders.from_snipmate"
+  end
+
   local cmp = require "cmp"
 
-  ls.config.setup({
-    ext_opts = {
-      [ls_types.choiceNode] = {
-        active = { virt_text = { { icons.kind.Snippet, 'SnippetChoiceIndicator' } } },
-        passive = { virt_text = { { icons.kind.Snippet, 'SnippetPassiveIndicator' } } }
+  if ls then
+    ls.config.setup({
+      ext_opts = {
+        [ls_types.choiceNode] = {
+          active = { virt_text = { { icons.kind.Snippet, 'SnippetChoiceIndicator' } } },
+          passive = { virt_text = { { icons.kind.Snippet, 'SnippetPassiveIndicator' } } }
+        },
+        [ls_types.insertNode] = {
+          active = { virt_text = { { icons.kind.Snippet, 'SnippetInsertIndicator' } } },
+          passive = { virt_text = { { icons.kind.Snippet, 'SnippetPassiveIndicator' } } }
+        }
       },
-      [ls_types.insertNode] = {
-        active = { virt_text = { { icons.kind.Snippet, 'SnippetInsertIndicator' } } },
-        passive = { virt_text = { { icons.kind.Snippet, 'SnippetPassiveIndicator' } } }
-      }
-    },
-  })
+    })
 
-  ls_loaders_from_snipmate.load()
+    ls_loaders_from_snipmate.load()
+  end
 
   cmp.setup {
-    snippet = { expand = function(args) ls.lsp_expand(args.body) end },
+    snippet = { expand = function(args)
+      if ls then
+        ls.lsp_expand(args.body)
+      end
+    end },
 
     mapping = {
       ["<Tab>"]   = cmp.mapping({
         i = function(fb)
-          if ls.expand_or_locally_jumpable() then ls.expand_or_jump()
+          if ls and ls.expand_or_locally_jumpable() then ls.expand_or_jump()
           else fb() end
         end,
         c = function(fb)
@@ -54,7 +64,7 @@ M.config = function()
       }),
       ["<S-Tab>"] = cmp.mapping({
         i = function(fb)
-          if ls.jumpable(-1) then ls.jump(-1)
+          if ls and ls.jumpable(-1) then ls.jump(-1)
           else fb() end
         end,
         c = function(fb)

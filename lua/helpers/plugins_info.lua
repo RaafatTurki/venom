@@ -9,6 +9,7 @@ local M = {
   treesitter_ctx_cms          = { url = "JoosepAlviste/nvim-ts-context-commentstring" },
   fold_cycle                  = { url = "jghauser/fold-cycle.nvim" },
   luasnip                     = { url = "L3MON4D3/LuaSnip" },
+  copilot                     = { url = "zbirenbaum/copilot.lua" },
   cmp                         = { url = "hrsh7th/nvim-cmp" },
   -- cmp_nvim_lsp_signature_help = { url = "hrsh7th/cmp-nvim-lsp-signature-help" },
   -- cmp_rg                      = { url = "lukas-reineke/cmp-rg" },

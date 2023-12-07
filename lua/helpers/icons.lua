@@ -40,6 +40,8 @@ local icon_sets = {
       Event         = '',
       Operator      = '',
       TypeParameter = '',
+
+      Copilot       = '',
     },
     ascii = {
       Text          = 'txt',
@@ -67,6 +69,8 @@ local icon_sets = {
       Event         = 'evn',
       Operator      = 'opr',
       TypeParameter = 'typ',
+
+      Copilot       = 'cop',
     },
   },
   dap = {

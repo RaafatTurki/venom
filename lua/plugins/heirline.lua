@@ -240,6 +240,28 @@ M.config = function()
     },
   }
 
+  local copilot = {
+    condition = function()
+      return prequire "copilot"
+    end,
+    provider = function()
+      local message = require "copilot.api".status.data.message
+      -- local message = require "copilot.api".status.data.status
+      if message ~= '' then message = ' ' .. message end
+      return icons.kind.Copilot .. message
+    end,
+    space,
+    hl = function()
+      local status = require "copilot.api".status.data.status
+      if status == "InProgress" then
+        return "Type"
+      elseif status == "Normal" then
+        return "Folded"
+      else
+        return "Comment"
+      end
+    end,
+  }
 
   local lsp_diagnostics = {
     condition = conditions.has_diagnostics,
@@ -278,17 +300,22 @@ M.config = function()
 
   local lsp_active = {
     -- condition = conditions.lsp_attached,
-    provider = function()
+    static = {
+      blacklisted_servers = { "copilot" }
+    },
+    provider = function(self)
       local names = {}
       for i, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-        table.insert(names, server.name)
+        if not vim.tbl_contains(self.blacklisted_servers, server.name) then
+          table.insert(names, server.name)
+        end
       end
       return icons.misc.cogwheel .. " " .. table.concat(names, " ")
     end,
     space,
     hl = "Type",
     update = {
-      'LspAttach', 'LspDetach',
+      'LspAttach', 'LspDetach', 'BufEnter',
       callback = vim.schedule_wrap(function() vim.cmd.redrawstatus() end)
     },
   }
@@ -498,6 +525,7 @@ M.config = function()
       align,
 
       lsp_diagnostics,
+      copilot,
       lsp_active,
       search_count,
       macro_rec,

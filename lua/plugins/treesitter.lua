@@ -5,7 +5,8 @@ local U = require "helpers.utils"
 local M = { plugins_info.treesitter.url }
 
 M.dependencies = {
-  plugins_info.treesitter_ctx_cms.url
+  plugins_info.treesitter_ctx_cms.url,
+  plugins_info.treesitter_ctx.url,
 }
 
 M.build = function()
@@ -73,6 +74,16 @@ M.config = function()
       enable = true,
       disable = function(lang, buf) return U.is_buf_huge(buf) end,
     },
+  }
+
+  require 'treesitter-context'.setup {
+    -- max_lines = 0,
+    -- min_window_height = 0,
+    line_numbers = false,
+    -- multiline_threshold = 20,
+    -- trim_scope = 'outer',
+    mode = 'cursor',
+    separator = "─",
   }
 
   vim.api.nvim_create_autocmd({ "BufEnter" }, {

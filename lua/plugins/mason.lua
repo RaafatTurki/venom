@@ -47,6 +47,14 @@ M.config = function()
     function(server_name)
       M.setup_lspconfig_server(server_name, {})
     end,
+    clangd = function()
+      M.setup_lspconfig_server('clangd', {
+        cmd = {
+          "clangd",
+          "--offset-encoding=utf-16",
+        },
+      })
+    end,
     lua_ls = function()
       local neodev = prequire "neodev"
       if neodev then

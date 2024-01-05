@@ -1,3 +1,4 @@
+local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 
@@ -11,8 +12,8 @@ M.config = function()
     default_mappings = false,
     disable_diagnostics = false,
     highlights = {
-      current = 'GitConflictCurrent',
-      incoming = 'GitConflictIncoming',
+      current = U.get_hl_fallback("GitConflictCurrent", "DiffChange"),
+      incoming = U.get_hl_fallback("GitConflictIncoming", "DiffChange"),
     }
   }
 

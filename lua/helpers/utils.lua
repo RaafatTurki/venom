@@ -271,6 +271,15 @@ function M.get_cursor_text()
   return vim.api.nvim_buf_get_text(0, ls-1, cs-1, le-1, ce, {})
 end
 
+--- returns hilight group name or fallback
+function M.get_hl_fallback(group, fallback)
+  if vim.fn.hlexists(group) == 1 then
+    return group
+  else
+    return fallback
+  end
+end
+
 --- returns a table containing the lsp changes counts from an lsp result
 function M.count_lsp_res_changes(lsp_res)
   local count = { instances = 0, files = 0 }

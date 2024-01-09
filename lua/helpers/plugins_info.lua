@@ -34,6 +34,7 @@ local M = {
   lsp_signature               = { url = "ray-x/lsp_signature.nvim" },
   omnisharp_ext               = { url = "Hoffs/omnisharp-extended-lsp.nvim" },
   lightbulb                   = { url = "kosayoda/nvim-lightbulb" },
+  fidget                      = { url = "j-hui/fidget.nvim" },
   -- lsp_overloads               = { url = "Issafalcon/lsp-overloads.nvim" },
   -- dial                        = { url = "monaqa/dial.nvim" },
   -- nvim_bqf                    = { url = "kevinhwang91/nvim-bqf" },

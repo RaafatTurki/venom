@@ -731,8 +731,8 @@ NeoTreeWindowsHidden        = { '@debug' };
   NavicSeparator          = { 'Folded' };
 
   -- fidget
-  FidgetTitle             = { 'Folded' },
-  FidgetTask              = { 'Comment' },
+  -- FidgetTitle             = { 'Folded' },
+  -- FidgetTask              = { 'Comment' },
 
   -- illuminate
   IlluminatedWordText     = { 'LspReferenceText' };

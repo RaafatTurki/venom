@@ -83,7 +83,8 @@ M.config = function()
       end,
       ['<C-e>']       = cmp.mapping.abort(),
       ['<Esc>']       = cmp.mapping.close(),
-      ['<CR>']        = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace }),
+      -- ['<CR>']        = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace }),
+      ['<CR>']        = cmp.mapping.confirm({ select = false }),
       ['<Down>']      = function(fb) cmp.close(); fb() end,
       ['<Up>']        = function(fb) cmp.close(); fb() end,
       ['<C-Down>']    = cmp.mapping.select_next_item(),
@@ -132,14 +133,14 @@ M.config = function()
         return new_trigger_chars
       end
     },
-    view = {
-      docs = {
-        auto_open = false
-      }
-    },
-    experimental = {
-      ghost_text = { hl_group = 'LspCodeLens' },
-    }
+    -- view = {
+    --   docs = {
+    --     auto_open = false
+    --   }
+    -- },
+    -- experimental = {
+    --   ghost_text = { hl_group = 'LspCodeLens' },
+    -- }
   }
 
   cmp.setup.cmdline({ '/', '?' }, {

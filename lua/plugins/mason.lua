@@ -10,6 +10,7 @@ M.dependencies = {
   plugins_info.mason_lspconfig.url,
   plugins_info.neodev.url,
   plugins_info.omnisharp_ext.url,
+  -- plugins_info.lsp_overloads.url,
 }
 
 M.config = function()
@@ -137,7 +138,14 @@ M.setup_lspconfig_server = function(server_name, opts)
     on_attach = function(client, bufnr)
       -- set gq command to use the lsp formatter for this buffer
       vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
-      -- Lsp.setup_buf_fmt_on_save(client, bufnr)
+
+      -- format on save
+      -- if client.supports_method("textDocument/formatting") then
+      --   vim.api.nvim_create_autocmd("BufWritePre", {
+      --     buffer = bufnr,
+      --     callback = function(ev) vim.lsp.buf.format() end,
+      --   })
+      -- end
 
       -- calling the server specific on attach
       if opts.on_attach then

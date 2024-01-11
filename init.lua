@@ -15,7 +15,7 @@ require "core.options"
 require "core.keymaps"
 require "core.autocmds"
 
-require "helpers.colorschemes".set_a_colorscheme({ "venom", "industry" })
+require "helpers.colorschemes".set_a_colorscheme({ "venom", "minischeme", "industry" })
 require "helpers.keys".set_leader(" ")
 require "helpers.disable_builtins"
 require "helpers.buffers"
@@ -31,11 +31,14 @@ require "helpers.lsp"
 
 require "core.lazy"
 
--- required external tools
+-- External Tools
+
+-- NOTE: IN USE
 -- python-pynvim (nvim)
 -- pnpm -g install neovim (nvim)
 -- git (lazy.nvim, treesitter)
 -- gcc (treesitter)
--- rg (telescope & mini.pick)
--- fzf (telescope-fzf)
+-- rg (mini.pick, telescope)
 
+-- NOTE: NOT IN USE
+-- fzf (telescope-fzf)

@@ -66,10 +66,6 @@ vim.o.quickfixtextfunc = '{info -> v:lua._G.qftf(info)}'
 
 -- keybinds
 -- TODO: disable cnext and cprevious errors when going out of range
-map("n", "<S-Up>",    vim.cmd.cprevious, "QFList previous")
-map("n", "<S-Down>",  vim.cmd.cnext, "QFList next")
-map("n", "<S-q>",  function()
-  local winid = vim.fn.getqflist({winid = true}).winid
-  if winid and vim.fn.win_gotoid(winid) > 0 then vim.cmd("cclose") else vim.cmd("copen") end
-end, "QFList next")
+map({ "x", "n" }, "<S-Up>",    vim.cmd.cprevious, "QFList previous")
+map({ "x", "n" }, "<S-Down>",  vim.cmd.cnext, "QFList next")
 

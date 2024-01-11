@@ -14,6 +14,10 @@ M.build = function()
 end
 
 M.config = function()
+  local filetypes = {
+    dart = { indent = false },
+  }
+
   require 'nvim-treesitter.configs'.setup {
     ensure_installed = {
       'bash',
@@ -69,11 +73,23 @@ M.config = function()
     },
     highlight = {
       enable = true,
-      disable = function(lang, buf) return U.is_buf_huge(buf) end,
+      disable = function(lang, buf)
+        local ft = vim.api.nvim_buf_get_option(buf, 'filetype')
+        local is_ft_blocked = vim.tbl_get(filetypes, ft, "highlight") == false
+        local is_buf_huge = U.is_buf_huge(buf)
+
+        return is_buf_huge or is_ft_blocked
+      end,
     },
     indent = {
       enable = true,
-      disable = function(lang, buf) return U.is_buf_huge(buf) end,
+      disable = function(lang, buf)
+        local ft = vim.api.nvim_buf_get_option(buf, 'filetype')
+        local is_ft_blocked = vim.tbl_get(filetypes, ft, "indent") == false
+        local is_buf_huge = U.is_buf_huge(buf)
+
+        return is_buf_huge or is_ft_blocked
+      end,
     },
   }
 

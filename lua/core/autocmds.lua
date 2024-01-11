@@ -65,7 +65,7 @@ vim.cmd [[
   " au FileType fish setlocal commentstring=#%s
   " au FileType prisma setlocal commentstring=//%s
   " au FileType sxhkdrc setlocal commentstring=#%s
-  " au FileType dart setlocal commentstring=//%s
+  au FileType dart setlocal commentstring=//%s
 
   " au BufEnter xorg.conf* setlocal ft=xf86conf
   " au BufRead,BufNewFile */xorg.conf.d/*.conf* setlocal ft=xf86conf

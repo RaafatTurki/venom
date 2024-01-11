@@ -7,7 +7,7 @@ local M = {
   mini                        = { url = "echasnovski/mini.nvim", },
   treesitter                  = { url = "nvim-treesitter/nvim-treesitter" },
   treesitter_ctx_cms          = { url = "JoosepAlviste/nvim-ts-context-commentstring" },
-  treesitter_ctx              = { url = "nvim-treesitter/nvim-treesitter-context" },
+  -- treesitter_ctx              = { url = "nvim-treesitter/nvim-treesitter-context" },
   fold_cycle                  = { url = "jghauser/fold-cycle.nvim" },
   luasnip                     = { url = "L3MON4D3/LuaSnip" },
   copilot                     = { url = "zbirenbaum/copilot.lua" },

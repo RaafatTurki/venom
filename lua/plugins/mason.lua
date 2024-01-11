@@ -107,6 +107,15 @@ M.config = function()
       },
     })
   end
+
+  if vim.fn.executable('dart') == 1 then
+    M.setup_lspconfig_server('dartls', {
+      -- cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
+      -- flags = {
+      --   debounce_text_changes = 150,
+      -- },
+    })
+  end
 end
 
 -- lspconfig server setup wrapper

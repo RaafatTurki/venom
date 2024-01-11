@@ -23,6 +23,7 @@ M.config = function()
       'cmake',
       'cpp',
       'css',
+      'dart',
       'elm',
       'fish',
       'gdscript',

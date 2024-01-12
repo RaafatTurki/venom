@@ -22,20 +22,6 @@ M.Buf = function()
       -- self:watch()
       return self
     end,
-    switch = function(self)
-      -- vim.cmd.b(self.bufnr)
-      vim.cmd.edit(self.file_path)
-    end,
-    rename = function(self, new_name)
-      vim.api.nvim_buf_set_name(self.bufnr, new_name)
-      self.file_path = new_name
-
-      -- vim.cmd(":bunload " .. self.bufnr)
-      -- vim.cmd(":badd " .. vim.fn.fnameescape(new_name))
-
-      -- Perform a forced write for the specified buffer
-      -- vim.cmd('execute "write! " .. bufname(' .. self.bufnr .. ')')
-    end,
     -- watch = function(self)
     --   self.event_listener:start(self.file_path, {}, vim.schedule_wrap(function(err, _fname, status)
     --     if status.rename then
@@ -54,6 +40,7 @@ end
 M.BufList = function()
   return {
     bufs = {},
+    last_focused_buf_i = 0,
     labels = {
       '1', '2', '3',
       'q', 'w', 'e',
@@ -62,6 +49,15 @@ M.BufList = function()
       'A', 'S', 'D',
     },
 
+    focus_buf = function(self, index)
+      if not index then return end
+      if not U.is_within_range(index, 1, #self.bufs) then return end
+
+      local file_path = self.bufs[index].file_path
+      vim.cmd.edit(file_path)
+
+      self.last_focused_buf_i = index
+    end,
     is_buf_addable = function(self, bufnr)
       -- if vim.api.nvim_buf_is_loaded(bufnr) then return false end
       -- if not vim.fn.bufexists(bufnr) == 1 then return false end
@@ -104,21 +100,20 @@ M.BufList = function()
         label = opts.label,
       }
 
+      local i = nil
+
       if opts.bufnr then
-        for i, buf in ipairs(self.bufs) do
-          if buf.bufnr == opts.bufnr then buf:switch() end
-        end
+        i = self:get_buf_index({ bufnr = opts.bufnr })
       elseif opts.index then
-        self.bufs[opts.index]:switch()
+        i = opts.index
       elseif opts.rel_index then
-        local target_index = self:get_buf_index({ current = true }) - opts.rel_index
-        if U.is_within_range(target_index, 1, #self.bufs) then
-          self.bufs[target_index]:switch()
-        end
+        i = self:get_buf_index({ current = true }) - opts.rel_index
       elseif opts.label then
-        local buf_info = self:get_buf_info(self:get_buf_index({ label = opts.label }))
-        if buf_info then buf_info.buf:switch() end
+        i = self:get_buf_index({ label = opts.label })
       end
+
+      self:focus_buf(i)
+      self.last_focused_buf_i = i
     end,
     swap_bufs = function(self, i1, i2)
       if (U.is_within_range(i1, 1, #self.bufs) and U.is_within_range(i1, 1, #self.bufs)) then
@@ -134,9 +129,21 @@ M.BufList = function()
       if i == 0 then i = self:get_buf_index({ current = true }) end
       -- shift i by rel_i
       local target_index = i + rel_i
-      if U.is_within_range(target_index, 1, #self.bufs) then
-        self:swap_bufs(i, target_index)
+      -- use multiple swaps to shift the buffer while maintaining the order of the other buffers and not going out of bounds
+      if U.is_within_range(i, 1, #self.bufs) and U.is_within_range(target_index, 1, #self.bufs) then
+        if rel_i > 0 then
+          for j = i, target_index - 1 do
+            self:swap_bufs(j, j + 1)
+          end
+        elseif rel_i < 0 then
+          for j = i, target_index + 1, -1 do
+            self:swap_bufs(j, j - 1)
+          end
+        end
       end
+      -- if U.is_within_range(target_index, 1, #self.bufs) then
+      --   self:swap_bufs(i, target_index)
+      -- end
     end,
     get_buf_index = function(self, opts)
       opts = opts or {}
@@ -172,6 +179,21 @@ M.BufList = function()
       else
         return nil
       end
+    end,
+    renamed_buf = function(self, i, new_path)
+      local buf_info = self:get_buf_info(i)
+
+      vim.cmd("badd " .. vim.fn.fnameescape(U.get_relative_path(new_path)))
+      local new_buf_info = self:get_buf_info(#self.bufs)
+
+      vim.tbl_map(function(win_id)
+        vim.api.nvim_win_set_buf(win_id, new_buf_info.buf.bufnr)
+      end, vim.fn.win_findbuf(buf_info.buf.bufnr))
+
+      vim.cmd.bdelete(buf_info.buf.bufnr)
+
+      self:shift_buf(#self.bufs, i - #self.bufs)
+      vim.cmd.redrawtabline()
     end,
   }
 end
@@ -252,7 +274,8 @@ M.populate = function(data)
       end
 
       if i == data.current_file_index then
-        M.buflist:get_buf_info(i).buf:switch()
+        -- M.buflist:get_buf_info(i).buf:focus()
+        M.buflist:set_current_buf({ index = i })
       end
     else
       log("file \"" .. file_path .. "\" missing from cwd")

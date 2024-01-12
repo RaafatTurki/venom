@@ -1,3 +1,4 @@
+local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
@@ -15,6 +16,7 @@ M.config = function()
   local sfm = require "sfm"
   local sfm_api = require "sfm.api"
   local sfm_event = require "sfm.event"
+  -- local renamed_bufnr = nil
 
   local sfm_explorer = sfm.setup({
     view = {
@@ -62,13 +64,14 @@ M.config = function()
   keys.map("n", "<C-e>", sfm_api.explorer.toggle, "Toggle SFM")
 
   -- rename any related open buffers on file rename
+  -- TODO: make any buffers that have a file in a subdirectory of the renamed dir to be renamed as well
   sfm_explorer:subscribe(sfm_event.EntryRenamed, function(payload)
     local from_path = payload["from_path"]
     local to_path = payload["to_path"]
 
     local index = buffers.buflist:get_buf_index({ file_path = from_path })
     if index then
-      buffers.buflist:get_buf_info(index).buf:rename(to_path)
+      renamed_bufnr = buffers.buflist:renamed_buf(index, to_path)
     end
   end)
 

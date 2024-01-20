@@ -34,7 +34,7 @@ local M = {
   -- lsp_signature               = { url = "ray-x/lsp_signature.nvim" },
   omnisharp_ext               = { url = "Hoffs/omnisharp-extended-lsp.nvim" },
   lightbulb                   = { url = "kosayoda/nvim-lightbulb" },
-  fidget                      = { url = "j-hui/fidget.nvim" },
+  -- fidget                      = { url = "j-hui/fidget.nvim" },
   -- flutter                     = { url = "akinsho/flutter-tools.nvim" },
   -- typst                       = { url = "kaarmu/typst.vim" },
   -- noice                       = { url = "folke/noice.nvim" },

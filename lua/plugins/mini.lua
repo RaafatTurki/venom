@@ -160,6 +160,32 @@ M.config = function()
     -- vim.ui.select = MiniPick.ui_select
   end
 
+  local mini_notify = require "mini.notify"
+  if mini_notify then
+    mini_notify.setup {
+      content = {
+        format = function(notif)
+          return notif.msg
+        end,
+      },
+      lsp_progress = {
+        enable = true,
+        duration_last = 1000,
+      },
+      window = {
+        config = {
+          border = 'none',
+          anchor = 'SE',
+          col = vim.api.nvim_win_get_width(0) -2, -- because of the scrollbar
+          row = vim.api.nvim_win_get_height(0),
+        },
+        winblend = 0,
+      },
+    }
+
+    vim.notify = mini_notify.make_notify()
+  end
+
   -- TODO: clue
   -- local mini_clue = require 'mini.clue'
   -- if mini_clue then

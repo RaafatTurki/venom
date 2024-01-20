@@ -767,6 +767,11 @@ NeoTreeWindowsHidden        = { '@debug' };
 
   MiniTrailspace          = { "Whitespace" };
 
+
+  MiniNotifyBorder       = { "FloatBorder" };
+  MiniNotifyNormal       = { "Folded" };
+  MiniNotifyTitle        = { "FloatTitle" };
+
   -- CUTSOM GROUPS
   -- NormalAlt               = { bg = c.bg_alt };
   SnippetPassiveIndicator = { 'Comment' };

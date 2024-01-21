@@ -1,3 +1,4 @@
+local U = require "helpers.utils"
 local namespace = vim.api.nvim_create_namespace("class_conceal")
 local group = vim.api.nvim_create_augroup("class_conceal", {})
 
@@ -28,8 +29,8 @@ end
 vim.api.nvim_create_autocmd({ "BufWritePost", "TextChanged", "BufEnter" }, {
   group = group,
   pattern = "*.html,*.svelte,*.vue",
-  callback = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    conceal_html_class(bufnr)
+  callback = function(ev)
+    if U.is_buf_huge(ev.buf) then return end
+    conceal_html_class(ev.buf)
   end,
 })

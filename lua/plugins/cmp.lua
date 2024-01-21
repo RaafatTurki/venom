@@ -114,8 +114,8 @@ M.config = function()
       -- completion = cmp.config.window.bordered(),
       completion = {
         border = 'single',
-        winhighlight = '',
-        -- winhighlight = 'CursorLine:Normal',
+        -- winhighlight = '',
+        winhighlight = 'CursorLine:PmenuSel',
       },
       documentation = {
         border = 'single',

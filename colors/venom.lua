@@ -348,7 +348,7 @@ local highlights = {
   FloatBorder     = { fg = c.mg },
   NormalNC        = { }, --
   Pmenu           = { bg = c.line, fg = c.fg },
-  PmenuSel        = { bg = c.mg, fg = c.fg },
+  PmenuSel        = { bg = c.fg, fg = c.bg },
   PmenuSbar       = { 'Pmenu' },
   PmenuThumb      = { bg = c.mg },
   Question        = { fg = c.fg, bold = true },

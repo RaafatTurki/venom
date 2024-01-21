@@ -61,9 +61,3 @@ map("n", "Y",         "y$", "")
 map("n", "J",         "J$", "")
 -- split (opposite of J)
 map("n", "S",         "T hr<CR>k$", "")
-
-
--- motions
--- entire buffer (https://vi.stackexchange.com/a/2321)
-map("o", "aa",        ":<c-u>normal! mzggVG<cr>`z")
-

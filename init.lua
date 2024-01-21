@@ -27,6 +27,7 @@ require "helpers.highlight_yank"
 require "helpers.better_qflist"
 require "helpers.normal_mode_on_write"
 require "helpers.conceal_html_classes"
+require "helpers.text_object_all"
 require "helpers.lsp"
 
 require "core.lazy"

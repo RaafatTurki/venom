@@ -379,7 +379,12 @@ M.config = function()
     condition = function() return vim.o.number end,
     provider = function()
       local num_count = vim.api.nvim_buf_line_count(0)
-      return U.str_pad(tostring(vim.v.lnum), #tostring(num_count), ' ')
+
+      if vim.v.virtnum > 0 then
+        return U.str_pad('.', #tostring(num_count), ' ')
+      else
+        return U.str_pad(tostring(vim.v.lnum), #tostring(num_count), ' ')
+      end
     end,
     hl = function()
       local ls, _, le, _ = U.get_cursor_pos()
@@ -514,32 +519,46 @@ M.config = function()
 
 
   require "heirline".setup {
-    tabline = { { tabline_offset, bufferline, tabpages } },
-    statusline = { {
-      file_icon, space,
-      file_name, space,
-      file_flag_modified,
-      file_flag_readonly, space,
-      gitsigns, space,
+    tabline = {
+      fallthrough = false,
+      { tabline_offset, bufferline, tabpages, }
+    },
+    statusline = {
+      fallthrough = false,
+      {
+        file_icon, space,
+        file_name, space,
+        file_flag_modified,
+        file_flag_readonly, space,
+        gitsigns, space,
 
-      align,
+        align,
 
-      lsp_diagnostics,
-      copilot,
-      lsp_active,
-      search_count,
-      macro_rec,
-      file_encoding, space,
-      filetype, space,
-      ruler
-    } },
-    statuscolumn = { {
+        lsp_diagnostics,
+        copilot,
+        lsp_active,
+        search_count,
+        macro_rec,
+        file_encoding, space,
+        filetype, space,
+        ruler
+      }
+    },
+    statuscolumn = {
+      fallthrough = false,
+      {
+        condition = function() return U.is_buf_huge(vim.api.nvim_get_current_buf()) end,
+        sc_lnum, space,
+        align,
+      },
       -- TODO: sc_dap
-      sc_lnum,
       -- sc_diags,
-      sc_gitsigns,
-      sc_fold,
-    } },
+      {
+        sc_lnum,
+        sc_gitsigns,
+        sc_fold,
+      }
+    },
   }
 
 end

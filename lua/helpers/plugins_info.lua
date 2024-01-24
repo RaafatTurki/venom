@@ -35,6 +35,8 @@ local M = {
   lightbulb                   = { url = "kosayoda/nvim-lightbulb" },
   omnisharp_ext               = { url = "Hoffs/omnisharp-extended-lsp.nvim" },
   typst_vim                   = { url = "kaarmu/typst.vim" },
+  -- image                       = { url = "3rd/image.nvim" },
+  -- img_clip                    = { url = "hakonharnes/img-clip.nvim" },
   -- fidget                      = { url = "j-hui/fidget.nvim" },
   -- flutter                     = { url = "akinsho/flutter-tools.nvim" },
   -- typst                       = { url = "kaarmu/typst.vim" },

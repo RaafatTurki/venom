@@ -1,6 +1,6 @@
+local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local buffers = require "helpers.buffers"
-local U = require "helpers.utils"
 
 local M = { plugins_info.treesitter.url }
 

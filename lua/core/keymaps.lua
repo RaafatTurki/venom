@@ -51,8 +51,8 @@ map("x", "<S-Right>", "$", "Go to end of line")
 -- preserve cursor position on visual yank
 map("x", "y",         "ygv<ESC>", "")
 -- move cursor to the start of the line on format
-map("n", "==",        "==_", "")
-map("x", "=",         "=gv_", "")
+-- map("n", "==",        "==_", "")
+-- map("x", "=",         "=gv_", "")
 -- copy and retain visual selection in visual mode
 map("x", "Y",         "ygv", "")
 -- make Y copy to end of line in normal mode

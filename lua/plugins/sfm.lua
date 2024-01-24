@@ -12,6 +12,8 @@ M.dependencies = {
   plugins_info.sfm_git.url,
 }
 
+-- M.dev = true
+
 M.config = function()
   local sfm = require "sfm"
   local sfm_api = require "sfm.api"

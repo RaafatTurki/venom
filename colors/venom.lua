@@ -348,7 +348,7 @@ local highlights = {
   FloatBorder     = { fg = c.mg },
   NormalNC        = { }, --
   Pmenu           = { bg = c.line, fg = c.fg },
-  PmenuSel        = { bg = c.fg, fg = c.bg },
+  PmenuSel        = { bg = c.mg, bold = true },
   PmenuSbar       = { 'Pmenu' },
   PmenuThumb      = { bg = c.mg },
   Question        = { fg = c.fg, bold = true },
@@ -772,6 +772,12 @@ NeoTreeWindowsHidden        = { '@debug' };
   MiniNotifyNormal       = { "Folded" };
   MiniNotifyTitle        = { "FloatTitle" };
 
+  MiniPickMatchCurrent = { "PmenuSel" };
+  MiniPickMatchMarked = { "Type" };
+  MiniPickMatchRanges = { "Title" };
+  MiniPickNormal = { "Folded" };
+  MiniPickPrompt = { "Title" };
+
   -- CUTSOM GROUPS
   -- NormalAlt               = { bg = c.bg_alt };
   SnippetPassiveIndicator = { 'Comment' };
@@ -788,26 +794,5 @@ NeoTreeWindowsHidden        = { '@debug' };
   DapLogPoint             = { fg = c.type };
   DapStopped              = { bg = c.warn_dim };
 }
-
--- vim.cmd [[
---   augroup misc_highlighs
---   au!
---
---   autocmd BufEnter log,*.log call SetLogHighlights()
---   function SetLogHighlights()
---     syn region logHead start=/^\[/ end=/\]/ contains=logInfo,logWarn,logError
---
---     syn keyword logInfo INFO
---     syn keyword logWarn WARN START
---     syn keyword logError ERROR
---
---     hi link logInfo DiagnosticInfo
---     hi link logWarn DiagnosticWarn
---     hi link logError DiagnosticError
---
---     hi link logHead Comment
---   endfunction
---   augroup misc_highlighs
--- ]]
 
 set_hls(highlights)

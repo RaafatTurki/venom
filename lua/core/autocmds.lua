@@ -19,6 +19,9 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
 
     local ft_handlers = {
       cs = function() vim.bo.commentstring = "// %s" end,
+      dart = function() vim.bo.commentstring = "// %s" end,
+      prisma = function() vim.bo.commentstring = "// %s" end,
+      typst = function() vim.bo.commentstring = "// %s" end,
       dosini = function() vim.bo.commentstring = "# %s" end,
       resolv = function() vim.bo.commentstring = "# %s" end,
       iss = function() vim.bo.commentstring = "; %s" end,
@@ -37,6 +40,7 @@ vim.cmd [[
 
   " file name
   au BufEnter *.svx setlocal ft=svelte
+  au BufEnter *.typ setlocal ft=typst
   " au BufEnter .swcrc setlocal ft=json
   " au BufEnter tsconfig.json setlocal ft=jsonc
   " au BufEnter mimeapps.list setlocal ft=dosini
@@ -57,6 +61,7 @@ vim.cmd [[
   " au FileType lazy setlocal cursorline
 
   " " comment strings
+  " au BufEnter ripgreprc* setlocal commentstring=#%s
   " au FileType sshdconfig setlocal commentstring=#%s
   " au FileType c setlocal commentstring=//%s
   " au FileType arduino setlocal commentstring=//%s
@@ -65,7 +70,7 @@ vim.cmd [[
   " au FileType fish setlocal commentstring=#%s
   " au FileType prisma setlocal commentstring=//%s
   " au FileType sxhkdrc setlocal commentstring=#%s
-  au FileType dart setlocal commentstring=//%s
+  " au FileType dart setlocal commentstring=//%s
 
   " au BufEnter xorg.conf* setlocal ft=xf86conf
   " au BufRead,BufNewFile */xorg.conf.d/*.conf* setlocal ft=xf86conf

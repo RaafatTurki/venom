@@ -157,7 +157,8 @@ M.config = function()
       -- keys.map("n", "<leader>b",    "<CMD>Pick git_hunks<CR>", "Pick git hunks")
     -- end
 
-    -- vim.ui.select = MiniPick.ui_select
+    ---@diagnostic disable-next-line: undefined-global
+    vim.ui.select = MiniPick.ui_select
   end
 
   local mini_notify = require "mini.notify"

@@ -3,6 +3,8 @@ local icons = require "helpers.icons".icons
 
 local M = { plugins_info.corn.url }
 
+-- M.dev = true
+
 M.config = function()
   -- disable virtual text diags
   vim.diagnostic.config({ virtual_text = false })
@@ -10,7 +12,9 @@ M.config = function()
   require "corn".setup {
     -- auto_cmds = false,
     sort_method = 'column',
+    border_style = 'none',
     -- scope = 'file',
+    blacklisted_modes = { 'i' },
     icons = {
       error = icons.diag.Error,
       warn = icons.diag.Warn,

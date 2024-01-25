@@ -24,6 +24,7 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
       typst = function() vim.bo.commentstring = "// %s" end,
       dosini = function() vim.bo.commentstring = "# %s" end,
       resolv = function() vim.bo.commentstring = "# %s" end,
+      hurl = function() vim.bo.commentstring = "# %s" end,
       iss = function() vim.bo.commentstring = "; %s" end,
     }
 
@@ -41,6 +42,7 @@ vim.cmd [[
   " file name
   au BufEnter *.svx setlocal ft=svelte
   au BufEnter *.typ setlocal ft=typst
+  au BufEnter *.hurl setlocal ft=hurl
   " au BufEnter .swcrc setlocal ft=json
   " au BufEnter tsconfig.json setlocal ft=jsonc
   " au BufEnter mimeapps.list setlocal ft=dosini

@@ -39,6 +39,7 @@ M.config = function()
       'gomod',
       'html',
       'http',
+      'hurl',
       'ini',
       'java',
       'javascript',

@@ -521,7 +521,7 @@ M.config = function()
   require "heirline".setup {
     tabline = {
       fallthrough = false,
-      { tabline_offset, bufferline, tabpages, }
+      { tabline_offset, bufferline, tabpages }
     },
     statusline = {
       fallthrough = false,

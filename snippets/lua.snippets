@@ -3,6 +3,9 @@
 # 		require '${3}'.setup {${0}}
 # 	end)
 
+snippet plugin_info
+	${1}												= { url = "${0}" },
+
 snippet service plugin service
 	M.${1} = service({{feat.CONF, '${2}'}}, nil, function()
 		require '${3}'.setup {${0}}

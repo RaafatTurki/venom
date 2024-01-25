@@ -89,6 +89,13 @@ vim.cmd [[
   augroup base
 ]]
 
+-- vim.api.nvim_create_autocmd({ "InsertCharPre" }, {
+--   callback = function(ev)
+--     if (vim.v.char == "s") then
+--       vim.v.char = ''
+--     end
+--   end
+-- })
 
 -- vim.api.nvim_create_autocmd({ "BufRead" }, {
 --   callback = function(ev)

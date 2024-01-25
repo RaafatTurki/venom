@@ -95,7 +95,7 @@ M.config = function()
       { name = 'luasnip' },
       -- { name = 'nvim_lua' },
       { name = 'buffer' },
-      -- { name = 'rg', option = { additional_arguments = '--smart-case --hidden', }},
+      -- { name = 'rg', option = { additional_arguments = '--smart-case --hidden' }},
       { name = 'path' },
       -- { name = 'codeium' },
       -- { name = 'omni' },

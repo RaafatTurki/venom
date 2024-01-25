@@ -4,7 +4,7 @@ local M = {
   lspconfig                   = { url = "neovim/nvim-lspconfig" },
   mason_lspconfig             = { url = "williamboman/mason-lspconfig.nvim" },
   neodev                      = { url = "folke/neodev.nvim" },
-  mini                        = { url = "echasnovski/mini.nvim", },
+  mini                        = { url = "echasnovski/mini.nvim" },
   treesitter                  = { url = "nvim-treesitter/nvim-treesitter" },
   treesitter_ctx_cms          = { url = "JoosepAlviste/nvim-ts-context-commentstring" },
   -- treesitter_ctx              = { url = "nvim-treesitter/nvim-treesitter-context" },

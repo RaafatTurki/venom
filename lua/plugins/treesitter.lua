@@ -94,6 +94,10 @@ M.config = function()
     },
   }
 
+  require 'ts_context_commentstring'.setup {
+    enable_autocmd = false,
+  }
+
   -- require 'treesitter-context'.setup {
   --   -- max_lines = 0,
   --   -- min_window_height = 0,

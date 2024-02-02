@@ -186,7 +186,8 @@ end
 -- Neovim Utils
 --- return if a file size is considered huge
 function M.is_file_huge(file_path)
-  local huge_buffer_size = 1000000 -- 1MB
+  -- local huge_buffer_size = 1000000 -- 1MB
+  local huge_buffer_size = 100000 -- 100KB
   local ok, stats = pcall(vim.loop.fs_stat, file_path)
   if ok and stats then return stats.size > huge_buffer_size end
 end

@@ -1,3 +1,4 @@
+local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 
@@ -96,7 +97,7 @@ M.config = function()
         custom_commentstring = function()
           -- use tree sitter powered commentstring calculation if present
           local ts_ctx_cms = prequire 'ts_context_commentstring.internal'
-          if ts_ctx_cms then
+          if ts_ctx_cms and U.is_buf_huge(vim.api.nvim_get_current_buf()) then
             return ts_ctx_cms.calculate_commentstring()
           else
             return vim.bo.commentstring

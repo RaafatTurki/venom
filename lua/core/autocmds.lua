@@ -19,9 +19,11 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
 
     local ft_handlers = {
       cs = function() vim.bo.commentstring = "// %s" end,
+      cpp = function() vim.bo.commentstring = "// %s" end,
       dart = function() vim.bo.commentstring = "// %s" end,
       prisma = function() vim.bo.commentstring = "// %s" end,
       typst = function() vim.bo.commentstring = "// %s" end,
+      glsl = function() vim.bo.commentstring = "// %s" end,
       dosini = function() vim.bo.commentstring = "# %s" end,
       resolv = function() vim.bo.commentstring = "# %s" end,
       hurl = function() vim.bo.commentstring = "# %s" end,
@@ -88,6 +90,19 @@ vim.cmd [[
 
   augroup base
 ]]
+
+-- -- huge buffer detection
+-- vim.api.nvim_create_autocmd({ "BufReadPre" }, {
+--   callback = function(ev)
+--     if U.is_buf_huge(ev.buf) then
+--       ---@diagnostic disable-next-line: inject-field
+--       vim.b.huge = true
+--     else
+--       ---@diagnostic disable-next-line: inject-field
+--       vim.b.huge = false
+--     end
+--   end,
+-- })
 
 -- vim.api.nvim_create_autocmd({ "InsertCharPre" }, {
 --   callback = function(ev)

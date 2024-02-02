@@ -13,7 +13,7 @@ M.config = function()
       topdelete    = { text = '‾' },
       changedelete = { text = '~' },
     },
-    _extmark_signs = false, -- NOTE: using legacy signs to make them visible in statuscol.nvim
+    _extmark_signs = false, -- NOTE: using legacy signs to make them visible in statuscolumn
     max_file_length = 40000,
   }
 

@@ -101,7 +101,7 @@ M.config = function()
     {
       {
         condition = function(self) return vim.api.nvim_buf_get_option(self.bufnr, 'modified') end,
-        provider = '•',
+        provider = '• ',
         hl = 'DiffAdd',
       },
       {
@@ -110,7 +110,7 @@ M.config = function()
           return not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or
             vim.api.nvim_buf_get_option(self.bufnr, "readonly")
         end,
-        provider = '',
+        provider = ' ',
         hl = 'ErrorMsg',
       },
       {
@@ -118,7 +118,7 @@ M.config = function()
           if self.bufnr == nil then return end
           return (buffers.buflist:get_buf_info(buffers.buflist:get_buf_index({bufnr = self.bufnr})).buf.is_huge)
         end,
-        provider = '',
+        provider = ' ',
         hl = 'WarningMsg',
       },
     },

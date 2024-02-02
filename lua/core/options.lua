@@ -9,6 +9,7 @@ local opts = {
   expandtab       = true,
   swapfile        = false,
   showmode        = false,
+  writebackup     = false,
   splitbelow      = true,
   splitright      = true,
   ignorecase      = true,
@@ -73,7 +74,6 @@ vim.opt.whichwrap:append '<,>,[,]' -- arrow keys can wrap around to next line
 -- vim.opt.spelllang     = { 'en_us' }
 
 
--- writebackup      = false,
 -- spell            = true,
 -- scrolloff        = 4,
 -- wildmenu         = false,

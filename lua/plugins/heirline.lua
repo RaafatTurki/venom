@@ -248,7 +248,7 @@ M.config = function()
       local message = require "copilot.api".status.data.message
       -- local message = require "copilot.api".status.data.status
       if message ~= '' then message = ' ' .. message end
-      return icons.kind.Copilot .. message
+      return icons.copilot.Copilot .. message
     end,
     space,
     hl = function()
@@ -332,7 +332,11 @@ M.config = function()
     end,
     provider = function(self)
       local search = self.search
-      return string.format(icons.misc.search .. " %d/%d", search.current, math.min(search.total, search.maxcount))
+      return string.format(
+        icons.misc.search .. " %d/%d",
+        search.current,
+        math.min(search.total, search.maxcount)
+      )
     end,
     space
   }

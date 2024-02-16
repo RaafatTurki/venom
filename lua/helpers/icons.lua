@@ -4,7 +4,7 @@ local icon_sets = {
   diag = {
     cozette  = { Error = "", Warn = "", Hint = "", Info = "" },
     codicons = { Error = "", Warn = "", Hint = "", Info = "" },
-    ascii    = { Error = "E", Warn = "W", Hint = "", Info = "I" },
+    ascii    = { Error = "E", Warn = "W", Hint = "H", Info = "I" },
   },
   code_action = {
     nerdfont = {
@@ -40,8 +40,6 @@ local icon_sets = {
       Event         = '',
       Operator      = '',
       TypeParameter = '',
-
-      Copilot       = '',
     },
     ascii = {
       Text          = 'txt',
@@ -69,8 +67,6 @@ local icon_sets = {
       Event         = 'evn',
       Operator      = 'opr',
       TypeParameter = 'typ',
-
-      Copilot       = 'cop',
     },
   },
   dap = {
@@ -131,6 +127,18 @@ local icon_sets = {
       Null      = 'nil',
     },
   },
+  copilot = {
+    nerdfont = {
+      Copilot       = '',
+      CopilotError  = '',
+      CopilotWarn   = '',
+    },
+    ascii = {
+      Copilot       = 'cplt',
+      CopilotError  = 'cplt-err',
+      CopilotWarn   = 'cplt-wrn',
+    },
+  },
   misc = {
     nerdfont = {
       sessions = '󱂬',
@@ -186,6 +194,7 @@ M.icons = {
   dap = icon_sets.dap.nerdfont,
   vcs = icon_sets.vcs.ascii,
   navic = icon_sets.navic.codicons,
+  copilot = icon_sets.copilot.nerdfont,
   misc = icon_sets.misc.nerdfont,
 }
 

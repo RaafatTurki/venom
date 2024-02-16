@@ -15,6 +15,9 @@ M.config = function()
     border_style = 'none',
     -- scope = 'file',
     blacklisted_modes = { 'i' },
+    blacklisted_severities = {
+      vim.diagnostic.severity.HINT,
+    },
     icons = {
       error = icons.diag.Error,
       warn = icons.diag.Warn,

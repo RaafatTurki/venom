@@ -3,6 +3,7 @@ local M = {
   mason                       = { url = "williamboman/mason.nvim" },
   lspconfig                   = { url = "neovim/nvim-lspconfig" },
   mason_lspconfig             = { url = "williamboman/mason-lspconfig.nvim" },
+  typescript_tools            = { url = "pmizio/typescript-tools.nvim" },
   neodev                      = { url = "folke/neodev.nvim" },
   mini                        = { url = "echasnovski/mini.nvim" },
   treesitter                  = { url = "nvim-treesitter/nvim-treesitter" },

@@ -10,9 +10,9 @@ M.ft = "hurl"
 
 M.config = function()
   require "hurl".setup {
-    -- env_file = {
-    --   'example.env',
-    -- },
+    env_file = {
+      '.env',
+    },
     mode = "popup",
     -- mode = "split",
   }

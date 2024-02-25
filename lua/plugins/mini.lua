@@ -84,9 +84,9 @@ M.config = function()
   if mini_comment then
     mini_comment.setup {
       mappings = {
-        comment = '<space>c',
-        comment_line = '<space>c',
-        comment_visual = '<space>c',
+        comment = '<leader>c',
+        comment_line = '<leader>c',
+        comment_visual = '<leader>c',
         textobject = '',
       },
       hooks = {
@@ -96,12 +96,7 @@ M.config = function()
       options = {
         custom_commentstring = function()
           -- use tree sitter powered commentstring calculation if present
-          local ts_ctx_cms = prequire 'ts_context_commentstring.internal'
-          if ts_ctx_cms and U.is_buf_huge(vim.api.nvim_get_current_buf()) then
-            return ts_ctx_cms.calculate_commentstring()
-          else
-            return vim.bo.commentstring
-          end
+          return prequire 'ts_context_commentstring'.calculate_commentstring() or vim.bo.commentstring
         end,
         ignore_blank_line = true,
       },

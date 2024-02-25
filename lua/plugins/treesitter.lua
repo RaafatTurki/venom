@@ -4,6 +4,8 @@ local buffers = require "helpers.buffers"
 
 local M = { plugins_info.treesitter.url }
 
+-- M.dev = true
+
 M.dependencies = {
   plugins_info.treesitter_ctx_cms.url,
   -- plugins_info.treesitter_ctx.url,
@@ -21,8 +23,7 @@ M.config = function()
   require 'nvim-treesitter.configs'.setup {
     ensure_installed = {
       'bash',
-      'c',
-      -- 'comment',
+      'comment',
       'c_sharp',
       'cmake',
       'cpp',
@@ -47,7 +48,6 @@ M.config = function()
       'json',
       'jsonc',
       'latex',
-      'lua',
       'make',
       'markdown',
       'markdown_inline',
@@ -58,7 +58,6 @@ M.config = function()
       'prisma',
       'pug',
       'python',
-      'query',
       'regex',
       'rust',
       'scss',
@@ -68,9 +67,15 @@ M.config = function()
       'sxhkdrc',
       'toml',
       'typescript',
-      'vim',
+      'typst',
       'vimdoc',
       'yaml',
+
+      -- parsers that are bundled but arch neovim package does not include them
+      'c',
+      'vim',
+      'query',
+      'lua',
     },
     highlight = {
       enable = true,
@@ -93,6 +98,9 @@ M.config = function()
       end,
     },
   }
+
+
+  vim.g.skip_ts_context_commentstring_module = true
 
   require 'ts_context_commentstring'.setup {
     enable_autocmd = false,

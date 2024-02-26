@@ -28,6 +28,8 @@
   "omnisharp-extended-lsp.nvim": { "branch": "main", "commit": "4be2e8689067494ed7e5a4f1221adc31d1a07783" },
   "plenary.nvim": { "branch": "master", "commit": "4f71c0c4a196ceb656c824a70792f3df3ce6bb6d" },
   "sfm-git.nvim": { "branch": "master", "commit": "248eb4b64c26eb4e6b653b04a0c6859941c4c1de" },
+  "sfm.nvim": { "branch": "main", "commit": "71986ba4de02cbf90ff22488dbbcd9983dd945b0" },
   "typescript-tools.nvim": { "branch": "master", "commit": "c43d9580c3ff5999a1eabca849f807ab33787ea7" },
-  "typst.vim": { "branch": "main", "commit": "e28d440c7ba4df2516d7d7f908c4fb664a8cf86c" }
+  "typst.vim": { "branch": "main", "commit": "e28d440c7ba4df2516d7d7f908c4fb664a8cf86c" },
+  "vim-asterisk": { "branch": "master", "commit": "77e97061d6691637a034258cc415d98670698459" }
 }

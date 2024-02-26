@@ -47,17 +47,19 @@ M.config = function()
   require "mason-lspconfig".setup()
   require "mason-lspconfig".setup_handlers {
     function(server_name)
-      M.setup_lspconfig_server(server_name, {})
+      M.setup_server_lspconfig(server_name, {})
     end,
     tsserver = function()
-      require "typescript-tools".setup {
+      local opts = M.extend_server_opts_w_shared_opts {
         settings = {
           expose_as_code_action = "all",
         }
       }
+
+      require "typescript-tools".setup(opts)
     end,
     clangd = function()
-      M.setup_lspconfig_server('clangd', {
+      M.setup_server_lspconfig('clangd', {
         cmd = {
           "clangd",
           "--offset-encoding=utf-16",
@@ -70,7 +72,7 @@ M.config = function()
         neodev.setup { library = { plugins = false } }
       end
 
-      M.setup_lspconfig_server('lua_ls', {
+      M.setup_server_lspconfig('lua_ls', {
         settings = {
           Lua = {
             diagnostics = { disable = { 'lowercase-global', 'trailing-space', 'unused-local' } },
@@ -90,10 +92,10 @@ M.config = function()
         }
       end
 
-      M.setup_lspconfig_server('omnisharp', opt)
+      M.setup_server_lspconfig('omnisharp', opt)
     end,
     texlab = function()
-      M.setup_lspconfig_server('texlab', {
+      M.setup_server_lspconfig('texlab', {
         settings = {
           texlab = {
             build = {
@@ -109,7 +111,7 @@ M.config = function()
 
   -- setting up non-mason servers
   if vim.fn.executable('godot') == 1 then
-    M.setup_lspconfig_server('gdscript', {
+    M.setup_server_lspconfig('gdscript', {
       cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
       flags = {
         debounce_text_changes = 150,
@@ -118,7 +120,7 @@ M.config = function()
   end
 
   if vim.fn.executable('dart') == 1 then
-    M.setup_lspconfig_server('dartls', {
+    M.setup_server_lspconfig('dartls', {
       -- cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
       -- flags = {
       --   debounce_text_changes = 150,
@@ -127,10 +129,8 @@ M.config = function()
   end
 end
 
--- lspconfig server setup wrapper
-M.setup_lspconfig_server = function(server_name, opts)
-  local lspconf = require 'lspconfig'
-
+-- server setup opts extender wrapper
+M.extend_server_opts_w_shared_opts = function(opts)
   -- setup shared capabilities
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
   if prequire "nvim-cmp" then
@@ -162,7 +162,13 @@ M.setup_lspconfig_server = function(server_name, opts)
     end
   }
 
-  lspconf[server_name].setup(vim.tbl_deep_extend('force', opts, shared_opts))
+  return vim.tbl_deep_extend('force', opts, shared_opts)
+end
+
+-- lspconfig server setup wrapper
+M.setup_server_lspconfig = function(server_name, opts)
+  local lspconf = require 'lspconfig'
+  lspconf[server_name].setup(M.extend_server_opts_w_shared_opts(opts))
 end
 
 return M

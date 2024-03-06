@@ -160,8 +160,8 @@ local c = {
   string    = green[10],
   type      = cyan[1],
   include   = lime[10],
+  special   = orange[2],
 
-  -- special   = yellow[5],
   -- tag       = grey[8],
 
   -- others
@@ -355,7 +355,7 @@ local highlights = {
   QuickFixLine    = { 'PmenuSel' },
   Search          = { bg = c.mg, bold = true },
   SignColumn      = { }, --
-  SpecialKey      = { fg = c.fold },
+  SpecialKey      = { fg = c.special },
   SpellBad        = { undercurl = true, sp = c.err },
   SpellCap        = { }, --
   SpellLocal      = { }, --

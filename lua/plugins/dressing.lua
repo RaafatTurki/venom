@@ -11,12 +11,12 @@ M.config = function()
       title_pos = "center",
     },
     select = {
-      -- enabled = false
-      backend = { "builtin" },
-      builtin = {
-        border = "single",
-        relative = "editor",
-      }
+      enabled = false
+      -- backend = { "builtin" },
+      -- builtin = {
+      --   border = "single",
+      --   relative = "editor",
+      -- }
     }
   }
 end

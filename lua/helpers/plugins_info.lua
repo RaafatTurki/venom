@@ -37,7 +37,7 @@ local M = {
   -- lsp_signature               = { url = "ray-x/lsp_signature.nvim" },
   lightbulb                   = { url = "kosayoda/nvim-lightbulb" },
   omnisharp_ext               = { url = "Hoffs/omnisharp-extended-lsp.nvim" },
-  typst_vim                   = { url = "kaarmu/typst.vim" },
+  -- typst_vim                   = { url = "kaarmu/typst.vim" },
   hurl                        = { url = "jellydn/hurl.nvim" },
   nui                         = { url = "MunifTanjim/nui.nvim" },
   -- image                       = { url = "3rd/image.nvim" },

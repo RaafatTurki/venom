@@ -16,11 +16,10 @@ M.dependencies = {
 
 M.config = function()
   local sfm = require "sfm"
-  local sfm_api = require "sfm.api"
-  local sfm_event = require "sfm.event"
-  -- local renamed_bufnr = nil
+  local api = require "sfm.api"
+  local event = require "sfm.event"
 
-  local sfm_explorer = sfm.setup({
+  local explorer = sfm.setup({
     view = {
       width = 35,
       selection_render_method = 'highlight',
@@ -50,7 +49,7 @@ M.config = function()
     },
   })
 
-  sfm_explorer:load_extension("sfm-git", {
+  explorer:load_extension("sfm-git", {
     debounce_interval_ms = 100,
     icons = {
       unstaged = icons.vcs.modified,
@@ -63,22 +62,22 @@ M.config = function()
     },
   })
 
-  keys.map("n", "<C-e>", sfm_api.explorer.toggle, "Toggle SFM")
+  keys.map("n", "<C-e>", api.explorer.toggle, "Toggle SFM")
 
   -- rename any related open buffers on file rename
   -- TODO: make any buffers that have a file in a subdirectory of the renamed dir to be renamed as well
-  sfm_explorer:subscribe(sfm_event.EntryRenamed, function(payload)
+  explorer:subscribe(event.EntryRenamed, function(payload)
     local from_path = payload["from_path"]
     local to_path = payload["to_path"]
 
     local index = buffers.buflist:get_buf_index({ file_path = from_path })
     if index then
-      renamed_bufnr = buffers.buflist:renamed_buf(index, to_path)
+      local renamed_bufnr = buffers.buflist:renamed_buf(index, to_path)
     end
   end)
 
   -- remove any related open buffers on file delete
-  sfm_explorer:subscribe(sfm_event.EntryDeleted, function(payload)
+  explorer:subscribe(event.EntryDeleted, function(payload)
     local path = payload["path"]
 
     local index = buffers.buflist:get_buf_index({ file_path = path })

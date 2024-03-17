@@ -45,6 +45,9 @@ vim.cmd [[
   au BufEnter *.svx setlocal ft=svelte
   au BufEnter *.typ setlocal ft=typst
   au BufEnter *.hurl setlocal ft=hurl
+
+  au BufEnter en.json setlocal wrap
+  au BufEnter ar.json setlocal wrap
   " au BufEnter .swcrc setlocal ft=json
   " au BufEnter tsconfig.json setlocal ft=jsonc
   " au BufEnter mimeapps.list setlocal ft=dosini
@@ -54,7 +57,7 @@ vim.cmd [[
   " au BufEnter pythonrc setlocal ft=python
   " au BufEnter sxhkdrc,*.sxhkdrc set ft=sxhkdrc
   " au BufEnter .classpath setlocal ft=xml
-  " au BufEnter .env* setlocal ft=sh
+  au BufEnter .env* setlocal ft=sh
   " au BufEnter .replit setlocal ft=toml
   " au BufEnter package.json setlocal nofoldenable
   " au BufEnter tsconfig.json setlocal nofoldenable

@@ -85,11 +85,10 @@ M.BufList = function()
       end
     end,
     remove_buf = function(self, bufnr)
-      for i, buf in ipairs(self.bufs) do
-        if buf.bufnr == bufnr then
-          table.remove(self.bufs, i)
-          -- events.buflist_update()
-        end
+      local index = self:get_buf_index({ bufnr = bufnr })
+      if index then
+        table.remove(self.bufs, index)
+        -- events.buflist_update()
       end
     end,
     set_current_buf = function(self, opts)

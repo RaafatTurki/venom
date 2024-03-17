@@ -68,6 +68,7 @@ M.config = function()
       'toml',
       'typescript',
       'typst',
+      'tsx',
       'vimdoc',
       'yaml',
 

@@ -5,7 +5,7 @@ local icons = require "helpers.icons".icons
 
 local M = { plugins_info.heirline.url }
 
-M.dependecies = {
+M.dependencies = {
   plugins_info.devicons.url,
 }
 

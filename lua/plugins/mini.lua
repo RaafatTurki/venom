@@ -97,13 +97,13 @@ M.config = function()
         hex_colors = mini_hipatterns.gen_highlighter.hex_color(),
 
         -- highlight named color string (red)
-        named_colors = {
-          pattern = '%w+',
-          group = function(_, match)
-            local hex = precomputed_colors.all[match]
-            if hex ~= nil then return mini_hipatterns.compute_hex_color_group(hex, 'bg') end
-          end
-        },
+        -- named_colors = {
+        --   pattern = '%w+',
+        --   group = function(_, match)
+        --     local hex = precomputed_colors.all[match]
+        --     if hex ~= nil then return mini_hipatterns.compute_hex_color_group(hex, 'bg') end
+        --   end
+        -- },
       }
     }
   end

@@ -136,9 +136,9 @@ local c = {
   add       = green[2],
   mod       = blue[1],
   del       = red[1],
-  add_alt   = mix(green[2], black[1], 0.2, 0.8),
-  mod_alt   = mix(blue[1], black[1], 0.2, 0.8),
-  del_alt   = mix(red[1], black[1], 0.2, 0.8),
+  add_alt   = mix(green[2], black[1], 0.6, 0.4),
+  mod_alt   = mix(blue[1], black[1], 0.6, 0.4),
+  del_alt   = mix(red[1], black[1], 0.6, 0.4),
 
   -- vcs
   staged    = green[4],
@@ -324,9 +324,9 @@ local highlights = {
   CursorLineNr    = { 'CursorLine' },
   CursorLineSign  = { }, --
   DiffAdd         = { fg = c.add },
-  DiffChange      = { fg = c.mod },
+  DiffChange      = { fg = c.mod_alt },
   DiffDelete      = { fg = c.del },
-  DiffText        = { fg = c.mod_alt },
+  DiffText        = { fg = c.mod },
   Directory       = { }, --
   EndOfBuffer     = { }, --
   ErrorMsg        = { fg = c.err },
@@ -768,15 +768,15 @@ NeoTreeWindowsHidden        = { '@debug' };
   MiniTrailspace          = { "Whitespace" };
 
 
-  MiniNotifyBorder       = { "FloatBorder" };
-  MiniNotifyNormal       = { "Folded" };
-  MiniNotifyTitle        = { "FloatTitle" };
+  MiniNotifyBorder        = { "FloatBorder" };
+  MiniNotifyNormal        = { "Folded" };
+  MiniNotifyTitle         = { "FloatTitle" };
 
-  MiniPickMatchCurrent = { "PmenuSel" };
-  MiniPickMatchMarked = { "Type" };
-  MiniPickMatchRanges = { "Title" };
-  MiniPickNormal = { "Folded" };
-  MiniPickPrompt = { "Title" };
+  MiniPickMatchCurrent    = { "PmenuSel" };
+  MiniPickMatchMarked     = { "Type" };
+  MiniPickMatchRanges     = { "Title" };
+  MiniPickNormal          = { "Folded" };
+  MiniPickPrompt          = { "Title" };
 
   -- CUTSOM GROUPS
   -- NormalAlt               = { bg = c.bg_alt };

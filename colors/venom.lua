@@ -793,6 +793,9 @@ NeoTreeWindowsHidden        = { '@debug' };
   DapBreakpointRejected   = { fg = c.warn };
   DapLogPoint             = { fg = c.type };
   DapStopped              = { bg = c.warn_dim };
+
+  CccFloatBorder          = { "FloatBorder" };
+  CccFloatNormal          = { fg = c.fg };
 }
 
 set_hls(highlights)

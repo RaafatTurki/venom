@@ -40,6 +40,7 @@ local M = {
   -- typst_vim                   = { url = "kaarmu/typst.vim" },
   hurl                        = { url = "jellydn/hurl.nvim" },
   nui                         = { url = "MunifTanjim/nui.nvim" },
+  ccc                         = { url = "uga-rosa/ccc.nvim" },
   -- image                       = { url = "3rd/image.nvim" },
   -- img_clip                    = { url = "hakonharnes/img-clip.nvim" },
   -- fidget                      = { url = "j-hui/fidget.nvim" },

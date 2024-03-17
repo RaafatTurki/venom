@@ -12,16 +12,49 @@ M.config = function()
         width = 1,
         winblend = 0,
         show_integration_count = false,
-      }
+      },
+      symbols = {
+        -- encode = mini_map.gen_encode_symbols.dot('4x2'),
+        -- encode = mini_map.gen_encode_symbols.block('2x1'),
+        -- encode = mini_map.gen_encode_symbols.shade('2x1'),
+        scroll_line = '┃',
+        scroll_view = '│',
+      },
+      integrations = {
+        -- mini_map.gen_integration.builtin_search(),
+        -- mini_map.gen_integration.gitsigns(),
+        -- mini_map.gen_integration.diagnostic(),
+      },
     }
     -- open on vim enter
     vim.api.nvim_create_autocmd('VimEnter', {
       callback = function(ev) mini_map.open() end
     })
-    -- refresh on window resize
-    vim.api.nvim_create_autocmd('VimResized', {
-      callback = function(ev) mini_map.refresh() end
+
+    -- hide on insert
+    vim.api.nvim_create_autocmd('ModeChanged', {
+      callback = function(ev)
+        local mode = vim.api.nvim_get_mode().mode
+        if mode == 'i' then
+          mini_map.close()
+        else
+          mini_map.open()
+        end
+      end
     })
+
+    -- hide on normal when cursor is on the far edge 
+    -- vim.api.nvim_create_autocmd('CursorMoved', {
+    --   callback = function(ev)
+    --     log(ev)
+    --     -- if cursor is on the right most edge of the entire editor close minimap, else open it
+    --     -- if ... then
+    --     --   mini_map.close()
+    --     -- else
+    --     --   mini_map.open()
+    --     -- end
+    --   end
+    -- })
   end
 
   local mini_bufremove = require 'mini.bufremove'

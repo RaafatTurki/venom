@@ -1,6 +1,7 @@
 local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
+local precomputed_colors = require "helpers.precomputed_colors"
 
 local M = { plugins_info.mini.url }
 
@@ -78,6 +79,12 @@ M.config = function()
 
   local mini_hipatterns = require 'mini.hipatterns'
   if mini_hipatterns then
+
+    -- precomputing hex values for named colors
+    -- local color_map_uc = vim.tbl_map(function(v) return string.format('#%06x', v) end, vim.api.nvim_get_color_map())
+    -- local color_map_lc = {}
+    -- for k, v in pairs(color_map_uc) do color_map_lc[string.lower(k)] = v end
+
     mini_hipatterns.setup {
       highlighters = {
         -- highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
@@ -86,12 +93,17 @@ M.config = function()
         todo  = { pattern = '%f[%w]()TODO()%f[%W]',  group = 'MiniHipatternsTodo'  },
         note  = { pattern = '%f[%w]()NOTE()%f[%W]',  group = 'MiniHipatternsNote'  },
 
-        -- highlight hex color strings (`#rrggbb`) using that color
-        hex_color = mini_hipatterns.gen_highlighter.hex_color(),
+        -- highlight hex color strings (#FF0000, #FFFF00)
+        hex_colors = mini_hipatterns.gen_highlighter.hex_color(),
 
-        -- TODO: highlight short hex colors $rgb
-        -- #F00
-        -- #FF0000
+        -- highlight named color string (red)
+        named_colors = {
+          pattern = '%w+',
+          group = function(_, match)
+            local hex = precomputed_colors.all[match]
+            if hex ~= nil then return mini_hipatterns.compute_hex_color_group(hex, 'bg') end
+          end
+        },
       }
     }
   end

@@ -45,4 +45,5 @@ M.config = function()
   keys.map("i", "<M-Right>", function() require("copilot.suggestion").prev() end, "Previous copilot suggestion")
 end
 
-return M
+-- return M
+return {}

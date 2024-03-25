@@ -129,11 +129,13 @@ local icon_sets = {
   },
   copilot = {
     nerdfont = {
+      Codeium       = '',
       Copilot       = '',
       CopilotError  = '',
       CopilotWarn   = '',
     },
     ascii = {
+      Codeium       = 'codm',
       Copilot       = 'cplt',
       CopilotError  = 'cplt-err',
       CopilotWarn   = 'cplt-wrn',

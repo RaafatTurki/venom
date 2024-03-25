@@ -91,13 +91,13 @@ M.config = function()
       ['<C-Up>']      = cmp.mapping.select_prev_item(),
     },
     sources = {
-      { name = 'nvim_lsp' },
-      { name = 'luasnip' },
       -- { name = 'nvim_lua' },
-      { name = 'buffer' },
       -- { name = 'rg', option = { additional_arguments = '--smart-case --hidden' }},
       { name = 'path' },
-      -- { name = 'codeium' },
+      { name = 'codeium', max_item_count = 3 },
+      { name = 'buffer', max_item_count = 3 },
+      { name = 'nvim_lsp' },
+      { name = 'luasnip' },
       -- { name = 'omni' },
       -- { name = 'spell' },
       -- { name = 'nvim_lsp_signature_help' },
@@ -106,7 +106,11 @@ M.config = function()
     formatting = {
       fields = { "kind", "abbr", "menu" },
       format = function(entry, vim_item)
-        vim_item.kind = icons.kind[vim_item.kind] or ''
+        if entry.source.name == "codeium" then
+          vim_item.kind = icons.copilot.Codeium or ''
+        else
+          vim_item.kind = icons.kind[vim_item.kind] or ''
+        end
         return vim_item
       end
     },

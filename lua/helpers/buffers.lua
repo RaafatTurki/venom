@@ -263,22 +263,44 @@ M.aggregate = function()
 end
 
 M.populate = function(data)
-  for i, file_path in ipairs(data.file_paths) do
-    if U.is_file_exists(file_path) then
-      -- edit the first file to prevent the creation of a [No Name] buffer
-      if i == 1 then
-        vim.cmd.edit(vim.fn.fnameescape(file_path))
-      else
-        vim.cmd.badd(vim.fn.fnameescape(file_path))
-      end
+  local is_curr_file_added = false
 
-      if i == data.current_file_index then
-        -- M.buflist:get_buf_info(i).buf:focus()
-        M.buflist:set_current_buf({ index = i })
+  local function baddFile(path, useEdit)
+    useEdit = useEdit or false
+
+    if U.is_file_exists(path) then
+      if useEdit then
+        vim.cmd.edit(vim.fn.fnameescape(path))
+      else
+        vim.cmd.badd(vim.fn.fnameescape(path))
       end
+      return true
     else
-      log("file \"" .. file_path .. "\" missing from cwd")
+      log("file \"" .. path .. "\" missing from cwd")
+      return false
     end
+  end
+
+  if data.current_file_index and data.current_file_index <= #data.file_paths then
+    is_curr_file_added = baddFile(data.file_paths[data.current_file_index], true)
+  end
+
+
+  for i, file_path in ipairs(data.file_paths) do
+    -- edit the first file to prevent the creation of a [No Name] buffer
+    if i == 1 and not is_curr_file_added then
+      baddFile(file_path, true)
+    end
+
+    if i ~= data.current_file_index then
+      baddFile(file_path, false)
+      -- M.buflist:get_buf_info(i).buf:focus()
+      -- M.buflist:set_current_buf({ index = i })
+    end
+  end
+
+  if is_curr_file_added then
+    M.buflist:shift_buf(1, data.current_file_index-1)
   end
 
   -- events.buflist_update()

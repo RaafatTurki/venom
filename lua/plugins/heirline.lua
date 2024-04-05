@@ -1,6 +1,7 @@
 local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local buffers = require "helpers.buffers"
+local sessions = require "helpers.sessions"
 local icons = require "helpers.icons".icons
 
 local M = { plugins_info.heirline.url }
@@ -353,6 +354,17 @@ M.config = function()
     update = { "RecordingEnter", "RecordingLeave" }
   }
 
+  local local_session = {
+    condition = function()
+      return sessions.is_in_local_session
+    end,
+    provider = function()
+      return icons.misc.sessions
+    end,
+    space,
+    hl = "WarningMsg",
+  }
+
   local file_encoding = {
     provider = function()
       local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc -- :h 'enc'
@@ -543,6 +555,7 @@ M.config = function()
         lsp_active,
         search_count,
         macro_rec,
+        local_session,
         file_encoding, space,
         filetype, space,
         ruler

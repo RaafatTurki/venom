@@ -1,6 +1,7 @@
 local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
+local buffers = require "helpers.buffers"
 local precomputed_colors = require "helpers.precomputed_colors"
 
 local M = { plugins_info.mini.url }
@@ -108,6 +109,152 @@ M.config = function()
     }
   end
 
+  local mini_files = require 'mini.files'
+  if mini_files then
+    mini_files.setup {
+      mappings = {
+        close       = 'q',
+        go_in_plus  = '<CR>',
+        go_in       = '<A-Right>',
+        go_out      = '<A-Left>',
+        reset       = 'r',
+        reveal_cwd  = '@',
+        show_help   = 'g?',
+        synchronize = '<C-s>',
+        trim_left   = '<',
+        trim_right  = '>',
+      },
+      options = {
+        permanent_delete = false,
+      },
+      content = {
+        filter = function(entry)
+          return entry.name ~= '.DS_Store' and entry.name ~= '.git' and entry.name ~= '.direnv'
+        end,
+        -- sort = function(entries)
+        --   -- technically can filter entries here too, and checking gitignore for _every entry individually_
+        --   -- like I would have to in `content.filter` above is too slow. Here we can give it _all_ the entries
+        --   -- at once, which is much more performant.
+        --   local all_paths = table.concat(
+        --     vim.tbl_map(function(entry)
+        --       return entry.path
+        --     end, entries),
+        --     '\n'
+        --   )
+        --   local output_lines = {}
+        --   local job_id = vim.fn.jobstart({ 'git', 'check-ignore', '--stdin' }, {
+        --     stdout_buffered = true,
+        --     on_stdout = function(_, data)
+        --       output_lines = data
+        --     end,
+        --   })
+
+        --   -- command failed to run
+        --   if job_id < 1 then
+        --     return entries
+        --   end
+
+        --   -- send paths via STDIN
+        --   vim.fn.chansend(job_id, all_paths)
+        --   vim.fn.chanclose(job_id, 'stdin')
+        --   vim.fn.jobwait({ job_id })
+        --   return require('mini.files').default_sort(vim.tbl_filter(function(entry)
+        --     return not vim.tbl_contains(output_lines, entry.path)
+        --   end, entries))
+        -- end,
+      },
+      -- windows = {
+      --   preview = true,
+      --   width_focus = 50,
+      --   width_nofocus = 15,
+      --   width_preview = 80,
+      -- },
+    }
+
+    keys.map("n", "<C-e>", function()
+      if not mini_files.close() then mini_files.open() end
+    end, "Open files")
+
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "MiniFilesActionDelete",
+      nested = true,
+      callback = function(ev)
+        local index = buffers.buflist:get_buf_index({ file_path = ev.data.from })
+
+        -- TODO: if deleted path is a dir, remove all buffer for children files
+        if mini_bufremove and index then
+          local bufnr = buffers.buflist:get_buf_info(index).buf.bufnr
+          mini_bufremove.delete(bufnr)
+        end
+      end
+    })
+
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "MiniFilesActionRename",
+      nested = true,
+      callback = function(ev)
+        local index = buffers.buflist:get_buf_index({ file_path = ev.data.from })
+        if index then
+          -- TODO: fix it, this doesn't work on focused buffers
+          local renamed_bufnr = buffers.buflist:renamed_buf(index, ev.data.to)
+        end
+      end
+    })
+
+
+    local ns_mini_files_git = vim.api.nvim_create_namespace("mini_files_git")
+
+    local function get_git_status(file_path)
+      local cmd = "git -C " .. vim.fn.shellescape(vim.fn.expand('%:p:h')) .. " status --short " .. vim.fn.shellescape(file_path)
+      local output = vim.fn.system(cmd)
+
+      local symbol_map = {
+        [' '] = { '', '' },
+        [''] = { '', '' },
+
+        ['?'] = { '?', 'Comment' },
+        ['A'] = { '+', 'GitSignsAdd' },
+        ['M'] = { '•', 'GitSignsChange' },
+        ['D'] = { '-', 'GitSignsDelete' },
+        ['R'] = { 'R', 'GitSignsChange' },
+        ['C'] = { 'C', 'GitSignsAdd' },
+        ['U'] = { 'CONF', 'GitSignsDelete' },
+      }
+
+      if output then
+        local symbol = output:sub(1, 1)
+        if symbol_map[symbol] then
+          return symbol_map[symbol]
+        else
+          return { '>:C', 'GitSignsDelete' }
+        end
+      end
+
+      return nil
+    end
+
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "MiniFilesBufferUpdate",
+      -- nested = true,
+      callback = function(ev)
+        local bufnr = ev.data.buf_id
+        local nlines = vim.api.nvim_buf_line_count(bufnr)
+
+        for i = 1, nlines do
+          local entry = mini_files.get_fs_entry(bufnr, i)
+          local status = get_git_status(entry.path)
+
+          if status then
+            vim.api.nvim_buf_set_extmark(ev.data.buf_id, ns_mini_files_git, i-1, 0, {
+              virt_text = { status },
+              virt_text_pos = "right_align",
+            })
+          end
+
+        end
+      end
+    })
+  end
 
 
   -- local ts_ctx_cms = prequire 'ts_context_commentstring'

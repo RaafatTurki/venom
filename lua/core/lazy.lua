@@ -25,7 +25,7 @@ lazy.setup("plugins", {
     colorscheme = { colorscheme }
   },
   ui = {
-    size = { width = 142, height = 0.8 },
+    size = { width = 0.8, height = 0.8 },
     wrap = false,
     border = 'single',
   },

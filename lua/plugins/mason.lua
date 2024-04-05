@@ -11,6 +11,7 @@ M.dependencies = {
   plugins_info.neodev.url,
   plugins_info.omnisharp_ext.url,
   { plugins_info.typescript_tools.url, dependencies = plugins_info.plenary.url },
+  plugins_info.ts_error_translator.url,
   -- plugins_info.lsp_overloads.url,
 }
 
@@ -53,6 +54,12 @@ M.config = function()
       local opts = M.extend_server_opts_w_shared_opts {
         settings = {
           expose_as_code_action = "all",
+        },
+        handlers = {
+          ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+            require("ts-error-translator").translate_diagnostics(err, result, ctx, config)
+            vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
+          end
         }
       }
 

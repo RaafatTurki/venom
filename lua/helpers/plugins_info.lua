@@ -4,6 +4,7 @@ local M = {
   lspconfig                   = { url = "neovim/nvim-lspconfig" },
   mason_lspconfig             = { url = "williamboman/mason-lspconfig.nvim" },
   typescript_tools            = { url = "pmizio/typescript-tools.nvim" },
+  ts_error_translator         = { url = "dmmulroy/ts-error-translator.nvim" },
   neodev                      = { url = "folke/neodev.nvim" },
   mini                        = { url = "echasnovski/mini.nvim" },
   treesitter                  = { url = "nvim-treesitter/nvim-treesitter" },

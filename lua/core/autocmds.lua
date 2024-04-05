@@ -48,7 +48,7 @@ vim.cmd [[
 
   au BufEnter en.json setlocal wrap
   au BufEnter ar.json setlocal wrap
-  " au BufEnter .swcrc setlocal ft=json
+  au BufEnter .swcrc setlocal ft=json
   " au BufEnter tsconfig.json setlocal ft=jsonc
   " au BufEnter mimeapps.list setlocal ft=dosini
   " au BufEnter PKGBUILD.* setlocal ft=PKGBUILD

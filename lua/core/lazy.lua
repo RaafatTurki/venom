@@ -28,6 +28,19 @@ lazy.setup("plugins", {
     size = { width = 0.8, height = 0.8 },
     wrap = false,
     border = 'single',
+    backdrop = 100,
+    -- pills = false,
+    custom_keys = {
+      ["<localleader>l"] = false,
+      ["<localleader>g"] = {
+        function(plugin) require("lazy.util").float_term({ "gitui" }, { cwd = plugin.dir }) end,
+        desc = "Open gitui in plugin dir",
+      },
+      ["<localleader>t"] = {
+        function(plugin) require("lazy.util").float_term(nil, { cwd = plugin.dir }) end,
+        desc = "Open terminal in plugin dir",
+      },
+    },
   },
   checker = {
     enabled = true,

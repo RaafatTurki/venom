@@ -5,13 +5,12 @@ local M = { plugins_info.dressing.url }
 M.config = function()
   require "dressing".setup {
     input = {
-      -- enabled = false
       border = "single",
       relative = "editor",
       title_pos = "center",
     },
     select = {
-      enabled = false
+      enabled = false -- mini.pick
       -- backend = { "builtin" },
       -- builtin = {
       --   border = "single",

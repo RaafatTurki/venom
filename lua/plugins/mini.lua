@@ -6,6 +6,10 @@ local precomputed_colors = require "helpers.precomputed_colors"
 
 local M = { plugins_info.mini.url }
 
+M.dependencies = {
+  plugins_info.devicons.url,
+}
+
 M.config = function()
   local mini_map = require "mini.map"
   if mini_map then
@@ -28,6 +32,12 @@ M.config = function()
         -- mini_map.gen_integration.diagnostic(),
       },
     }
+
+    -- refresh on window resize
+    vim.api.nvim_create_autocmd('VimResized', {
+      callback = function(ev) mini_map.refresh() end
+    })
+
     -- open on vim enter
     vim.api.nvim_create_autocmd('VimEnter', {
       callback = function(ev) mini_map.open() end
@@ -372,7 +382,7 @@ M.config = function()
       },
     }
 
-    vim.notify = mini_notify.make_notify()
+    -- vim.notify = mini_notify.make_notify()
   end
 
   -- TODO: clue

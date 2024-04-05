@@ -470,6 +470,7 @@ M.config = function()
       return str .. "%*"
       -- return status_utils.stylize(str .. "%*", opts)
     end,
+    hl = "Normal",
     space,
   }
 
@@ -495,7 +496,7 @@ M.config = function()
       if self.sign then
         return self.sign.texthl
       else
-        return nil
+        return "Normal"
       end
     end,
   }

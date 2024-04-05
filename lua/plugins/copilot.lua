@@ -1,7 +1,9 @@
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 
-local M = { plugins_info.copilot.url }
+local M = {
+  -- plugins_info.copilot.url
+}
 
 M.cmd = "Copilot"
 M.build = ":Copilot auth"

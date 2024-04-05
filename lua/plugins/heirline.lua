@@ -552,7 +552,7 @@ M.config = function()
         align,
 
         lsp_diagnostics,
-        copilot,
+        -- copilot,
         lsp_active,
         search_count,
         macro_rec,

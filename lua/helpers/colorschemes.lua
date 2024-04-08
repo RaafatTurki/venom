@@ -1,5 +1,7 @@
 local M = {}
 
+M.colorscheme = "default"
+
 local function is_colorscheme_valid(name)
   if vim.tbl_contains(vim.fn.getcompletion("", "color"), name) then
     return true
@@ -12,7 +14,7 @@ function M.set_a_colorscheme(colorschemes)
   for _, name in ipairs(colorschemes) do
     if is_colorscheme_valid(name) then
       vim.cmd.colorscheme(name)
-      colorscheme = name
+      M.colorscheme = name
       break
     end
   end

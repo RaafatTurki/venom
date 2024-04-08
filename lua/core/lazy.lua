@@ -1,3 +1,5 @@
+colorschemes = require "helpers.colorschemes"
+
 -- install lazy.nvim if not already installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -22,7 +24,7 @@ lazy.setup("plugins", {
     path = "~/sectors/nvim/",
   },
   install = {
-    colorscheme = { colorscheme }
+    colorscheme = { colorschemes.colorscheme }
   },
   ui = {
     size = { width = 0.8, height = 0.8 },

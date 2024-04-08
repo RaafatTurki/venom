@@ -1,7 +1,5 @@
 log = require "helpers.logger"
 
-colorscheme = "default"
-
 function prequire(name)
   local ok, val = pcall(require, name)
   if ok then

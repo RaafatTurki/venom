@@ -12,7 +12,7 @@ M.config = function()
   require "corn".setup {
     -- auto_cmds = false,
     sort_method = 'column',
-    border_style = 'none',
+    -- border_style = 'none',
     -- scope = 'file',
     blacklisted_modes = { 'i' },
     blacklisted_severities = {

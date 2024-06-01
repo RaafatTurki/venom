@@ -14,7 +14,7 @@ local icon_sets = {
     }
   },
   kind = {
-    codicons = {
+    nerdfont = {
       Text          = '',
       Method        = '',
       Function      = '',
@@ -93,18 +93,27 @@ local icon_sets = {
     },
   },
   vcs = {
+    nerdfont = {
+      untracked   = '',
+      modified    = '•',
+      staged      = '',
+      conflicted  = '',
+      renamed     = '',
+      deleted     = '',
+      ignored     = '󰛑',
+    },
     ascii = {
-      untracked = "??",
-      modified = "M",
-      staged = "A",
-      conflicted = "CONF",
-      renamed = "R",
-      deleted = "D",
-      ignored = "!!",
-    }
+      untracked   = '?',
+      modified    = 'M',
+      staged      = 'A',
+      conflicted  = 'X',
+      renamed     = 'R',
+      deleted     = 'D',
+      ignored     = '!',
+    },
   },
   navic = {
-    codicons = {
+    nerdfont = {
       Namespace = '',
       Package   = '',
       String    = '',
@@ -143,6 +152,7 @@ local icon_sets = {
   },
   misc = {
     nerdfont = {
+      user = '',
       sessions = '󱂬',
       record = '󰑊',
       modified = '•',
@@ -192,10 +202,10 @@ local icon_sets = {
 M.icons = {
   diag = icon_sets.diag.cozette,
   code_action = icon_sets.code_action.nerdfont,
-  kind = icon_sets.kind.codicons,
+  kind = icon_sets.kind.nerdfont,
   dap = icon_sets.dap.nerdfont,
-  vcs = icon_sets.vcs.ascii,
-  navic = icon_sets.navic.codicons,
+  vcs = icon_sets.vcs.nerdfont,
+  navic = icon_sets.navic.nerdfont,
   copilot = icon_sets.copilot.nerdfont,
   misc = icon_sets.misc.nerdfont,
 }

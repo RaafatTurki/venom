@@ -16,8 +16,14 @@ map("n", "<A-Right>", ":bnext<CR>", "Next buffer")
 map("n", "<A-Left>",  ":bprevious<CR>", "Previous buffer")
 
 -- goto and display to nex/prev lsp diagnositc
-map("n", 'd<Left>',           function() vim.diagnostic.goto_prev({ float = false }) end, "")
-map("n", 'd<Right>',          function() vim.diagnostic.goto_next({ float = false }) end, "")
+-- TODO: see what this severity stuff is about
+map("n", 'd<Left>',           function() vim.diagnostic.goto_prev({ float = false, severity = vim.diagnostic.severity.ERROR }) end, "Go To Previous Diagnostic")
+map("n", 'd<Right>',          function() vim.diagnostic.goto_next({ float = false, severity = vim.diagnostic.severity.ERROR }) end, "Go To Next Diagnostic")
+
+-- commenting
+-- VimEnter because it needs to be set after the _defaults.lua has executed
+map("n", "<leader>c", "gcc", { remap = true, desc = "Comment line" }, { "VimEnter" })
+map("x", "<leader>c", "gc", { remap = true, desc = "Comment visual" }, { "VimEnter" })
 
 -- tabs
 -- map("n", '<C-t>',             vim.cmd.tabnew, "")
@@ -27,8 +33,8 @@ map("n", 'd<Right>',          function() vim.diagnostic.goto_next({ float = fals
 -- indent
 map("n", "<S-Tab>",   "<<", "Deindent")
 map("n", "<Tab>",     ">>", "Indent")
-map("v", "<S-Tab>",   "<gv", "Visual deindent")
-map("v", "<Tab>",     ">gv", "Visual indent")
+map("x", "<S-Tab>",   "<gv", "Visual deindent")
+map("x", "<Tab>",     ">gv", "Visual indent")
 
 -- page shift
 map("n", "<C-Up>",    "<C-y>k", "Shift page up one line")
@@ -49,15 +55,18 @@ map("x", "<S-Right>", "$", "Go to end of line")
 
 -- misc
 -- preserve cursor position on visual yank
-map("x", "y",         "ygv<ESC>", "")
+map("x", "y",         "ygv<ESC>")
 -- move cursor to the start of the line on format
 -- map("n", "==",        "==_", "")
 -- map("x", "=",         "=gv_", "")
 -- copy and retain visual selection in visual mode
-map("x", "Y",         "ygv", "")
+map("x", "Y",         "ygv")
 -- make Y copy to end of line in normal mode
-map("n", "Y",         "y$", "")
+map("n", "Y",         "y$")
 -- go to end after a join
-map("n", "J",         "J$", "")
+map("n", "J",         "J$")
 -- split (opposite of J)
-map("n", "S",         "T hr<CR>k$", "")
+map("n", "S",         "T hr<CR>k$")
+-- make x use the black hole register
+map("n", "x",         '"_x')
+map("x", "x",         '"_x')

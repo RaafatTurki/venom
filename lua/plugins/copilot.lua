@@ -2,7 +2,7 @@ local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 
 local M = {
-  -- plugins_info.copilot.url
+  plugins_info.copilot.url
 }
 
 M.cmd = "Copilot"
@@ -47,5 +47,4 @@ M.config = function()
   keys.map("i", "<M-Right>", function() require("copilot.suggestion").prev() end, "Previous copilot suggestion")
 end
 
--- return M
-return {}
+return M

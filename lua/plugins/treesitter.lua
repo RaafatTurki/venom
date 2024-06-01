@@ -7,8 +7,9 @@ local M = { plugins_info.treesitter.url }
 -- M.dev = true
 
 M.dependencies = {
-  plugins_info.treesitter_ctx_cms.url,
+  -- plugins_info.treesitter_ctx_cms.url,
   -- plugins_info.treesitter_ctx.url,
+  plugins_info.treesitter_comments.url,
 }
 
 M.build = function()
@@ -47,6 +48,7 @@ M.config = function()
       'jsdoc',
       'json',
       'jsonc',
+      'kdl',
       'latex',
       'make',
       'markdown',
@@ -100,12 +102,13 @@ M.config = function()
     },
   }
 
+  require 'ts-comments'.setup {}
 
-  vim.g.skip_ts_context_commentstring_module = true
-
-  require 'ts_context_commentstring'.setup {
-    enable_autocmd = false,
-  }
+  -- vim.g.skip_ts_context_commentstring_module = true
+  --
+  -- require 'ts_context_commentstring'.setup {
+  --   enable_autocmd = false,
+  -- }
 
   -- require 'treesitter-context'.setup {
   --   -- max_lines = 0,

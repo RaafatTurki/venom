@@ -8,6 +8,7 @@ local M = { plugins_info.heirline.url }
 
 M.dependencies = {
   plugins_info.devicons.url,
+  plugins_info.heirline_components.url,
 }
 
 M.config = function()
@@ -79,7 +80,9 @@ M.config = function()
         else
           local filename = self.filename
           local extension = vim.fn.fnamemodify(filename, ':e')
-          self.icon, self.icon_color = require 'nvim-web-devicons'.get_icon_color(filename, extension, { default = true })
+          if prequire 'nvim-web-devicons' then
+            self.icon, self.icon_color = require 'nvim-web-devicons'.get_icon_color(filename, extension, { default = true })
+          end
         end
       end,
       provider = function(self) return self.icon and (self.icon) end,
@@ -158,7 +161,9 @@ M.config = function()
     init = function(self)
       local filename = vim.api.nvim_buf_get_name(0)
       local extension = vim.fn.fnamemodify(filename, ":e")
-      self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+      if prequire 'nvim-web-devicons' then
+        self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+      end
     end,
     provider = function(self)
       return self.icon
@@ -239,6 +244,18 @@ M.config = function()
       end,
       hl = "DiffChange"
     },
+  }
+
+  local root = {
+    condition = function(self)
+      self.user = os.getenv("USER")
+      return self.user == "root"
+    end,
+    provider = function(self)
+      return icons.misc.user .. " " .. self.user
+    end,
+    space,
+    hl = "ErrorMsg",
   }
 
   local copilot = {
@@ -437,6 +454,7 @@ M.config = function()
     provider = function(self)
       local wp = self.ffi.C.find_window_by_handle(0, self.ffi.new "Error") -- get window handler
       local width = self.ffi.C.compute_foldcolumn(wp, 0) -- get foldcolumn width
+
       -- get fold info of current line
       local foldinfo = width > 0 and self.ffi.C.fold_info(wp, vim.v.lnum) or { start = 0, level = 0, llevel = 0, lines = 0 }
 
@@ -470,35 +488,77 @@ M.config = function()
       return str .. "%*"
       -- return status_utils.stylize(str .. "%*", opts)
     end,
-    hl = "Normal",
     space,
   }
 
   local sc_gitsigns = {
     init = function(self)
-      local bufs_signs = vim.fn.sign_getplaced(vim.api.nvim_get_current_buf(), { group = "gitsigns_vimfn_signs_", lnum = vim.v.lnum })
-      local signs = bufs_signs[1].signs
+      self.ns = vim.api.nvim_get_namespaces()["gitsigns_signs_"]
+      -- self.ns = -1
+      self.extmarks = nil
+      self.extmark = nil
+      self.sign = nil
 
-      if #signs == 0 then
-        self.sign = nil
-      else
-        self.sign = vim.fn.sign_getdefined(signs[1].name)[1]
+      if self.ns then
+        self.extmarks = vim.api.nvim_buf_get_extmarks(0, self.ns, {vim.v.lnum-1,0}, {vim.v.lnum-1,0}, { type = "sign", details = true })
+      end
+
+      if self.extmarks then
+        self.extmark = self.extmarks[1]
+      end
+
+      if self.extmark then
+        self.sign = self.extmark[4]
       end
     end,
     provider = function(self)
       if self.sign then
-        return self.sign.text
+        print(vim.inspect(self.sign))
+        return self.sign.sign_text
       else
         return '  '
       end
     end,
     hl = function(self)
       if self.sign then
-        return self.sign.texthl
-      else
-        return "Normal"
+        return self.sign.sign_hl_group
       end
     end,
+  }
+
+  -- local sc_gitsigns_new = {
+  --   condition = conditions.signcolumn_enabled,
+  --   init = function(self)
+  --   end,
+  --   provider = function(self)
+  --   end,
+  --   hl = function(self)
+  --   end,
+  -- }
+
+  local sc_minidiff = {
+    init = function(self)
+      self.ns = vim.api.nvim_get_namespaces()["MiniDiffViz"]
+      self.extmark = vim.api.nvim_buf_get_extmarks(0, self.ns, {vim.v.lnum-1,0}, {vim.v.lnum-1,0}, { type = "sign", details = true })[1]
+    end,
+    provider = function(self)
+      if self.extmark then
+        return self.extmark[4].sign_text
+      else
+        return '  '
+      end
+    end,
+    hl = function(self)
+      if self.extmark then
+        return self.extmark[4].sign_hl_group
+      end
+      -- else
+      --   return "Normal"
+    end,
+    -- update = {
+    --   "User",
+    --   pattern = "*",
+    -- }
   }
 
   local sc_diags = {
@@ -552,11 +612,12 @@ M.config = function()
         align,
 
         lsp_diagnostics,
-        -- copilot,
+        copilot,
         lsp_active,
         search_count,
         macro_rec,
         local_session,
+        root,
         file_encoding, space,
         filetype, space,
         ruler
@@ -564,16 +625,18 @@ M.config = function()
     },
     statuscolumn = {
       fallthrough = false,
-      {
-        condition = function() return U.is_buf_huge(vim.api.nvim_get_current_buf()) end,
-        sc_lnum, space,
-        align,
-      },
+      -- {
+      --   condition = function() return U.is_buf_huge(vim.api.nvim_get_current_buf()) end,
+      --   sc_lnum, space,
+      --   align,
+      -- },
       -- TODO: sc_dap
-      -- sc_diags,
       {
+        -- sc_diags,
         sc_lnum,
-        sc_gitsigns,
+        require("heirline-components.all").component.signcolumn(), -- TODO: temporary until gitsigns is fixed
+        -- sc_gitsigns,
+        -- sc_minidiff, space,
         sc_fold,
       }
     },

@@ -26,6 +26,8 @@ local function lsp_rename()
 
       -- apply renames
       local client = vim.lsp.get_client_by_id(ctx.client_id)
+      if not client then return end
+
       vim.lsp.util.apply_workspace_edit(res, client.offset_encoding)
 
       -- display a message
@@ -83,7 +85,11 @@ local function lsp_diags_list()
 end
 
 local function lsp_diags_hover()
-  vim.diagnostic.open_float({ border = "single" })
+  vim.diagnostic.open_float({
+    border = "single",
+    scope = "line",
+    source = false,
+  })
 end
 
 local function lsp_signature_help()
@@ -243,15 +249,15 @@ local function toggle_diags()
   -- TODO: ...
 end
 
--- keys.map("n", "<leader>D",         lsp_toggle_diags, {})
-keys.map("n", "<leader>r",         lsp_rename, {})
-keys.map("n", "<leader>R",         lsp_references, {})
-keys.map("n", "<leader>d",         lsp_definition, {})
-keys.map("n", "<leader>C",         lsp_code_action, {})
-keys.map("n", "<leader>v",         lsp_hover, {})
--- keys.map("n", "<leader>v",         lsp_inspect, {})
-keys.map("n", "<leader>x",         lsp_diags_hover, {})
-keys.map("n", "<leader>X",         lsp_diags_list, {})
+-- keys.map("n", "<leader>D",         lsp_toggle_diags)
+keys.map("n", "<leader>r",         lsp_rename)
+keys.map("n", "<leader>R",         lsp_references)
+keys.map("n", "<leader>d",         lsp_definition)
+keys.map("n", "<leader>C",         lsp_code_action)
+keys.map("n", "<leader>v",         lsp_hover)
+-- keys.map("n", "<leader>v",         lsp_inspect)
+keys.map("n", "<leader>x",         lsp_diags_hover)
+keys.map("n", "<leader>X",         lsp_diags_list)
 
 vim.api.nvim_create_user_command('LspRename', lsp_rename, {})
 vim.api.nvim_create_user_command('LspReferences', lsp_references, {})

@@ -1,6 +1,6 @@
 local M = {}
 
-M.colorscheme = "default"
+M.colorscheme = "default" -- because default is what nvim starts with
 
 local function is_colorscheme_valid(name)
   if vim.tbl_contains(vim.fn.getcompletion("", "color"), name) then

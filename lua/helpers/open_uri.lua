@@ -47,6 +47,6 @@ end
 
 vim.api.nvim_create_user_command('OpenURIUnderCursor', M.open_uri_under_cursor, {})
 
-keys.map("n", "gx", M.open_uri_under_cursor, {})
+keys.map("n", "gx", M.open_uri_under_cursor)
 
 return M

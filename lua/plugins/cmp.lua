@@ -5,12 +5,14 @@ local M = { plugins_info.cmp.url }
 
 M.dependencies = {
   plugins_info.lspconfig.url,
-  plugins_info.luasnip.url,
+  -- plugins_info.luasnip.url,
+  -- plugins_info.snippets.url,
+  -- plugins_info.friendly_snippets.url,
   plugins_info.cmp_buffer.url,
   -- plugins_info.cmp_rg.url,
   plugins_info.cmp_path.url,
   plugins_info.cmp_nvim_lsp.url,
-  plugins_info.cmp_luasnip.url,
+  -- plugins_info.cmp_luasnip.url,
   plugins_info.cmp_cmdline.url,
   -- plugins_info.cmp_nvim_lsp_signature_help.url,
 }
@@ -18,43 +20,25 @@ M.dependencies = {
 M.config = function()
   -- TODO: optimize for huge buffers
 
+  local snippets = prequire "snippets"
   local ls = prequire "luasnip"
-  local ls_types, ls_loaders_from_snipmate
-  if ls then
-    ls_types = require "luasnip.util.types"
-    ls_loaders_from_snipmate = require "luasnip.loaders.from_snipmate"
-  end
-
   local cmp = require "cmp"
 
-  if ls then
-    ls.config.setup({
-      ext_opts = {
-        [ls_types.choiceNode] = {
-          active = { virt_text = { { icons.kind.Snippet, 'SnippetChoiceIndicator' } } },
-          passive = { virt_text = { { icons.kind.Snippet, 'SnippetPassiveIndicator' } } }
-        },
-        [ls_types.insertNode] = {
-          active = { virt_text = { { icons.kind.Snippet, 'SnippetInsertIndicator' } } },
-          passive = { virt_text = { { icons.kind.Snippet, 'SnippetPassiveIndicator' } } }
-        }
-      },
-    })
-
-    ls_loaders_from_snipmate.load()
-  end
+  -- if snippets then
+  --   snippets.setup {
+  --   }
+  -- end
 
   cmp.setup {
-    snippet = { expand = function(args)
-      if ls then
-        ls.lsp_expand(args.body)
+    snippet = {
+      expand = function(args)
+        vim.snippet.expand(args.body)
       end
-    end },
-
+    },
     mapping = {
       ["<Tab>"]   = cmp.mapping({
         i = function(fb)
-          if ls and ls.expand_or_locally_jumpable() then ls.expand_or_jump()
+          if vim.snippet.jump(1) then
           else fb() end
         end,
         c = function(fb)
@@ -64,7 +48,7 @@ M.config = function()
       }),
       ["<S-Tab>"] = cmp.mapping({
         i = function(fb)
-          if ls and ls.jumpable(-1) then ls.jump(-1)
+          if vim.snippet.jump(-1) then
           else fb() end
         end,
         c = function(fb)
@@ -96,8 +80,15 @@ M.config = function()
       { name = 'path' },
       { name = 'codeium', max_item_count = 3 },
       { name = 'buffer', max_item_count = 3 },
-      { name = 'nvim_lsp' },
-      { name = 'luasnip' },
+      { name = 'nvim_lsp',
+        option = {
+          markdown_oxide = {
+            keyword_pattern = [[\(\k\| \|\/\|#\)\+]]
+          }
+        }
+      },
+      -- { name = 'luasnip' },
+      -- { name = 'snippets' },
       -- { name = 'omni' },
       -- { name = 'spell' },
       -- { name = 'nvim_lsp_signature_help' },

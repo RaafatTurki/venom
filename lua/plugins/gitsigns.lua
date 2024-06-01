@@ -3,6 +3,11 @@ local keys = require "helpers.keys"
 
 local M = { plugins_info.gitsigns.url }
 
+-- M.config = function()
+--   require 'gitsigns'.setup {
+--   }
+-- end
+
 M.config = function()
   local gitsigns = require "gitsigns"
   gitsigns.setup {
@@ -13,8 +18,8 @@ M.config = function()
       topdelete    = { text = '‾' },
       changedelete = { text = '~' },
     },
-    _extmark_signs = false, -- NOTE: using legacy signs to make them visible in statuscolumn
     max_file_length = 40000,
+    -- _extmark_signs = false, -- NOTE: using legacy signs to make them visible in statuscolumn
   }
 
   keys.map("n", "g<Left>",  gitsigns.prev_hunk, "")
@@ -36,13 +41,13 @@ M.config = function()
   -- text object
   keys.map({'o', 'x'}, 'gh', ':<C-U>Gitsigns select_hunk<CR>', "")
 
-  vim.api.nvim_create_autocmd('User', {
-    pattern = 'GitConflictDetected',
-    callback = function()
-      vim.o.foldenable = false
-      vim.diagnostic.disable()
-    end
-  })
+  -- vim.api.nvim_create_autocmd('User', {
+  --   pattern = 'GitConflictDetected',
+  --   callback = function()
+  --     vim.o.foldenable = false
+  --     vim.diagnostic.enable(false)
+  --   end
+  -- })
 end
 
 return M

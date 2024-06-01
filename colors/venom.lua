@@ -96,6 +96,8 @@ local set_hls = function(hl_table)
   for hl_group, opts in pairs(hl_table) do
     set_hl(hl_group, opts)
   end
+
+  vim.g.colors_name = "venom"
 end
 
 local green     = gen_shades '#1F5E3F'
@@ -122,11 +124,12 @@ local c = {
   fold      = grey[8],
 
   -- diag
+  ok        = green[4],
   err       = red[4],
   info      = cyan[4],
   warn      = yellow[4],
   hint      = purple[4],
-
+  ok_dim    = mix(green[4], black[1], 0.1, 0.9),
   err_dim   = mix(red[4], black[1], 0.1, 0.9),
   info_dim  = mix(cyan[4], black[1], 0.1, 0.9),
   warn_dim  = mix(yellow[4], black[1], 0.1, 0.9),
@@ -151,6 +154,7 @@ local c = {
   comment   = grey[2],
   link      = cyan[3],
   note      = blue[10],
+  todo      = orange[5],
   value     = red[10],
   variable  = purple[10],
   constant  = red[1],
@@ -162,640 +166,463 @@ local c = {
   include   = lime[10],
   special   = orange[2],
 
-  -- tag       = grey[8],
-
   -- others
   debug     = debug[1]
 }
 
 local highlights = {
-  -- TREESITTER:
-  -- for more visit https://github.com/nvim-treesitter/nvim-treesitter/blob/master/CONTRIBUTING.md
-  -- Misc
-  ['@comment']           = { fg = c.comment },
-  ['@error']             = { fg = c.err },
-  ['@none']              = { fg = c.include },
-  ['@preproc']           = { fg = c.include },
-  ['@define']            = { '@preproc' },
-  ['@operator']          = { fg = c.operator },
-  -- Punctuation
-  ['@punctuation.bracket']    = { '@operator' },
-  ['@punctuation.delimiter']  = { '@operator' },
-  ['@punctuation.special']    = { '@operator' },
-  -- Literals
-  ['@string']             = { fg = c.string },
-  ['@string.regex']       = { '@string' },
-  ['@string.escape']      = { '@string' },
-  ['@string.special']     = { '@string' },
-  ['character']           = { '@string' },
-  ['character.special']   = { '@string' },
-  ['@number']             = { fg = c.value },
-  ['@boolean']            = { '@number' },
-  ['@float']              = { '@number' },
-  -- Functions
-  ['@function']           = { fg = c.func },
-  ['@function.builtin']   = { '@function' },
-  ['@function.call']      = { '@function' },
-  ['@function.macro']     = { '@function' },
-  ['@method']             = { '@function' },
-  ['@method.call']        = { '@function' },
-  ['@constructor']        = { '@function' },
-  ['@parameter']          = { '@variable' },
-  -- Keywords
-  ['@keyword']            = { fg = c.keyword },
-  ['@keyword.function']   = { '@keyword' },
-  ['@keyword.operator']   = { '@keyword' },
-  ['@keyword.return']     = { '@keyword' },
-  ['@conditional']        = { '@keyword' },
-  ['@repeat']             = { '@keyword' },
-  ['@debug']              = { fg = c.debug, bg = c.debug },
-  ['@label']              = { '@keyword' },
-  ['@include']            = { fg = c.include },
-  ['@exception']          = { '@keyword' },
-  -- Types
-  ['@type']               = { fg = c.type },
-  ['@type.builtin']       = { '@type' },
-  ['@type.definition']    = { '@type' },
-  ['@type.qualifier']     = { '@type' },
-  ['@storageclass']       = { '@type' },
-  ['@attribute']          = { '@variable' },
-  ['@field']              = { '@variable' },
-  ['@property']           = { '@variable' },
-  -- Identifiers
-  ['@variable']           = { fg = c.fg }, -- c.variable,
-  ['@variable.builtin']   = { '@variable' },
-  ['@constant']           = { fg = c.constant },
-  ['@constant.builtin']   = { '@constant' },
-  ['@constant.macro']     = { '@constant' },
-  ['@namespace']          = { '@type' },
-  ['@symbol']             = { '@variable' },
-  -- Text
-  ['@text']                   = { fg = c.fg },
-  ['@markup.strong']            = { bold = true },
-  ['@markup.emphasis']          = { italic = true },
-  ['@markup.underline']         = { underline = true },
-  ['@markup.strike']            = { strikethrough = true },
-  ['@markup.title']             = { fg = c.fg, bold = true },
-  ['@markup.literal']           = { '@string' },
-  ['@markup.uri']               = { underline = true, fg = c.link },
-  ['@markup.math']              = { '@keyword' },
-  ['@markup.environment']       = { '@function' },
-  ['@markup.environment.name']  = { '@constant' },
-  ['@markup.reference']         = { '@text.uri' },
-  ['@markup.todo']              = { },
-  ['@markup.note']              = { },
-  ['@markup.warning']           = { },
-  ['@markup.danger']            = { },
-  ['@markup.diff.add']          = { fg = c.add },
-  ['@markup.diff.delete']       = { fg = c.del },
-  -- Tags
-  ['@tag']                = { '@keyword' },
-  ['@tag.attribute']      = { '@variable' },
-  ['@tag.delimiter']      = { '@variable' },
 
-  -- Conceal
-  -- ['@conceal']         = {},
-
-  -- Spell
-  -- ['@spell']           = {},
-
-  -- Non-standard (optional)
-  -- ['@variable.global'] = {}
-
-  -- Locals
-  -- ['@definition']
-  -- ['@definition.constant']
-  -- ['@definition.function']
-  -- ['@definition.method']
-  -- ['@definition.var']
-  -- ['@definition.parameter']
-  -- ['@definition.macro']
-  -- ['@definition.type']
-  -- ['@definition.field']
-  -- ['@definition.enum']
-  -- ['@definition.namespace']
-  -- ['@definition.import']
-  -- ['@definition.associated']
-  --
-  -- ['@scope']
-  -- ['@reference']
+  -- TREE SITTER
+  ['@variable']                     = { fg = c.fg },
+  ['@variable.builtin']             = { "@variable" },
+  ['@variable.parameter']           = {},
+  ['@variable.parameter.builtin']   = { "@variable.parameter" },
+  ['@variable.member']              = {},
+  ['@constant']                     = { fg = c.constant },
+  ['@constant.builtin']             = { "@constant" },
+  ['@constant.macro']               = {},
+  ['@module']                       = {},
+  ['@module.builtin']               = { "@module" },
+  ['@label']                        = { "@keyword" },
+  ['@string']                       = { fg = c.string },
+  -- ['@string.documentation']         = {},
+  -- ['@string.regexp']                = {},
+  -- ['@string.escape']                = {},
+  ['@string.special']               = { "@type" },
+  -- ['@string.special.symbol']        = {},
+  -- ['@string.special.path']          = {},
+  -- ['@string.special.url']           = {},
+  ['@character']                    = { fg = c.string },
+  -- ['@character.special']            = {},
+  ['@boolean']                      = { fg = c.value },
+  ['@number']                       = { fg = c.value },
+  -- ['@number.float']                 = {},
+  ['@type']                         = { fg = c.type },
+  ['@type.builtin']                 = { "@type" },
+  -- ['@type.definition']              = {},
+  ['@attribute']                    = { "@variable" },
+  ['@attribute.builtin']            = { "@attribute" },
+  ['@property']                     = { "@variable" },
+  ['@function']                     = { fg = c.func },
+  ['@function.builtin']             = { "@function" },
+  -- ['@function.call']                = {},
+  -- ['@function.macro']               = {},
+  -- ['@function.method']              = {},
+  -- ['@function.method.call']         = {},
+  ['@constructor']                  = { "@function" },
+  ['@operator']                     = { fg = c.operator },
+  ['@keyword']                      = { fg = c.keyword },
+  -- ['@keyword.coroutine']            = {},
+  -- ['@keyword.function']             = {},
+  -- ['@keyword.operator']             = {},
+  -- ['@keyword.import']               = {},
+  -- ['@keyword.type']                 = {},
+  -- ['@keyword.modifier']             = {},
+  -- ['@keyword.repeat']               = {},
+  -- ['@keyword.return']               = {},
+  ['@keyword.debug']                = { fg = c.debug },
+  -- ['@keyword.exception']            = {},
+  -- ['@keyword.conditional']          = {},
+  -- ['@keyword.conditional.ternary']  = {},
+  -- ['@keyword.directive']            = {},
+  -- ['@keyword.directive.define']     = {},
+  ['@punctuation']                  = { "@operator" },
+  -- ['@punctuation.delimiter']        = {},
+  -- ['@punctuation.bracket']          = {},
+  -- ['@punctuation.special']          = {},
+  ['@comment']                      = { fg = c.comment },
+  -- ['@comment.documentation']        = {},
+  ['@comment.error']                = { fg = c.err },
+  ['@comment.warning']              = { fg = c.warn },
+  ['@comment.todo']                 = { fg = c.todo },
+  ['@comment.note']                 = { fg = c.note },
+  ['@markup.strong']                = { bold = true },
+  ['@markup.italic']                = { italic = true },
+  ['@markup.strikethrough']         = { strikethrough = true },
+  ['@markup.underline']             = { underline = true },
+  ['@markup.heading']               = { bold = true },
+  ['@markup.heading.1']             = { fg = c.err },
+  ['@markup.heading.2']             = { fg = c.warn },
+  ['@markup.heading.3']             = { fg = c.type },
+  ['@markup.heading.4']             = {},
+  ['@markup.heading.5']             = {},
+  ['@markup.heading.6']             = {},
+  ['@markup.quote']                 = { "@string" },
+  ['@markup.math']                  = {},
+  ['@markup.link']                  = { "@operator" },
+  ['@markup.link.label']            = { "@keyword" },
+  ['@markup.link.url']              = { fg = c.link, underline = true },
+  ['@markup.raw']                   = {},
+  ['@markup.raw.block']             = {},
+  ['@markup.list']                  = { fg = c.string, bold = true },
+  ['@markup.list.checked']          = {},
+  ['@markup.list.unchecked']        = {},
+  -- ['@diff']                         = {},
+  ['@diff.plus']                    = { fg = c.add },
+  ['@diff.minus']                   = { fg = c.del },
+  ['@diff.delta']                   = { fg = c.mod },
+  ['@tag']                          = { "@keyword" },
+  ['@tag.builtin']                  = { "@tag" },
+  -- ['@tag.attribute']                = {},
+  -- ['@tag.delimiter']                = {},
 
 
-  -- LSP SEMANTIC HIGHLIGHT (turrning off lsp highlights, but keeping the unused imports on)
+
+  -- LSP SEMANTIC HIGHLIGHT (turrning off some lsp semantic highlights)
   -- visit https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
-  ['@lsp.type.namespace']   = { },
-  ['@lsp.type.type']        = { },
-  ['@lsp.type.class']       = { },
-  ['@lsp.type.enum']        = { },
-  ['@lsp.type.interface']   = { },
-  ['@lsp.type.struct']      = { },
-  ['@lsp.type.parameter']   = { },
-  ['@lsp.type.variable']    = { },
-  ['@lsp.type.property']    = { },
-  ['@lsp.type.enumMember']  = { },
-  ['@lsp.type.function']    = { },
-  ['@lsp.type.method']      = { },
-  ['@lsp.type.macro']       = { },
-  ['@lsp.type.decorator']   = { },
-  -- ['@lsp.type.namespace']   = { '@namespace' },
-  -- ['@lsp.type.type']        = { '@type' },
-  -- ['@lsp.type.class']       = { '@type' },
-  -- ['@lsp.type.enum']        = { '@type' },
-  -- ['@lsp.type.interface']   = { '@type' },
-  -- ['@lsp.type.struct']      = { '@structure' },
-  -- ['@lsp.type.parameter']   = { '@parameter' },
-  -- ['@lsp.type.variable']    = { '@variable' },
-  -- ['@lsp.type.property']    = { '@property' },
-  -- ['@lsp.type.enumMember']  = { '@constant' },
-  -- ['@lsp.type.function']    = { '@function' },
-  -- ['@lsp.type.method']      = { '@method' },
-  -- ['@lsp.type.macro']       = { '@macro' },
-  -- ['@lsp.type.decorator']   = { '@function' }, 
-
-  -- N/VIM
-  ColorColumn	    = { 'CursorLine' },
-  Conceal         = { 'Folded' },
-  CurSearch       = { bg = c.match, bold = true },
-  Cursor          = { bg = c.fg },
-  CursorColumn    = { 'CursorLine' }, --
-  CursorIM        = { }, --
-  CursorLine      = { bg = c.line },
-  CursorLineFold  = { }, --
-  CursorLineNr    = { 'CursorLine' },
-  CursorLineSign  = { }, --
-  DiffAdd         = { fg = c.add },
-  DiffChange      = { fg = c.mod_alt },
-  DiffDelete      = { fg = c.del },
-  DiffText        = { fg = c.mod },
-  Directory       = { }, --
-  EndOfBuffer     = { }, --
-  ErrorMsg        = { fg = c.err },
-  Folded          = { fg = c.fold },
-  FoldColumn      = { 'Folded' }, --
-  lCursor         = { }, --
-  IncSearch       = { 'Search' },
-  LineNr          = { fg = c.comment },
-  LineNrAbove     = { }, --
-  LineNrBelow     = { }, --
-  MatchParen      = { fg = c.fg, bold = true },
-  ModeMsg         = { fg = c.fg, bold = true },
-  MoreMsg         = { fg = c.info },
-  MsgArea         = { fg = c.match },
-  MsgSeparator    = { bg = c.bg_float, fg = c.mg },
-  NonText         = { fg = c.comment, bold = true },
-  Normal          = { bg = c.bg },
-  NormalFloat     = { bg = c.bg },
-  FloatBorder     = { fg = c.mg },
-  NormalNC        = { }, --
-  Pmenu           = { bg = c.line, fg = c.fg },
-  PmenuSel        = { bg = c.mg, bold = true },
-  PmenuSbar       = { 'Pmenu' },
-  PmenuThumb      = { bg = c.mg },
-  Question        = { fg = c.fg, bold = true },
-  QuickFixLine    = { 'PmenuSel' },
-  Search          = { bg = c.mg, bold = true },
-  SignColumn      = { }, --
-  SpecialKey      = { fg = c.special },
-  SpellBad        = { undercurl = true, sp = c.err },
-  SpellCap        = { }, --
-  SpellLocal      = { }, --
-  SpellRare       = { }, --
-  StatusLine      = { 'NormalFloat' }, --
-  StatusLineNC    = { reverse = true },
-  Substitute      = { 'CurSearch' },
-  TabLineFill     = { bg = c.bg_float },
-  TabLine         = { bg = c.bg_float, fg = c.fold },
-  TabLineSel      = { bg = c.bg_float, fg = c.fg, bold = true },
-  TermCursor      = { underline = true },
-  TermCursorNC    = { 'TermCursor' },
-  Title           = { '@text.title' },
-  Visual          = { bg = c.fold, bold = true },
-  VisualNOS       = { }, --
-  WarningMsg      = { fg = c.warn },
-  Whitespace      = { 'Folded' },
-  WildMenu        = { 'Pmenu' },
-  WinBar          = { 'NormalFloat' },
-  WinBarNC        = { }, --
-  WinSeparator    = { fg = c.mg },
-
-  -- DEPRECATED
-  VertSplit       = { 'WinSeparator' },
-  FloatTitle      = { '@text.title' };
+  -- ['@lsp.type.class']             = {},
+  ['@lsp.type.comment']           = {},
+  -- ['@lsp.type.decorator']         = {},
+  -- ['@lsp.type.enum']              = {},
+  -- ['@lsp.type.enumMember']        = {},
+  -- ['@lsp.type.event']             = {},
+  -- ['@lsp.type.function']          = {},
+  -- ['@lsp.type.interface']         = {},
+  -- ['@lsp.type.keyword']           = {},
+  -- ['@lsp.type.macro']             = {},
+  -- ['@lsp.type.method']            = {},
+  -- ['@lsp.type.modifier']          = {},
+  -- ['@lsp.type.namespace']         = {},
+  -- ['@lsp.type.number']            = {},
+  -- ['@lsp.type.operator']          = {},
+  -- ['@lsp.type.parameter']         = {},
+  -- ['@lsp.type.property']          = {},
+  -- ['@lsp.type.regexp']            = {},
+  -- ['@lsp.type.string']            = {},
+  -- ['@lsp.type.struct']            = {},
+  -- ['@lsp.type.type']              = {},
+  -- ['@lsp.type.typeParameter']     = {},
+  ['@lsp.type.variable']          = {},
+  -- ['@lsp.mod.abstract']           = {},
+  -- ['@lsp.mod.async']              = {},
+  -- ['@lsp.mod.declaration']        = {},
+  -- ['@lsp.mod.defaultLibrary']     = {},
+  -- ['@lsp.mod.definition']         = {},
+  -- ['@lsp.mod.deprecated']         = {},
+  -- ['@lsp.mod.documentation']      = {},
+  -- ['@lsp.mod.modification']       = {},
+  -- ['@lsp.mod.readonly']           = {},
+  -- ['@lsp.mod.static']             = {},
 
 
-  -- LSP
-  LspReferenceText            = { bg = c.info_dim };
-  LspReferenceRead            = { bg = c.info_dim };
-  LspReferenceWrite           = { bg = c.info_dim };
-  LspCodeLens                 = { 'Comment' },
-LspCodeLensSeparator        = { '@debug' },
-  LspSignatureActiveParameter = { "Search" },
+
+  -- LEGACY
+  ['Normal']          = { fg = c.fg },
+  ['NormalFloat']     = { "Normal" },
+  ['NormalNC']        = { "Normal" },
+
+  ['Search']          = { bg = c.match },
+  ['IncSearch']       = { "Search" },
+  ['CurSearch']       = { "Search" },
+  ['Substitute']      = { "Search" },
+
+  ['CursorLine']      = { bg = c.line },
+  ['CursorLineNr']    = {},
+  ['CursorLineFold']  = {},
+  ['CursorLineSign']  = {},
+  ['CursorColumn']    = {},
+
+  ['ColorColumn']     = { bg = c.line },
+
+  ['Visual']          = { bg = c.mg },
+  ['VisualNOS']       = { "Visual" },
+
+  ['ErrorMsg']        = { fg = c.err },
+  ['WarningMsg']      = { fg = c.warn },
+
+  ['LineNr']          = { "Comment" },
+
+  ['Folded']          = { fg = c.fold },
+
+  ['TermCursor']      = { underline = true },
+  ['TermCursorNC']    = { "TermCursor" },
+
+  ['SpecialKey']      = { fg = c.fold },
+  ['Whitespace']      = { fg = c.comment },
+
+  ['DiffAdd']         = { "@diff.plus" },
+  ['DiffChange']      = { "@diff.delta" },
+  ['DiffDelete']      = { "@diff.minus" },
+  ['DiffText']        = {},
+
+  ['SpellBad']        = { undercurl = true, sp = c.warn },
+
+  ['FoldColumn']      = { "Folded" },
+  ['Title']           = { "@markup.heading" },
+
+  ['StatusLine']      = { bg = c.bg },
+  ['StatusLineNC']    = { bg = c.bg },
+
+  ['TabLine']         = { bg = c.bg, fg = c.fold },
+  ['TabLineFill']     = { bg = c.bg,  },
+  ['TabLineSel']      = { bg = c.bg, fg = c.fg, bold = true },
+
+  ['Pmenu']           = { bg = c.bg_float },
+  ['PmenuSel']        = { bg = c.mg },
+  ['PmenuKind']       = { fg = c.comment },
+  ['PmenuKindSel']    = { fg = c.comment },
+  ['PmenuExtra']      = {},
+  ['PmenuExtraSel']   = {},
+  ['PmenuSbar']       = { bg = c.mg },
+  ['PmenuThumb']      = { bg = c.fg },
+
+  -- UNWANTED
+  ['Cursor']          = {},
+  ['lCursor']         = {},
+  ['CursorIM']        = {},
+
+  ['Conceal']         = { "Folded" },
+
+  ['MatchParen']      = {},
+
+  ['EndOfBuffer']     = {},
+  ['WildMenu']        = {},
+  ['ModeMsg']         = {},
+  ['Question']        = {},
+  ['Directory']       = {},
+  ['SignColumn']      = {},
+
+  ['FloatBorder']     = {},
+  ['FloatTitle']      = {},
+  ['FloatFooter']     = {},
+  ['WinSeparator']    = {},
+
+  ['LineNrAbove']     = {},
+  ['LineNrBelow']     = {},
+
+  ['MsgArea']         = {},
+  ['MsgSeparator']    = {},
+  ['MoreMsg']         = {},
+  ['NonText']         = {},
+
+  ['SpellCap']        = {},
+  ['SpellLocal']      = {},
+  ['SpellRare']       = {},
+
+  -- GUI
+  -- ['User1']           = {},
+  -- ['User2']           = {},
+  -- ['User3']           = {},
+  -- ['User4']           = {},
+  -- ['User5']           = {},
+  -- ['User6']           = {},
+  -- ['User7']           = {},
+  -- ['User8']           = {},
+  -- ['User9']           = {},
+  -- ['Menu']            = {},
+  -- ['Scrollbar']       = {},
+  -- ['Tooltip']         = {},
+
+  -- UNSET
+  ['QuickFixLine']    = {},
+
+  ['WinBar']          = {},
+  ['WinBarNC']        = {},
 
 
-  -- Diagnostics
-  DiagnosticError             = { fg = c.err },
-  DiagnosticWarn              = { fg = c.warn },
-  DiagnosticInfo              = { fg = c.info },
-  DiagnosticHint              = { fg = c.hint },
-  DiagnosticVirtualTextError  = { 'DiagnosticError' },
-  DiagnosticVirtualTextWarn   = { 'DiagnosticWarn' },
-  DiagnosticVirtualTextInfo   = { 'DiagnosticInfo' },
-  DiagnosticVirtualTextHint   = { 'DiagnosticHint' },
-  DiagnosticUnderlineError    = { undercurl = true, sp = c.err },
-  DiagnosticUnderlineWarn     = { undercurl = true, sp = c.warn },
-  DiagnosticUnderlineInfo     = { undercurl = true, sp = c.info },
-  DiagnosticUnderlineHint     = { undercurl = true, sp = c.hint },
-  DiagnosticFloatingError     = { 'DiagnosticError' },
-  DiagnosticFloatingWarn      = { 'DiagnosticWarn' },
-  DiagnosticFloatingInfo      = { 'DiagnosticInfo' },
-  DiagnosticFloatingHint      = { 'DiagnosticHint' },
-  DiagnosticSignError         = { 'DiagnosticError' },
-  DiagnosticSignWarn          = { 'DiagnosticWarn' },
-  DiagnosticSignInfo          = { 'DiagnosticInfo' },
-  DiagnosticSignHint          = { 'DiagnosticHint' },
+  -- EXTRA
+  ['Comment']         = { "@comment" },
+  ['Constant']        = { "@constant" },
+  ['String']          = { "@string" },
+  ['Character']       = { "@character" },
+  ['Number']          = { "@number" },
+  ['Boolean']         = { "@boolean" },
+  ['Float']           = { "@number.float" },
+  ['Identifier']      = { "@variable" },
+  ['Function']        = { "@function" },
+  ['Statement']       = {},
+  ['Conditional']     = { "@keyword" },
+  ['Repeat']          = { "@keyword" },
+  ['Label']           = { "@keyword" },
+  ['Operator']        = { "@operator" },
+  ['Keyword']         = { "@keyword" },
+  ['Exception']       = { "@keyword" },
+  ['PreProc']         = { "@constant" },
+  ['Include']         = { "@constant" },
+  ['Define']          = { "@constant" },
+  ['Macro']           = { "@constant" },
+  ['PreCondit']       = { "@constant" },
+  ['Type']            = { "@type" },
+  ['StorageClass']    = { "@module" },
+  ['Structure']       = { "@module" },
+  ['Typedef']         = { "@type" },
+  ['Special']         = { "@string.special"},
+  ['SpecialChar']     = { "@character.special" },
+  ['Tag']             = { "@tag" },
+  ['Delimiter']       = { "@punctuation.delimiter" },
+  ['SpecialComment']  = { "@comment.documentation" },
+  ['Underlined']      = { "@markup.underline" },
+  ['Debug']           = { "@keyword.debug" },
+  ['Ignore']          = {},
+  ['Error']           = {},
+  ['Todo']            = { "@comment.todo" },
+  ['keywords']        = { "@keyword" },
+  ['Added']           = { "@diff.plus" },
+  ['Changed']         = { "@diff.delta" },
+  ['Removed']         = { "@diff.minus" },
 
 
-  -- Vim
-  -- those are no longer used for syntax highlighting, they server as fallbacks for plugins
-  Comment                 = { '@comment' },
-  Constant                = { '@constant' },
-  String                  = { '@string' },
-  Character               = { '@character' },
-  Number                  = { '@number' },
-  Boolean                 = { '@boolean' },
-  Float                   = { '@float' },
-  Identifier              = { '@variable' },
-  Function                = { '@function' },
-  Statement               = { '@keyword' },
-  Keyword                 = { '@keyword' },
-  Conditional             = { '@conditional' },
-  Repeat                  = { '@repeat' },
-  Label                   = { '@label' },
-  Operator                = { '@operator' },
-  Exception               = { '@exception' },
-  Include                 = { '@include' },
-  PreProc                 = { '@preProc' },
-  Macro                   = { '@preProc' },
-  PreCondit               = { '@preProc' },
-  Define                  = { '@define' },
-  Type                    = { '@type' },
-  StorageClass            = { '@storageclass' },
-  Structure               = { '@type.builtin' },
-  Typedef                 = { '@type.definition' },
-  Special                 = { '@string.special' },
-  SpecialChar             = { '@character.special' },
-  Tag                     = { '@tag' },
-  Delimiter               = { '@punctuation.delimiter' },
-  SpecialComment          = { '@text.note' },
-  Debug                   = { '@debug' },
-  Underlined              = { '@underline' },
-  Error                   = { '@error' },
-  Ignore                  = { fg = c.bg_float };
-  Todo                    = { '@text.todo' },
+  -- DIAGS
+  ['DiagnosticError']             = { fg = c.err },
+  ['DiagnosticWarn']              = { fg = c.warn },
+  ['DiagnosticInfo']              = { fg = c.info },
+  ['DiagnosticHint']              = { fg = c.hint },
+  ['DiagnosticOk']                = { fg = c.ok },
+
+  ['DiagnosticUnderlineError']    = { undercurl = true, sp = c.err },
+  ['DiagnosticUnderlineWarn']     = { undercurl = true, sp = c.warn },
+  ['DiagnosticUnderlineInfo']     = { undercurl = true, sp = c.info },
+  ['DiagnosticUnderlineHint']     = { undercurl = true, sp = c.hint },
+  ['DiagnosticUnderlineOk']       = { undercurl = true, sp = c.ok },
+
+  ['DiagnosticVirtualTextError']  = { bg = c.err_dim, fg = c.err },
+  ['DiagnosticVirtualTextWarn']   = { bg = c.warn_dim, fg = c.warn },
+  ['DiagnosticVirtualTextInfo']   = { bg = c.info_dim, fg = c.info },
+  ['DiagnosticVirtualTextHint']   = { bg = c.hint_dim, fg = c.hint },
+  ['DiagnosticVirtualTextOk']     = { bg = c.ok_dim, fg = c.ok },
+
+  ['DiagnosticFloatingError']     = { fg = c.err },
+  ['DiagnosticFloatingWarn']      = { fg = c.warn },
+  ['DiagnosticFloatingInfo']      = { fg = c.info },
+  ['DiagnosticFloatingHint']      = { fg = c.hint },
+  ['DiagnosticFloatingOk']        = { fg = c.ok },
+
+  ['DiagnosticSignError']         = { fg = c.err },
+  ['DiagnosticSignWarn']          = { fg = c.warn },
+  ['DiagnosticSignInfo']          = { fg = c.info },
+  ['DiagnosticSignHint']          = { fg = c.hint },
+  ['DiagnosticSignOk']            = { fg = c.ok },
+
+  ['DiagnosticDeprecated']        = {},
+  ['DiagnosticUnnecessary']       = { "@comment" },
 
 
-  -- TS Filetype Specific
-  healthSuccess           = { fg = c.add, bold = true };
-  healthWarning           = { fg = c.warn, bold = true };
-  healthError             = { fg = c.err, bold = true };
-  healthHelp              = { '@text.reference' };
-healthBar               = { '@debug' };
+
+  -- Mason
+  ['MasonNormal'] = { link = "NormalFloat" },
+  ['MasonHeader'] = { "@markup.heading.1" },
+  ['MasonHeaderSecondary'] = { "@markup.heading2" },
+  ['MasonHighlight'] = { fg = c.type },
+  ['MasonHighlightBlock'] = { bg = c.type, fg = c.bg_float },
+  ['MasonHighlightBlockBold'] = { bg = c.type, fg = c.bg_float, bold = true },
+  ['MasonHighlightSecondary'] = { fg = c.warn },
+  ['MasonHighlightBlockSecondary'] = { bg = c.warn, fg = c.bg_float },
+  ['MasonHighlightBlockBoldSecondary'] = { bg = c.warn, fg = c.bg_float, bold = true },
+  ['MasonLink'] = { "@markup.link.url" },
+  ['MasonMuted'] = { fg = c.fold },
+  ['MasonMutedBlock'] = { bg = c.fold, fg = c.bg_float },
+  ['MasonMutedBlockBold'] = { bg = c.fold, fg = c.bg_float, bold = true },
+  ['MasonError'] = { "ErrorMsg" },
+  ['MasonWarning'] = { "WarningMsg" },
+  ['MasonHeading'] = { "@markup.heading" },
 
 
-  -- Plugins
-  LspInfoTitle            = { 'Label' };
-  LspInfoList             = { 'Label' };
-  LspInfoFiletype         = { 'Type' };
-  LspInfoTip              = { 'Comment' };
-  LspInfoBorder           = { 'FloatBorder' };
-
-  -- diff
-  diffAdded               = { fg = c.add };
-  diffChanged             = { fg = c.mod };
-  diffRemoved             = { fg = c.del };
-  diffOldFile             = { bg = c.del };
-  diffNewFile             = { bg = c.add };
-  diffFile                = { fg = c.comment };
-  diffLine                = { fg = c.fg };
-  diffIndexLine           = { fg = c.comment };
-
-  -- gitsigns
-  GitSignsAdd             = { fg = c.add };
-  GitSignsAddNr           = { fg = c.add };
-  GitSignsAddLn           = { fg = c.add };
-  GitSignsChange          = { fg = c.mod };
-  GitSignsChangeNr        = { fg = c.mod };
-  GitSignsChangeLn        = { fg = c.mod };
-  GitSignsDelete          = { fg = c.del };
-  GitSignsDeleteNr        = { fg = c.del };
-  GitSignsDeleteLn        = { fg = c.del };
-
-  -- cmp
-  CmpItemAbbr             = { fg = c.fold };
-  CmpItemAbbrDeprecated   = { fg = c.fold, strikethrough = true };
-  CmpItemAbbrMatch        = { fg = c.fg, bold = true };
-  CmpItemAbbrMatchFuzzy   = { fg = c.fg };
-  CmpItemKind             = { };
-  CmpItemMenu             = { fg = c.comment  };
-  CmpItemKindText         = { fg = c.fg       };
-  CmpItemKindMethod       = { fg = c.func     };
-  CmpItemKindFunction     = { fg = c.func     };
-  CmpItemKindConstructor  = { fg = c.special  };
-  CmpItemKindField        = { fg = c.entity   };
-  CmpItemKindVariable     = { fg = c.keyword  };
-  CmpItemKindClass        = { fg = c.type     };
-  CmpItemKindInterface    = { fg = c.type     };
-  CmpItemKindModule       = { fg = c.special  };
-  CmpItemKindProperty     = { fg = c.entity   };
-  CmpItemKindUnit         = { fg = c.keyword  };
-  CmpItemKindValue        = { fg = c.string   };
-  CmpItemKindEnum         = { fg = c.keyword  };
-  CmpItemKindKeyword      = { fg = c.keyword  };
-  CmpItemKindSnippet      = { fg = c.constant };
-  CmpItemKindColor        = { fg = c.string   };
-  CmpItemKindFile         = { fg = c.fg       };
-  CmpItemKindReference    = { fg = c.entity   };
-  CmpItemKindFolder       = { fg = c.fg       };
-  CmpItemKindEnumMember   = { fg = c.string   };
-  CmpItemKindConstant     = { fg = c.constant };
-  CmpItemKindStruct       = { fg = c.string   };
-  CmpItemKindEvent        = { fg = c.special  };
-  CmpItemKindOperator     = { fg = c.operator };
-  CmpItemKindTypeParameter= { fg = c.type     };
-
-  -- scrollview
-  ScrollView              = { bg = c.mg };
-
-  -- scrollbar
-  ScrollbarHandle         = { 'ScrollView' };
-  ScrollbarSearchHandle   = { bg = c.mg, fg = c.fg };
-  ScrollbarSearch         = { fg = c.fg };
-  ScrollbarErrorHandle    = { bg = c.mg, fg = c.err };
-  ScrollbarError          = { fg = c.err };
-  ScrollbarWarnHandle     = { bg = c.mg, fg = c.warn };
-  ScrollbarWarn           = { fg = c.warn };
-  ScrollbarInfoHandle     = { bg = c.mg, fg = c.info };
-  ScrollbarInfo           = { fg = c.info };
-  ScrollbarHintHandle     = { bg = c.mg, fg = c.hint };
-  ScrollbarHint           = { fg = c.hint };
-  ScrollbarMiscHandle     = { bg = c.mg, fg = c.fg };
-  ScrollbarMisc           = { fg = c.fg };
-
-  -- nvim-tree
-  -- NvimTreeNormal          = { bg = c.bg_alt };
-  NvimTreeRootFolder      = { fg = c.fg };
-  NvimTreeFolderIcon      = { fg = c.fg };
-  NvimTreeFileIcon        = { fg = c.fg };
-  NvimTreeSpecialFile     = { fg = c.fg };
-  NvimTreeExecFile        = { bold = true };
-  NvimTreeSymlink         = { underline = true };
-  NvimTreeIndentMarker    = { fg = c.mg };
-  NvimTreeImageFile       = { fg = c.fg };
-  NvimTreeOpenedFile      = { fg = c.fg };
-  NvimTreeGitDirty        = { fg = c.err };
-  NvimTreeGitStaged       = { fg = c.add };
-  NvimTreeGitMerge        = { fg = c.conflict };
-  NvimTreeGitRenamed      = { fg = c.renamed };
-  NvimTreeGitDeleted      = { fg = c.deleted };
-  NvimTreeLspDiagnosticsError       = { 'DiagnosticSignError' };
-  NvimTreeLspDiagnosticsWarning     = { 'DiagnosticSignWarn' };
-  NvimTreeLspDiagnosticsInformation = { 'DiagnosticSignInfo' };
-  NvimTreeLspDiagnosticsHint        = { 'DiagnosticSignHint' };
-
-  -- neo-tree
-  NeoTreeBufferNumber         = { 'Comment' };
-  NeoTreeCursorLine           = { 'CursorLine' };
-  NeoTreeDirectoryIcon        = {}; --
-  NeoTreeDirectoryName        = {}; --
-  NeoTreeDimText              = { 'Folded' };
-  NeoTreeDotfile              = { 'Comment' };
-  NeoTreeFileIcon             = { 'NvimTreeFileIcon' };
-  NeoTreeModified             = { 'ReachModifiedIndicator' };
-  NeoTreeFileName             = {}; --
-  NeoTreeFileNameOpened       = { bold = true };
-  NeoTreeFilterTerm           = {};
-  NeoTreeFloatBorder          = { 'FloatBorder' };
-  NeoTreeFloatTitle           = { 'Title' };
-  NeoTreeGitAdded             = { fg = c.add };
-  NeoTreeGitConflict          = { fg = c.err };
-  NeoTreeGitDeleted           = { fg = c.del };
-  NeoTreeGitModified          = { fg = c.mod };
-  NeoTreeGitUntracked         = { fg = c.err };
-  NeoTreeGitIgnored           = { 'Comment' };
-  NeoTreeGitUnstaged          = { fg = c.unstaged };
-  NeoTreeGitStaged            = { fg = c.add, bold = true };
-  NeoTreeHiddenByName         = { 'Comment' };
-  NeoTreeIndentMarker         = { 'NvimTreeIndentMarker' };
-  NeoTreeExpander             = { 'NvimTreeIndentMarker' };
-  NeoTreeNormal               = {}; --
-  NeoTreeNormalNC             = {}; --
-  NeoTreeSignColumn           = {}; --
-  NeoTreeStatusLine           = {}; --
-  NeoTreeStatusLineNC         = {}; --
-  NeoTreeVertSplit            = {}; --
-  NeoTreeWinSeparator         = {}; --
-  NeoTreeEndOfBuffer          = {};
-  NeoTreeRootName             = { 'Title' };
-NeoTreeSymbolicLinkTarget   = { '@debug' };
-NeoTreeTitleBar             = { '@debug' };
-NeoTreeWindowsHidden        = { '@debug' };
-  NeoTreeTabActive            = { 'Normal' };
-  NeoTreeTabInactive          = { 'Comment' };
-  NeoTreeTabSeparatorActive   = { 'Ignore' };
-  NeoTreeTabSeparatorInactive = { 'Ignore' };
-
-  -- sfm
-  SFMGitStaged    = { fg = c.add };
-  SFMGitUnstaged  = { fg = c.err };
-  SFMGitRenamed   = { fg = c.renamed };
-  SFMGitDeleted   = { fg = c.del };
-  SFMGitMerged    = { fg = c.conflict };
-  SFMGitNew       = { fg = c.add };
-  SFMGitIgnored   = { fg = c.comment };
-
-  -- vim-quickui
-  QuickBG                 = { bg = c.bg_float, fg = c.fg };
-  QuickSel                = { 'Search' };
-  QuickKey                = { fg = c.err };
-  QuickOff                = { fg = c.mg };
-  QuickHelp               = { 'WarningMsg' };
-
-  -- outline
-  FocusedSymbol           = { 'Search' };
-  SymbolsOutlineConnector = { fg = c.mg };
-
-  -- telescope
-  TelescopeMatching       = { fg = c.fg, bold = true };
-  TelescopeMultiSelection = { fg = c.type };
-  TelescopeSelectionCaret = { 'NormalFloat' };
-  TelescopeNormal         = { fg = c.mg };
-  TelescopePreviewNormal  = { 'NormalFloat' };
-  TelescopePromptNormal   = { 'NormalFloat' };
-  TelescopeSelection      = { 'CursorLine' };
-  TelescopeTitle          = { 'Title' };
-  TelescopePreviewTitle   = { 'Title' };
-  TelescopePromptTitle    = { 'Title' };
-  TelescopeBorder         = { 'FloatBorder' };
-  TelescopePromptBorder   = { 'FloatBorder' };
-
-  -- harpoon
-  HarpoonBorder           = { 'FloatBorder' };
-
-  -- startup-time
-  StartupTimeStartupKey   = { bold = true };
-  StartupTimeStartupValue = { bold = true };
-  StartupTimeHeader       = { 'Comment' };
-  StartupTimeSourcingEvent= { fg = cyan[5] };
-  StartupTimeOtherEvent   = { fg = purple[5] };
-  StartupTimeTime         = { fg = red[5] };
-  StartupTimePercent      = { fg = red[5] };
-  StartupTimePlot         = { fg = red[1] };
-
-  -- notify
-  NotifyERRORBorder       = { 'DiagnosticVirtualTextError' };
-  NotifyWARNBorder        = { 'DiagnosticVirtualTextWarn' };
-  NotifyINFOBorder        = { 'DiagnosticVirtualTextInfo' };
-  NotifyTRACEBorder       = { 'DiagnosticFloatingHint' };
-  NotifyDEBUGBorder       = { 'DiagnosticVirtualTextHint' };
-  NotifyERRORIcon         = { fg = c.fg };
-  NotifyWARNIcon          = { fg = c.fg };
-  NotifyINFOIcon          = { fg = c.fg };
-  NotifyDEBUGIcon         = { fg = c.fg };
-  NotifyTRACEIcon         = { fg = c.fg };
-  NotifyERRORTitle        = { 'NotifyERRORBorder', bold = true};
-  NotifyWARNTitle         = { 'NotifyWARNBorder',  bold = true};
-  NotifyINFOTitle         = { 'NotifyINFOBorder',  bold = true};
-  NotifyDEBUGTitle        = { 'NotifyDEBUGBorder', bold = true};
-  NotifyTRACETitle        = { 'NotifyTRACEBorder', bold = true};
-  NotifyERRORBody         = { 'Normal' };
-  NotifyWARNBody          = { 'Normal' };
-  NotifyINFOBody          = { 'Normal' };
-  NotifyDEBUGBody         = { 'Normal' };
-  NotifyTRACEBody         = { 'Normal' };
-
-  -- ultest
-  UltestPass              = { fg = c.add };
-  UltestFail              = { fg = c.err };
-  UltestRunning           = { fg = c.warn };
-  UltestBorder            = { 'FloatBorder' };
-  UltestSummaryInfo       = { fg = c.fold };
-  UltestSummaryFile       = { 'UltestSummaryInfo', bold = true};
-  UltestSummaryNamespace  = { 'UltestSummaryFile' };
-
-  -- reach
-  ReachBorder             = { 'FloatBorder' };
-  ReachDirectory          = { 'Directory' };
-  ReachModifiedIndicator  = { 'String' };
-  ReachHandleBuffer       = { 'String' };
-  ReachHandleDelete       = { 'Error' };
-  ReachHandleSplit        = { 'Directory' };
-  ReachTail               = { fg = c.fold };
-  ReachHandleMarkLocal    = { 'Type' };
-  ReachHandleMarkGlobal   = { 'Number' };
-  ReachMark               = { 'Normal' };
-  ReachMarkLocation       = { 'Comment' };
-  ReachHandleTabpage      = { 'TabLineSel' };
-  ReachGrayOut            = { 'Comment' };
-  ReachMatchExact         = { 'String' };
-  ReachPriority           = { 'WarningMsg' };
-  ReachCurrent            = { fg = c.fg, bold = true};
-
-  -- navic
-  NavicIconsFile          = { 'CmpItemKindFile' };
-  NavicIconsModule        = { 'CmpItemKindModule' };
-  NavicIconsNamespace     = { 'CmpItemKindModule' };
-  NavicIconsPackage       = { 'CmpItemKindModule' };
-  NavicIconsClass         = { 'CmpItemKindClass' };
-  NavicIconsMethod        = { 'CmpItemKindMethod' };
-  NavicIconsProperty      = { 'CmpItemKindProperty' };
-  NavicIconsField         = { 'CmpItemKindField' };
-  NavicIconsConstructor   = { 'CmpItemKindConstructor' };
-  NavicIconsEnum          = { 'CmpItemKindEnum' };
-  NavicIconsInterface     = { 'CmpItemKindInterface' };
-  NavicIconsFunction      = { 'CmpItemKindFunction' };
-  NavicIconsVariable      = { 'CmpItemKindVariable' };
-  NavicIconsConstant      = { 'CmpItemKindConstant' };
-  NavicIconsString        = { 'CmpItemKindValue' };
-  NavicIconsNumber        = { 'CmpItemKindValue' };
-  NavicIconsBoolean       = { 'CmpItemKindValue' };
-  NavicIconsArray         = { 'CmpItemKindValue' };
-  NavicIconsObject        = { 'CmpItemKindValue' };
-  NavicIconsKey           = { 'CmpItemKindProperty' };
-  NavicIconsNull          = { 'CmpItemKindConstant' };
-  NavicIconsEnumMember    = { 'CmpItemKindEnumMember' };
-  NavicIconsStruct        = { 'CmpItemKindStruct' };
-  NavicIconsEvent         = { 'CmpItemKindEvent' };
-  NavicIconsOperator      = { 'CmpItemKindOperator' };
-  NavicIconsTypeParameter = { 'CmpItemKindTypeParameter' };
-  NavicText               = { 'CmpItemKindText' };
-  NavicSeparator          = { 'Folded' };
-
-  -- fidget
-  -- FidgetTitle             = { 'Folded' },
-  -- FidgetTask              = { 'Comment' },
-
-  -- illuminate
-  IlluminatedWordText     = { 'LspReferenceText' };
-  IlluminatedWordRead     = { 'LspReferenceRead' };
-  IlluminatedWordWrite    = { 'LspReferenceWrite' };
-
-  -- modicator
-  NormalMode              = { fg = c.fg };
-  InsertMode              = { fg = c.del };
-  VisualMode              = { fg = c.add };
-  CommandMode             = { fg = c.warn };
-  ReplaceMode             = { 'CommandMode' };
-  SelectMode              = { fg = c.add };
-  TerminalMode            = { fg = c.type };
-
-  MiniStarterHeader       = { 'Label' };
-  MiniStarterFooter       = { 'Label' };
-  MiniStarterSection      = { 'Label' };
-  -- MiniStarterCurrent      = { 'Title' };
-  -- MiniStarterItem         = { 'Normal' };
-
-  MiniMapNormal           = { 'Normal' };
-  -- MiniMapSymbolCount      = { '' };
-  MiniMapSymbolLine       = { 'Normal' };
-  MiniMapSymbolView       = { 'Comment' };
-  MiniAnimateCursor       = { bg = c.fg };
-
-  MiniHipatternsFixme     = { bold = true, fg = c.err };
-  MiniHipatternsHack      = { bold = true, fg = c.hint };
-  MiniHipatternsTodo      = { bold = true, fg = c.warn };
-  MiniHipatternsNote      = { bold = true, fg = c.note };
-
-  MiniTrailspace          = { "Whitespace" };
+  -- Cmp
+  ['CmpItemAbbr']               = { fg = c.fold },
+  ['CmpItemAbbrDeprecated']     = { fg = c.fold, strikethrough = true },
+  ['CmpItemAbbrMatch']          = { fg = c.fg, bold = true },
+  ['CmpItemAbbrMatchFuzzy']     = { fg = c.fg },
+  ['CmpItemKind']               = {},
+  ['CmpItemMenu']               = { fg = c.comment },
+  ['CmpItemKindText']           = { fg = c.fg },
+  ['CmpItemKindMethod']         = { fg = c.func },
+  ['CmpItemKindFunction']       = { fg = c.func },
+  ['CmpItemKindConstructor']    = { fg = c.special },
+  ['CmpItemKindField']          = { fg = c.entity },
+  ['CmpItemKindVariable']       = { fg = c.keyword },
+  ['CmpItemKindClass']          = { fg = c.type },
+  ['CmpItemKindInterface']      = { fg = c.type },
+  ['CmpItemKindModule']         = { fg = c.special },
+  ['CmpItemKindProperty']       = { fg = c.entity },
+  ['CmpItemKindUnit']           = { fg = c.keyword },
+  ['CmpItemKindValue']          = { fg = c.string },
+  ['CmpItemKindEnum']           = { fg = c.keyword },
+  ['CmpItemKindKeyword']        = { fg = c.keyword },
+  ['CmpItemKindSnippet']        = { fg = c.constant },
+  ['CmpItemKindColor']          = { fg = c.string },
+  ['CmpItemKindFile']           = { fg = c.fg },
+  ['CmpItemKindReference']      = { fg = c.entity },
+  ['CmpItemKindFolder']         = { fg = c.fg },
+  ['CmpItemKindEnumMember']     = { fg = c.string },
+  ['CmpItemKindConstant']       = { fg = c.constant },
+  ['CmpItemKindStruct']         = { fg = c.string },
+  ['CmpItemKindEvent']          = { fg = c.special },
+  ['CmpItemKindOperator']       = { fg = c.operator },
+  ['CmpItemKindTypeParameter']  = { fg = c.type },
 
 
-  MiniNotifyBorder        = { "FloatBorder" };
-  MiniNotifyNormal        = { "Folded" };
-  MiniNotifyTitle         = { "FloatTitle" };
+  -- MINI
+  -- Map
+  ['MiniMapNormal']             = {},
+  ['MiniMapSymbolView']         = { 'Folded' },
+  -- Notify
+  ['MiniNotifyNormal']          = { 'Folded' },
+  -- Pick
+  ['MiniPickBorder']            = { "FloatBorder" },
+  ['MiniPickBorderBusy']        = { fg = c.fold },
+  ['MiniPickIconDirectory']     = { fg = c.fg },
+  ['MiniPickIconFile']          = { fg = c.fg },
+  ['MiniPickHeader']            = { "@markup.heading.1" },
+  ['MiniPickMatchCurrent']      = { "PmenuSel" },
+['MiniPickMatchMarked'] = {},   -- marked matched items.
+  ['MiniPickMatchRanges']       = { fg = c.fg, bold = true },
+  ['MiniPickNormal']            = { fg = c.fold },
+['MiniPickPreviewLine'] = {},   -- target line in preview.
+['MiniPickPreviewRegion'] = {}, -- target region in preview.
+  ['MiniPickPrompt']            = { fg = c.fg },
 
-  MiniPickMatchCurrent    = { "PmenuSel" };
-  MiniPickMatchMarked     = { "Type" };
-  MiniPickMatchRanges     = { "Title" };
-  MiniPickNormal          = { "Folded" };
-  MiniPickPrompt          = { "Title" };
 
-  -- CUTSOM GROUPS
-  -- NormalAlt               = { bg = c.bg_alt };
-  SnippetPassiveIndicator = { 'Comment' };
-  SnippetInsertIndicator  = { fg = c.fg };
-  SnippetChoiceIndicator  = { fg = c.hint };
-  -- CursorLineSelect        = { fg = c.fg, bg = c.line, bold = true },
-  GitConflictCurrent      = { bg = c.add_alt };
-  GitConflictIncoming     = { bg = c.mod_alt };
-  Camel                   = { fg = c.warn };
-  -- DAP
-  DapBreakpoint           = { fg = c.err };
-  DapBreakpointCondition  = { fg = c.err };
-  DapBreakpointRejected   = { fg = c.warn };
-  DapLogPoint             = { fg = c.type };
-  DapStopped              = { bg = c.warn_dim };
+  -- Neotree
+  -- NeoTreeBufferNumber       The buffer number shown in the buffers source.
+  -- NeoTreeCursorLine         |hl-CursorLine| override in Neo-tree window.
+  NeoTreeDimText               = { fg = c.fold }, -- Greyed out text used in various places.
+  -- NeoTreeDirectoryIcon      Directory icon.
+  -- NeoTreeDirectoryName      Directory name.
+  -- NeoTreeDotfile            Used for icons and names when dotfiles are filtered.
+  -- NeoTreeFileIcon           File icon, when not overridden by devicons.
+  -- NeoTreeFileName           File name, when not overwritten by another status.
+  -- NeoTreeFileNameOpened     File name when the file is open. Not used yet.
+  -- NeoTreeFilterTerm         The filter term, as displayed in the root node.
+  -- NeoTreeFloatBorder        The border for pop-up windows.
+  -- NeoTreeFloatTitle         Used for the title text of pop-ups when the border-style
+  --                           is set to another style than "NC". This is derived
+  --                           from NeoTreeFloatBorder.
+  -- NeoTreeTitleBar           Used for the title bar of pop-ups, when the border-style
+  --                           is set to "NC". This is derived from NeoTreeFloatBorder.
 
-  CccFloatBorder          = { "FloatBorder" };
-  CccFloatNormal          = { fg = c.fg };
+  NeoTreeGitAdded           = { "DiffAdd" },
+  NeoTreeGitConflict        = { fg = c.conflict },
+  NeoTreeGitDeleted         = { fg = c.deleted },
+  NeoTreeGitIgnored         = { "Comment" },
+  NeoTreeGitModified        = { "DiffAdd" },
+  NeoTreeGitUntracked       = { "Folded" },
+
+  NeoTreeGitUnstaged        = { fg = c.unstaged },
+  NeoTreeGitStaged          = { fg = c.staged },
+
+  NeoTreeMessage            = { fg = c.comment, italic = true },
+
+  -- NeoTreeHiddenByName       Used for icons and names when `hide_by_name` is used.
+  -- NeoTreeIndentMarker       The style of indentation markers (guides). By default,
+  --                           the "Normal" highlight is used.
+  -- NeoTreeExpander           Used for collapsed/expanded icons.
+  -- NeoTreeNormal             |hl-Normal| override in Neo-tree window.
+  -- NeoTreeNormalNC           |hl-NormalNC| override in Neo-tree window.
+  -- NeoTreeSignColumn         |hl-SignColumn| override in Neo-tree window.
+  -- NeoTreeStats              Used for "stat" columns like size, last modified, etc.
+  -- NeoTreeStatsHeader        Used for the header (top line) of the above columns.
+  -- NeoTreeStatusLine         |hl-StatusLine| override in Neo-tree window.
+  -- NeoTreeStatusLineNC       |hl-StatusLineNC| override in Neo-tree window.
+  -- NeoTreeVertSplit          |hl-VertSplit| override in Neo-tree window.
+  -- NeoTreeWinSeparator       |hl-WinSeparator| override in Neo-tree window.
+  -- NeoTreeEndOfBuffer        |hl-EndOfBuffer| override in Neo-tree window.
+  -- NeoTreeRootName           The name of the root node.
+  -- NeoTreeSymbolicLinkTarget Symbolic link target.
+  -- NeoTreeTitleBar           Used for the title bar of pop-ups, when the border-style
+  --                           is set to "NC". This is derived from NeoTreeFloatBorder.
+  -- NeoTreeWindowsHidden      Used for icons and names that are hidden on Windows.
+
+
 }
 
 set_hls(highlights)

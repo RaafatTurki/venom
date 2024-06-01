@@ -23,6 +23,7 @@ local opts = {
   laststatus      = 3,
   showtabline     = 2,
   -- mousescroll     = "ver:0,hor:0",
+  mouse           = 'a',
   showcmdloc      = 'statusline',
   splitkeep       = 'screen',
   clipboard       = 'unnamed,unnamedplus',
@@ -35,13 +36,15 @@ local opts = {
 
   number          = true,
   foldcolumn      = '1',
-  signcolumn      = 'no',
+  signcolumn      = 'yes:2',
+  -- iskeyword       = '@,48-57,192-255', -- removed '_' so that motion commands work with underscores
 
   -- colorcolumn     = U.seq(120, 999, ',', 1),
   -- colorcolumn     = "120",
 
   -- cmdheight       = 0,
-  -- completeopt      = 'menu,menuone,noselect',
+  -- completeopt      = 'menuone,noinsert,noselect,popup',
+
   -- foldcolumn       = '1',
   -- foldlevel        = 99
   -- foldlevelstart   = -1

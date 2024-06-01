@@ -103,6 +103,17 @@ M.config = function()
 
       M.setup_server_lspconfig('omnisharp', opt)
     end,
+    markdown_oxide = function()
+      M.setup_server_lspconfig('markdown_oxide', {
+        capabilities = {
+          workspace = {
+            didChangeWatchedFiles = {
+              dynamicRegistration = true,
+            }
+          }
+        }
+      })
+    end,
     texlab = function()
       M.setup_server_lspconfig('texlab', {
         settings = {
@@ -144,6 +155,10 @@ M.extend_server_opts_w_shared_opts = function(opts)
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
   if prequire "nvim-cmp" then
     shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities()
+  elseif prequire "autocomplete.capabilities" then
+    shared_capabilities = vim.tbl_deep_extend('force', shared_capabilities, require 'autocomplete.capabilities')
+  elseif prequire "epo" then
+    shared_capabilities = vim.tbl_deep_extend('force', shared_capabilities, require 'epo'.register_cap())
   end
 
   local shared_opts = {

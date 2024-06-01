@@ -13,28 +13,39 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
   end
 })
 
--- filetype based autocmd
-vim.api.nvim_create_autocmd({ "Filetype" }, {
-  callback = function(ev)
-
-    local ft_handlers = {
-      cs = function() vim.bo.commentstring = "// %s" end,
-      cpp = function() vim.bo.commentstring = "// %s" end,
-      dart = function() vim.bo.commentstring = "// %s" end,
-      prisma = function() vim.bo.commentstring = "// %s" end,
-      typst = function() vim.bo.commentstring = "// %s" end,
-      glsl = function() vim.bo.commentstring = "// %s" end,
-      dosini = function() vim.bo.commentstring = "# %s" end,
-      resolv = function() vim.bo.commentstring = "# %s" end,
-      hurl = function() vim.bo.commentstring = "# %s" end,
-      iss = function() vim.bo.commentstring = "; %s" end,
-    }
-
-    if vim.tbl_contains(vim.tbl_keys(ft_handlers), ev.match) then
-      ft_handlers[ev.match]()
-    end
+-- kill xclip on VimLeave
+vim.api.nvim_create_autocmd("VimLeave", {
+  group = vim.api.nvim_create_augroup("KillXclip", { clear = true }),
+  callback =  function()
+    os.execute("pkill xclip")
   end
 })
+
+-- filetype based autocmd
+-- vim.api.nvim_create_autocmd({ "Filetype" }, {
+--   callback = function(ev)
+--
+--     local ft_handlers = {
+--       cs = function() vim.bo.commentstring = "// %s" end,
+--       cpp = function() vim.bo.commentstring = "// %s" end,
+--       dart = function() vim.bo.commentstring = "// %s" end,
+--       prisma = function() vim.bo.commentstring = "// %s" end,
+--       typst = function() vim.bo.commentstring = "// %s" end,
+--       glsl = function() vim.bo.commentstring = "// %s" end,
+--       dosini = function() vim.bo.commentstring = "# %s" end,
+--       resolv = function() vim.bo.commentstring = "# %s" end,
+--       hurl = function() vim.bo.commentstring = "# %s" end,
+--       iss = function() vim.bo.commentstring = "; %s" end,
+--       sql = function() vim.bo.commentstring = "-- %s" end,
+--       tsx = function() vim.bo.commentstring = "{/* %s */}" end,
+--       jsx = function() vim.bo.commentstring = "{/* %s */}" end,
+--     }
+--
+--     if vim.tbl_contains(vim.tbl_keys(ft_handlers), ev.match) then
+--       ft_handlers[ev.match]()
+--     end
+--   end
+-- })
 
 -- filename based autocmd
 vim.cmd [[
@@ -70,6 +81,7 @@ vim.cmd [[
   " " comment strings
   " au BufEnter ripgreprc* setlocal commentstring=#%s
   " au FileType sshdconfig setlocal commentstring=#%s
+   au FileType kdl setlocal commentstring=//\ %s
   " au FileType c setlocal commentstring=//%s
   " au FileType arduino setlocal commentstring=//%s
   " au FileType cs setlocal commentstring=//%s

@@ -14,6 +14,7 @@ M.dependencies = {
   plugins_info.cmp_nvim_lsp.url,
   -- plugins_info.cmp_luasnip.url,
   plugins_info.cmp_cmdline.url,
+  { plugins_info.lazydev.url, dependencies = plugins_info.luvit_meta.url, ft = "lua" },
   -- plugins_info.cmp_nvim_lsp_signature_help.url,
 }
 
@@ -24,10 +25,16 @@ M.config = function()
   local ls = prequire "luasnip"
   local cmp = require "cmp"
 
-  -- if snippets then
-  --   snippets.setup {
-  --   }
-  -- end
+  local lazydev = prequire "lazydev"
+  if lazydev then
+    -- lazydev.setup { library = { plugins = false } }
+    lazydev.setup {
+      library = {
+        vim.env.LAZY .. "/luvit-meta/library",
+        -- vim.env.LAZY .. "/",
+      }
+    }
+  end
 
   cmp.setup {
     snippet = {
@@ -87,6 +94,10 @@ M.config = function()
           }
         }
       },
+      {
+        name = "lazydev",
+        group_index = 0, -- skip loading LuaLS completions
+      }
       -- { name = 'luasnip' },
       -- { name = 'snippets' },
       -- { name = 'omni' },

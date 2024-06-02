@@ -8,7 +8,7 @@ local M = { plugins_info.mason.url }
 M.dependencies = {
   plugins_info.lspconfig.url,
   plugins_info.mason_lspconfig.url,
-  plugins_info.neodev.url,
+  -- plugins_info.neodev.url,
   plugins_info.omnisharp_ext.url,
   { plugins_info.typescript_tools.url, dependencies = plugins_info.plenary.url },
   plugins_info.ts_error_translator.url,

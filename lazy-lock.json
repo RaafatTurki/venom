@@ -10,6 +10,7 @@
   "gitsigns.nvim": { "branch": "main", "commit": "75dc649106827183547d3bedd4602442340d2f7f" },
   "heirline-components.nvim": { "branch": "main", "commit": "8752d84a6915e29d3e98ff7e8939e97f667a384c" },
   "heirline.nvim": { "branch": "master", "commit": "0d797435e54645a5f98bad7ad6046aac1ef95c1e" },
+  "hex.nvim": { "branch": "master", "commit": "cbffd2ce4b8be089360e3c95d5909cd511d8840c" },
   "hurl.nvim": { "branch": "main", "commit": "00264bd4824021a65ce6e791864fda3393548199" },
   "lazy.nvim": { "branch": "main", "commit": "ad30030b6abca7dac5a493c58b4d183b3fe93202" },
   "lazydev.nvim": { "branch": "main", "commit": "7d843b9f3aa9240e38854e7bc4df389929dbe44a" },

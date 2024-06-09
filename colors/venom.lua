@@ -578,12 +578,12 @@ local highlights = {
   NeoTreeDimText               = { fg = c.fold }, -- Greyed out text used in various places.
   -- NeoTreeDirectoryIcon      Directory icon.
   -- NeoTreeDirectoryName      Directory name.
-  -- NeoTreeDotfile            Used for icons and names when dotfiles are filtered.
+  NeoTreeDotfile               = { fg = c.comment }, -- Used for icons and names when dotfiles are filtered.
   -- NeoTreeFileIcon           File icon, when not overridden by devicons.
   -- NeoTreeFileName           File name, when not overwritten by another status.
   -- NeoTreeFileNameOpened     File name when the file is open. Not used yet.
   -- NeoTreeFilterTerm         The filter term, as displayed in the root node.
-  -- NeoTreeFloatBorder        The border for pop-up windows.
+  NeoTreeFloatBorder           = { fg = c.fg }, --The border for pop-up windows.
   -- NeoTreeFloatTitle         Used for the title text of pop-ups when the border-style
   --                           is set to another style than "NC". This is derived
   --                           from NeoTreeFloatBorder.

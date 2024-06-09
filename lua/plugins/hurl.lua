@@ -19,7 +19,7 @@ M.config = function()
     popup_position = '0%',
     popup_size = {
       width = '100%',
-      height = '100%',
+      height = '60%',
     },
   }
 end

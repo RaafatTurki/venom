@@ -36,7 +36,7 @@ local opts = {
 
   number          = true,
   foldcolumn      = '1',
-  signcolumn      = 'yes:2',
+  signcolumn      = 'no',
   -- iskeyword       = '@,48-57,192-255', -- removed '_' so that motion commands work with underscores
 
   -- colorcolumn     = U.seq(120, 999, ',', 1),

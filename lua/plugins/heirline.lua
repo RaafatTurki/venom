@@ -8,7 +8,6 @@ local M = { plugins_info.heirline.url }
 
 M.dependencies = {
   plugins_info.devicons.url,
-  plugins_info.heirline_components.url,
 }
 
 M.config = function()
@@ -408,8 +407,40 @@ M.config = function()
 
 
   -- NOTE: statuscolumn
+  local function get_lnum_sign(ns)
+    local extmarks = nil
+    local extmark = nil
+    local sign = nil
+
+    if ns then extmarks = vim.api.nvim_buf_get_extmarks(0, ns, {vim.v.lnum-1,0}, {vim.v.lnum-1,0}, { type = "sign", details = true }) end
+    if extmarks then extmark = extmarks[1] end
+    if extmark then sign = extmark[4] end
+
+    return sign
+  end
+
+  local function get_lnum_diag_severity()
+    diagnostics = vim.diagnostic.get(0, { lnum = vim.v.lnum - 1 })
+
+    local severity_level = nil
+
+    for i, diag in ipairs(diagnostics) do
+      if severity_level == nil then
+        severity_level = diag.severity
+      else if diag.severity < severity_level then
+          severity_level = diag.severity
+        end
+      end
+    end
+
+    return severity_level
+  end
+
+
   local sc_lnum = {
-    condition = function() return vim.o.number end,
+    condition = function()
+      return vim.o.number
+    end,
     provider = function()
       local num_count = vim.api.nvim_buf_line_count(0)
 
@@ -420,27 +451,13 @@ M.config = function()
       end
     end,
     hl = function()
-      local ls, _, le, _ = U.get_cursor_pos()
-      local lnums = {}
-
-      if ls > le then
-        local tmp = le
-        le = ls
-        ls = tmp
-      end
-
-      for i = ls, le do
-        table.insert(lnums, i)
-      end
-
-      if vim.tbl_contains(lnums, vim.v.lnum) then
-        return vim.api.nvim_get_hl(0, { name = U.get_mode_hl() or "Normal" })
-      end
-    end,
+      return vim.v.relnum > 0 and "LineNr" or "CursorLineFold"
+    end
   }
 
   local sc_fold = {
     condition = function()
+      -- there is no point in showing foldcolumn if we can't access the folds api
       return vim.o.foldcolumn == "1"
     end,
     init = function(self)
@@ -460,7 +477,7 @@ M.config = function()
 
       local str = ""
       if width ~= 0 then
-        str = vim.v.relnum > 0 and "%#FoldColumn#" or "%#CursorLineFold#"
+        str = ""
         if foldinfo.level == 0 then
           str = str .. (" "):rep(width)
         else
@@ -488,112 +505,55 @@ M.config = function()
       return str .. "%*"
       -- return status_utils.stylize(str .. "%*", opts)
     end,
-    space,
+    hl = function()
+      return vim.v.relnum > 0 and "FoldColumn" or "CursorLineFold"
+    end
   }
 
-  local sc_gitsigns = {
-    init = function(self)
-      self.ns = vim.api.nvim_get_namespaces()["gitsigns_signs_"]
-      -- self.ns = -1
-      self.extmarks = nil
-      self.extmark = nil
-      self.sign = nil
-
-      if self.ns then
-        self.extmarks = vim.api.nvim_buf_get_extmarks(0, self.ns, {vim.v.lnum-1,0}, {vim.v.lnum-1,0}, { type = "sign", details = true })
-      end
-
-      if self.extmarks then
-        self.extmark = self.extmarks[1]
-      end
-
-      if self.extmark then
-        self.sign = self.extmark[4]
-      end
-    end,
-    provider = function(self)
-      if self.sign then
-        print(vim.inspect(self.sign))
-        return self.sign.sign_text
-      else
-        return '  '
-      end
-    end,
-    hl = function(self)
-      if self.sign then
-        return self.sign.sign_hl_group
-      end
-    end,
-  }
-
-  -- local sc_gitsigns_new = {
-  --   condition = conditions.signcolumn_enabled,
-  --   init = function(self)
-  --   end,
-  --   provider = function(self)
-  --   end,
-  --   hl = function(self)
-  --   end,
-  -- }
-
-  local sc_minidiff = {
+  local sc_mini_diff = {
     init = function(self)
       self.ns = vim.api.nvim_get_namespaces()["MiniDiffViz"]
-      self.extmark = vim.api.nvim_buf_get_extmarks(0, self.ns, {vim.v.lnum-1,0}, {vim.v.lnum-1,0}, { type = "sign", details = true })[1]
     end,
     provider = function(self)
-      if self.extmark then
-        return self.extmark[4].sign_text
-      else
-        return '  '
-      end
+      local sign = get_lnum_sign(self.ns)
+      -- remove the last character (white space)
+      local sign_text = sign and sign.sign_text:sub(1, -2)
+      return sign_text or ' '
     end,
     hl = function(self)
-      if self.extmark then
-        return self.extmark[4].sign_hl_group
-      end
-      -- else
-      --   return "Normal"
+      local sign = get_lnum_sign(self.ns)
+      return sign and sign.sign_hl_group or 'Normal'
     end,
-    -- update = {
-    --   "User",
-    --   pattern = "*",
-    -- }
   }
 
   local sc_diags = {
-    init = function(self)
-      local bufs_signs = vim.fn.sign_getplaced(vim.api.nvim_get_current_buf(), { group = "*", lnum = vim.v.lnum })
-      local signs = bufs_signs[1].signs
-
-
-      if #signs == 0 then
-        self.sign = nil
-      else
-        local sign = vim.fn.sign_getdefined(signs[1].name)[1]
-        if vim.startswith(sign.name, "DiagnosticSign") then
-          self.sign = sign
-        else
-          self.sign = nil
-        end
-      end
-    end,
     provider = function(self)
-      if self.sign then
-        return self.sign.text
-      else
-        return '  '
-      end
+      local severity_level = get_lnum_diag_severity()
+
+      local diag_icons = {
+        icons.diag.Error,
+        icons.diag.Warn,
+        icons.diag.Info,
+        icons.diag.Hint,
+      }
+
+      return severity_level and diag_icons[severity_level] or ' '
     end,
-    hl = function(self)
-      if self.sign then
-        return self.sign.texthl
-      else
-        return nil
-      end
-    end,
+    hl = function()
+      local severity_level = get_lnum_diag_severity()
+
+      local diag_hls = {
+        "DiagnosticSignError",
+        "DiagnosticSignWarn",
+        "DiagnosticSignInfo",
+        "DiagnosticSignHint",
+      }
+
+      return severity_level and diag_hls[severity_level] or ''
+    end
   }
 
+  -- TODO: sc_dap
 
   require "heirline".setup {
     tabline = {
@@ -625,19 +585,22 @@ M.config = function()
     },
     statuscolumn = {
       fallthrough = false,
-      -- {
-      --   condition = function() return U.is_buf_huge(vim.api.nvim_get_current_buf()) end,
-      --   sc_lnum, space,
-      --   align,
-      -- },
-      -- TODO: sc_dap
       {
-        -- sc_diags,
+        condition = function() return U.is_buf_huge(vim.api.nvim_get_current_buf()) end,
         sc_lnum,
-        require("heirline-components.all").component.signcolumn(), -- TODO: temporary until gitsigns is fixed
-        -- sc_gitsigns,
-        -- sc_minidiff, space,
+        space,
+      },
+      {
+        sc_lnum,
+
+        sc_mini_diff,
+        space,
+
+        sc_diags,
+        space,
+
         sc_fold,
+        space,
       }
     },
   }

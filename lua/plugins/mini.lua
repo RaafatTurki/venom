@@ -315,15 +315,15 @@ M.config = function()
     -- vim.notify = mini_notify.make_notify()
   end
 
-  -- local mini_diff = require 'mini.diff'
-  -- if mini_diff then
-  --   mini_diff.setup {
-  --     view = {
-  --       style = 'sign',
-  --       signs = { add = '│', change = '│', delete = '-' },
-  --     }
-  --   }
-  -- end
+  local mini_diff = require 'mini.diff'
+  if mini_diff then
+    mini_diff.setup {
+      view = {
+        style = 'sign',
+        signs = { add = '│', change = '│', delete = '-' },
+      }
+    }
+  end
 
   -- TODO: clue
   -- local mini_clue = require 'mini.clue'

@@ -30,7 +30,8 @@ M.config = function()
     -- lazydev.setup { library = { plugins = false } }
     lazydev.setup {
       library = {
-        vim.env.LAZY .. "/luvit-meta/library",
+        -- vim.env.LAZY .. "/luvit-meta/library",
+        vim.fn.stdpath("data") .. "/lazy/luvit-meta/library"
         -- vim.env.LAZY .. "/",
       }
     }

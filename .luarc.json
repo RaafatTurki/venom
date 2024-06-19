@@ -4,5 +4,11 @@
     "log",
     "large_filesize",
   ],
-  "workspace.checkThirdParty": "Disable"
+  "workspace.checkThirdParty": "Disable",
+  "diagnostics.disable": [
+    "lowercase-global",
+    "trailing-space",
+    "unused-local",
+    "missing-fields"
+  ]
 }

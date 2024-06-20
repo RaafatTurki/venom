@@ -245,6 +245,65 @@ M.config = function()
     },
   }
 
+  local mini_git = {
+    condition = function()
+      return prequire "mini.git"
+    end,
+    init = function(self)
+      self.summary = vim.b['minigit_summary']
+    end,
+    provider = function(self)
+      if self.summary and self.summary.head_name then
+        return icons.misc.git_branch .. ' ' .. self.summary.head_name
+      end
+    end,
+    hl = "ErrorMsg"
+  }
+
+  local mini_diff = {
+    condition = function()
+      local mini_diff = prequire "mini.diff"
+
+      if mini_diff then
+        local buf_data = mini_diff.get_buf_data()
+        if buf_data then
+          return buf_data.summary
+        end
+      end
+    end,
+    init = function(self)
+      self.summary = prequire "mini.diff".get_buf_data().summary
+    end,
+    {
+      provider = function(self)
+        local count = self.summary.add or 0
+        return count > 0 and ("+" .. count)
+      end,
+      hl = "DiffAdd"
+    },
+    {
+      provider = function(self)
+        local count = self.summary.delete or 0
+        return count > 0 and ("-" .. count)
+      end,
+      hl = "DiffDelete",
+    },
+    {
+      provider = function(self)
+        local count = self.summary.change or 0
+        return count > 0 and ("~" .. count)
+      end,
+      hl = "DiffChange"
+    },
+    {
+      provider = function(self)
+        local count = self.summary.n_ranges or 0
+        return count > 0 and ("|" .. count)
+      end,
+      hl = "Comment"
+    },
+  }
+
   local root = {
     condition = function(self)
       self.user = os.getenv("USER")
@@ -554,7 +613,9 @@ M.config = function()
         file_name, space,
         file_flag_modified,
         file_flag_readonly, space,
-        gitsigns, space,
+        -- gitsigns, space,
+        mini_git, space,
+        mini_diff, space,
 
         align,
 

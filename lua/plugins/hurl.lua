@@ -1,10 +1,10 @@
 local plugins_info = require "helpers.plugins_info"
 
-local M = { plugins_info.hurl.url }
+local M = { plugins_info.hurl }
 
 M.dependencies = {
-  plugins_info.plenary.url,
-  plugins_info.nui.url,
+  plugins_info.plenary,
+  plugins_info.nui,
 }
 
 M.ft = "hurl"

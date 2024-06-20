@@ -1,21 +1,21 @@
 local plugins_info = require "helpers.plugins_info"
 local icons = require "helpers.icons".icons
 
-local M = { plugins_info.cmp.url }
+local M = { plugins_info.cmp }
 
 M.dependencies = {
-  plugins_info.lspconfig.url,
-  -- plugins_info.luasnip.url,
-  -- plugins_info.snippets.url,
-  -- plugins_info.friendly_snippets.url,
-  plugins_info.cmp_buffer.url,
-  -- plugins_info.cmp_rg.url,
-  plugins_info.cmp_path.url,
-  plugins_info.cmp_nvim_lsp.url,
-  -- plugins_info.cmp_luasnip.url,
-  plugins_info.cmp_cmdline.url,
-  { plugins_info.lazydev.url, dependencies = plugins_info.luvit_meta.url, ft = "lua" },
-  -- plugins_info.cmp_nvim_lsp_signature_help.url,
+  plugins_info.lspconfig,
+  -- plugins_info.luasnip,
+  -- plugins_info.snippets,
+  -- plugins_info.friendly_snippets,
+  plugins_info.cmp_buffer,
+  -- plugins_info.cmp_rg,
+  plugins_info.cmp_path,
+  plugins_info.cmp_nvim_lsp,
+  -- plugins_info.cmp_luasnip,
+  plugins_info.cmp_cmdline,
+  { plugins_info.lazydev, dependencies = plugins_info.luvit_meta, ft = "lua" },
+  -- plugins_info.cmp_nvim_lsp_signature_help,
 }
 
 M.config = function()

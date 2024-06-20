@@ -1,6 +1,6 @@
 local plugins_info = require "helpers.plugins_info"
 
-local M = { plugins_info.hex.url }
+local M = { plugins_info.hex }
 
 M.dev = true
 

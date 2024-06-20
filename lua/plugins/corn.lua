@@ -1,7 +1,7 @@
 local plugins_info = require "helpers.plugins_info"
 local icons = require "helpers.icons".icons
 
-local M = { plugins_info.corn.url }
+local M = { plugins_info.corn }
 
 -- M.dev = true
 

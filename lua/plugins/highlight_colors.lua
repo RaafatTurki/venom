@@ -1,7 +1,7 @@
 local plugins_info = require "helpers.plugins_info"
 
 local M = {
-  plugins_info.highlight_colors.url
+  plugins_info.highlight_colors
 }
 
 M.config = function()

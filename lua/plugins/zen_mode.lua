@@ -2,7 +2,7 @@ local plugins_info = require "helpers.plugins_info"
 local icons = require "helpers.icons".icons
 local keys = require "helpers.keys"
 
-local M = { plugins_info.zen_mode.url }
+local M = { plugins_info.zen_mode }
 
 M.config = function()
   require "zen-mode".setup {}

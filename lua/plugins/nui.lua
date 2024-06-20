@@ -1,6 +1,6 @@
 local plugins_info = require "helpers.plugins_info"
 
-local M = { plugins_info.nui.url }
+local M = { plugins_info.nui }
 
 M.config = function()
   local Input = require("nui.input")

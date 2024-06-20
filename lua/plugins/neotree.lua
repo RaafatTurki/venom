@@ -2,15 +2,15 @@ local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
 
-local M = { plugins_info.neotree.url }
+local M = { plugins_info.neotree }
 
 M.branch = "v3.x"
 
 M.dependencies = {
-  plugins_info.plenary.url,
-  plugins_info.devicons.url,
-  plugins_info.nui.url,
-  -- plugins_info.image.url, -- Optional image support in preview window: See `# Preview Mode` for more information
+  plugins_info.plenary,
+  plugins_info.devicons,
+  plugins_info.nui,
+  -- plugins_info.image, -- Optional image support in preview window: See `# Preview Mode` for more information
 }
 
 M.config = function()

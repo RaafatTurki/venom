@@ -2,7 +2,7 @@ local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 
 local M = {
-  plugins_info.copilot.url
+  plugins_info.copilot
 }
 
 M.cmd = "Copilot"

@@ -4,10 +4,10 @@ local buffers = require "helpers.buffers"
 local sessions = require "helpers.sessions"
 local icons = require "helpers.icons".icons
 
-local M = { plugins_info.heirline.url }
+local M = { plugins_info.heirline }
 
 M.dependencies = {
-  plugins_info.devicons.url,
+  plugins_info.devicons,
 }
 
 M.config = function()

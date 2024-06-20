@@ -1,7 +1,7 @@
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 
-local M = { plugins_info.gitsigns.url }
+local M = { plugins_info.gitsigns }
 
 -- M.config = function()
 --   require 'gitsigns'.setup {

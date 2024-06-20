@@ -1,7 +1,7 @@
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 
-local M = { plugins_info.fold_cycle.url }
+local M = { plugins_info.fold_cycle }
 
 M.config = function()
   local fold_cycle = require "fold-cycle"

@@ -4,10 +4,10 @@ local keys = require "helpers.keys"
 local buffers = require "helpers.buffers"
 local precomputed_colors = require "helpers.precomputed_colors"
 
-local M = { plugins_info.mini.url }
+local M = { plugins_info.mini }
 
 M.dependencies = {
-  plugins_info.devicons.url,
+  plugins_info.devicons,
 }
 
 M.config = function()

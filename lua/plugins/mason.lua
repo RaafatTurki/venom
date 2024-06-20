@@ -3,15 +3,15 @@ local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
 
-local M = { plugins_info.mason.url }
+local M = { plugins_info.mason }
 
 M.dependencies = {
-  plugins_info.lspconfig.url,
-  plugins_info.mason_lspconfig.url,
-  -- plugins_info.neodev.url,
-  plugins_info.omnisharp_ext.url,
-  { plugins_info.typescript_tools.url, dependencies = plugins_info.plenary.url },
-  -- plugins_info.lsp_overloads.url,
+  plugins_info.lspconfig,
+  plugins_info.mason_lspconfig,
+  -- plugins_info.neodev,
+  plugins_info.omnisharp_ext,
+  { plugins_info.typescript_tools, dependencies = plugins_info.plenary },
+  -- plugins_info.lsp_overloads,
 }
 
 M.config = function()

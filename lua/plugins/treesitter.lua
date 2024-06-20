@@ -2,14 +2,14 @@ local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local buffers = require "helpers.buffers"
 
-local M = { plugins_info.treesitter.url }
+local M = { plugins_info.treesitter }
 
 -- M.dev = true
 
 M.dependencies = {
-  -- plugins_info.treesitter_ctx_cms.url,
-  -- plugins_info.treesitter_ctx.url,
-  plugins_info.treesitter_comments.url,
+  -- plugins_info.treesitter_ctx_cms,
+  -- plugins_info.treesitter_ctx,
+  plugins_info.treesitter_comments,
 }
 
 M.build = function()

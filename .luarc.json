@@ -1,9 +1,5 @@
 {
-  "diagnostics.globals": [
-    "prequire",
-    "log",
-    "large_filesize",
-  ],
+  "diagnostics.globals": [],
   "workspace.checkThirdParty": "Disable",
   "diagnostics.disable": [
     "lowercase-global",

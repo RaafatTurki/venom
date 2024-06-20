@@ -88,6 +88,7 @@ M.BufList = function()
       local index = self:get_buf_index({ bufnr = bufnr })
       if index then
         table.remove(self.bufs, index)
+        self:focus_buf(index)
         -- events.buflist_update()
       end
     end,

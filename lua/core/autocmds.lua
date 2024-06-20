@@ -21,90 +21,64 @@ vim.api.nvim_create_autocmd("VimLeave", {
   end
 })
 
--- filetype based autocmd
--- vim.api.nvim_create_autocmd({ "Filetype" }, {
---   callback = function(ev)
---
---     local ft_handlers = {
---       cs = function() vim.bo.commentstring = "// %s" end,
---       cpp = function() vim.bo.commentstring = "// %s" end,
---       dart = function() vim.bo.commentstring = "// %s" end,
---       prisma = function() vim.bo.commentstring = "// %s" end,
---       typst = function() vim.bo.commentstring = "// %s" end,
---       glsl = function() vim.bo.commentstring = "// %s" end,
---       dosini = function() vim.bo.commentstring = "# %s" end,
---       resolv = function() vim.bo.commentstring = "# %s" end,
---       hurl = function() vim.bo.commentstring = "# %s" end,
---       iss = function() vim.bo.commentstring = "; %s" end,
---       sql = function() vim.bo.commentstring = "-- %s" end,
---       tsx = function() vim.bo.commentstring = "{/* %s */}" end,
---       jsx = function() vim.bo.commentstring = "{/* %s */}" end,
---     }
---
---     if vim.tbl_contains(vim.tbl_keys(ft_handlers), ev.match) then
---       ft_handlers[ev.match]()
---     end
---   end
--- })
+-- filename based filetypes
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+  callback = function(ev)
+
+    local fn_pattern_ft = {
+      ['.env%.*'] = "sh",
+      ['.*%.svx'] = "sh",
+      ['.*%.swcrc'] = "json",
+
+      -- au BufEnter xorg.conf* setlocal ft=xf86conf
+      -- au BufRead,BufNewFile */xorg.conf.d/*.conf* setlocal ft=xf86conf
+    }
+
+    local filename = vim.fs.basename(ev.file)
+
+    for pattern, ft in pairs(fn_pattern_ft) do
+      local match = string.match(filename, pattern)
+      if match and #match == #filename then
+        log(match)
+        vim.bo.filetype = ft
+      end
+    end
+  end
+})
+
+-- filetype based comment strings
+vim.api.nvim_create_autocmd({ "Filetype" }, {
+  callback = function(ev)
+
+    local ft_cms = {
+      typescript = "// %s",
+      javascript = "// %s",
+      sshdconfig = "# %s",
+      sql = "-- %s",
+    }
+
+    if vim.tbl_contains(vim.tbl_keys(ft_cms), ev.match) then
+      vim.bo.commentstring = ft_cms[ev.match]
+    end
+  end
+})
 
 -- filename based autocmd
-vim.cmd [[
-  augroup base
-  au!
-
-  " file name
-  au BufEnter *.svx setlocal ft=svelte
-  au BufEnter *.typ setlocal ft=typst
-  au BufEnter *.hurl setlocal ft=hurl
-
-  au BufEnter en.json setlocal wrap
-  au BufEnter ar.json setlocal wrap
-  au BufEnter .swcrc setlocal ft=json
-  " au BufEnter tsconfig.json setlocal ft=jsonc
-  " au BufEnter mimeapps.list setlocal ft=dosini
-  " au BufEnter PKGBUILD.* setlocal ft=PKGBUILD
-  " au BufEnter README setlocal ft=markdown
-  " au BufEnter nanorc setlocal ft=nanorc
-  " au BufEnter pythonrc setlocal ft=python
-  " au BufEnter sxhkdrc,*.sxhkdrc set ft=sxhkdrc
-  " au BufEnter .classpath setlocal ft=xml
-  au BufEnter .env* setlocal ft=sh
-  " au BufEnter .replit setlocal ft=toml
-  " au BufEnter package.json setlocal nofoldenable
-  " au BufEnter tsconfig.json setlocal nofoldenable
-
-  " " file type
-  " au FileType lspinfo setlocal nofoldenable
-  " au FileType alpha setlocal cursorline
-  " au FileType lazy setlocal cursorline
-
-  " " comment strings
-  " au BufEnter ripgreprc* setlocal commentstring=#%s
-  " au FileType sshdconfig setlocal commentstring=#%s
-   au FileType kdl setlocal commentstring=//\ %s
-  " au FileType c setlocal commentstring=//%s
-  " au FileType arduino setlocal commentstring=//%s
-  " au FileType cs setlocal commentstring=//%s
-  " au FileType gdscript setlocal commentstring=#%s
-  " au FileType fish setlocal commentstring=#%s
-  " au FileType prisma setlocal commentstring=//%s
-  " au FileType sxhkdrc setlocal commentstring=#%s
-  " au FileType dart setlocal commentstring=//%s
-
-  " au BufEnter xorg.conf* setlocal ft=xf86conf
-  " au BufRead,BufNewFile */xorg.conf.d/*.conf* setlocal ft=xf86conf
-
-  " terminal
-  " au FileType terminal setlocal nocursorline
-  " au TermOpen * setlocal nonumber
-  " au TermOpen * setlocal norelativenumber
-  " au TermOpen * setlocal signcolumn=no
-
-  " au InsertLeave,TextChanged * set foldmethod=expr
-  " au BufWritePost * set foldmethod=expr
-
-  augroup base
-]]
+-- vim.cmd [[
+--   augroup base
+--   au!
+--
+--   " terminal
+--   " au FileType terminal setlocal nocursorline
+--   " au TermOpen * setlocal nonumber
+--   " au TermOpen * setlocal norelativenumber
+--   " au TermOpen * setlocal signcolumn=no
+--
+--   " au InsertLeave,TextChanged * set foldmethod=expr
+--   " au BufWritePost * set foldmethod=expr
+--
+--   augroup base
+-- ]]
 
 -- -- huge buffer detection
 -- vim.api.nvim_create_autocmd({ "BufReadPre" }, {

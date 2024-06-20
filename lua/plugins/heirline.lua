@@ -526,6 +526,22 @@ M.config = function()
     end,
   }
 
+  local sc_lightbulb = {
+    init = function(self)
+      self.ns = vim.api.nvim_get_namespaces()["nvim-lightbulb"]
+    end,
+    provider = function(self)
+      local sign = get_lnum_sign(self.ns)
+      -- remove the last character (white space)
+      local sign_text = sign and sign.sign_text:sub(1, -2)
+      return sign_text or ' '
+    end,
+    hl = function(self)
+      local sign = get_lnum_sign(self.ns)
+      return sign and sign.sign_hl_group or 'Normal'
+    end,
+  }
+
   local sc_diags = {
     provider = function(self)
       local severity_level = get_lnum_diag_severity()
@@ -600,6 +616,7 @@ M.config = function()
         space,
 
         sc_fold,
+        sc_lightbulb,
         space,
       }
     },

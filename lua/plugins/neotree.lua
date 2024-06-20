@@ -1,6 +1,6 @@
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
-local icons= require "helpers.icons"
+local icons = require "helpers.icons".icons
 
 local M = { plugins_info.neotree.url }
 
@@ -21,16 +21,30 @@ M.config = function()
     default_component_configs = {
       git_status = {
         symbols = {
-          added     = icons.icons.vcs.staged,
-          deleted   = icons.icons.vcs.deleted,
-          modified  = icons.icons.vcs.modified,
-          renamed   = icons.icons.vcs.renamed,
-          untracked = icons.icons.vcs.untracked,
-          ignored   = icons.icons.vcs.ignored,
-          staged    = icons.icons.vcs.staged,
-          conflict  = icons.icons.vcs.conflicted,
+          added     = icons.vcs.staged,
+          deleted   = icons.vcs.deleted,
+          modified  = icons.vcs.modified,
+          renamed   = icons.vcs.renamed,
+          untracked = icons.vcs.untracked,
+          ignored   = icons.vcs.ignored,
+          staged    = icons.vcs.staged,
+          conflict  = icons.vcs.conflicted,
           unstaged  = '',
         }
+      },
+      diagnostics = {
+        symbols = {
+          hint = icons.diag.Hint,
+          info = icons.diag.Info,
+          warn = icons.diag.Warn,
+          error = icons.diag.Error,
+        },
+        highlights = {
+          hint = "DiagnosticSignHint",
+          info = "DiagnosticSignInfo",
+          warn = "DiagnosticSignWarn",
+          error = "DiagnosticSignError",
+        },
       },
       symlink_target = {
         enabled = true,

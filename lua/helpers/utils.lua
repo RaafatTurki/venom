@@ -184,6 +184,37 @@ end
 
 
 -- Neovim Utils
+--- returns the first extmark of the current line within a specific namespace (nil if none)
+M.get_lnum_extmark = function(ns)
+  local extmarks = nil
+  local extmark = nil
+  local sign = nil
+
+  if ns then extmarks = vim.api.nvim_buf_get_extmarks(0, ns, {vim.v.lnum-1,0}, {vim.v.lnum-1,0}, { type = "sign", details = true }) end
+  if extmarks then extmark = extmarks[1] end
+  if extmark then sign = extmark[4] end
+
+  return sign
+end
+
+--- returns the severity level of the current line diagnostics (nil if none)
+M.get_lnum_diag_severity = function()
+  diagnostics = vim.diagnostic.get(0, { lnum = vim.v.lnum - 1 })
+
+  local severity_level = nil
+
+  for i, diag in ipairs(diagnostics) do
+    if severity_level == nil then
+      severity_level = diag.severity
+    else if diag.severity < severity_level then
+        severity_level = diag.severity
+      end
+    end
+  end
+
+  return severity_level
+end
+
 --- return if a file size is considered huge
 function M.is_file_huge(file_path)
   -- local huge_buffer_size = 1000000 -- 1MB

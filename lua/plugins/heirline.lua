@@ -73,7 +73,7 @@ M.config = function()
     -- icon
     {
       init = function(self)
-        if vim.api.nvim_buf_get_option(self.bufnr, 'buftype') == 'terminal' then
+        if vim.api.nvim_get_option_value('buftype', { buf = self.bufnr }) == 'terminal' then
           self.icon = ' '
           self.icon_color = utils.get_highlight('Type').fg
         else
@@ -103,15 +103,15 @@ M.config = function()
     -- indicators
     {
       {
-        condition = function(self) return vim.api.nvim_buf_get_option(self.bufnr, 'modified') end,
+        condition = function(self) return vim.api.nvim_get_option_value('modified', { buf = self.bufnr }) end,
         provider = '• ',
         hl = 'DiffAdd',
       },
       {
         condition = function(self)
           -- return (not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or vim.api.nvim_buf_get_option(self.bufnr, "readonly")) and not vim.api.nvim_buf_get_option(self.bufnr, 'buftype') == 'terminal'
-          return not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or
-            vim.api.nvim_buf_get_option(self.bufnr, "readonly")
+          return not vim.api.nvim_get_option_value("modifiable", { buf = self.bufnr }) or
+            vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
         end,
         provider = ' ',
         hl = 'ErrorMsg',
@@ -322,7 +322,7 @@ M.config = function()
     },
     provider = function(self)
       local names = {}
-      for i, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+      for i, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
         if not vim.tbl_contains(self.blacklisted_servers, server.name) then
           table.insert(names, server.name)
         end
@@ -407,36 +407,6 @@ M.config = function()
 
 
   -- NOTE: statuscolumn
-  local function get_lnum_sign(ns)
-    local extmarks = nil
-    local extmark = nil
-    local sign = nil
-
-    if ns then extmarks = vim.api.nvim_buf_get_extmarks(0, ns, {vim.v.lnum-1,0}, {vim.v.lnum-1,0}, { type = "sign", details = true }) end
-    if extmarks then extmark = extmarks[1] end
-    if extmark then sign = extmark[4] end
-
-    return sign
-  end
-
-  local function get_lnum_diag_severity()
-    diagnostics = vim.diagnostic.get(0, { lnum = vim.v.lnum - 1 })
-
-    local severity_level = nil
-
-    for i, diag in ipairs(diagnostics) do
-      if severity_level == nil then
-        severity_level = diag.severity
-      else if diag.severity < severity_level then
-          severity_level = diag.severity
-        end
-      end
-    end
-
-    return severity_level
-  end
-
-
   local sc_lnum = {
     condition = function()
       return vim.o.number
@@ -515,13 +485,13 @@ M.config = function()
       self.ns = vim.api.nvim_get_namespaces()["MiniDiffViz"]
     end,
     provider = function(self)
-      local sign = get_lnum_sign(self.ns)
+      local sign = U.get_lnum_extmark(self.ns)
       -- remove the last character (white space)
       local sign_text = sign and sign.sign_text:sub(1, -2)
       return sign_text or ' '
     end,
     hl = function(self)
-      local sign = get_lnum_sign(self.ns)
+      local sign = U.get_lnum_extmark(self.ns)
       return sign and sign.sign_hl_group or 'Normal'
     end,
   }
@@ -531,20 +501,20 @@ M.config = function()
       self.ns = vim.api.nvim_get_namespaces()["nvim-lightbulb"]
     end,
     provider = function(self)
-      local sign = get_lnum_sign(self.ns)
+      local sign = U.get_lnum_extmark(self.ns)
       -- remove the last character (white space)
       local sign_text = sign and sign.sign_text:sub(1, -2)
       return sign_text or ' '
     end,
     hl = function(self)
-      local sign = get_lnum_sign(self.ns)
+      local sign = U.get_lnum_extmark(self.ns)
       return sign and sign.sign_hl_group or 'Normal'
     end,
   }
 
   local sc_diags = {
     provider = function(self)
-      local severity_level = get_lnum_diag_severity()
+      local severity_level = U.get_lnum_diag_severity()
 
       local diag_icons = {
         icons.diag.Error,
@@ -556,7 +526,7 @@ M.config = function()
       return severity_level and diag_icons[severity_level] or ' '
     end,
     hl = function()
-      local severity_level = get_lnum_diag_severity()
+      local severity_level = U.get_lnum_diag_severity()
       if not severity_level then return 'Normal' end
 
       local diag_hls = {

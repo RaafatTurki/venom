@@ -557,6 +557,7 @@ M.config = function()
     end,
     hl = function()
       local severity_level = get_lnum_diag_severity()
+      if not severity_level then return 'Normal' end
 
       local diag_hls = {
         "DiagnosticSignError",
@@ -565,7 +566,7 @@ M.config = function()
         "DiagnosticSignHint",
       }
 
-      return severity_level and diag_hls[severity_level] or ''
+      return diag_hls[severity_level]
     end
   }
 

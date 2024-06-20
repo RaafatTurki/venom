@@ -27,7 +27,6 @@ local M = {
   -- sfm_git                     = "dinhhuy258/sfm-git.nvim",
   devicons                    = "nvim-tree/nvim-web-devicons",
   heirline                    = "rebelot/heirline.nvim",
-  gitsigns                    = "lewis6991/gitsigns.nvim",
   git_conflict                = "akinsho/git-conflict.nvim",
   dressing                    = "stevearc/dressing.nvim",
   corn                        = "RaafatTurki/corn.nvim",

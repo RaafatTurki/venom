@@ -120,7 +120,9 @@ local c = {
   mg        = grey[1],
   fg        = white[1],
   line      = black[2],
-  match     = grey[10],
+
+  acc       = cyan[1],
+
   fold      = grey[8],
 
   -- diag
@@ -311,7 +313,7 @@ local highlights = {
   ['NormalFloat']     = { "Normal" },
   ['NormalNC']        = { "Normal" },
 
-  ['Search']          = { bg = c.match },
+  ['Search']          = { bg = c.fold },
   ['IncSearch']       = { "Search" },
   ['CurSearch']       = { "Search" },
   ['Substitute']      = { "Search" },
@@ -337,7 +339,7 @@ local highlights = {
   ['TermCursor']      = { underline = true },
   ['TermCursorNC']    = { "TermCursor" },
 
-  ['SpecialKey']      = { fg = c.fold },
+  ['SpecialKey']      = { fg = c.special },
   ['Whitespace']      = { fg = c.comment },
 
   ['DiffAdd']         = { "@diff.plus" },
@@ -353,11 +355,11 @@ local highlights = {
   ['StatusLine']      = { bg = c.bg },
   ['StatusLineNC']    = { bg = c.bg },
 
-  ['TabLine']         = { bg = c.bg, fg = c.fold },
-  ['TabLineFill']     = { bg = c.bg,  },
+  ['TabLine']         = { bg = c.bg, fg = c.mg },
+  ['TabLineFill']     = { bg = c.bg },
   ['TabLineSel']      = { bg = c.bg, fg = c.fg, bold = true },
 
-  ['Pmenu']           = { bg = c.bg_float },
+  ['Pmenu']           = { bg = c.bg_float }, -- should be c.bg when it gets borders
   ['PmenuSel']        = { bg = c.mg },
   ['PmenuKind']       = { fg = c.comment },
   ['PmenuKindSel']    = { fg = c.comment },
@@ -382,10 +384,10 @@ local highlights = {
   ['Directory']       = {},
   ['SignColumn']      = {},
 
-  ['FloatBorder']     = {},
+  ['FloatBorder']     = { "WinSeparator" },
   ['FloatTitle']      = {},
   ['FloatFooter']     = {},
-  ['WinSeparator']    = {},
+  ['WinSeparator']    = { fg = c.comment },
 
   ['LineNrAbove']     = {},
   ['LineNrBelow']     = {},
@@ -518,10 +520,10 @@ local highlights = {
 
 
   -- Cmp
-  ['CmpItemAbbr']               = { fg = c.fold },
-  ['CmpItemAbbrDeprecated']     = { fg = c.fold, strikethrough = true },
-  ['CmpItemAbbrMatch']          = { fg = c.fg, bold = true },
-  ['CmpItemAbbrMatchFuzzy']     = { fg = c.fg },
+  ['CmpItemAbbr']               = {},
+  ['CmpItemAbbrDeprecated']     = { strikethrough = true },
+  ['CmpItemAbbrMatch']          = { fg = c.acc },
+  ['CmpItemAbbrMatchFuzzy']     = {},
   ['CmpItemKind']               = {},
   ['CmpItemMenu']               = { fg = c.comment },
   ['CmpItemKindText']           = { fg = c.fg },
@@ -564,11 +566,11 @@ local highlights = {
   ['MiniPickIconFile']          = { fg = c.fg },
   ['MiniPickHeader']            = { "@markup.heading.1" },
   ['MiniPickMatchCurrent']      = { "PmenuSel" },
-['MiniPickMatchMarked'] = {},   -- marked matched items.
-  ['MiniPickMatchRanges']       = { fg = c.fg, bold = true },
-  ['MiniPickNormal']            = { fg = c.fold },
-['MiniPickPreviewLine'] = {},   -- target line in preview.
-['MiniPickPreviewRegion'] = {}, -- target region in preview.
+  ['MiniPickMatchMarked']       = { fg = c.acc },
+  ['MiniPickMatchRanges']       = { fg = c.acc, bold = true },
+  ['MiniPickNormal']            = { fg = c.fg },
+  ['MiniPickPreviewLine'] = {},   -- target line in preview.
+  ['MiniPickPreviewRegion'] = {}, -- target region in preview.
   ['MiniPickPrompt']            = { fg = c.fg },
 
 

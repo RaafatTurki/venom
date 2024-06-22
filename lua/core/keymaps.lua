@@ -55,6 +55,10 @@ map("x", "<S-Right>", "$", "Go to end of line")
 -- misc
 -- preserve cursor position on visual yank
 map("x", "y",         "ygv<ESC>")
+-- preserve cursor position on *
+map("n", "*",         "*N")
+-- preserve last yarn on visual paste
+-- map('v', 'p',         '"_dP')
 -- move cursor to the start of the line on format
 -- map("n", "==",        "==_", "")
 -- map("x", "=",         "=gv_", "")

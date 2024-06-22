@@ -499,6 +499,9 @@ local highlights = {
   ['DiagnosticUnnecessary']       = { "@comment" },
 
 
+  -- LspInfo
+  ['LspInfoBorder']               = { "FloatBorder" },
+
 
   -- Mason
   ['MasonNormal'] = { link = "NormalFloat" },

@@ -2,8 +2,8 @@ local M = {}
 
 local icon_sets = {
   diag = {
-    cozette  = { Error = "", Warn = "", Hint = "", Info = "" },
-    codicons = { Error = "", Warn = "", Hint = "", Info = "" },
+    cozette  = { Error = "", Warn = "", Hint = " ", Info = "" },
+    codicons = { Error = "", Warn = "", Hint = " ", Info = "" },
     ascii    = { Error = "E", Warn = "W", Hint = "H", Info = "I" },
   },
   code_action = {

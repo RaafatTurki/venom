@@ -26,11 +26,11 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
   callback = function(ev)
 
     local fn_pattern_ft = {
-      ['.env%.*'] = "sh",
-      ['.*%.svx'] = "sh",
-      ['.*%.swcrc'] = "json",
+      ['%.env.*'] = "sh",
+      ['%.*%.svx'] = "sh",
+      ['%.*%.swcrc'] = "json",
+      ['xorg%.conf%a*'] = "xf86conf",
 
-      -- au BufEnter xorg.conf* setlocal ft=xf86conf
       -- au BufRead,BufNewFile */xorg.conf.d/*.conf* setlocal ft=xf86conf
     }
 
@@ -55,6 +55,7 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
       javascript = "// %s",
       sshdconfig = "# %s",
       sql = "-- %s",
+      css = "/* %s */",
     }
 
     if vim.tbl_contains(vim.tbl_keys(ft_cms), ev.match) then

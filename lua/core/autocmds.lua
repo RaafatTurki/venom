@@ -64,6 +64,13 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
   end
 })
 
+-- set integrated terminal opts
+vim.api.nvim_create_autocmd({ "TermOpen" }, {
+  callback = function(ev)
+    vim.wo.number = false
+  end
+})
+
 -- filename based autocmd
 -- vim.cmd [[
 --   augroup base

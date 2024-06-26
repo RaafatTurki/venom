@@ -24,6 +24,7 @@ local opts = {
   showtabline     = 2,
   -- mousescroll     = "ver:0,hor:0",
   mouse           = 'a',
+  inccommand      = 'split',
   showcmdloc      = 'statusline',
   splitkeep       = 'screen',
   clipboard       = 'unnamed,unnamedplus',
@@ -74,6 +75,7 @@ vim.opt.listchars:append {
   trail = "."
 }
 vim.opt.whichwrap:append '<,>,[,]' -- arrow keys can wrap around to next line
+vim.opt.wildmode:append 'list:longest'
 vim.opt.display:append 'uhex'
 -- TODO: implement spell checking
 -- vim.opt.spelllang     = { 'en_us' }

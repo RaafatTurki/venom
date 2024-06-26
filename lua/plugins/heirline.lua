@@ -109,7 +109,7 @@ M.config = function()
       },
       {
         condition = function(self)
-          -- return (not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or vim.api.nvim_buf_get_option(self.bufnr, "readonly")) and not vim.api.nvim_buf_get_option(self.bufnr, 'buftype') == 'terminal'
+          -- return (not vim.api.nvim_buf_get_option(self.bufnr, "modifiable") or vim.api.nvim_buf_get_option(self.bufnr, "readonly")) and not vim.api.nvim_buf_get_option(self.bufnr, 'buff type') == 'terminal'
           return not vim.api.nvim_get_option_value("modifiable", { buf = self.bufnr }) or
             vim.api.nvim_get_option_value("readonly", { buf = self.bufnr })
         end,
@@ -455,6 +455,16 @@ M.config = function()
     hl = "Folded",
   }
 
+  local spell = {
+    provider = function()
+      if vim.opt.spell:get() then
+        return icons.misc.spellcheck
+      end
+    end,
+    space,
+    hl = "Normal"
+  }
+
   local ruler = {
     -- %l = current line number
     -- %L = number of lines in the buffer
@@ -620,6 +630,7 @@ M.config = function()
         align,
 
         lsp_diagnostics,
+        spell,
         copilot,
         lsp_active,
         search_count,

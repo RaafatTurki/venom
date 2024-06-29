@@ -477,9 +477,9 @@ M.config = function()
 
   -- STATUSCOLUMN
   local sc_lnum = {
-    condition = function()
-      return vim.o.number
-    end,
+    -- condition = function()
+    --   return vim.o.number
+    -- end,
     provider = function()
       local num_count = vim.api.nvim_buf_line_count(0)
 
@@ -497,6 +497,7 @@ M.config = function()
   local sc_fold = {
     condition = function()
       -- there is no point in showing foldcolumn if we can't access the folds api
+      -- TODO: make this work on higher values than 1
       return vim.o.foldcolumn == "1"
     end,
     init = function(self)
@@ -694,7 +695,28 @@ M.config = function()
     statuscolumn = {
       fallthrough = false,
       {
-        condition = function() return U.is_buf_huge(vim.api.nvim_get_current_buf()) end,
+        condition = function()
+          local is_terminal = vim.bo.buftype == 'terminal'
+          local is_dap = vim.tbl_contains({ "dap-repl", "dapui_breakpoints", "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_console", }, vim.bo.ft)
+
+          if is_terminal or is_dap then
+            vim.wo.foldcolumn = '0'
+            vim.wo.number = false
+
+            return true
+          end
+        end,
+      },
+      {
+        condition = function()
+          local is_buf_huge = U.is_buf_huge(vim.api.nvim_get_current_buf())
+
+          if is_buf_huge then
+            vim.bo.foldcolumn = '0'
+
+            return true
+          end
+        end,
         sc_lnum,
         space,
       },

@@ -16,6 +16,7 @@ M.dependencies = {
   -- DAP
   plugins_info.dap,
   plugins_info.mason_dap,
+  { plugins_info.dap_ui, dependencies = plugins_info.nio },
 }
 
 M.config = function()
@@ -161,15 +162,63 @@ M.config = function()
     }
   }
 
+  local dapui = require "dapui"
+
+  dapui.setup {
+    mappings = {
+      edit = "e",
+      expand = { "<Right>" },
+      open = { "<CR>", 'o' },
+      remove = "d",
+      repl = "r",
+      toggle = "<Space>"
+    },
+
+    layouts = {
+      {
+        position = "right",
+        size = 0.3,
+        elements = {
+          { id = "scopes", size = 0.1 },
+          { id = "breakpoints", size = 0.2 },
+          { id = "stacks", size = 0.3 },
+          -- { id = "watches", size = 0.4 },
+        },
+      },
+      { elements = { "repl" }, size = 10, position = "bottom" },
+      -- { elements = { "console", }, size = 0.25, position = "left" },
+    },
+
+    -- floating = {
+    --   max_height = nil, -- These can be integers or a float between 0 and 1.
+    --   max_width = nil, -- Floats will be treated as percentage of your screen.
+    --   border = "single", -- Border style. Can be "single", "double" or "rounded"
+    --   mappings = {
+    --     close = { "q", "<Esc>" },
+    --   },
+    -- },
+
+    -- windows = {
+    --   indent = 1
+    -- },
+    --
+    -- render = {
+    --   max_type_length = nil, -- Can be integer or nil.
+    --   max_value_lines = 100, -- Can be integer or nil.
+    -- },
+  }
+
   -- MASON
   keys.map("n", "<leader>l", "<CMD>Mason<CR>", "Open mason")
   -- DAP
-  keys.map("n", "dc", dap.continue, "DAP Continue")
-  keys.map("n", "db", dap.toggle_breakpoint, "DAP Toggle breakpoint")
-  keys.map("n", "d<Right>", dap.step_into, "DAP Step into")
-  keys.map("n", "d<Left>", dap.step_out, "DAP Step out")
-  keys.map("n", "d<Up>", dap.step_back, "DAP Step back")
-  keys.map("n", "d<Down>", dap.step_over, "DAP Step over")
+  keys.map("n", "xs", function() dap.continue() dapui.open() end, "DAP Start")
+  keys.map("n", "xq", function() dap.terminate() dapui.close() end, "DAP Terminate")
+  keys.map("n", "xc", dap.continue, "DAP Continue")
+  keys.map("n", "xx", dap.toggle_breakpoint, "DAP Toggle breakpoint")
+  keys.map("n", "x<Right>", dap.step_into, "DAP Step into")
+  keys.map("n", "x<Left>", dap.step_out, "DAP Step out")
+  keys.map("n", "x<Up>", dap.step_back, "DAP Step back")
+  keys.map("n", "x<Down>", dap.step_over, "DAP Step over")
 end
 
 -- server setup opts extender wrapper

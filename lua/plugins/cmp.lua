@@ -109,6 +109,13 @@ M.config = function()
     formatting = {
       fields = { "kind", "abbr", "menu" },
       format = function(entry, vim_item)
+        -- highlight_colors cmp integration (tailwind color completions n stuff) (we check for .format to avoid errors when the plugin is not setup yet)
+        -- local highlight_colors = prequire "nvim-highlight-colors"
+        -- if highlight_colors and highlight_colors.format then
+        --   vim_item = highlight_colors.format(entry, vim_item)
+        -- end
+
+        -- item kind icons (edgecase for codeium)
         if entry.source.name == "codeium" then
           vim_item.kind = icons.copilot.Codeium or ''
         else

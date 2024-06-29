@@ -54,6 +54,10 @@ M.BufList = function()
       if not U.is_within_range(index, 1, #self.bufs) then return end
 
       local file_path = self.bufs[index].file_path
+
+      -- TODO: instead of this check filepath is a real path for real (be mindful of relative vs absolute pathing)
+      if file_path == "" then return end
+
       vim.cmd.edit(file_path)
 
       self.last_focused_buf_i = index

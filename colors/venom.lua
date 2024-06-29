@@ -538,7 +538,7 @@ local highlights = {
   ['CmpItemKindClass']          = { fg = c.type },
   ['CmpItemKindInterface']      = { fg = c.type },
   ['CmpItemKindModule']         = { fg = c.special },
-  ['CmpItemKindProperty']       = { fg = c.entity },
+  ['CmpItemKindProperty']       = { fg = c.type },
   ['CmpItemKindUnit']           = { fg = c.keyword },
   ['CmpItemKindValue']          = { fg = c.string },
   ['CmpItemKindEnum']           = { fg = c.keyword },

@@ -28,7 +28,7 @@ require "helpers.spell"
 -- require "helpers.osc52"
 require "helpers.normal_mode_on_write"
 require "helpers.text_object_all"
-require "helpers.lsp"
+require "helpers.lsp_utils"
 
 require "core.lazy"
 

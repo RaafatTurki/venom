@@ -3,15 +3,16 @@ local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
 
-local M = { plugins_info.mason }
+local M = {
+  plugins_info.mason,
+}
 
 M.dependencies = {
+  -- LSP
   plugins_info.lspconfig,
   plugins_info.mason_lspconfig,
-  -- plugins_info.neodev,
   plugins_info.omnisharp_ext,
   { plugins_info.typescript_tools, dependencies = plugins_info.plenary },
-  -- plugins_info.lsp_overloads,
 }
 
 M.config = function()
@@ -39,111 +40,114 @@ M.config = function()
     }
   }
 
-  keys.map("n", "<leader>l", "<CMD>Mason<CR>", "Open mason")
-
+  -- LSP
   -- adds border to :LspInfo window
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- setting up mason servers
   local lspconfig_util = require 'lspconfig.util'
-  require "mason-lspconfig".setup()
-  require "mason-lspconfig".setup_handlers {
-    function(server_name)
-      M.setup_server_lspconfig(server_name, {})
-    end,
-    tsserver = function()
-      local opts = M.extend_server_opts_w_shared_opts {
-        settings = {
-          expose_as_code_action = "all",
-        },
-      }
-
-      require "typescript-tools".setup(opts)
-    end,
-    clangd = function()
-      M.setup_server_lspconfig('clangd', {
-        cmd = {
-          "clangd",
-          "--offset-encoding=utf-16",
-        },
-      })
-    end,
-    lua_ls = function()
-      local neodev = prequire "neodev"
-      if neodev then
-        neodev.setup { library = { plugins = false } }
-      end
-
-      M.setup_server_lspconfig('lua_ls', {
-        settings = {
-          Lua = {
-            diagnostics = { disable = { 'lowercase-global', 'trailing-space', 'unused-local' } },
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
-          }
-        },
-      })
-    end,
-    omnisharp = function()
-      local opt = {}
-
-      local omnisharp_ext = prequire "omnisharp_extended"
-      if omnisharp_ext then
-        opt.handlers = {
-          ["textDocument/definition"] = require('omnisharp_extended').handler,
+  require "mason-lspconfig".setup {
+    handlers = {
+      function(server_name)
+        M.setup_lsp_server_lspconfig(server_name, {})
+      end,
+      tsserver = function()
+        local opts = M.extend_lsp_server_opts_w_shared_opts {
+          settings = {
+            expose_as_code_action = "all",
+          },
         }
-      end
 
-      M.setup_server_lspconfig('omnisharp', opt)
-    end,
-    markdown_oxide = function()
-      M.setup_server_lspconfig('markdown_oxide', {
-        capabilities = {
-          workspace = {
-            didChangeWatchedFiles = {
-              dynamicRegistration = true,
+        require "typescript-tools".setup(opts)
+      end,
+      clangd = function()
+        M.setup_lsp_server_lspconfig('clangd', {
+          cmd = {
+            "clangd",
+            "--offset-encoding=utf-16",
+          },
+        })
+      end,
+      lua_ls = function()
+        local neodev = prequire "neodev"
+        if neodev then
+          neodev.setup { library = { plugins = false } }
+        end
+
+        M.setup_lsp_server_lspconfig('lua_ls', {
+          settings = {
+            Lua = {
+              diagnostics = { disable = { 'lowercase-global', 'trailing-space', 'unused-local' } },
+              workspace = { checkThirdParty = false },
+              telemetry = { enable = false },
+            }
+          },
+        })
+      end,
+      omnisharp = function()
+        local opt = {}
+
+        local omnisharp_ext = prequire "omnisharp_extended"
+        if omnisharp_ext then
+          opt.handlers = {
+            ["textDocument/definition"] = require('omnisharp_extended').handler,
+          }
+        end
+
+        M.setup_lsp_server_lspconfig('omnisharp', opt)
+      end,
+      markdown_oxide = function()
+        M.setup_lsp_server_lspconfig('markdown_oxide', {
+          capabilities = {
+            workspace = {
+              didChangeWatchedFiles = {
+                dynamicRegistration = true,
+              }
             }
           }
-        }
-      })
-    end,
-    texlab = function()
-      M.setup_server_lspconfig('texlab', {
-        settings = {
-          texlab = {
-            build = {
-              onSave = true,
-              executable = 'tectonic',
-              args = { '%f', '--synctex', '-k' },
-            },
+        })
+      end,
+      texlab = function()
+        M.setup_lsp_server_lspconfig('texlab', {
+          settings = {
+            texlab = {
+              build = {
+                onSave = true,
+                executable = 'tectonic',
+                args = { '%f', '--synctex', '-k' },
+              },
+            }
           }
-        }
-      })
-    end,
+        })
+      end,
+    }
   }
 
   -- setting up non-mason servers
   if vim.fn.executable('godot') == 1 then
-    M.setup_server_lspconfig('gdscript', {
+    M.setup_lsp_server_lspconfig('gdscript', {
       cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
       flags = {
         debounce_text_changes = 150,
       },
     })
   end
-
   if vim.fn.executable('dart') == 1 then
-    M.setup_server_lspconfig('dartls', {
+    M.setup_lsp_server_lspconfig('dartls', {
       -- cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
       -- flags = {
       --   debounce_text_changes = 150,
       -- },
     })
   end
+
+
+
+  keys.map("n", "<leader>l", "<CMD>Mason<CR>", "Open mason")
 end
 
 -- server setup opts extender wrapper
-M.extend_server_opts_w_shared_opts = function(opts)
+M.extend_lsp_server_opts_w_shared_opts = function(opts)
   -- setup shared capabilities
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
   if prequire "nvim-cmp" then
@@ -183,9 +187,9 @@ M.extend_server_opts_w_shared_opts = function(opts)
 end
 
 -- lspconfig server setup wrapper
-M.setup_server_lspconfig = function(server_name, opts)
+M.setup_lsp_server_lspconfig = function(server_name, opts)
   local lspconf = require 'lspconfig'
-  lspconf[server_name].setup(M.extend_server_opts_w_shared_opts(opts))
+  lspconf[server_name].setup(M.extend_lsp_server_opts_w_shared_opts(opts))
 end
 
 return M

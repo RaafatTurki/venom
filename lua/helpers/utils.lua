@@ -184,20 +184,34 @@ end
 
 
 -- Neovim Utils
---- returns the first extmark of the current line within a specific namespace (nil if none)
-M.get_lnum_extmark = function(ns)
-  local extmarks = nil
-  local extmark = nil
-  local sign = nil
+--- returns the extmarks of the current line within a specific namespace
+M.get_lnum_extmark_signs = function(ns, trim, lnum)
+  trim = trim or false
+  lnum = lnum and lnum-1 or vim.v.lnum-1
 
-  if ns then extmarks = vim.api.nvim_buf_get_extmarks(0, ns, {vim.v.lnum-1,0}, {vim.v.lnum-1,0}, { type = "sign", details = true }) end
-  if extmarks then extmark = extmarks[1] end
-  if extmark then sign = extmark[4] end
+  local extmarks = vim.api.nvim_buf_get_extmarks(0, ns, {lnum, 0}, {lnum, 0}, { type = "sign", details = true })
+  local signs = {}
 
-  return sign
+  if extmarks then
+    signs = vim.tbl_map(function(extmark)
+      -- extmark[4] is sign data
+      local sign = extmark[4]
+      if sign then
+
+        if trim and sign.sign_text and #sign.sign_text > 1 then
+          -- trim the last character
+          sign.sign_text = sign.sign_text:sub(1, -2)
+        end
+
+        return sign
+      end
+    end, extmarks)
+  end
+
+  return signs
 end
 
---- returns the severity level of the current line diagnostics (nil if none)
+--- returns the (strongest) severity level of the current line diagnostics (nil if none)
 M.get_lnum_diag_severity = function()
   diagnostics = vim.diagnostic.get(0, { lnum = vim.v.lnum - 1 })
 

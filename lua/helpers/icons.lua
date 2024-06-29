@@ -70,19 +70,21 @@ local icon_sets = {
     },
   },
   dap = {
+    -- nerdfont = {
+    --   breakpoint = "",
+    --   breakpoint_conditional = "",
+    --   breakpoint_rejected = "",
+    --   logpoint = "→",
+    --   stoppoint = "󰁕",
+    --   stoppoint_active = "󰁕",
+    -- },
     nerdfont = {
-      breakpoint = "",
-      breakpoint_conditional = "",
-      breakpoint_rejected = "",
-      logpoint = ".>",
-      stoppoint = "󰁕",
-    },
-    codicons = {
       breakpoint = '',
       breakpoint_conditional = '',
       breakpoint_rejected = '',
       logpoint = '',
-      stoppoint = '', --'→'
+      stoppoint = '',
+      stoppoint_active = "",
     },
     ascii = {
       breakpoint = '**',
@@ -90,6 +92,7 @@ local icon_sets = {
       breakpoint_rejected = 'r*',
       logpoint = 'l*',
       stoppoint = '->',
+      stoppoint_active = '=>',
     },
   },
   vcs = {

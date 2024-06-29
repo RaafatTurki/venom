@@ -13,6 +13,9 @@ M.dependencies = {
   plugins_info.mason_lspconfig,
   plugins_info.omnisharp_ext,
   { plugins_info.typescript_tools, dependencies = plugins_info.plenary },
+  -- DAP
+  plugins_info.dap,
+  plugins_info.mason_dap,
 }
 
 M.config = function()
@@ -142,8 +145,31 @@ M.config = function()
   end
 
 
+  -- DAP
+  vim.fn.sign_define("DapBreakpoint",           { text = icons.dap.breakpoint,              texthl = "ErrorMsg" })
+  vim.fn.sign_define("DapBreakpointCondition",  { text = icons.dap.breakpoint_conditional,  texthl = "ErrorMsg" })
+  vim.fn.sign_define("DapBreakpointRejected",   { text = icons.dap.breakpoint_rejected,     texthl = "ErrorMsg" })
+  vim.fn.sign_define("DapLogPoint",             { text = icons.dap.logpoint,                texthl = "Type" })
+  vim.fn.sign_define("DapStopped",              { text = icons.dap.stoppoint,               texthl = "WarningMsg" })
 
+  local dap = require "dap"
+  require "mason-nvim-dap".setup {
+    handlers = {
+      function(cfg)
+        require('mason-nvim-dap').default_setup(cfg)
+      end
+    }
+  }
+
+  -- MASON
   keys.map("n", "<leader>l", "<CMD>Mason<CR>", "Open mason")
+  -- DAP
+  keys.map("n", "dc", dap.continue, "DAP Continue")
+  keys.map("n", "db", dap.toggle_breakpoint, "DAP Toggle breakpoint")
+  keys.map("n", "d<Right>", dap.step_into, "DAP Step into")
+  keys.map("n", "d<Left>", dap.step_out, "DAP Step out")
+  keys.map("n", "d<Up>", dap.step_back, "DAP Step back")
+  keys.map("n", "d<Down>", dap.step_over, "DAP Step over")
 end
 
 -- server setup opts extender wrapper

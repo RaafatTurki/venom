@@ -18,7 +18,7 @@ M.config = function()
   local space = { provider = " " }
 
 
-  -- NOTE: tabline
+  -- TABLINE
   local tabline_offset = {
     condition = function(self)
       local win = vim.api.nvim_tabpage_list_wins(0)[1]
@@ -155,7 +155,7 @@ M.config = function()
   }
 
 
-  -- NOTE: statusline
+  -- STATUSLINE
   local file_icon = {
     init = function(self)
       local filename = vim.api.nvim_buf_get_name(0)
@@ -475,7 +475,7 @@ M.config = function()
   }
 
 
-  -- NOTE: statuscolumn
+  -- STATUSCOLUMN
   local sc_lnum = {
     condition = function()
       return vim.o.number
@@ -553,15 +553,68 @@ M.config = function()
     init = function(self)
       self.ns = vim.api.nvim_get_namespaces()["MiniDiffViz"]
     end,
+
     provider = function(self)
-      local sign = U.get_lnum_extmark(self.ns)
-      -- remove the last character (white space)
-      local sign_text = sign and sign.sign_text:sub(1, -2)
-      return sign_text or ' '
+      local sign = U.get_lnum_extmark_signs(self.ns, true)[1]
+      return sign and sign.sign_text or ' '
     end,
     hl = function(self)
-      local sign = U.get_lnum_extmark(self.ns)
+      local sign = U.get_lnum_extmark_signs(self.ns)[1]
       return sign and sign.sign_hl_group or 'Normal'
+    end,
+  }
+
+  local sc_dap = {
+    init = function(self)
+      local ns = {}
+
+      -- breakpoints namespace
+      ns.breakpoints = vim.api.nvim_get_namespaces()["dap_breakpoints"]
+
+      -- stoppoint namespace
+      local bufnr = vim.api.nvim_get_current_buf()
+      local dap_ns = vim.api.nvim_get_namespaces()["dap-" .. bufnr]
+      if dap_ns then ns.stoppoint = vim.api.nvim_get_namespaces()["dap-" .. dap_ns] end
+
+      self.ns = ns
+    end,
+    provider = function(self)
+      local signs = {
+        breakpoint = self.ns.breakpoints and U.get_lnum_extmark_signs(self.ns.breakpoints, true)[1],
+        stoppoint = self.ns.stoppoint and U.get_lnum_extmark_signs(self.ns.stoppoint, true)[1],
+      }
+
+      local str = ''
+
+      if signs.breakpoint and signs.stoppoint then
+        str = icons.dap.stoppoint_active
+      elseif signs.breakpoint then
+        str = signs.breakpoint.sign_text
+      elseif signs.stoppoint then
+        str = signs.stoppoint.sign_text
+      else
+        str = ' '
+      end
+
+      return str
+    end,
+    hl = function(self)
+      local signs = {
+        breakpoint = self.ns.breakpoints and U.get_lnum_extmark_signs(self.ns.breakpoints, true)[1],
+        stoppoint = self.ns.stoppoint and U.get_lnum_extmark_signs(self.ns.stoppoint, true)[1],
+      }
+
+      local hl = "Normal"
+
+      if signs.breakpoint then
+        hl = signs.breakpoint.sign_hl_group
+      end
+
+      if signs.stoppoint then
+        hl = signs.stoppoint.sign_hl_group
+      end
+
+      return hl
     end,
   }
 
@@ -570,13 +623,11 @@ M.config = function()
       self.ns = vim.api.nvim_get_namespaces()["nvim-lightbulb"]
     end,
     provider = function(self)
-      local sign = U.get_lnum_extmark(self.ns)
-      -- remove the last character (white space)
-      local sign_text = sign and sign.sign_text:sub(1, -2)
-      return sign_text or ' '
+      local sign = U.get_lnum_extmark_signs(self.ns, true)[1]
+      return sign and sign.sign_text or ' '
     end,
     hl = function(self)
-      local sign = U.get_lnum_extmark(self.ns)
+      local sign = U.get_lnum_extmark_signs(self.ns)[1]
       return sign and sign.sign_hl_group or 'Normal'
     end,
   }
@@ -608,8 +659,6 @@ M.config = function()
       return diag_hls[severity_level]
     end
   }
-
-  -- TODO: sc_dap
 
   require "heirline".setup {
     tabline = {
@@ -650,6 +699,9 @@ M.config = function()
         space,
       },
       {
+        sc_dap,
+        space,
+
         sc_lnum,
 
         sc_mini_diff,

@@ -39,18 +39,13 @@ M.config = function()
       end
     end,
     provider = function(self)
-      local title = self.title
+      local title = ""
       local width = vim.api.nvim_win_get_width(self.winid)
       local pad = math.ceil((width - #title) / 2)
-      return string.rep(" ", pad) .. title .. string.rep(" ", pad)
+      local str = string.rep(" ", pad) .. title .. string.rep(" ", pad)
+      return str .. "│"
     end,
-    hl = function(self)
-      if vim.api.nvim_get_current_win() == self.winid then
-        return "TablineSel"
-      else
-        return "Tabline"
-      end
-    end,
+    hl = "Tabline"
   }
 
   local buffer_abstract = {
@@ -697,9 +692,20 @@ M.config = function()
       {
         condition = function()
           local is_terminal = vim.bo.buftype == 'terminal'
-          local is_dap = vim.tbl_contains({ "dap-repl", "dapui_breakpoints", "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_console", }, vim.bo.ft)
+          local is_help = vim.bo.ft == 'help' and vim.bo.buftype == 'help'
+          local is_ft = vim.tbl_contains({
+            "dap-repl",
+            "dapui_breakpoints",
+            "dapui_scopes",
+            "dapui_stacks",
+            "dapui_watches",
+            "dapui_console",
+            "neo-tree",
+            "NvimTree",
+            "sfm",
+          }, vim.bo.ft)
 
-          if is_terminal or is_dap then
+          if is_terminal or is_help or is_ft then
             vim.wo.foldcolumn = '0'
             vim.wo.number = false
 

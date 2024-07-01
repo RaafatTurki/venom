@@ -7,6 +7,7 @@ local M = {
   lazydev                     = "folke/lazydev.nvim",
   luvit_meta                  = "Bilal2453/luvit-meta",
   mini                        = "echasnovski/mini.nvim",
+  edgy                        = "folke/edgy.nvim",
   treesitter                  = "nvim-treesitter/nvim-treesitter",
   treesitter_comments         = "folke/ts-comments.nvim",
   dap                         = "mfussenegger/nvim-dap",

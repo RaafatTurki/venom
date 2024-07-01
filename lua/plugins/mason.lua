@@ -177,17 +177,28 @@ M.config = function()
     layouts = {
       {
         position = "right",
-        size = 0.3,
+        size = 0.5,
         elements = {
-          { id = "scopes", size = 0.1 },
-          { id = "breakpoints", size = 0.2 },
-          { id = "stacks", size = 0.3 },
-          -- { id = "watches", size = 0.4 },
+          "scopes",
+          "breakpoints",
+          "stacks",
+          -- "watches",
         },
       },
-      { elements = { "repl" }, size = 10, position = "bottom" },
+      {
+        position = "bottom",
+        size = 0.2,
+        elements = {
+          "repl",
+        },
+      },
+      -- { elements = { "repl" } },
       -- { elements = { "console", }, size = 0.25, position = "left" },
     },
+
+    controls = {
+      enabled = false,
+    }
 
     -- floating = {
     --   max_height = nil, -- These can be integers or a float between 0 and 1.

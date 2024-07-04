@@ -6,11 +6,19 @@ local precomputed_colors = require "helpers.precomputed_colors"
 
 local M = { plugins_info.mini }
 
-M.dependencies = {
-  plugins_info.devicons,
-}
+-- M.dependencies = {
+--   plugins_info.devicons,
+-- }
 
 M.config = function()
+  local mini_icons = require 'mini.icons'
+  if mini_icons then
+    mini_icons.setup {
+      -- style = 'ascii',
+    }
+    mini_icons.mock_nvim_web_devicons()
+  end
+
   local mini_map = require "mini.map"
   if mini_map then
     mini_map.setup {

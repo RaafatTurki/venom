@@ -1,57 +1,63 @@
+local M = {}
 
 -- utils
-local clamp = function(n, min, max)
-  return math.min(math.max(n, min), max)
+M.rgb_to_hex = function(rgb)
+  return string.format("#%02x%02x%02x", rgb[1], rgb[2], rgb[3])
 end
 
-local mod = function(hex, amt)
-  hex = hex:sub(2)
-  local hex_r = hex:sub(1, 2)
-  local hex_g = hex:sub(3, 4)
-  local hex_b = hex:sub(5, 6)
-
-  local r = tonumber(hex_r, 16)
-  local g = tonumber(hex_g, 16)
-  local b = tonumber(hex_b, 16)
-
-  r = r + amt
-  g = g + amt
-  b = b + amt
-
-  r = clamp(r, 0, 255)
-  g = clamp(g, 0, 255)
-  b = clamp(b, 0, 255)
-
-  local rgb = (r * 0x10000) + (g * 0x100) + b
-  return string.format("#%06x", rgb)
+M.hex_to_rgb = function(hex)
+  hex = hex:gsub("#", "")
+  local r = tonumber("0x" .. hex:sub(1, 2))
+  local g = tonumber("0x" .. hex:sub(3, 4))
+  local b = tonumber("0x" .. hex:sub(5, 6))
+  return { r, g, b }
 end
 
-local mix = function(color1, color2, weight1, weight2)
-  color1 = string.sub(color1, 2)
-  color2 = string.sub(color2, 2)
-  -- convert hex colors to decimal values
-  local r1, g1, b1 = tonumber("0x"..string.sub(color1, 1, 2)), tonumber("0x"..string.sub(color1, 3, 4)), tonumber("0x"..string.sub(color1, 5, 6))
-  local r2, g2, b2 = tonumber("0x"..string.sub(color2, 1, 2)), tonumber("0x"..string.sub(color2, 3, 4)), tonumber("0x"..string.sub(color2, 5, 6))
-  -- calculate weighted average values to get the mixed color
-  local totalWeight = weight1 + weight2
-  local r = (r1 * weight1 + r2 * weight2) / totalWeight
-  local g = (g1 * weight1 + g2 * weight2) / totalWeight
-  local b = (b1 * weight1 + b2 * weight2) / totalWeight
-  -- convert decimal values back to hex
-  return string.format("#%02x%02x%02x", r, g, b)
+M.interpolate = function(color1, color2, t)
+  local r = color1[1] + (color2[1] - color1[1]) * t
+  local g = color1[2] + (color2[2] - color1[2]) * t
+  local b = color1[3] + (color2[3] - color1[3]) * t
+
+  return {r, g, b}
 end
 
-local gen_shades = function(col)
+M.steps = { 0.1, 0.25, 0.5, 0.75, 0.9 }
+
+M.fg = "#BFB8DC"
+M.bg = "#07080f"
+
+M.gen_shades = function(hex)
   local shades = {}
-  for i = 0, 9 do
-    local new_col = mod(col, i*3)
-    table.insert(shades, new_col)
+  shades[0] = hex
+
+  local base = M.hex_to_rgb(hex)
+  local fg = M.hex_to_rgb(M.fg)
+  local bg = M.hex_to_rgb(M.bg)
+
+  -- towards fg
+  for i, step in ipairs(M.steps) do
+    local shade = M.interpolate(base, fg, step)
+    shades[i] = M.rgb_to_hex(shade)
   end
+
+  -- towards bg
+  for i, step in ipairs(M.steps) do
+    local shade = M.interpolate(base, bg, step)
+    shades[-i] = M.rgb_to_hex(shade)
+  end
+
+  -- log(shades)
+  -- log(base)
+
+  -- local shades = {}
+  -- for i = 0, 9 do
+  --   local new_col = M.mod(col, i*3)
+  --   table.insert(shades, new_col)
+  -- end
   return shades
 end
 
-
-local set_hl = function(group_name, opts)
+M.set_hl = function(group_name, opts)
 
   local hl_opts = {
     fg = opts.fg,
@@ -71,7 +77,7 @@ local set_hl = function(group_name, opts)
     nocombine = opts.nocombine or false,
   }
 
-  if opts.blend ~= nil then hl_opts.blend = clamp(opts.blend, 0, 100) end
+  if opts.blend ~= nil then hl_opts.blend = M.clamp(opts.blend, 0, 100) end
 
   if opts[1] ~= nil then hl_opts.link = opts[1] end
 
@@ -92,84 +98,119 @@ local set_hl = function(group_name, opts)
   vim.api.nvim_set_hl(0, group_name, hl_opts)
 end
 
-local set_hls = function(hl_table)
+M.setup = function(hl_table)
   for hl_group, opts in pairs(hl_table) do
-    set_hl(hl_group, opts)
+    M.set_hl(hl_group, opts)
   end
 
   vim.g.colors_name = "venom"
 end
 
-local green     = gen_shades '#1F5E3F'
-local white     = gen_shades '#C0B9DD'
-local red       = gen_shades '#CB4251'
-local orange    = gen_shades '#F37A2E'
-local yellow    = gen_shades '#FFBE34'
-local lime      = gen_shades '#AAD94C'
-local cyan      = gen_shades '#409FFF'
-local blue      = gen_shades '#3C4879'
-local purple    = gen_shades '#4C3889'
-local grey      = gen_shades '#222A3D'
-local black     = gen_shades '#07080f'
-local debug     = gen_shades '#FF00FF'
+M.bases = {
+  red       = '#CB4251',
+  orange    = '#F37A2E',
+  yellow    = '#FFBE34',
+  green     = '#AAD94C',
+  blue      = '#409FFF',
+  purple    = '#4C3889',
+  grey      = '#222A3D',
+
+  debug     = '#FF00FF',
+}
+
+M.shades = {
+  red       = M.gen_shades(M.bases.red),
+  orange    = M.gen_shades(M.bases.orange),
+  yellow    = M.gen_shades(M.bases.yellow),
+  green     = M.gen_shades(M.bases.green),
+  blue      = M.gen_shades(M.bases.blue),
+  purple    = M.gen_shades(M.bases.purple),
+  grey      = M.gen_shades(M.bases.grey),
+}
+
+M.serialize_shades = function(shades)
+  local ser_shades = {}
+  for i = -#M.steps, #M.steps do
+    table.insert(ser_shades, shades[i])
+  end
+  return ser_shades
+end
+
+-- function test()
+--   vim.api.nvim_buf_set_lines(0, vim.api.nvim_win_get_cursor(0)[1] - 1, vim.api.nvim_win_get_cursor(0)[1], true, {
+--     vim.inspect(M.serialize_shades(M.gen_shades(M.bases.red))),
+--     vim.inspect(M.serialize_shades(M.gen_shades(M.bases.orange))),
+--     vim.inspect(M.serialize_shades(M.gen_shades(M.bases.yellow))),
+--     vim.inspect(M.serialize_shades(M.gen_shades(M.bases.green))),
+--     vim.inspect(M.serialize_shades(M.gen_shades(M.bases.blue))),
+--     vim.inspect(M.serialize_shades(M.gen_shades(M.bases.purple))),
+--     vim.inspect(M.serialize_shades(M.gen_shades(M.bases.grey))),
+--   })
+-- end
 
 local c = {
   -- common
-  bg        = black[1],
-  bg_float  = black[3],
-  mg        = grey[1],
-  fg        = white[1],
-  line      = black[2],
+  bg        = M.bg,
+  fg        = M.fg,
+  bg_float  = M.shades.grey[-3],
+  mg        = M.shades.grey[0],
+  line      = M.shades.grey[-4],
 
-  acc       = cyan[1],
+  acc       = M.shades.blue[-1],
 
-  fold      = grey[8],
+  fold      = M.shades.grey[2],
 
   -- diag
-  ok        = green[4],
-  err       = red[4],
-  info      = cyan[4],
-  warn      = yellow[4],
-  hint      = purple[4],
-  ok_dim    = mix(green[4], black[1], 0.1, 0.9),
-  err_dim   = mix(red[4], black[1], 0.1, 0.9),
-  info_dim  = mix(cyan[4], black[1], 0.1, 0.9),
-  warn_dim  = mix(yellow[4], black[1], 0.1, 0.9),
-  hint_dim  = mix(purple[4], black[1], 0.1, 0.9),
+  ok        = M.shades.green[1],
+  err       = M.shades.red[1],
+  info      = M.shades.blue[1],
+  warn      = M.shades.yellow[1],
+  hint      = M.shades.purple[1],
+
+  ok_dim    = M.shades.green[-4],
+  err_dim   = M.shades.red[-4],
+  info_dim  = M.shades.blue[-4],
+  warn_dim  = M.shades.yellow[-4],
+  hint_dim  = M.shades.purple[-4],
 
   -- diff
-  add       = green[2],
-  mod       = blue[1],
-  del       = red[1],
-  add_alt   = mix(green[2], black[1], 0.6, 0.4),
-  mod_alt   = mix(blue[1], black[1], 0.6, 0.4),
-  del_alt   = mix(red[1], black[1], 0.6, 0.4),
+  add       = M.shades.green[-1],
+  mod       = M.shades.blue[-1],
+  del       = M.shades.red[-1],
+  add_alt   = M.shades.green[-2],
+  mod_alt   = M.shades.blue[-2],
+  del_alt   = M.shades.red[-2],
 
   -- vcs
-  staged    = green[4],
-  unstaged  = grey[2],
-  conflict  = red[1],
-  deleted   = red[1],
-  renamed   = blue[1],
+  staged    = M.shades.green[2],
+  unstaged  = M.shades.grey[2],
+  conflict  = M.shades.red[1],
+  deleted   = M.shades.red[1],
+  renamed   = M.shades.blue[1],
 
   -- syntax
-  comment   = grey[2],
-  link      = cyan[3],
-  note      = blue[10],
-  todo      = orange[5],
-  value     = red[10],
-  variable  = purple[10],
-  constant  = red[1],
-  func      = yellow[1],
-  keyword   = orange[1],
-  operator  = orange[10],
-  string    = green[10],
-  type      = cyan[1],
-  include   = lime[10],
-  special   = orange[2],
+  comment   = M.shades.grey[1],
+  note      = M.shades.blue[-3],
+  todo      = M.shades.orange[-3],
+
+  variable  = M.shades.purple[0],
+  func      = M.shades.yellow[0],
+
+  constant  = M.shades.red[0],
+  value     = M.shades.red[1],
+
+  type      = M.shades.blue[0],
+  link      = M.shades.blue[1],
+
+  string    = M.shades.green[0],
+  include   = M.shades.green[1],
+
+  keyword   = M.shades.orange[0],
+  special   = M.shades.orange[1],
+  operator  = M.shades.orange[2],
 
   -- others
-  debug     = debug[1]
+  debug     = M.bases.debug
 }
 
 local highlights = {
@@ -565,8 +606,8 @@ local highlights = {
   -- Pick
   ['MiniPickBorder']            = { "FloatBorder" },
   ['MiniPickBorderBusy']        = { fg = c.fold },
-  ['MiniPickIconDirectory']     = { fg = c.fg },
-  ['MiniPickIconFile']          = { fg = c.fg },
+  -- ['MiniPickIconDirectory']     = { fg = c.fg },
+  -- ['MiniPickIconFile']          = { fg = c.fg },
   ['MiniPickHeader']            = { "@markup.heading.1" },
   ['MiniPickMatchCurrent']      = { "PmenuSel" },
   ['MiniPickMatchMarked']       = { fg = c.acc },
@@ -575,16 +616,26 @@ local highlights = {
   ['MiniPickPreviewLine'] = {},   -- target line in preview.
   ['MiniPickPreviewRegion'] = {}, -- target region in preview.
   ['MiniPickPrompt']            = { fg = c.fg },
+  -- Icons
+  ['MiniIconsAzure']            = { fg = M.shades.blue[1] },
+  ['MiniIconsBlue']             = { fg = M.shades.blue[0] },
+  ['MiniIconsCyan']             = { fg = M.shades.blue[2] },
+  ['MiniIconsGreen']            = { fg = M.shades.green[0] },
+  ['MiniIconsGrey']             = { fg = M.shades.grey[2] },
+  ['MiniIconsOrange']           = { fg = M.shades.orange[0] },
+  ['MiniIconsPurple']           = { fg = M.shades.purple[0] },
+  ['MiniIconsRed']              = { fg = M.shades.red[0] },
+  ['MiniIconsYellow']           = { fg = M.shades.yellow[0] },
 
 
   -- Neotree
   -- NeoTreeBufferNumber       The buffer number shown in the buffers source.
   -- NeoTreeCursorLine         |hl-CursorLine| override in Neo-tree window.
-  NeoTreeDimText               = { fg = c.fold }, -- Greyed out text used in various places.
-  -- NeoTreeDirectoryIcon      Directory icon.
+  NeoTreeDimText                = { fg = c.fold }, -- Greyed out text used in various places.
+  NeoTreeDirectoryIcon          = { "MiniIconsGrey" },
   -- NeoTreeDirectoryName      Directory name.
   NeoTreeDotfile               = { fg = c.comment }, -- Used for icons and names when dotfiles are filtered.
-  -- NeoTreeFileIcon           File icon, when not overridden by devicons.
+  NeoTreeFileIcon               = { "MiniIconGrey" },
   -- NeoTreeFileName           File name, when not overwritten by another status.
   -- NeoTreeFileNameOpened     File name when the file is open. Not used yet.
   -- NeoTreeFilterTerm         The filter term, as displayed in the root node.
@@ -630,4 +681,4 @@ local highlights = {
 
 }
 
-set_hls(highlights)
+M.setup(highlights)

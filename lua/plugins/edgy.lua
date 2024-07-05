@@ -20,6 +20,12 @@ M.config = function()
         filter = function(buf) return vim.bo[buf].buftype == "help" end,
       },
       {
+        title = "Help",
+        ft = "markdown",
+        size = { width = 100 },
+        filter = function(buf) return vim.bo[buf].buftype == "help" end,
+      },
+      {
         title = "Scopes",
         ft = "dapui_scopes",
         size = { width = 100 },

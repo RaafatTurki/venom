@@ -200,6 +200,13 @@ M.config = function()
     mini_git.setup {}
   end
 
+  local mini_hipatterns = require 'mini.hipatterns'
+  if mini_hipatterns then
+    mini_hipatterns.setup {
+      highlighters = precomputed_colors.all
+    }
+  end
+
   -- TODO: clue
   -- local mini_clue = require 'mini.clue'
   -- if mini_clue then

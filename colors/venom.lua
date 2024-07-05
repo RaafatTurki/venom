@@ -217,21 +217,21 @@ local highlights = {
 
   -- TREE SITTER
   ['@variable']                     = { fg = c.fg },
-  ['@variable.builtin']             = { "@variable" },
+  ['@variable.builtin']             = { '@variable' },
   ['@variable.parameter']           = {},
-  ['@variable.parameter.builtin']   = { "@variable.parameter" },
+  ['@variable.parameter.builtin']   = { '@variable.parameter' },
   ['@variable.member']              = {},
   ['@constant']                     = { fg = c.constant },
-  ['@constant.builtin']             = { "@constant" },
+  ['@constant.builtin']             = { '@constant' },
   ['@constant.macro']               = {},
   ['@module']                       = {},
-  ['@module.builtin']               = { "@module" },
-  ['@label']                        = { "@keyword" },
+  ['@module.builtin']               = { '@module' },
+  ['@label']                        = { '@keyword' },
   ['@string']                       = { fg = c.string },
   -- ['@string.documentation']         = {},
   -- ['@string.regexp']                = {},
   -- ['@string.escape']                = {},
-  ['@string.special']               = { "@type" },
+  ['@string.special']               = { '@type' },
   -- ['@string.special.symbol']        = {},
   -- ['@string.special.path']          = {},
   -- ['@string.special.url']           = {},
@@ -241,18 +241,18 @@ local highlights = {
   ['@number']                       = { fg = c.value },
   -- ['@number.float']                 = {},
   ['@type']                         = { fg = c.type },
-  ['@type.builtin']                 = { "@type" },
+  ['@type.builtin']                 = { '@type' },
   -- ['@type.definition']              = {},
-  ['@attribute']                    = { "@variable" },
-  ['@attribute.builtin']            = { "@attribute" },
-  ['@property']                     = { "@variable" },
+  ['@attribute']                    = { '@variable' },
+  ['@attribute.builtin']            = { '@attribute' },
+  ['@property']                     = { '@variable' },
   ['@function']                     = { fg = c.func },
-  ['@function.builtin']             = { "@function" },
+  ['@function.builtin']             = { '@function' },
   -- ['@function.call']                = {},
   -- ['@function.macro']               = {},
   -- ['@function.method']              = {},
   -- ['@function.method.call']         = {},
-  ['@constructor']                  = { "@function" },
+  ['@constructor']                  = { '@function' },
   ['@operator']                     = { fg = c.operator },
   ['@keyword']                      = { fg = c.keyword },
   -- ['@keyword.coroutine']            = {},
@@ -269,7 +269,7 @@ local highlights = {
   -- ['@keyword.conditional.ternary']  = {},
   -- ['@keyword.directive']            = {},
   -- ['@keyword.directive.define']     = {},
-  ['@punctuation']                  = { "@operator" },
+  ['@punctuation']                  = { '@operator' },
   -- ['@punctuation.delimiter']        = {},
   -- ['@punctuation.bracket']          = {},
   -- ['@punctuation.special']          = {},
@@ -290,10 +290,10 @@ local highlights = {
   ['@markup.heading.4']             = {},
   ['@markup.heading.5']             = {},
   ['@markup.heading.6']             = {},
-  ['@markup.quote']                 = { "@string" },
+  ['@markup.quote']                 = { '@string' },
   ['@markup.math']                  = {},
-  ['@markup.link']                  = { "@operator" },
-  ['@markup.link.label']            = { "@keyword" },
+  ['@markup.link']                  = { '@operator' },
+  ['@markup.link.label']            = { '@keyword' },
   ['@markup.link.url']              = { fg = c.link, underline = true },
   ['@markup.raw']                   = {},
   ['@markup.raw.block']             = {},
@@ -304,8 +304,8 @@ local highlights = {
   ['@diff.plus']                    = { fg = c.add },
   ['@diff.minus']                   = { fg = c.del },
   ['@diff.delta']                   = { fg = c.mod },
-  ['@tag']                          = { "@keyword" },
-  ['@tag.builtin']                  = { "@tag" },
+  ['@tag']                          = { '@keyword' },
+  ['@tag.builtin']                  = { '@tag' },
   -- ['@tag.attribute']                = {},
   -- ['@tag.delimiter']                = {},
 
@@ -351,13 +351,13 @@ local highlights = {
 
   -- LEGACY
   ['Normal']          = { fg = c.fg },
-  ['NormalFloat']     = { "Normal" },
-  ['NormalNC']        = { "Normal" },
+  ['NormalFloat']     = { 'Normal' },
+  ['NormalNC']        = { 'Normal' },
 
   ['Search']          = { bg = c.fold },
-  ['IncSearch']       = { "Search" },
-  ['CurSearch']       = { "Search" },
-  ['Substitute']      = { "Search" },
+  ['IncSearch']       = { 'Search' },
+  ['CurSearch']       = { 'Search' },
+  ['Substitute']      = { 'Search' },
 
   ['CursorLine']      = { bg = c.line },
   ['CursorLineNr']    = {},
@@ -368,30 +368,30 @@ local highlights = {
   ['ColorColumn']     = { bg = c.line },
 
   ['Visual']          = { bg = c.mg },
-  ['VisualNOS']       = { "Visual" },
+  ['VisualNOS']       = { 'Visual' },
 
   ['ErrorMsg']        = { fg = c.err },
   ['WarningMsg']      = { fg = c.warn },
 
-  ['LineNr']          = { "Comment" },
+  ['LineNr']          = { 'Comment' },
 
   ['Folded']          = { fg = c.fold },
 
   ['TermCursor']      = { underline = true },
-  ['TermCursorNC']    = { "TermCursor" },
+  ['TermCursorNC']    = { 'TermCursor' },
 
   ['SpecialKey']      = { fg = c.special },
   ['Whitespace']      = { fg = c.comment },
 
-  ['DiffAdd']         = { "@diff.plus" },
-  ['DiffChange']      = { "@diff.delta" },
-  ['DiffDelete']      = { "@diff.minus" },
+  ['DiffAdd']         = { '@diff.plus' },
+  ['DiffChange']      = { '@diff.delta' },
+  ['DiffDelete']      = { '@diff.minus' },
   ['DiffText']        = {},
 
   ['SpellBad']        = { undercurl = true, sp = c.warn },
 
-  ['FoldColumn']      = { "Folded" },
-  ['Title']           = { "@markup.heading" },
+  ['FoldColumn']      = { 'Folded' },
+  ['Title']           = { '@markup.heading' },
 
   ['StatusLine']      = { bg = c.bg },
   ['StatusLineNC']    = { bg = c.bg },
@@ -414,7 +414,7 @@ local highlights = {
   ['lCursor']         = {},
   ['CursorIM']        = {},
 
-  ['Conceal']         = { "Folded" },
+  ['Conceal']         = { 'Folded' },
 
   ['MatchParen']      = {},
 
@@ -425,7 +425,7 @@ local highlights = {
   ['Directory']       = {},
   ['SignColumn']      = {},
 
-  ['FloatBorder']     = { "WinSeparator" },
+  ['FloatBorder']     = { 'WinSeparator' },
   ['FloatTitle']      = {},
   ['FloatFooter']     = {},
   ['WinSeparator']    = { fg = c.comment },
@@ -464,45 +464,45 @@ local highlights = {
 
 
   -- EXTRA
-  ['Comment']         = { "@comment" },
-  ['Constant']        = { "@constant" },
-  ['String']          = { "@string" },
-  ['Character']       = { "@character" },
-  ['Number']          = { "@number" },
-  ['Boolean']         = { "@boolean" },
-  ['Float']           = { "@number.float" },
-  ['Identifier']      = { "@variable" },
-  ['Function']        = { "@function" },
+  ['Comment']         = { '@comment' },
+  ['Constant']        = { '@constant' },
+  ['String']          = { '@string' },
+  ['Character']       = { '@character' },
+  ['Number']          = { '@number' },
+  ['Boolean']         = { '@boolean' },
+  ['Float']           = { '@number.float' },
+  ['Identifier']      = { '@variable' },
+  ['Function']        = { '@function' },
   ['Statement']       = {},
-  ['Conditional']     = { "@keyword" },
-  ['Repeat']          = { "@keyword" },
-  ['Label']           = { "@keyword" },
-  ['Operator']        = { "@operator" },
-  ['Keyword']         = { "@keyword" },
-  ['Exception']       = { "@keyword" },
-  ['PreProc']         = { "@constant" },
-  ['Include']         = { "@constant" },
-  ['Define']          = { "@constant" },
-  ['Macro']           = { "@constant" },
-  ['PreCondit']       = { "@constant" },
-  ['Type']            = { "@type" },
-  ['StorageClass']    = { "@module" },
-  ['Structure']       = { "@module" },
-  ['Typedef']         = { "@type" },
-  ['Special']         = { "@string.special"},
-  ['SpecialChar']     = { "@character.special" },
-  ['Tag']             = { "@tag" },
-  ['Delimiter']       = { "@punctuation.delimiter" },
-  ['SpecialComment']  = { "@comment.documentation" },
-  ['Underlined']      = { "@markup.underline" },
-  ['Debug']           = { "@keyword.debug" },
+  ['Conditional']     = { '@keyword' },
+  ['Repeat']          = { '@keyword' },
+  ['Label']           = { '@keyword' },
+  ['Operator']        = { '@operator' },
+  ['Keyword']         = { '@keyword' },
+  ['Exception']       = { '@keyword' },
+  ['PreProc']         = { '@constant' },
+  ['Include']         = { '@constant' },
+  ['Define']          = { '@constant' },
+  ['Macro']           = { '@constant' },
+  ['PreCondit']       = { '@constant' },
+  ['Type']            = { '@type' },
+  ['StorageClass']    = { '@module' },
+  ['Structure']       = { '@module' },
+  ['Typedef']         = { '@type' },
+  ['Special']         = { '@string.special'},
+  ['SpecialChar']     = { '@character.special' },
+  ['Tag']             = { '@tag' },
+  ['Delimiter']       = { '@punctuation.delimiter' },
+  ['SpecialComment']  = { '@comment.documentation' },
+  ['Underlined']      = { '@markup.underline' },
+  ['Debug']           = { '@keyword.debug' },
   ['Ignore']          = {},
   ['Error']           = {},
-  ['Todo']            = { "@comment.todo" },
-  ['keywords']        = { "@keyword" },
-  ['Added']           = { "@diff.plus" },
-  ['Changed']         = { "@diff.delta" },
-  ['Removed']         = { "@diff.minus" },
+  ['Todo']            = { '@comment.todo' },
+  ['keywords']        = { '@keyword' },
+  ['Added']           = { '@diff.plus' },
+  ['Changed']         = { '@diff.delta' },
+  ['Removed']         = { '@diff.minus' },
 
 
   -- DIAGS
@@ -537,30 +537,30 @@ local highlights = {
   ['DiagnosticSignOk']            = { fg = c.ok },
 
   ['DiagnosticDeprecated']        = {},
-  ['DiagnosticUnnecessary']       = { "@comment" },
+  ['DiagnosticUnnecessary']       = { '@comment' },
 
 
   -- LspInfo
-  ['LspInfoBorder']               = { "FloatBorder" },
+  ['LspInfoBorder']               = { 'FloatBorder' },
 
 
   -- Mason
   ['MasonNormal'] = { link = "NormalFloat" },
-  ['MasonHeader'] = { "@markup.heading.1" },
-  ['MasonHeaderSecondary'] = { "@markup.heading2" },
+  ['MasonHeader'] = { '@markup.heading.1' },
+  ['MasonHeaderSecondary'] = { '@markup.heading2' },
   ['MasonHighlight'] = { fg = c.type },
   ['MasonHighlightBlock'] = { bg = c.type, fg = c.bg_float },
   ['MasonHighlightBlockBold'] = { bg = c.type, fg = c.bg_float, bold = true },
   ['MasonHighlightSecondary'] = { fg = c.warn },
   ['MasonHighlightBlockSecondary'] = { bg = c.warn, fg = c.bg_float },
   ['MasonHighlightBlockBoldSecondary'] = { bg = c.warn, fg = c.bg_float, bold = true },
-  ['MasonLink'] = { "@markup.link.url" },
+  ['MasonLink'] = { '@markup.link.url' },
   ['MasonMuted'] = { fg = c.fold },
   ['MasonMutedBlock'] = { bg = c.fold, fg = c.bg_float },
   ['MasonMutedBlockBold'] = { bg = c.fold, fg = c.bg_float, bold = true },
-  ['MasonError'] = { "ErrorMsg" },
-  ['MasonWarning'] = { "WarningMsg" },
-  ['MasonHeading'] = { "@markup.heading" },
+  ['MasonError'] = { 'ErrorMsg' },
+  ['MasonWarning'] = { 'WarningMsg' },
+  ['MasonHeading'] = { '@markup.heading' },
 
 
   -- Cmp
@@ -604,12 +604,12 @@ local highlights = {
   -- Notify
   ['MiniNotifyNormal']          = { 'Folded' },
   -- Pick
-  ['MiniPickBorder']            = { "FloatBorder" },
+  ['MiniPickBorder']            = { 'FloatBorder' },
   ['MiniPickBorderBusy']        = { fg = c.fold },
   -- ['MiniPickIconDirectory']     = { fg = c.fg },
   -- ['MiniPickIconFile']          = { fg = c.fg },
-  ['MiniPickHeader']            = { "@markup.heading.1" },
-  ['MiniPickMatchCurrent']      = { "PmenuSel" },
+  ['MiniPickHeader']            = { '@markup.heading.1' },
+  ['MiniPickMatchCurrent']      = { 'PmenuSel' },
   ['MiniPickMatchMarked']       = { fg = c.acc },
   ['MiniPickMatchRanges']       = { fg = c.acc, bold = true },
   ['MiniPickNormal']            = { fg = c.fg },
@@ -617,9 +617,9 @@ local highlights = {
   ['MiniPickPreviewRegion'] = {}, -- target region in preview.
   ['MiniPickPrompt']            = { fg = c.fg },
   -- Icons
-  ['MiniIconsAzure']            = { fg = M.shades.blue[1] },
   ['MiniIconsBlue']             = { fg = M.shades.blue[0] },
-  ['MiniIconsCyan']             = { fg = M.shades.blue[2] },
+  ['MiniIconsAzure']            = { fg = M.shades.blue[2] },
+  ['MiniIconsCyan']             = { fg = M.shades.blue[4] },
   ['MiniIconsGreen']            = { fg = M.shades.green[0] },
   ['MiniIconsGrey']             = { fg = M.shades.grey[2] },
   ['MiniIconsOrange']           = { fg = M.shades.orange[0] },
@@ -632,10 +632,10 @@ local highlights = {
   -- NeoTreeBufferNumber       The buffer number shown in the buffers source.
   -- NeoTreeCursorLine         |hl-CursorLine| override in Neo-tree window.
   NeoTreeDimText                = { fg = c.fold }, -- Greyed out text used in various places.
-  NeoTreeDirectoryIcon          = { "MiniIconsGrey" },
+  NeoTreeDirectoryIcon          = { 'MiniIconsGrey' },
   -- NeoTreeDirectoryName      Directory name.
   NeoTreeDotfile               = { fg = c.comment }, -- Used for icons and names when dotfiles are filtered.
-  NeoTreeFileIcon               = { "MiniIconGrey" },
+  NeoTreeFileIcon               = { 'MiniIconGrey' },
   -- NeoTreeFileName           File name, when not overwritten by another status.
   -- NeoTreeFileNameOpened     File name when the file is open. Not used yet.
   -- NeoTreeFilterTerm         The filter term, as displayed in the root node.
@@ -646,12 +646,12 @@ local highlights = {
   -- NeoTreeTitleBar           Used for the title bar of pop-ups, when the border-style
   --                           is set to "NC". This is derived from NeoTreeFloatBorder.
 
-  NeoTreeGitAdded           = { "DiffAdd" },
+  NeoTreeGitAdded           = { 'DiffAdd' },
   NeoTreeGitConflict        = { fg = c.conflict },
   NeoTreeGitDeleted         = { fg = c.deleted },
-  NeoTreeGitIgnored         = { "Comment" },
-  NeoTreeGitModified        = { "DiffAdd" },
-  NeoTreeGitUntracked       = { "Folded" },
+  NeoTreeGitIgnored         = { 'Comment' },
+  NeoTreeGitModified        = { 'DiffAdd' },
+  NeoTreeGitUntracked       = { 'Folded' },
 
   NeoTreeGitUnstaged        = { fg = c.unstaged },
   NeoTreeGitStaged          = { fg = c.staged },

@@ -30,6 +30,10 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
       ['%.*%.svx'] = "sh",
       ['%.*%.swcrc'] = "json",
       ['xorg%.conf%a*'] = "xf86conf",
+      -- ['docker-compose%.yaml'] = "yaml.docker-compose",
+      -- ['docker-compose%.yml'] = "yaml.docker-compose",
+      -- ['compose%.yaml'] = "yaml.docker-compose",
+      -- ['compose%.yml'] = "yaml.docker-compose",
 
       -- au BufRead,BufNewFile */xorg.conf.d/*.conf* setlocal ft=xf86conf
     }
@@ -53,6 +57,7 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
     local ft_cms = {
       typescript = "// %s",
       javascript = "// %s",
+      cs = "// %s",
       sshdconfig = "# %s",
       sql = "-- %s",
       css = "/* %s */",

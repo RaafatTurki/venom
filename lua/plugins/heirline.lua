@@ -718,7 +718,7 @@ M.config = function()
           local is_buf_huge = U.is_buf_huge(vim.api.nvim_get_current_buf())
 
           if is_buf_huge then
-            vim.bo.foldcolumn = '0'
+            vim.wo.foldcolumn = '0'
 
             return true
           end

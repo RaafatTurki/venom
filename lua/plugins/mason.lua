@@ -44,8 +44,12 @@ M.config = function()
     }
   }
 
-  -- LSP
-  -- adds border to :LspInfo window
+  M.config_lsp()
+  M.config_dap()
+end
+
+M.config_lsp = function()
+  -- set border to :LspInfo window
   require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- setting up mason servers
@@ -56,13 +60,11 @@ M.config = function()
         M.setup_lsp_server_lspconfig(server_name, {})
       end,
       tsserver = function()
-        local opts = M.extend_lsp_server_opts_w_shared_opts {
+        require "typescript-tools".setup {
           settings = {
             expose_as_code_action = "all",
           },
         }
-
-        require "typescript-tools".setup(opts)
       end,
       clangd = function()
         M.setup_lsp_server_lspconfig('clangd', {
@@ -144,9 +146,9 @@ M.config = function()
       -- },
     })
   end
+end
 
-
-  -- DAP
+M.config_dap = function()
   vim.fn.sign_define("DapBreakpoint",           { text = icons.dap.breakpoint,              texthl = "ErrorMsg" })
   vim.fn.sign_define("DapBreakpointCondition",  { text = icons.dap.breakpoint_conditional,  texthl = "ErrorMsg" })
   vim.fn.sign_define("DapBreakpointRejected",   { text = icons.dap.breakpoint_rejected,     texthl = "ErrorMsg" })
@@ -233,7 +235,7 @@ M.config = function()
 end
 
 -- server setup opts extender wrapper
-M.extend_lsp_server_opts_w_shared_opts = function(opts)
+M.shared_lsp_server_opts_extension = function(opts)
   -- setup shared capabilities
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
   if prequire "nvim-cmp" then
@@ -252,7 +254,7 @@ M.extend_lsp_server_opts_w_shared_opts = function(opts)
     },
     on_attach = function(client, bufnr)
       -- set gq command to use the lsp formatter for this buffer
-      vim.api.nvim_buf_set_option(0, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
+      vim.api.nvim_set_option_value('formatexpr', 'v:lua.vim.lsp.formatexpr()', { buf = bufnr })
 
       -- format on save
       -- if client.supports_method("textDocument/formatting") then
@@ -275,7 +277,7 @@ end
 -- lspconfig server setup wrapper
 M.setup_lsp_server_lspconfig = function(server_name, opts)
   local lspconf = require 'lspconfig'
-  lspconf[server_name].setup(M.extend_lsp_server_opts_w_shared_opts(opts))
+  lspconf[server_name].setup(M.shared_lsp_server_opts_extension(opts))
 end
 
 return M

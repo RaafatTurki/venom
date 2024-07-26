@@ -49,6 +49,21 @@ M.config = function()
       symlink_target = {
         enabled = true,
       },
+    },
+    filesystem = {
+      filtered_items = {
+        hide_dotfiles = false,
+        hide_gitignored = false,
+        hide_hidden = false,
+
+        hide_by_name = {
+          ".git",
+          "node_modules",
+          ".venom.json",
+          ".DS_Store",
+          -- "thumbs.db",
+        },
+      },
     }
   }
 

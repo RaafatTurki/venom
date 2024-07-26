@@ -6,10 +6,6 @@ local precomputed_colors = require "helpers.precomputed_colors"
 
 local M = { plugins_info.mini }
 
--- M.dependencies = {
---   plugins_info.devicons,
--- }
-
 M.config = function()
   local mini_icons = require 'mini.icons'
   if mini_icons then

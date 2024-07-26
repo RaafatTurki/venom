@@ -350,7 +350,7 @@ local highlights = {
 
 
   -- LEGACY
-  ['Normal']          = { fg = c.fg },
+  ['Normal']          = { bg = c.bg, fg = c.fg },
   ['NormalFloat']     = { 'Normal' },
   ['NormalNC']        = { 'Normal' },
 

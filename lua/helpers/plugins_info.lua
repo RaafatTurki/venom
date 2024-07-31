@@ -39,6 +39,7 @@ local M = {
   -- view                        = "RaafatTurki/view.nvim",
   lightbulb                   = "kosayoda/nvim-lightbulb",
   omnisharp_ext               = "Hoffs/omnisharp-extended-lsp.nvim",
+  schemastore                 = "b0o/SchemaStore.nvim",
   hurl                        = "jellydn/hurl.nvim",
   nui                         = "MunifTanjim/nui.nvim",
   highlight_colors            = "brenoprata10/nvim-highlight-colors",

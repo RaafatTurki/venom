@@ -12,6 +12,7 @@ M.dependencies = {
   plugins_info.lspconfig,
   plugins_info.mason_lspconfig,
   plugins_info.omnisharp_ext,
+  plugins_info.schemastore,
   { plugins_info.typescript_tools, dependencies = plugins_info.plenary },
   -- DAP
   plugins_info.dap,
@@ -89,6 +90,21 @@ M.config_lsp = function()
             }
           },
         })
+      end,
+      jsonls = function()
+        local opt = {}
+
+        local schemastore_ext = require "schemastore"
+        if schemastore_ext then
+          opt.settings = {
+            json = {
+              validate = { enable = true },
+              schemas = schemastore_ext.json.schemas(),
+            },
+          }
+        end
+
+        M.setup_lsp_server_lspconfig('jsonls', opt)
       end,
       omnisharp = function()
         local opt = {}
@@ -245,8 +261,8 @@ end
 M.shared_lsp_server_opts_extension = function(opts)
   -- setup shared capabilities
   local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
-  if prequire "nvim-cmp" then
-    shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities()
+  if prequire "cmp" and prequire "cmp_nvim_lsp" then
+    shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities(shared_capabilities)
   elseif prequire "autocomplete.capabilities" then
     shared_capabilities = vim.tbl_deep_extend('force', shared_capabilities, require 'autocomplete.capabilities')
   elseif prequire "epo" then

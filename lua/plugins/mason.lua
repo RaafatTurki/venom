@@ -130,6 +130,13 @@ M.config_lsp = function()
   }
 
   -- setting up non-mason servers
+  local gdshader_lsp_bin = "/home/potato/sectors/rust/gdshader-lsp/target/debug/gdshader-lsp"
+  if vim.fn.executable(gdshader_lsp_bin) == 1 then
+    M.setup_lsp_server_lspconfig('gdshader_lsp', {
+      name = "gdshader",
+      cmd = { gdshader_lsp_bin, "--stdio" },
+    })
+  end
   if vim.fn.executable('godot') == 1 then
     M.setup_lsp_server_lspconfig('gdscript', {
       cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),

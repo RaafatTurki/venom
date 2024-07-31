@@ -33,6 +33,7 @@ M.config = function()
       'elm',
       'fish',
       'gdscript',
+      'gdshader',
       'gitcommit',
       'gitignore',
       'glsl',

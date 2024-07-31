@@ -61,6 +61,7 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
       sshdconfig = "# %s",
       sql = "-- %s",
       css = "/* %s */",
+      gdshader = "// %s",
     }
 
     if vim.tbl_contains(vim.tbl_keys(ft_cms), ev.match) then

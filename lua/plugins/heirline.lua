@@ -475,17 +475,37 @@ M.config = function()
     -- condition = function()
     --   return vim.o.number
     -- end,
-    provider = function()
+    init = function(self)
+      self.lnum = vim.v.lnum
+      self.visual_range = nil
+      if vim.fn.mode():lower():find('v') then
+        local visual_lnum = vim.fn.getpos('v')[2]
+        local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
+        -- ensure visual_range is ascending
+        if visual_lnum > cursor_lnum then
+          self.visual_range = { cursor_lnum, visual_lnum }
+        else
+          self.visual_range = { visual_lnum, cursor_lnum }
+        end
+      end
+    end,
+    provider = function(self)
       local num_count = vim.api.nvim_buf_line_count(0)
 
       if vim.v.virtnum > 0 then
         return U.str_pad('.', #tostring(num_count), ' ')
       else
-        return U.str_pad(tostring(vim.v.lnum), #tostring(num_count), ' ')
+        return U.str_pad(tostring(self.lnum), #tostring(num_count), ' ')
       end
     end,
-    hl = function()
-      return vim.v.relnum > 0 and "LineNr" or "CursorLineFold"
+    hl = function(self)
+      if vim.v.relnum == 0 then
+        return "Normal"
+      elseif self.visual_range and self.lnum >= self.visual_range[1] and self.lnum <= self.visual_range[2] then
+        return "Folded"
+      else
+        return "Comment"
+      end
     end
   }
 

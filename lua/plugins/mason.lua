@@ -247,14 +247,14 @@ M.config_dap = function()
   -- MASON
   keys.map("n", "<leader>l", "<CMD>Mason<CR>", "Open mason")
   -- DAP
-  keys.map("n", "xs", function() dap.continue() dapui.open() end, "DAP Start")
-  keys.map("n", "xq", function() dap.terminate() dapui.close() end, "DAP Terminate")
-  keys.map("n", "xc", dap.continue, "DAP Continue")
-  keys.map("n", "xx", dap.toggle_breakpoint, "DAP Toggle breakpoint")
-  keys.map("n", "x<Right>", dap.step_into, "DAP Step into")
-  keys.map("n", "x<Left>", dap.step_out, "DAP Step out")
-  keys.map("n", "x<Up>", dap.step_back, "DAP Step back")
-  keys.map("n", "x<Down>", dap.step_over, "DAP Step over")
+  keys.map("n", "ss", function() dap.continue() dapui.open() end, "DAP Start")
+  keys.map("n", "sq", function() dap.terminate() dapui.close() end, "DAP Terminate")
+  keys.map("n", "s<Leader>", dap.continue, "DAP Continue")
+  keys.map("n", "sx", dap.toggle_breakpoint, "DAP Toggle breakpoint")
+  keys.map("n", "s<Right>", dap.step_into, "DAP Step into")
+  keys.map("n", "s<Left>", dap.step_out, "DAP Step out")
+  keys.map("n", "s<Up>", dap.step_back, "DAP Step back")
+  keys.map("n", "s<Down>", dap.step_over, "DAP Step over")
 end
 
 -- server setup opts extender wrapper

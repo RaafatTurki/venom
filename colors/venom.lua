@@ -631,20 +631,17 @@ local highlights = {
   -- Neotree
   -- NeoTreeBufferNumber       The buffer number shown in the buffers source.
   -- NeoTreeCursorLine         |hl-CursorLine| override in Neo-tree window.
-  NeoTreeDimText                = { fg = c.fold }, -- Greyed out text used in various places.
-  NeoTreeDirectoryIcon          = { 'MiniIconsGrey' },
+  NeoTreeDimText            = { fg = c.fold }, -- Greyed out text used in various places.
+  NeoTreeDirectoryIcon      = { 'MiniIconsGrey' },
   -- NeoTreeDirectoryName      Directory name.
-  NeoTreeDotfile               = { fg = c.comment }, -- Used for icons and names when dotfiles are filtered.
-  NeoTreeFileIcon               = { 'MiniIconGrey' },
+  NeoTreeDotfile            = { fg = c.comment }, -- Used for icons and names when dotfiles are filtered.
+  NeoTreeFileIcon           = { 'MiniIconGrey' },
   -- NeoTreeFileName           File name, when not overwritten by another status.
   -- NeoTreeFileNameOpened     File name when the file is open. Not used yet.
   -- NeoTreeFilterTerm         The filter term, as displayed in the root node.
-  NeoTreeFloatBorder           = { fg = c.fg }, --The border for pop-up windows.
-  -- NeoTreeFloatTitle         Used for the title text of pop-ups when the border-style
-  --                           is set to another style than "NC". This is derived
-  --                           from NeoTreeFloatBorder.
-  -- NeoTreeTitleBar           Used for the title bar of pop-ups, when the border-style
-  --                           is set to "NC". This is derived from NeoTreeFloatBorder.
+  NeoTreeFloatBorder        = { "FloatBorder" }, --The border for pop-up windows.
+  NeoTreeFloatTitle         = { "Title" },
+  NeoTreeTitleBar           = { "Title" },
 
   NeoTreeGitAdded           = { 'DiffAdd' },
   NeoTreeGitConflict        = { fg = c.conflict },

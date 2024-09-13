@@ -64,8 +64,6 @@ map("n", "*",         "*N")
 -- map("x", "=",         "=gv_", "")
 -- copy and retain visual selection in visual mode
 map("x", "Y",         "ygv")
--- make Y copy to end of line in normal mode
-map("n", "Y",         "y$")
 -- go to end after a join
 map("n", "J",         "J$")
 -- split (opposite of J)

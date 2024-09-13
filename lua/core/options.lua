@@ -17,6 +17,7 @@ local opts = {
   list            = true,
   cursorline      = true,
   confirm         = true,
+  undofile        = true,
   updatetime      = 100, -- used for the CursorHold event
   timeoutlen      = 200, -- used for keymap squences timeout
   conceallevel    = 1,

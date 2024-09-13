@@ -1,14 +1,29 @@
 local U = require "helpers.utils"
 -- local buffers = require "helpers.buffers"
 
+
+-- vim.api.nvim_create_autocmd({ "BufEnter" }, {
+--   callback = function(ev)
+--     if U.is_buf_huge(ev.buf) then
+--       vim.opt.wrap = true
+--       vim.opt.undofile = false
+--       vim.opt.foldmethod = "manual"
+--       vim.opt.wrap = true
+--     end
+--   end
+-- })
+
 -- set window based options on BufEnter depending if a buffer is huge or not
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
   callback = function(ev)
-    if not U.is_buf_huge(ev.buf) then
-      vim.opt.wrap = false
-    else
-      vim.opt.foldmethod = "manual"
+    if U.is_buf_huge(ev.buf) then
+      vim.bo.undofile = false
       vim.opt.wrap = true
+      -- NOTE: no longer needed since treesitter folding is disabled on huge buffers
+      -- vim.opt.foldmethod = "manual"
+    else
+      -- NOTE: must be explicity set to false since this is a (per-window) option (or smth)
+      vim.opt.wrap = false
     end
   end
 })
@@ -75,6 +90,17 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
 vim.api.nvim_create_autocmd({ "TermOpen" }, {
   callback = function(ev)
     vim.wo.number = false
+  end
+})
+
+-- prevent lsps attaching on huge buffers
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(opt)
+    if U.is_buf_huge(opt.buf) then
+      vim.schedule(function()
+        vim.lsp.buf_detach_client(opt.buf, opt.data.client_id)
+      end)
+    end
   end
 })
 

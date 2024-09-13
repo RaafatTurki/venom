@@ -60,7 +60,7 @@ M.config_lsp = function()
       function(server_name)
         M.setup_lsp_server_lspconfig(server_name, {})
       end,
-      tsserver = function()
+      ts_ls = function()
         require "typescript-tools".setup {
           settings = {
             expose_as_code_action = "all",
@@ -275,6 +275,9 @@ M.shared_lsp_server_opts_extension = function(opts)
       ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
       ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
     },
+    -- on_init = function(client, _)
+    --   client.server_capabilities.semanticTokensProvider = nil
+    -- end,
     on_attach = function(client, bufnr)
       -- set gq command to use the lsp formatter for this buffer
       vim.api.nvim_set_option_value('formatexpr', 'v:lua.vim.lsp.formatexpr()', { buf = bufnr })

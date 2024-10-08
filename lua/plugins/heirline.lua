@@ -6,10 +6,6 @@ local icons = require "helpers.icons".icons
 
 local M = { plugins_info.heirline }
 
--- M.dependencies = {
---   plugins_info.devicons,
--- }
-
 M.config = function()
   local utils = require 'heirline/utils'
   local conditions = require 'heirline/conditions'

@@ -12,6 +12,7 @@ local M = {}
 M.hlgroups = {}
 for hl, _ in pairs(vim.api.nvim_get_hl(0, {})) do M.hlgroups[hl] = { pattern = '%f[%w]()' .. hl .. '()%f[%W]', group = hl } end
 
-M.all = vim.tbl_extend("error", M.hlgroups, {})
+-- M.all = vim.tbl_extend("error", M.hlgroups, {})
+M.all = {}
 
 return M

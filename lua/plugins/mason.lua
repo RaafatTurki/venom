@@ -61,11 +61,19 @@ M.config_lsp = function()
         M.setup_lsp_server_lspconfig(server_name, {})
       end,
       ts_ls = function()
-        require "typescript-tools".setup {
+        local opts = {
           settings = {
             expose_as_code_action = "all",
           },
         }
+
+        -- use typescript-tools if available
+        local ts_tools = require 'typescript-tools'
+        if ts_tools then
+          ts_tools.setup(M.shared_lsp_server_opts_extension(opts))
+        else
+          M.setup_lsp_server_lspconfig('ts_ls', opts)
+        end
       end,
       clangd = function()
         M.setup_lsp_server_lspconfig('clangd', {

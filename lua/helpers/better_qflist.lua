@@ -68,4 +68,3 @@ vim.cmd [[
 -- TODO: disable cnext and cprevious errors when going out of range
 map({ "x", "n" }, "<S-Up>",    vim.cmd.cprevious, "QFList previous")
 map({ "x", "n" }, "<S-Down>",  vim.cmd.cnext, "QFList next")
-

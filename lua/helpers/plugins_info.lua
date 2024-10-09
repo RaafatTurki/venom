@@ -12,6 +12,8 @@ local M = {
   blink                       = "Saghen/blink.cmp",
   hex                         = "RaafatTurki/hex.nvim",
   hurl                        = "jellydn/hurl.nvim",
+  volt                        = "NvChad/volt",
+  menu                        = "NvChad/menu",
 
   -- LSP
   mason                       = "williamboman/mason.nvim",

@@ -419,7 +419,7 @@ local highlights = {
   ['MatchParen']      = {},
 
   ['EndOfBuffer']     = {},
-  ['WildMenu']        = {},
+  ['WildMenu']        = { bg = c.mg },
   ['ModeMsg']         = {},
   ['Question']        = {},
   ['Directory']       = {},

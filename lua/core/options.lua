@@ -18,6 +18,7 @@ local opts = {
   cursorline      = true,
   confirm         = true,
   undofile        = true,
+  wrap            = false,
   updatetime      = 100, -- used for the CursorHold event
   timeoutlen      = 200, -- used for keymap squences timeout
   conceallevel    = 1,
@@ -76,7 +77,6 @@ vim.opt.listchars:append {
   trail = "."
 }
 vim.opt.whichwrap:append '<,>,[,]' -- arrow keys can wrap around to next line
-vim.opt.wildmode:append 'list:longest'
 vim.opt.display:append 'uhex'
 -- TODO: implement spell checking
 -- vim.opt.spelllang     = { 'en_us' }

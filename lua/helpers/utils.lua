@@ -185,7 +185,7 @@ end
 
 -- Neovim Utils
 --- returns the extmarks of the current line within a specific namespace
-M.get_lnum_extmark_signs = function(ns, trim, lnum)
+function M.get_lnum_extmark_signs(ns, trim, lnum)
   trim = trim or false
   lnum = lnum and lnum-1 or vim.v.lnum-1
 
@@ -212,7 +212,7 @@ M.get_lnum_extmark_signs = function(ns, trim, lnum)
 end
 
 --- returns the (strongest) severity level of the current line diagnostics (nil if none)
-M.get_lnum_diag_severity = function()
+function M.get_lnum_diag_severity()
   diagnostics = vim.diagnostic.get(0, { lnum = vim.v.lnum - 1 })
 
   local severity_level = nil
@@ -227,29 +227,6 @@ M.get_lnum_diag_severity = function()
   end
 
   return severity_level
-end
-
---- return if a file size is considered huge
-function M.is_file_huge(file_path)
-  -- local huge_buffer_size = 1000000 -- 1MB
-  local huge_buffer_size = 100000 -- 100KB
-
-  local size = vim.fn.getfsize(file_path)
-  return size > huge_buffer_size
-
-  -- local ok, stats = pcall(vim.loop.fs_stat, file_path)
-  -- if ok and stats then return stats.size > huge_buffer_size end
-end
-
---- return if a buffer size is considered huge
-function M.is_buf_huge(buf)
-  local fname = vim.api.nvim_buf_get_name(buf)
-
-  if #fname <= 0 then
-    return false
-  end
-
-  return M.is_file_huge(vim.api.nvim_buf_get_name(buf))
 end
 
 --- returns current vim mode name
@@ -402,4 +379,10 @@ function M.request_jump(target_path, line, col)
     print('jump attempt to ' .. tostring(line) .. ':' .. tostring(col) .. ' in ' .. vim.fs.basename(target_path))
   end
 end
+
+--- change the mod of current file
+function M.chmod(mod)
+  vim.cmd([[silent! !chmod ]] .. mod .. [[ %]])
+end
+
 return M

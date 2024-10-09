@@ -51,7 +51,7 @@ end
 
 M.config_lsp = function()
   -- set border to :LspInfo window
-  require('lspconfig.ui.windows').default_options.border = 'single'
+  -- require('lspconfig.ui.windows').default_options.border = 'single'
 
   -- setting up mason servers
   local lspconfig_util = require 'lspconfig.util'
@@ -155,7 +155,7 @@ M.config_lsp = function()
 
   -- setting up non-mason servers
   local gdshader_lsp_bin = "/home/potato/sectors/rust/gdshader-lsp/target/debug/gdshader-lsp"
-  if vim.fn.executable(gdshader_lsp_bin) == 1 then
+  if vim.fn.executable('gdshader_lsp_bin') == 1 then
     M.setup_lsp_server_lspconfig('gdshader_lsp', {
       name = "gdshader",
       cmd = { gdshader_lsp_bin, "--stdio" },

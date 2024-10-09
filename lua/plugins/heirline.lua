@@ -110,7 +110,8 @@ M.config = function()
       {
         condition = function(self)
           if self.bufnr == nil then return end
-          return (buffers.buflist:get_buf_info(buffers.buflist:get_buf_index({bufnr = self.bufnr})).buf.is_huge)
+          local ft = vim.bo[self.bufnr].filetype
+          return ft == 'bigfile'
         end,
         provider = ' ',
         hl = 'WarningMsg',
@@ -236,7 +237,7 @@ M.config = function()
     },
   }
 
-  local mini_git = {
+  local mini_git_branch = {
     condition = function()
       return prequire "mini.git"
     end,
@@ -251,7 +252,7 @@ M.config = function()
     hl = "ErrorMsg"
   }
 
-  local mini_diff = {
+  local mini_diff_summary = {
     condition = function()
       local mini_diff = prequire "mini.diff"
 
@@ -562,10 +563,12 @@ M.config = function()
   }
 
   local sc_mini_diff = {
+    condition = function()
+      return prequire "mini.diff"
+    end,
     init = function(self)
       self.ns = vim.api.nvim_get_namespaces()["MiniDiffViz"]
     end,
-
     provider = function(self)
       local sign = U.get_lnum_extmark_signs(self.ns, true)[1]
       return sign and sign.sign_text or ' '
@@ -685,8 +688,8 @@ M.config = function()
         file_flag_modified,
         file_flag_readonly, space,
         -- gitsigns, space,
-        mini_git, space,
-        mini_diff, space,
+        mini_git_branch, space,
+        mini_diff_summary, space,
 
         align,
 
@@ -728,19 +731,6 @@ M.config = function()
             return true
           end
         end,
-      },
-      {
-        condition = function()
-          local is_buf_huge = U.is_buf_huge(vim.api.nvim_get_current_buf())
-
-          if is_buf_huge then
-            vim.wo.foldcolumn = '0'
-
-            return true
-          end
-        end,
-        sc_lnum,
-        space,
       },
       {
         sc_dap,

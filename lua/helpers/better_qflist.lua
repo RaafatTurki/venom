@@ -51,18 +51,18 @@ end
 
 vim.o.quickfixtextfunc = '{info -> v:lua._G.qftf(info)}'
 
--- vim.cmd [[
--- if exists('b:current_syntax')
--- finish
--- endif
+vim.cmd [[
+  if exists('b:current_syntax')
+  finish
+  endif
 
--- " the lnum:col (e.g., 5:10) in the quickfix buffer
--- syntax match qfLineNum /\d\+:\d\+/
+  " the lnum:col (e.g., 5:10) in the quickfix buffer
+  syntax match qfLineNum /\d\+:\d\+/
 
--- hi def link qfLineNum ErrorMsg
+  hi def link qfLineNum ErrorMsg
 
--- let b:current_syntax = 'qf'
--- ]]
+  let b:current_syntax = 'qf'
+]]
 
 -- keybinds
 -- TODO: disable cnext and cprevious errors when going out of range

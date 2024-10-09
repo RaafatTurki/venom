@@ -13,6 +13,7 @@ require "core.options"
 require "core.keymaps"
 require "core.autocmds"
 
+require "helpers.bigfile"
 require "helpers.colorschemes".set_a_colorscheme({ "venom", "minischeme", "industry" })
 require "helpers.keys".set_leader(" ")
 require "helpers.disable_builtins"
@@ -25,6 +26,7 @@ require "helpers.highlight_yank"
 require "helpers.better_qflist"
 require "helpers.clean_paste"
 require "helpers.spell"
+require "helpers.fs_cmds"
 -- require "helpers.osc52"
 require "helpers.normal_mode_on_write"
 require "helpers.text_object_all"

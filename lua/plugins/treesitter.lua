@@ -4,12 +4,10 @@ local buffers = require "helpers.buffers"
 
 local M = { plugins_info.treesitter }
 
--- M.dev = true
-
 M.dependencies = {
   -- plugins_info.treesitter_ctx_cms,
   -- plugins_info.treesitter_ctx,
-  plugins_info.treesitter_comments,
+  -- plugins_info.treesitter_comments,
 }
 
 M.build = function()
@@ -86,9 +84,8 @@ M.config = function()
       disable = function(lang, buf)
         local ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
         local is_ft_blocked = vim.tbl_get(filetypes, ft, "highlight") == false
-        local is_buf_huge = U.is_buf_huge(buf)
 
-        return is_buf_huge or is_ft_blocked
+        return is_ft_blocked
       end,
     },
     indent = {
@@ -96,39 +93,17 @@ M.config = function()
       disable = function(lang, buf)
         local ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
         local is_ft_blocked = vim.tbl_get(filetypes, ft, "indent") == false
-        local is_buf_huge = U.is_buf_huge(buf)
 
-        return is_buf_huge or is_ft_blocked
+        return is_ft_blocked
       end,
     },
   }
 
-  require 'ts-comments'.setup {}
-
-  -- vim.g.skip_ts_context_commentstring_module = true
-  --
-  -- require 'ts_context_commentstring'.setup {
-  --   enable_autocmd = false,
-  -- }
-
-  -- require 'treesitter-context'.setup {
-  --   -- max_lines = 0,
-  --   -- min_window_height = 0,
-  --   line_numbers = false,
-  --   -- multiline_threshold = 20,
-  --   -- trim_scope = 'outer',
-  --   mode = 'cursor',
-  --   separator = "─",
-  -- }
-
+  -- treesitter folding
   vim.api.nvim_create_autocmd({ "BufEnter" }, {
     callback = function(ev)
-      if not U.is_buf_huge(ev.buf) then
-        vim.opt.foldmethod = "expr"
-        vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-      else
-        -- vim.opt.foldmethod = "manual"
-      end
+      vim.opt.foldmethod = "expr"
+      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
     end
   })
 end

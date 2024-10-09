@@ -10,14 +10,12 @@ M.Buf = function()
     bufnr = nil,
     is_persistable = true,
     file_path = nil,
-    is_huge = false,
     -- event_listener = nil,
 
     new = function(self, bufnr, is_persistable)
       self.bufnr = bufnr
       self.file_path = vim.api.nvim_buf_get_name(self.bufnr)
       self.is_persistable = is_persistable
-      self.is_huge = U.is_file_huge(self.file_path)
       -- self.event_listener = vim.loop.new_fs_event()
       -- self:watch()
       return self

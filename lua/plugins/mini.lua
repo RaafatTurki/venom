@@ -7,7 +7,7 @@ local precomputed_colors = require "helpers.precomputed_colors"
 local M = { plugins_info.mini }
 
 M.config = function()
-  local mini_icons = require 'mini.icons'
+  local mini_icons = prequire 'mini.icons'
   if mini_icons then
     mini_icons.setup {
       -- style = 'ascii',
@@ -15,7 +15,7 @@ M.config = function()
     mini_icons.mock_nvim_web_devicons()
   end
 
-  local mini_map = require "mini.map"
+  local mini_map = prequire "mini.map"
   if mini_map then
     mini_map.setup {
       window = {
@@ -73,13 +73,13 @@ M.config = function()
     -- })
   end
 
-  local mini_bufremove = require 'mini.bufremove'
+  local mini_bufremove = prequire 'mini.bufremove'
   if mini_bufremove then
     mini_bufremove.setup()
     keys.map("n", "<A-c>", mini_bufremove.delete, "Delete buffer")
   end
 
-  local mini_move = require 'mini.move'
+  local mini_move = prequire 'mini.move'
   if mini_move then
     mini_move.setup()
     keys.map("n", "<Tab>",      function() mini_move.move_line('right') end, "Indent")
@@ -92,7 +92,7 @@ M.config = function()
     keys.map("x", "<A-Up>",     function() mini_move.move_selection('up') end, "Visual shift lines up")
   end
 
-  local mini_trailspace = require 'mini.trailspace'
+  local mini_trailspace = prequire 'mini.trailspace'
   if mini_trailspace then
     mini_trailspace.setup()
     vim.api.nvim_create_user_command('Trim', mini_trailspace.trim, {})
@@ -103,9 +103,9 @@ M.config = function()
     end, {})
   end
 
-  local mini_extra = require "mini.extra"
+  local mini_extra = prequire "mini.extra"
 
-  local mini_pick = require 'mini.pick'
+  local mini_pick = prequire 'mini.pick'
   if mini_pick then
     mini_pick.setup {
       mappings = {
@@ -146,7 +146,7 @@ M.config = function()
     vim.ui.select = MiniPick.ui_select
   end
 
-  local mini_notify = require "mini.notify"
+  local mini_notify = prequire "mini.notify"
   if mini_notify then
     mini_notify.setup {
       content = {
@@ -172,7 +172,7 @@ M.config = function()
     -- vim.notify = mini_notify.make_notify()
   end
 
-  local mini_diff = require 'mini.diff'
+  local mini_diff = prequire 'mini.diff'
   if mini_diff then
     mini_diff.setup {
       view = {
@@ -191,26 +191,32 @@ M.config = function()
     }
   end
 
-  local mini_git = require 'mini.git'
+  local mini_git = prequire 'mini.git'
   if mini_git then
     mini_git.setup {}
   end
 
-  local mini_hipatterns = require 'mini.hipatterns'
+  local mini_hipatterns = prequire 'mini.hipatterns'
   if mini_hipatterns then
     mini_hipatterns.setup {
       highlighters = precomputed_colors.all
     }
   end
 
+  local mini_comment = prequire 'mini.comment'
+  if mini_comment then
+    -- overrides the default commenting keymaps with a better whitespaced one
+    mini_comment.setup {}
+  end
+
   -- TODO: clue
-  -- local mini_clue = require 'mini.clue'
+  -- local mini_clue = prequire 'mini.clue'
   -- if mini_clue then
   --   mini_clue.setup {}
   -- end
 
   -- TODO: surround
-  -- local mini_surround = require 'mini.surround'
+  -- local mini_surround = prequire 'mini.surround'
   -- if mini_surround then
   --   mini_surround.setup()
   -- end

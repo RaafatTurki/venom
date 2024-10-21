@@ -19,30 +19,30 @@ M.config = function()
   local m_misc = {
 
     {
-      name = " Hurl Run",
-      cmd = "HurlRunner",
-      hl = "WarningMsg",
+      name = "Hurl",
+      items = {
+        {
+          name = " Run File",
+          cmd = "HurlRunner",
+          hl = "WarningMsg",
+        },
+        sep,
+        {
+          name = " Run At",
+          cmd = "HurlRunnerAt",
+          hl = "WarningMsg",
+        },
+        {
+          name = " Run To Entry",
+          cmd = "HurlRunnerToEntry",
+          hl = "WarningMsg",
+        },
+      },
     },
-
-    {
-      name = " Hurl Run At",
-      cmd = "HurlRunnerAt",
-      hl = "WarningMsg",
-    },
-
-    {
-      name = " Hurl Run To Entry",
-      cmd = "HurlRunnerToEntry",
-      hl = "WarningMsg",
-    },
-
-    sep,
 
   }
 
-  map({ "n" }, "<leader>x", function()
-    menu.open(m_misc, opts)
-  end, "Open Misc Menu")
+  map({ "n" }, "<leader>m", function() menu.open(m_misc, opts) end, "Open Misc Menu")
 end
 
 return M

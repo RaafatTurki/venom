@@ -22,7 +22,6 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
     for pattern, ft in pairs(fn_pattern_ft) do
       local match = string.match(filename, pattern)
       if match and #match == #filename then
-        log(match)
         vim.bo.filetype = ft
       end
     end

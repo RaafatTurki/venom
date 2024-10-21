@@ -78,8 +78,7 @@ vim.opt.listchars:append {
 }
 vim.opt.whichwrap:append '<,>,[,]' -- arrow keys can wrap around to next line
 vim.opt.display:append 'uhex'
--- TODO: implement spell checking
--- vim.opt.spelllang     = { 'en_us' }
+vim.opt.spelllang     = { 'en_us' }
 
 
 -- spell            = true,

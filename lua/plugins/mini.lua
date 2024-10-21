@@ -209,25 +209,25 @@ M.config = function()
     mini_comment.setup {}
   end
 
-  -- TODO: clue
+  -- NOTE: clue
   -- local mini_clue = prequire 'mini.clue'
   -- if mini_clue then
   --   mini_clue.setup {}
   -- end
 
-  -- TODO: surround
+  -- NOTE: surround
   -- local mini_surround = prequire 'mini.surround'
   -- if mini_surround then
   --   mini_surround.setup()
   -- end
 
-  -- TODO: operators
+  -- NOTE: operators
   -- require 'mini.operators'.setup()
 
-  -- TODO: align
+  -- NOTE: align
   -- require 'mini.align'.setup()
 
-  -- TODO: pairs
+  -- NOTE: pairs
   -- require 'mini.pairs'.setup()
 end
 

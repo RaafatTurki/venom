@@ -15,13 +15,19 @@ M.config = function()
       select_prev = { '<C-Up>' },
       select_next = { '<C-Down>' },
 
-      show_documentation = {},
-      hide_documentation = {},
+      show_documentation = '<C-space>',
+      hide_documentation = '<C-space>',
       scroll_documentation_up = '<C-k>',
       scroll_documentation_down = '<C-j>',
 
       snippet_forward = '<Tab>',
       snippet_backward = '<S-Tab>',
+    },
+
+    trigger = {
+      completion = {
+        show_on_insert_on_trigger_character = false,
+      },
     },
 
     signature_help = {
@@ -44,4 +50,4 @@ M.config = function()
   }
 end
 
-return {}
+return M

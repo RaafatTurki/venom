@@ -277,6 +277,8 @@ M.shared_lsp_server_opts_extension = function(opts)
     shared_capabilities = vim.tbl_deep_extend('force', shared_capabilities, require 'epo'.register_cap())
   end
 
+  shared_capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
+
   local shared_opts = {
     capabilities = shared_capabilities,
     handlers = {

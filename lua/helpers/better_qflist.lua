@@ -65,6 +65,14 @@ vim.cmd [[
 ]]
 
 -- keybinds
--- TODO: disable cnext and cprevious errors when going out of range
-map({ "x", "n" }, "<S-Up>",    vim.cmd.cprevious, "QFList previous")
-map({ "x", "n" }, "<S-Down>",  vim.cmd.cnext, "QFList next")
+-- NOTE: the commented out keybinds are for looping around the quickfix list
+
+map({ "x", "n" }, "<S-Up>", function()
+  local ok = pcall(vim.cmd.cprev)
+  -- if not ok then pcall(vim.cmd.clast) end
+end, "QFList previous")
+
+map({ "x", "n" }, "<S-Down>", function()
+  local ok = pcall(vim.cmd.cnext)
+  -- if not ok then pcall(vim.cmd.cfirst) end
+end, "QFList next")

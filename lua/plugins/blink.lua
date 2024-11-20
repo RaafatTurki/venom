@@ -46,6 +46,12 @@ M.config = function()
       ['<C-j>'] = { 'scroll_documentation_down', 'fallback' },
     },
 
+    accept = {
+      auto_brackets = {
+        enabled = true,
+      }
+    },
+
     trigger = {
       completion = {
         show_on_insert_on_trigger_character = false,

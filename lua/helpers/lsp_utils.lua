@@ -2,6 +2,10 @@ local U = require "helpers.utils"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
 
+-- better logging
+vim.lsp.log.set_format_func(vim.inspect)
+-- vim.lsp.set_log_level(vim.log.levels.DEBUG)
+
 local function lsp_rename()
   local curr_name = vim.fn.expand("<cword>")
   local input_opts = {

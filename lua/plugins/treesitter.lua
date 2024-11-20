@@ -100,7 +100,7 @@ M.config = function()
   }
 
   -- treesitter folding
-  vim.api.nvim_create_autocmd({ "BufEnter" }, {
+  vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePre" }, {
     callback = function(ev)
       vim.opt.foldmethod = "expr"
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"

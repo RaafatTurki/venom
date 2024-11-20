@@ -608,7 +608,7 @@ local highlights = {
   ['BlinkCmpDocCursorLine']                 = {},
   ['BlinkCmpSignatureHelp']                 = {},
   ['BlinkCmpSignatureHelpBorder']           = { "FloatBorder" },
-  ['BlinkCmpSignatureHelpActiveParameter']  = { bg = c.fg },
+  ['BlinkCmpSignatureHelpActiveParameter']  = { underline = true },
   ['BlinkCmpKind']                          = { "CmpItemKind" },
   ['BlinkCmpKindText']                      = { fg = c.fg },
   ['BlinkCmpKindMethod']                    = { fg = c.func },

@@ -3,6 +3,7 @@
   "blink.cmp": { "branch": "main", "commit": "81069e3955a8b4d5063287a2a6a47a844e9ca2cb" },
   "edgy.nvim": { "branch": "main", "commit": "7e8dedc39abebe40c289b8012cc89b11c69aa7a0" },
   "fold-cycle.nvim": { "branch": "main", "commit": "20e9b468b771ebf33b6806a0e872eee53c5a20c9" },
+  "format-ts-errors.nvim": { "branch": "main", "commit": "6661e6a335f53fcae1372755876fd43f98402c77" },
   "heirline.nvim": { "branch": "master", "commit": "cc359b628266cb9a84b2d71c883f2b99e16473a0" },
   "hex.nvim": { "branch": "master", "commit": "fcff75fcf43b5a6c5b471eed65b3a06c412d6020" },
   "hurl.nvim": { "branch": "main", "commit": "839784128048251ea9169264b72eaee171fbb1bd" },

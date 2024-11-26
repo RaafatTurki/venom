@@ -14,6 +14,7 @@ M.dependencies = {
   plugins_info.omnisharp_ext,
   plugins_info.schemastore,
   { plugins_info.typescript_tools, dependencies = plugins_info.plenary },
+  plugins_info.fmt_ts_errors,
   -- DAP
   plugins_info.dap,
   plugins_info.mason_dap,
@@ -67,8 +68,42 @@ M.config_lsp = function()
           },
         }
 
+        -- use format-ts-errors if available
+        local fmt_ts_errors = prequire 'format-ts-errorsa'
+        if fmt_ts_errors then
+          fmt_ts_errors.setup({
+            add_markdown = true,
+            start_indent_level = 0,
+          })
+
+          opts.handlers = {
+            ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
+              if result.diagnostics == nil then return end
+
+              -- ignore some tsserver diagnostics
+              local idx = 1
+              while idx <= #result.diagnostics do
+                local entry = result.diagnostics[idx]
+
+                local formatter = require('format-ts-errors')[entry.code]
+                entry.message = formatter and formatter(entry.message) or entry.message
+
+                -- codes: https://github.com/microsoft/TypeScript/blob/main/src/compiler/diagnosticMessages.json
+                if entry.code == 80001 then
+                  -- { message = "File is a CommonJS module; it may be converted to an ES module.", }
+                  table.remove(result.diagnostics, idx)
+                else
+                  idx = idx + 1
+                end
+              end
+
+              vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
+            end,
+          }
+        end
+
         -- use typescript-tools if available
-        local ts_tools = require 'typescript-tools'
+        local ts_tools = prequire 'typescript-tools'
         if ts_tools then
           ts_tools.setup(M.shared_lsp_server_opts_extension(opts))
         else

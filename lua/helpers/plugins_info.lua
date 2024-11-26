@@ -33,6 +33,7 @@ local M = {
   mason_lspconfig       = "williamboman/mason-lspconfig.nvim",
   lightbulb             = "kosayoda/nvim-lightbulb",
   typescript_tools      = "pmizio/typescript-tools.nvim",
+  fmt_ts_errors         = "davidosomething/format-ts-errors.nvim",
   omnisharp_ext         = "Hoffs/omnisharp-extended-lsp.nvim",
   schemastore           = "b0o/SchemaStore.nvim",
   lazydev               = "folke/lazydev.nvim",

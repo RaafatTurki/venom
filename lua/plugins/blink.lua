@@ -66,9 +66,45 @@ M.config = function()
         enabled_providers = { "lsp", "path", "snippets", "buffer", "lazydev" },
       },
       providers = {
-        -- dont show LuaLS require statements when lazydev has items
-        lsp = { fallback_for = { "lazydev" } },
-        lazydev = { name = "LazyDev", module = "lazydev.integrations.blink" },
+        path = {
+          name = 'path',
+          module = 'blink.cmp.sources.path',
+          score_offset = 3,
+          opts = {
+            trailing_slash = false,
+            label_trailing_slash = true,
+            get_cwd = function(context) return vim.fn.expand(('#%d:p:h'):format(context.bufnr)) end,
+            show_hidden_files_by_default = false,
+          }
+        },
+        snippets = {
+          name = 'snippets',
+          module = 'blink.cmp.sources.snippets',
+          score_offset = -3,
+          opts = {
+            friendly_snippets = true,
+            search_paths = { vim.fn.stdpath('config') .. '/snippets' },
+            global_snippets = { 'all' },
+            extended_filetypes = {},
+            ignored_filetypes = {},
+          }
+
+          --- Example usage for disabling the snippet provider after pressing trigger characters (i.e. ".")
+          -- enabled = function(ctx) return ctx ~= nil and ctx.trigger.kind == vim.lsp.protocol.CompletionTriggerKind.TriggerCharacter end,
+        },
+        buffer = {
+          name = 'buffer',
+          module = 'blink.cmp.sources.buffer',
+          fallback_for = { 'lsp' },
+        },
+        lsp = {
+          name = 'lsp',
+          fallback_for = { "lazydev" }
+        },
+        lazydev = {
+          name = "lazydev",
+          module = "lazydev.integrations.blink"
+        },
       },
     },
 

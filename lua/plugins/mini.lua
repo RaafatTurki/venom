@@ -2,7 +2,6 @@ local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 local buffers = require "helpers.buffers"
-local precomputed_colors = require "helpers.precomputed_colors"
 
 local M = { plugins_info.mini }
 
@@ -150,26 +149,33 @@ M.config = function()
   if mini_notify then
     mini_notify.setup {
       content = {
-        format = function(notif)
-          return notif.msg
+        format = function(str)
+          local parts = vim.split(str.msg, ': ')
+          if #parts == 2 then return parts[2] end
+          return string.format('\n  %s  \n', str.msg)
         end,
       },
       lsp_progress = {
         enable = true,
-        duration_last = 1000,
+        duration_last = 100,
       },
       window = {
-        config = {
-          border = 'none',
-          anchor = 'SE',
-          col = vim.api.nvim_win_get_width(0) -2, -- because of the scrollbar
-          row = vim.api.nvim_win_get_height(0),
-        },
+        config   = function ()
+          local pad = vim.o.cmdheight + (vim.o.laststatus > 0 and 1 or 0)
+
+          return {
+            row    = vim.o.lines - pad - 1,
+            col    = vim.o.columns - 1, -- because of the scrollbar
+            border = 'none',
+            anchor = 'SE',
+          }
+        end,
         winblend = 0,
       },
     }
 
-    -- vim.notify = mini_notify.make_notify()
+    -- use mini notify as the default notify function for vim
+    vim.notify = mini_notify.make_notify()
   end
 
   local mini_diff = prequire 'mini.diff'
@@ -198,8 +204,64 @@ M.config = function()
 
   local mini_hipatterns = prequire 'mini.hipatterns'
   if mini_hipatterns then
+
+    -- local aaa = "@asd.dsa"
+    -- local a = vim.split(aaa, '%.')
+    -- log(a)
+    -- table.remove(a, #a)
+    -- log(a)
+
+    local hls = vim.api.nvim_get_hl(0, {})
+    local venom_highlighter = {}
+
+    function is_hl_empty(group)
+      -- check if hl is empty
+      local hl = hls[group]
+      if hl == nil then return true end
+      if vim.tbl_isempty(hl) then return true end
+
+      -- recurse on link hl
+      local group_link = hl.link
+      local hl_link = hls[group_link]
+      if hl_link ~= nil then return is_hl_empty(hl_link) end
+
+      return false
+    end
+
+    function lsp_hl_get_closest_defined_parent_group(group)
+      if (not is_hl_empty(group)) then return group end
+
+      local segments = vim.split(group, '%.')
+      table.remove(segments, #segments)
+      parent_group = table.concat(segments, '.')
+      if not is_hl_empty(parent_group) then
+        return lsp_hl_get_closest_defined_parent_group(parent_group)
+      end
+
+      return "Comment"
+    end
+
+    for group, _ in pairs(hls) do
+      venom_highlighter[group] = {
+        pattern = function(bufnr)
+          if vim.api.nvim_buf_get_name(bufnr):match("venom.lua$") then
+            -- match highlight groups in buffer that are standalone words and might be prefixed with a @
+            -- return '%f[%w%@]()' .. group .. '()%f[%W]'
+            return '%f[%w]()' .. group .. '()%f[%W]'
+          end
+        end,
+        group = function(_, _, _)
+          -- if string.sub(hl, 1, 1) == '@' then
+          -- if string.sub(group, 1, 1) == '@' and is_hl_empty(group) then
+          --   return lsp_hl_get_closest_defined_parent_group(group)
+          -- end
+          return group
+        end
+      }
+    end
+
     mini_hipatterns.setup {
-      highlighters = precomputed_colors.all
+      highlighters = venom_highlighter
     }
   end
 

@@ -4,11 +4,7 @@ local buffers = require "helpers.buffers"
 
 local M = { plugins_info.treesitter }
 
-M.dependencies = {
-  -- plugins_info.treesitter_ctx_cms,
-  -- plugins_info.treesitter_ctx,
-  -- plugins_info.treesitter_comments,
-}
+M.dependencies = {}
 
 M.build = function()
   pcall(require("nvim-treesitter.install").update({ with_sync = true }))
@@ -81,26 +77,26 @@ M.config = function()
     },
     highlight = {
       enable = true,
-      disable = function(lang, buf)
-        local ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
-        local is_ft_blocked = vim.tbl_get(filetypes, ft, "highlight") == false
-
-        return is_ft_blocked
-      end,
+    --   disable = function(lang, buf)
+    --     local ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
+    --     local is_ft_blocked = vim.tbl_get(filetypes, ft, "highlight") == false
+    --
+    --     return is_ft_blocked
+    --   end,
     },
     indent = {
       enable = true,
-      disable = function(lang, buf)
-        local ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
-        local is_ft_blocked = vim.tbl_get(filetypes, ft, "indent") == false
-
-        return is_ft_blocked
-      end,
+      -- disable = function(lang, buf)
+      --   local ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
+      --   local is_ft_blocked = vim.tbl_get(filetypes, ft, "indent") == false
+      --
+      --   return is_ft_blocked
+      -- end,
     },
   }
 
   -- treesitter folding
-  vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePre" }, {
+  vim.api.nvim_create_autocmd({ "BufEnter" }, {
     callback = function(ev)
       vim.opt.foldmethod = "expr"
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"

@@ -34,3 +34,24 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
     vim.wo.number = false
   end
 })
+
+-- filename based commentstring
+vim.api.nvim_create_autocmd({ "Filetype" }, {
+  callback = function(ev)
+
+    local ft_cms = {
+      ['cs'] = "//%s",
+      ['prisma'] = "//%s",
+      ['sql'] = "--%s",
+      ['vue'] = "//%s",
+    }
+
+    local filetype = vim.bo.filetype
+
+    for ft, cms in pairs(ft_cms) do
+      if ft == filetype then
+        vim.bo.cms = cms
+      end
+    end
+  end
+})

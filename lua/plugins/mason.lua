@@ -51,9 +51,6 @@ M.config = function()
 end
 
 M.config_lsp = function()
-  -- set border to :LspInfo window
-  -- require('lspconfig.ui.windows').default_options.border = 'single'
-
   -- setting up mason servers
   local lspconfig_util = require 'lspconfig.util'
   require "mason-lspconfig".setup {
@@ -68,39 +65,39 @@ M.config_lsp = function()
           },
         }
 
-        -- use format-ts-errors if available
-        local fmt_ts_errors = prequire 'format-ts-errorsa'
-        if fmt_ts_errors then
-          fmt_ts_errors.setup({
-            add_markdown = true,
-            start_indent_level = 0,
-          })
-
-          opts.handlers = {
-            ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
-              if result.diagnostics == nil then return end
-
-              -- ignore some tsserver diagnostics
-              local idx = 1
-              while idx <= #result.diagnostics do
-                local entry = result.diagnostics[idx]
-
-                local formatter = require('format-ts-errors')[entry.code]
-                entry.message = formatter and formatter(entry.message) or entry.message
-
-                -- codes: https://github.com/microsoft/TypeScript/blob/main/src/compiler/diagnosticMessages.json
-                if entry.code == 80001 then
-                  -- { message = "File is a CommonJS module; it may be converted to an ES module.", }
-                  table.remove(result.diagnostics, idx)
-                else
-                  idx = idx + 1
-                end
-              end
-
-              vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
-            end,
-          }
-        end
+        -- -- use format-ts-errors if available
+        -- local fmt_ts_errors = prequire 'format-ts-errors'
+        -- if fmt_ts_errors then
+        --   fmt_ts_errors.setup({
+        --     add_markdown = true,
+        --     start_indent_level = 0,
+        --   })
+        --
+        --   opts.handlers = {
+        --     ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
+        --       if result.diagnostics == nil then return end
+        --
+        --       -- ignore some tsserver diagnostics
+        --       local idx = 1
+        --       while idx <= #result.diagnostics do
+        --         local entry = result.diagnostics[idx]
+        --
+        --         local formatter = require('format-ts-errors')[entry.code]
+        --         entry.message = formatter and formatter(entry.message) or entry.message
+        --
+        --         -- codes: https://github.com/microsoft/TypeScript/blob/main/src/compiler/diagnosticMessages.json
+        --         if entry.code == 80001 then
+        --           -- { message = "File is a CommonJS module; it may be converted to an ES module.", }
+        --           table.remove(result.diagnostics, idx)
+        --         else
+        --           idx = idx + 1
+        --         end
+        --       end
+        --
+        --       vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
+        --     end,
+        --   }
+        -- end
 
         -- use typescript-tools if available
         local ts_tools = prequire 'typescript-tools'
@@ -127,9 +124,28 @@ M.config_lsp = function()
         M.setup_lsp_server_lspconfig('lua_ls', {
           settings = {
             Lua = {
-              diagnostics = { disable = { 'lowercase-global', 'trailing-space', 'unused-local' } },
-              workspace = { checkThirdParty = false },
               telemetry = { enable = false },
+              diagnostics = {
+                disable = { 'lowercase-global', 'trailing-space', 'unused-local' }
+              },
+              workspace = { checkThirdParty = false },
+              codeLens = {
+                enable = true,
+              },
+              completion = {
+                callSnippet = "Replace",
+              },
+              doc = {
+                privateName = { "^_" },
+              },
+              hint = {
+                enable = true,
+                setType = false,
+                paramType = true,
+                paramName = "Disable",
+                semicolon = "Disable",
+                arrayIndex = "Disable",
+              },
             }
           },
         })
@@ -292,7 +308,7 @@ M.config_dap = function()
   -- DAP
   keys.map("n", "ss", function() dap.continue() dapui.open() end, "DAP Start")
   keys.map("n", "sq", function() dap.terminate() dapui.close() end, "DAP Terminate")
-  keys.map("n", "s<Leader>", dap.continue, "DAP Continue")
+  keys.map("n", "sc", dap.continue, "DAP Continue")
   keys.map("n", "sx", dap.toggle_breakpoint, "DAP Toggle breakpoint")
   keys.map("n", "s<Right>", dap.step_into, "DAP Step into")
   keys.map("n", "s<Left>", dap.step_out, "DAP Step out")
@@ -334,6 +350,15 @@ M.shared_lsp_server_opts_extension = function(opts)
       --     callback = function(ev) vim.lsp.buf.format() end,
       --   })
       -- end
+
+      -- enable inlay hints
+      if client.server_capabilities.inlayHintProvider then
+        -- this might not be needed
+        vim.g.inlay_hints_visible = true
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+      else
+        print("no inlay hints available")
+      end
 
       -- calling the server specific on attach
       if opts.on_attach then

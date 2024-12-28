@@ -267,7 +267,7 @@ M.config = function()
 
   local mini_comment = prequire 'mini.comment'
   if mini_comment then
-    -- overrides the default commenting keymaps with a better whitespaced one
+    -- overrides the default commenting keymaps with a better whitespaced one (in typescript anyways)
     mini_comment.setup {}
   end
 

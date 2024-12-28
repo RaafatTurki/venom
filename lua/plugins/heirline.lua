@@ -448,6 +448,9 @@ M.config = function()
   }
 
   local spell = {
+    condition = function()
+      return vim.opt.spell:get()
+    end,
     provider = function()
       if vim.opt.spell:get() then
         return icons.misc.spellcheck

@@ -19,6 +19,10 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   callback = function(ev)
     vim.opt.wrap = true
     vim.bo.undofile = false
+    vim.wo.foldmethod = "manual"
+    vim.wo.statuscolumn = ""
+    vim.wo.conceallevel = 0
+    vim.cmd [[NoMatchParen]]
 
     -- infer basic syntax highlighting from buffer contents
     vim.schedule(function()

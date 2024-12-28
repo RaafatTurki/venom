@@ -14,29 +14,66 @@ local icon_sets = {
     }
   },
   kind = {
+    blink = {
+      Text = '󰉿',
+      Method = '󰊕',
+      Function = '󰊕',
+      Constructor = '󰒓',
+      --
+      Field = '󰜢',
+      Variable = '󰆦',
+      Property = '󰖷',
+      --
+      Class = '󱡠',
+      Interface = '󱡠',
+      Struct = '󱡠',
+      Module = '󰅩',
+      --
+      Unit = '󰪚',
+      Value = '󰦨',
+      Enum = '󰦨',
+      EnumMember = '󰦨',
+      --
+      Keyword = '󰻾',
+      Constant = '󰏿',
+      --
+      Snippet = '󱄽',
+      Color = '󰏘',
+      File = '󰈔',
+      Reference = '󰬲',
+      Folder = '󰉋',
+      Event = '󱐋',
+      Operator = '󰪚',
+      TypeParameter = '󰬛',
+    },
     nerdfont = {
       Text          = '',
       Method        = '',
       Function      = '',
       Constructor   = '',
+      --
       Field         = '',
       Variable      = '',
+      Property      = '',
+      --
       Class         = '',
       Interface     = '',
+      Struct        = '',
       Module        = '',
-      Property      = '',
+      --
       Unit          = '',
       Value         = '',
       Enum          = '',
+      EnumMember    = '',
+      --
       Keyword       = '',
+      Constant      = '',
+      --
       Snippet       = '',
       Color         = '',
       File          = '',
       Reference     = '',
       Folder        = '',
-      EnumMember    = '',
-      Constant      = '',
-      Struct        = '',
       Event         = '',
       Operator      = '',
       TypeParameter = '',
@@ -46,24 +83,29 @@ local icon_sets = {
       Method        = 'fun',
       Function      = 'fun',
       Constructor   = 'fun',
+      --
       Field         = 'var',
       Variable      = 'var',
+      Property      = 'var',
+      --
       Class         = 'cls',
       Interface     = 'int',
+      Struct        = 'cls',
       Module        = 'mod',
-      Property      = 'var',
+      --
       Unit          = 'val',
       Value         = 'val',
       Enum          = 'val',
+      EnumMember    = 'val',
+      --
       Keyword       = 'key',
+      Constant      = 'con',
+      --
       Snippet       = 'snp',
       Color         = 'val',
       File          = 'fil',
       Reference     = 'ref',
       Folder        = 'dir',
-      EnumMember    = 'val',
-      Constant      = 'con',
-      Struct        = 'cls',
       Event         = 'evn',
       Operator      = 'opr',
       TypeParameter = 'typ',
@@ -180,6 +222,7 @@ local icon_sets = {
       ellipsis = '',
       expanded = '',
       collapsed = '',
+      letter_case = '󰾹',
     },
   },
   -- fs = {
@@ -216,7 +259,7 @@ local icon_sets = {
 M.icons = {
   diag = icon_sets.diag.cozette,
   code_action = icon_sets.code_action.nerdfont,
-  kind = icon_sets.kind.nerdfont,
+  kind = icon_sets.kind.blink,
   dap = icon_sets.dap.nerdfont,
   vcs = icon_sets.vcs.nerdfont,
   navic = icon_sets.navic.nerdfont,

@@ -12,7 +12,6 @@ M.version = 'v0.*'
 
 -- TODO: optimize for huge buffers
 M.config = function()
-
   local lazydev = prequire "lazydev"
   if lazydev then
     -- lazydev.setup { library = { plugins = false } }
@@ -46,25 +45,49 @@ M.config = function()
       ['<C-j>'] = { 'scroll_documentation_down', 'fallback' },
     },
 
-    accept = {
-      auto_brackets = {
-        enabled = true,
+    completion = {
+      trigger = {
+        show_on_insert_on_trigger_character = false,
+      },
+      menu = {
+        draw = {
+          treesitter = { "lsp" },
+        },
+        border = 'single',
+      },
+      documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 200,
+        window = {
+          border = 'single'
+        },
+      },
+      -- ghost_text = {
+      --   enabled = true
+      -- },
+    },
+
+    signature = {
+      enabled = true,
+      window = {
+        border = 'single',
       }
     },
 
-    trigger = {
-      completion = {
-        show_on_insert_on_trigger_character = false,
-      },
-      signature_help = {
-        enabled = true
-      },
+    appearance = {
+      kind_icons = icons.kind,
     },
 
     sources = {
-      completion = {
-        enabled_providers = { "lsp", "path", "snippets", "buffer", "lazydev" },
-      },
+      default = { "lsp", "path", "snippets", "buffer", "lazydev" },
+      cmdline = {},
+      -- cmdline = function()
+      --   local type = vim.fn.getcmdtype()
+      --   -- Search forward and backward
+      --   if type == '/' or type == '?' then return { 'buffer' } end
+      --   -- Commands
+      --   if type == ':' then return { 'cmdline' } end
+      -- end,
       providers = {
         path = {
           name = 'path',
@@ -95,30 +118,16 @@ M.config = function()
         buffer = {
           name = 'buffer',
           module = 'blink.cmp.sources.buffer',
-          fallback_for = { 'lsp' },
         },
         lsp = {
           name = 'lsp',
-          fallback_for = { "lazydev" }
+          fallbacks = { 'buffer' },
         },
         lazydev = {
           name = "lazydev",
-          module = "lazydev.integrations.blink"
+          module = "lazydev.integrations.blink",
+          fallbacks = { "lsp" },
         },
-      },
-    },
-
-    kind_icons = icons.kind,
-
-    windows = {
-      autocomplete = {
-        border = 'single',
-      },
-      documentation = {
-        border = 'single'
-      },
-      signature_help = {
-        border = 'single',
       },
     },
   }

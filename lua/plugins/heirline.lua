@@ -457,6 +457,19 @@ M.config = function()
     hl = "Normal"
   }
 
+  local ignorecase = {
+    condition = function()
+      return not vim.opt.ignorecase:get()
+    end,
+    provider = function()
+      if not vim.opt.ignorecase:get() then
+        return icons.misc.letter_case
+      end
+    end,
+    space,
+    hl = "Normal"
+  }
+
   local ruler = {
     -- %l = current line number
     -- %L = number of lines in the buffer
@@ -694,6 +707,7 @@ M.config = function()
         align,
 
         lsp_diagnostics,
+        ignorecase,
         spell,
         copilot,
         lsp_active,

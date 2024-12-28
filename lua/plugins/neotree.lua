@@ -13,6 +13,20 @@ M.dependencies = {
 }
 
 M.config = function()
+
+  local function on_move(data)
+    ---@diagnostic disable-next-line: undefined-global
+    Snacks.rename.on_rename_file(data.source, data.destination)
+  end
+
+  local events = require("neo-tree.events")
+  event_handlers = {}
+  vim.list_extend(event_handlers, {
+    { event = events.FILE_MOVED, handler = on_move },
+    { event = events.FILE_RENAMED, handler = on_move },
+  })
+
+
   require "neo-tree".setup {
     -- close_if_last_window = true,
     popup_border_style = 'single',
@@ -63,7 +77,8 @@ M.config = function()
           -- "thumbs.db",
         },
       },
-    }
+    },
+    event_handlers = event_handlers,
   }
 
   keys.map("n", "<C-e>", ":Neotree toggle reveal_force_cwd<CR>", "Neotree Toggle")

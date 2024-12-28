@@ -27,6 +27,7 @@
   "nvim-ts-autotag": { "branch": "main", "commit": "1cca23c9da708047922d3895a71032bc0449c52d" },
   "omnisharp-extended-lsp.nvim": { "branch": "main", "commit": "4916fa12e5b28d21a1f031f0bdd10aa15a75d85d" },
   "plenary.nvim": { "branch": "master", "commit": "2d9b06177a975543726ce5c73fca176cedbffe9d" },
+  "snacks.nvim": { "branch": "main", "commit": "98df370703b3c47a297988f3e55ce99628639590" },
   "supermaven-nvim": { "branch": "main", "commit": "07d20fce48a5629686aefb0a7cd4b25e33947d50" },
   "typescript-tools.nvim": { "branch": "master", "commit": "35e397ce467bedbbbb5bfcd0aa79727b59a08d4a" },
   "volt": { "branch": "main", "commit": "3f9abc92d7eda77c16ef540a86764d8a499137eb" },

@@ -1,4 +1,5 @@
 local M = {
+  snacks                = "folke/snacks.nvim",
   plenary               = "nvim-lua/plenary.nvim",
   mini                  = "echasnovski/mini.nvim",
   edgy                  = "folke/edgy.nvim",
@@ -6,7 +7,7 @@ local M = {
   nui                   = "MunifTanjim/nui.nvim",
   heirline              = "rebelot/heirline.nvim",
   corn                  = "RaafatTurki/corn.nvim",
-  zen_mode              = "folke/zen-mode.nvim",
+  -- zen_mode              = "folke/zen-mode.nvim",
   highlight_colors      = "brenoprata10/nvim-highlight-colors",
   copilot               = "zbirenbaum/copilot.lua",
   supermaven            = "supermaven-inc/supermaven-nvim",

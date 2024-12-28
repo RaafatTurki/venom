@@ -4,7 +4,9 @@ local buffers = require "helpers.buffers"
 
 local M = { plugins_info.treesitter }
 
-M.dependencies = {}
+M.dependencies = {
+  plugins_info.auto_tag,
+}
 
 M.build = function()
   pcall(require("nvim-treesitter.install").update({ with_sync = true }))
@@ -101,6 +103,15 @@ M.config = function()
       vim.opt.foldmethod = "expr"
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
     end
+  })
+
+  -- treesitter auto tag
+  require('nvim-ts-autotag').setup({
+    opts = {
+      enable_close = true,
+      enable_rename = false,
+      enable_close_on_slash = true
+    },
   })
 end
 

@@ -43,6 +43,7 @@ local M = {
   treesitter            = "nvim-treesitter/nvim-treesitter",
   treesitter_comments   = "folke/ts-comments.nvim",
   fold_cycle            = "jghauser/fold-cycle.nvim",
+  auto_tag              = "windwp/nvim-ts-autotag",
 
   -- DAP
   dap                   = "mfussenegger/nvim-dap",

@@ -14,6 +14,7 @@ end
 
 M.config = function()
   local filetypes = {
+    bigfile = { highlight = false, indent = false },
     dart = { indent = false },
   }
 
@@ -79,40 +80,45 @@ M.config = function()
     },
     highlight = {
       enable = true,
-    --   disable = function(lang, buf)
-    --     local ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
-    --     local is_ft_blocked = vim.tbl_get(filetypes, ft, "highlight") == false
-    --
-    --     return is_ft_blocked
-    --   end,
+      disable = function(lang, buf)
+        local ft = vim.api.nvim_get_option_value('filetype', { buf = buf })
+        local is_ft_blocked = vim.tbl_get(filetypes, ft, "highlight") == false
+
+        return is_ft_blocked
+      end,
     },
     indent = {
       enable = true,
-      -- disable = function(lang, buf)
-      --   local ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
-      --   local is_ft_blocked = vim.tbl_get(filetypes, ft, "indent") == false
-      --
-      --   return is_ft_blocked
-      -- end,
+      disable = function(lang, buf)
+        local ft = vim.api.nvim_get_option_value('filetype', { buf = buf })
+        local is_ft_blocked = vim.tbl_get(filetypes, ft, "indent") == false
+
+        return is_ft_blocked
+      end,
     },
   }
 
   -- treesitter folding
   vim.api.nvim_create_autocmd({ "BufEnter" }, {
     callback = function(ev)
+      -- bigfile check
+      local ft = vim.api.nvim_get_option_value('filetype', { buf = ev.buf })
+      if ft == "bigfile" then return end
+
       vim.opt.foldmethod = "expr"
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
     end
   })
 
   -- treesitter auto tag
-  require('nvim-ts-autotag').setup({
-    opts = {
-      enable_close = true,
-      enable_rename = false,
-      enable_close_on_slash = true
-    },
-  })
+  -- TODO: enable excluding bigfiles
+  -- require('nvim-ts-autotag').setup({
+  --   opts = {
+  --     enable_close = true,
+  --     enable_rename = false,
+  --     enable_close_on_slash = true
+  --   },
+  -- })
 end
 
 return M

@@ -650,6 +650,9 @@ M.config = function()
   }
 
   local sc_lightbulb = {
+    condition = function()
+      return prequire "nvim-lightbulb"
+    end,
     init = function(self)
       self.ns = vim.api.nvim_get_namespaces()["nvim-lightbulb"]
     end,
@@ -767,7 +770,6 @@ M.config = function()
       }
     },
   }
-
 end
 
 return M

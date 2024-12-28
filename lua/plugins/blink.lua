@@ -10,7 +10,6 @@ M.dependencies = {
 
 M.version = 'v0.*'
 
--- TODO: optimize for huge buffers
 M.config = function()
   local lazydev = prequire "lazydev"
   if lazydev then
@@ -30,6 +29,16 @@ M.config = function()
   end
 
   require "blink-cmp".setup {
+    enabled = function()
+      -- bigfile check
+      if vim.bo.filetype == "bigfile" then return false end
+      -- if vim.tbl_contains({ "cpp" }, vim.bo.filetype) then return false end
+      if vim.bo.buftype == "prompt" then return false end
+      if vim.b.completion == false then return false end
+
+      return true
+    end,
+
     keymap = {
       ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>'] = { 'hide', 'fallback' },

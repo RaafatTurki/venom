@@ -17,17 +17,21 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   group = vim.api.nvim_create_augroup("bigfile", {}),
   pattern = "bigfile",
   callback = function(ev)
-    vim.opt.wrap = true
+    -- vim
+    vim.opt.wrap = false
     vim.bo.undofile = false
     vim.wo.foldmethod = "manual"
-    vim.wo.statuscolumn = ""
+    -- vim.wo.statuscolumn = ""
     vim.wo.conceallevel = 0
-    vim.cmd [[NoMatchParen]]
-
+    vim.o.syntax = "off"
     -- infer basic syntax highlighting from buffer contents
-    vim.schedule(function()
-      local ft = vim.filetype.match({ buf = ev.buf })
-      vim.bo[ev.buf].syntax = ft or ""
-    end)
+    -- vim.schedule(function()
+      --   local ft = vim.filetype.match({ buf = ev.buf })
+      --   vim.bo[ev.buf].syntax = ft or ""
+      -- end)
+
+    -- mini
+    vim.b.minimap_disable = true
+
   end,
 })

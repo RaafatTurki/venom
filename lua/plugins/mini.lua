@@ -202,68 +202,68 @@ M.config = function()
     mini_git.setup {}
   end
 
-  local mini_hipatterns = prequire 'mini.hipatterns'
-  if mini_hipatterns then
-
-    -- local aaa = "@asd.dsa"
-    -- local a = vim.split(aaa, '%.')
-    -- log(a)
-    -- table.remove(a, #a)
-    -- log(a)
-
-    local hls = vim.api.nvim_get_hl(0, {})
-    local venom_highlighter = {}
-
-    function is_hl_empty(group)
-      -- check if hl is empty
-      local hl = hls[group]
-      if hl == nil then return true end
-      if vim.tbl_isempty(hl) then return true end
-
-      -- recurse on link hl
-      local group_link = hl.link
-      local hl_link = hls[group_link]
-      if hl_link ~= nil then return is_hl_empty(hl_link) end
-
-      return false
-    end
-
-    function lsp_hl_get_closest_defined_parent_group(group)
-      if (not is_hl_empty(group)) then return group end
-
-      local segments = vim.split(group, '%.')
-      table.remove(segments, #segments)
-      parent_group = table.concat(segments, '.')
-      if not is_hl_empty(parent_group) then
-        return lsp_hl_get_closest_defined_parent_group(parent_group)
-      end
-
-      return "Comment"
-    end
-
-    for group, _ in pairs(hls) do
-      venom_highlighter[group] = {
-        pattern = function(bufnr)
-          if vim.api.nvim_buf_get_name(bufnr):match("venom.lua$") then
-            -- match highlight groups in buffer that are standalone words and might be prefixed with a @
-            -- return '%f[%w%@]()' .. group .. '()%f[%W]'
-            return '%f[%w]()' .. group .. '()%f[%W]'
-          end
-        end,
-        group = function(_, _, _)
-          -- if string.sub(hl, 1, 1) == '@' then
-          -- if string.sub(group, 1, 1) == '@' and is_hl_empty(group) then
-          --   return lsp_hl_get_closest_defined_parent_group(group)
-          -- end
-          return group
-        end
-      }
-    end
-
-    mini_hipatterns.setup {
-      highlighters = venom_highlighter
-    }
-  end
+  -- local mini_hipatterns = prequire 'mini.hipatterns'
+  -- if mini_hipatterns then
+  --
+  --   -- local aaa = "@asd.dsa"
+  --   -- local a = vim.split(aaa, '%.')
+  --   -- log(a)
+  --   -- table.remove(a, #a)
+  --   -- log(a)
+  --
+  --   local hls = vim.api.nvim_get_hl(0, {})
+  --   local venom_highlighter = {}
+  --
+  --   function is_hl_empty(group)
+  --     -- check if hl is empty
+  --     local hl = hls[group]
+  --     if hl == nil then return true end
+  --     if vim.tbl_isempty(hl) then return true end
+  --
+  --     -- recurse on link hl
+  --     local group_link = hl.link
+  --     local hl_link = hls[group_link]
+  --     if hl_link ~= nil then return is_hl_empty(hl_link) end
+  --
+  --     return false
+  --   end
+  --
+  --   function lsp_hl_get_closest_defined_parent_group(group)
+  --     if (not is_hl_empty(group)) then return group end
+  --
+  --     local segments = vim.split(group, '%.')
+  --     table.remove(segments, #segments)
+  --     parent_group = table.concat(segments, '.')
+  --     if not is_hl_empty(parent_group) then
+  --       return lsp_hl_get_closest_defined_parent_group(parent_group)
+  --     end
+  --
+  --     return "Comment"
+  --   end
+  --
+  --   for group, _ in pairs(hls) do
+  --     venom_highlighter[group] = {
+  --       pattern = function(bufnr)
+  --         if vim.api.nvim_buf_get_name(bufnr):match("venom.lua$") then
+  --           -- match highlight groups in buffer that are standalone words and might be prefixed with a @
+  --           -- return '%f[%w%@]()' .. group .. '()%f[%W]'
+  --           return '%f[%w]()' .. group .. '()%f[%W]'
+  --         end
+  --       end,
+  --       group = function(_, _, _)
+  --         -- if string.sub(hl, 1, 1) == '@' then
+  --         -- if string.sub(group, 1, 1) == '@' and is_hl_empty(group) then
+  --         --   return lsp_hl_get_closest_defined_parent_group(group)
+  --         -- end
+  --         return group
+  --       end
+  --     }
+  --   end
+  --
+  --   mini_hipatterns.setup {
+  --     highlighters = venom_highlighter
+  --   }
+  -- end
 
   local mini_comment = prequire 'mini.comment'
   if mini_comment then

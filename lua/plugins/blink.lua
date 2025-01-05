@@ -52,6 +52,16 @@ M.config = function()
 
       ['<C-k>'] = { 'scroll_documentation_up', 'fallback' },
       ['<C-j>'] = { 'scroll_documentation_down', 'fallback' },
+
+      cmdline = {
+        preset = 'none',
+        ['<C-Up>'] = { 'select_prev', 'fallback' },
+        ['<C-Down>'] = { 'select_next', 'fallback' },
+
+        ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+        ['<C-e>'] = { 'hide', 'fallback' },
+        -- ['<Tab>'] = { 'accept', 'fallback' },
+      }
     },
 
     completion = {
@@ -60,7 +70,7 @@ M.config = function()
       },
       menu = {
         draw = {
-          treesitter = { "lsp" },
+          treesitter = {},
         },
         border = 'single',
       },
@@ -71,6 +81,11 @@ M.config = function()
           border = 'single'
         },
       },
+      list = {
+        selection = function(ctx)
+          return ctx.mode == 'cmdline' and 'auto_insert' or 'preselect'
+        end
+      }
       -- ghost_text = {
       --   enabled = true
       -- },
@@ -89,14 +104,6 @@ M.config = function()
 
     sources = {
       default = { "lsp", "path", "snippets", "buffer", "lazydev" },
-      cmdline = {},
-      -- cmdline = function()
-      --   local type = vim.fn.getcmdtype()
-      --   -- Search forward and backward
-      --   if type == '/' or type == '?' then return { 'buffer' } end
-      --   -- Commands
-      --   if type == ':' then return { 'cmdline' } end
-      -- end,
       providers = {
         path = {
           name = 'path',
@@ -114,7 +121,7 @@ M.config = function()
           module = 'blink.cmp.sources.snippets',
           score_offset = -3,
           opts = {
-            friendly_snippets = true,
+            friendly_snippets = false,
             search_paths = { vim.fn.stdpath('config') .. '/snippets' },
             global_snippets = { 'all' },
             extended_filetypes = {},

@@ -289,18 +289,18 @@ M.config_dap = function()
         size = 0.5,
         elements = {
           "scopes",
-          "breakpoints",
+          -- "breakpoints",
           "stacks",
           -- "watches",
         },
       },
-      {
-        position = "bottom",
-        size = 0.2,
-        elements = {
-          "repl",
-        },
-      },
+      -- {
+      --   position = "bottom",
+      --   size = 0.2,
+      --   elements = {
+      --     "repl",
+      --   },
+      -- },
       -- { elements = { "repl" } },
       -- { elements = { "console", }, size = 0.25, position = "left" },
     },

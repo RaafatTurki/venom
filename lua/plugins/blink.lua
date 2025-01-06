@@ -52,15 +52,18 @@ M.config = function()
 
       ['<C-k>'] = { 'scroll_documentation_up', 'fallback' },
       ['<C-j>'] = { 'scroll_documentation_down', 'fallback' },
+    },
 
-      cmdline = {
+    cmdline = {
+      keymap = {
         preset = 'none',
         ['<C-Up>'] = { 'select_prev', 'fallback' },
         ['<C-Down>'] = { 'select_next', 'fallback' },
 
         ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
         ['<C-e>'] = { 'hide', 'fallback' },
-        -- ['<Tab>'] = { 'accept', 'fallback' },
+        ['<Tab>'] = { 'select_next', 'fallback' },
+        ['<S-Tab>'] = { 'select_prev', 'fallback' },
       }
     },
 
@@ -82,9 +85,12 @@ M.config = function()
         },
       },
       list = {
-        selection = function(ctx)
-          return ctx.mode == 'cmdline' and 'auto_insert' or 'manual'
-        end
+        selection = {
+          auto_insert = function(ctx)
+            if ctx.mode == 'cmdline' then return true end
+            return false
+          end
+        }
       }
       -- ghost_text = {
       --   enabled = true

@@ -1,5 +1,7 @@
 local M = {
+  -- NOTE: first because some of its plugins need to be loaded first
   snacks                = "folke/snacks.nvim",
+
   plenary               = "nvim-lua/plenary.nvim",
   mini                  = "echasnovski/mini.nvim",
   edgy                  = "folke/edgy.nvim",

@@ -1,5 +1,7 @@
 local U = require "helpers.utils"
 local buffers = require "helpers.buffers"
+local mason = require "plugins.mason"
+local dap = mason and mason.dap or nil
 
 local M = {}
 
@@ -14,13 +16,14 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
 
 ---@class SessionData
 ---@field buffers { current_file_index: number, file_paths: string[] }
+---@field dap { breakpoints: { file_path: number[] } }
 
 function M.save()
   ---@type SessionData
-  local sdata = {
-    buffers = buffers.aggregate(),
-    -- dap = Dap.aggregate(),
-  }
+  local sdata = {}
+
+  if buffers then sdata.buffers = buffers.aggregate() end
+  if dap then sdata.dap = dap.aggregate() end
 
   -- write session file
   U.file_write(M.local_session_file, vim.fn.json_encode(sdata))
@@ -30,7 +33,7 @@ function M.save()
 end
 
 function M.load()
-  -- create a new session file if doesn't exist
+  -- prompt to save a new session if doesn't exist and exit
   if not U.is_file_exists(M.local_session_file) then
     vim.schedule(function()
       if U.confirm_yes_no('Local session file does not exist. Create one?') then
@@ -50,8 +53,8 @@ function M.load()
 
   -- populate modules with decoded data
   -- curr_branch = decoded_data.git_branches[U.get_curr_git_branch()]
-  buffers.populate(sdata.buffers)
-  -- Dap.populate(decoded_data.dap)
+  if sdata.buffers then buffers.populate(sdata.buffers) end
+  if sdata.dap then dap.populate(sdata.dap) end
 
   -- set local session bool
   M.is_in_local_session = true

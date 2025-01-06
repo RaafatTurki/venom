@@ -44,6 +44,8 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
       ['prisma'] = "//%s",
       ['sql'] = "--%s",
       ['vue'] = "//%s",
+      ['typst'] = "//%s",
+      ['svelte'] = "<!-- %s -->",
     }
 
     local filetype = vim.bo.filetype

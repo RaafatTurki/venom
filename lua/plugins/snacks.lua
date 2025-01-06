@@ -7,11 +7,22 @@ local M = {
 }
 
 M.config = function()
-  require "snacks".setup {
-    zen = {},
-  }
+  -- Toggle the profiler
+  -- Snacks.toggle.profiler():map("<leader>pp")
+  -- Toggle the profiler highlights
+  -- Snacks.toggle.profiler_highlights():map("<leader>ph")
 
-  keys.map("n", "<leader>z", Snacks.zen.zen)
+  -- require "snacks".setup {
+  --   profiler = {
+  --     keys = {
+  --       { "<leader>ps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Bufer" },
+  --     },
+  --   },
+  --   -- picker = {},
+  --   -- zen = {},
+  -- }
+
+  -- keys.map("n", "<leader>z", Snacks.zen.zen)
 end
 
 return M

@@ -2,6 +2,7 @@ local U = require "helpers.utils"
 local plugins_info = require "helpers.plugins_info"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
+local buffers = require "helpers.buffers"
 
 local M = {
   plugins_info.mason,
@@ -21,6 +22,9 @@ M.dependencies = {
   plugins_info.mason_dap,
   { plugins_info.dap_ui, dependencies = plugins_info.nio },
 }
+
+M.lsp = {}
+M.dap = {}
 
 M.config = function()
   require "mason".setup {
@@ -47,17 +51,17 @@ M.config = function()
     }
   }
 
-  M.config_lsp()
-  M.config_dap()
+  M.lsp.config()
+  M.dap.config()
 end
 
-M.config_lsp = function()
+M.lsp.config = function()
   -- setting up mason servers
   local lspconfig_util = require 'lspconfig.util'
   require "mason-lspconfig".setup {
     handlers = {
       function(server_name)
-        M.setup_lsp_server_lspconfig(server_name, {})
+        M.lsp.setup_server(server_name, {})
       end,
       ts_ls = function()
         local opts = {
@@ -103,13 +107,13 @@ M.config_lsp = function()
         -- use typescript-tools if available
         local ts_tools = prequire 'typescript-tools'
         if ts_tools then
-          ts_tools.setup(M.shared_lsp_server_opts_extension(opts))
+          ts_tools.setup(M.lsp.shared_opts_extender(opts))
         else
-          M.setup_lsp_server_lspconfig('ts_ls', opts)
+          M.lsp.setup_server('ts_ls', opts)
         end
       end,
       clangd = function()
-        M.setup_lsp_server_lspconfig('clangd', {
+        M.lsp.setup_server('clangd', {
           cmd = {
             "clangd",
             "--offset-encoding=utf-16",
@@ -122,7 +126,7 @@ M.config_lsp = function()
           neodev.setup { library = { plugins = false } }
         end
 
-        M.setup_lsp_server_lspconfig('lua_ls', {
+        M.lsp.setup_server('lua_ls', {
           settings = {
             Lua = {
               telemetry = { enable = false },
@@ -164,7 +168,7 @@ M.config_lsp = function()
           }
         end
 
-        M.setup_lsp_server_lspconfig('jsonls', opt)
+        M.lsp.setup_server('jsonls', opt)
       end,
       sqls = function()
         local opt = {
@@ -188,7 +192,7 @@ M.config_lsp = function()
           end
         end
 
-        M.setup_lsp_server_lspconfig('sqls', opt)
+        M.lsp.setup_server('sqls', opt)
       end,
       omnisharp = function()
         local opt = {}
@@ -200,10 +204,10 @@ M.config_lsp = function()
           }
         end
 
-        M.setup_lsp_server_lspconfig('omnisharp', opt)
+        M.lsp.setup_server('omnisharp', opt)
       end,
       markdown_oxide = function()
-        M.setup_lsp_server_lspconfig('markdown_oxide', {
+        M.lsp.setup_server('markdown_oxide', {
           capabilities = {
             workspace = {
               didChangeWatchedFiles = {
@@ -214,7 +218,7 @@ M.config_lsp = function()
         })
       end,
       texlab = function()
-        M.setup_lsp_server_lspconfig('texlab', {
+        M.lsp.setup_server('texlab', {
           settings = {
             texlab = {
               build = {
@@ -232,13 +236,13 @@ M.config_lsp = function()
   -- setting up non-mason servers
   local gdshader_lsp_bin = "/home/potato/sectors/rust/gdshader-lsp/target/debug/gdshader-lsp"
   if vim.fn.executable('gdshader_lsp_bin') == 1 then
-    M.setup_lsp_server_lspconfig('gdshader_lsp', {
+    M.lsp.setup_server('gdshader_lsp', {
       name = "gdshader",
       cmd = { gdshader_lsp_bin, "--stdio" },
     })
   end
   if vim.fn.executable('godot') == 1 then
-    M.setup_lsp_server_lspconfig('gdscript', {
+    M.lsp.setup_server('gdscript', {
       cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
       flags = {
         debounce_text_changes = 150,
@@ -246,7 +250,7 @@ M.config_lsp = function()
     })
   end
   if vim.fn.executable('dart') == 1 then
-    M.setup_lsp_server_lspconfig('dartls', {
+    M.lsp.setup_server('dartls', {
       -- cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
       -- flags = {
       --   debounce_text_changes = 150,
@@ -255,7 +259,67 @@ M.config_lsp = function()
   end
 end
 
-M.config_dap = function()
+M.lsp.shared_opts_extender = function(opts)
+  -- setup shared capabilities
+  local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
+  if prequire "cmp" and prequire "cmp_nvim_lsp" then
+    shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities(shared_capabilities)
+  elseif prequire "autocomplete.capabilities" then
+    shared_capabilities = vim.tbl_deep_extend('force', shared_capabilities, require 'autocomplete.capabilities')
+  elseif prequire "epo" then
+    shared_capabilities = vim.tbl_deep_extend('force', shared_capabilities, require 'epo'.register_cap())
+  end
+
+  shared_capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
+
+  local shared_opts = {
+    capabilities = shared_capabilities,
+    handlers = {
+      ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
+      ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
+    },
+    -- on_init = function(client, _)
+    --   client.server_capabilities.semanticTokensProvider = nil
+    -- end,
+    on_attach = function(client, bufnr)
+      -- set gq command to use the lsp formatter for this buffer
+      vim.api.nvim_set_option_value('formatexpr', 'v:lua.vim.lsp.formatexpr()', { buf = bufnr })
+
+      -- format on save
+      -- if client.supports_method("textDocument/formatting") then
+      --   vim.api.nvim_create_autocmd("BufWritePre", {
+      --     buffer = bufnr,
+      --     callback = function(ev) vim.lsp.buf.format() end,
+      --   })
+      -- end
+
+      -- enable inlay hints
+      -- if client.server_capabilities.inlayHintProvider then
+      --   -- this might not be needed
+      --   vim.g.inlay_hints_visible = true
+      --   vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+      -- else
+      --   print("no inlay hints available")
+      -- end
+
+      -- calling the server specific on attach
+      if opts.on_attach then
+        opts.on_attach(client, bufnr)
+      end
+    end
+  }
+
+  return vim.tbl_deep_extend('force', opts, shared_opts)
+end
+
+M.lsp.setup_server = function(server_name, opts)
+  local lspconfig = require 'lspconfig'
+  lspconfig[server_name].setup(M.lsp.shared_opts_extender(opts))
+end
+
+
+
+M.dap.config = function()
   vim.fn.sign_define("DapBreakpoint",           { text = icons.dap.breakpoint,              texthl = "ErrorMsg" })
   vim.fn.sign_define("DapBreakpointCondition",  { text = icons.dap.breakpoint_conditional,  texthl = "ErrorMsg" })
   vim.fn.sign_define("DapBreakpointRejected",   { text = icons.dap.breakpoint_rejected,     texthl = "ErrorMsg" })
@@ -289,18 +353,18 @@ M.config_dap = function()
         size = 0.5,
         elements = {
           "scopes",
-          "breakpoints",
+          -- "breakpoints",
           "stacks",
           -- "watches",
         },
       },
-      {
-        position = "bottom",
-        size = 0.2,
-        elements = {
-          "repl",
-        },
-      },
+      -- {
+      --   position = "bottom",
+      --   size = 0.2,
+      --   elements = {
+      --     "repl",
+      --   },
+      -- },
       -- { elements = { "repl" } },
       -- { elements = { "console", }, size = 0.25, position = "left" },
     },
@@ -341,64 +405,56 @@ M.config_dap = function()
   keys.map("n", "s<Down>", dap.step_over, "DAP Step over")
 end
 
--- server setup opts extender wrapper
-M.shared_lsp_server_opts_extension = function(opts)
-  -- setup shared capabilities
-  local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
-  if prequire "cmp" and prequire "cmp_nvim_lsp" then
-    shared_capabilities = require 'cmp_nvim_lsp'.default_capabilities(shared_capabilities)
-  elseif prequire "autocomplete.capabilities" then
-    shared_capabilities = vim.tbl_deep_extend('force', shared_capabilities, require 'autocomplete.capabilities')
-  elseif prequire "epo" then
-    shared_capabilities = vim.tbl_deep_extend('force', shared_capabilities, require 'epo'.register_cap())
-  end
+M.dap.list_breakpoints = function(bufnr)
+  local lnums = {}
 
-  shared_capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
+  local dap_bps = prequire "dap.breakpoints"
+  if dap_bps == nil then return lnums end
 
-  local shared_opts = {
-    capabilities = shared_capabilities,
-    handlers = {
-      ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
-      ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
-    },
-    -- on_init = function(client, _)
-    --   client.server_capabilities.semanticTokensProvider = nil
-    -- end,
-    on_attach = function(client, bufnr)
-      -- set gq command to use the lsp formatter for this buffer
-      vim.api.nvim_set_option_value('formatexpr', 'v:lua.vim.lsp.formatexpr()', { buf = bufnr })
+  local bps = dap_bps.get(bufnr)[1]
+  if bps == nil then return lnums end
+  lnums = vim.tbl_map(function(bp) return bp.line end, bps)
 
-      -- format on save
-      -- if client.supports_method("textDocument/formatting") then
-      --   vim.api.nvim_create_autocmd("BufWritePre", {
-      --     buffer = bufnr,
-      --     callback = function(ev) vim.lsp.buf.format() end,
-      --   })
-      -- end
-
-      -- enable inlay hints
-      if client.server_capabilities.inlayHintProvider then
-        -- this might not be needed
-        vim.g.inlay_hints_visible = true
-        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-      else
-        print("no inlay hints available")
-      end
-
-      -- calling the server specific on attach
-      if opts.on_attach then
-        opts.on_attach(client, bufnr)
-      end
-    end
-  }
-
-  return vim.tbl_deep_extend('force', opts, shared_opts)
+  return lnums
 end
 
--- lspconfig server setup wrapper
-M.setup_lsp_server_lspconfig = function(server_name, opts)
-  local lspconf = require 'lspconfig'
-  lspconf[server_name].setup(M.shared_lsp_server_opts_extension(opts))
+M.dap.set_breakpoint = function(bufnr, lnum)
+  local dap_bps = prequire "dap.breakpoints"
+  if dap_bps == nil then return end
+  dap_bps.set({}, bufnr, lnum)
+end
+
+M.dap.aggregate = function()
+  local data = {
+    breakpoints = {},
+  }
+
+  for i, buf in ipairs(buffers.buflist.bufs) do
+    if not buf.is_persistable then goto dap_aggregate_loop_continue end
+
+    local file_path = U.get_relative_path(buf.file_path)
+    local lnums = M.dap.list_breakpoints(buf.bufnr)
+
+    if #lnums > 0 then
+      data.breakpoints[file_path] = lnums
+    end
+
+    ::dap_aggregate_loop_continue::
+  end
+
+  return data
+end
+
+M.dap.populate = function(data)
+  for i, buf in ipairs(buffers.buflist.bufs) do
+    file_path = U.get_relative_path(buf.file_path)
+
+    if data.breakpoints[file_path] then
+      for _, lnum in ipairs(data.breakpoints[file_path]) do
+        M.dap.set_breakpoint(buf.bufnr, lnum)
+      end
+    end
+  end
 end
 
 return M

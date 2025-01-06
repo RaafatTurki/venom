@@ -24,7 +24,8 @@ end
 M.steps = { 0.1, 0.25, 0.5, 0.75, 0.9 }
 
 M.fg = "#BFB8DC"
-M.bg = "#07080f"
+-- M.bg = "#07080f"
+M.bg = "#080808"
 
 M.gen_shades = function(hex)
   local shades = {}
@@ -113,7 +114,8 @@ M.bases = {
   green     = '#AAD94C',
   blue      = '#409FFF',
   purple    = '#4C3889',
-  grey      = '#222A3D',
+  -- grey      = '#222A3D',
+  grey      = '#292929',
 
   debug     = '#FF00FF',
 }

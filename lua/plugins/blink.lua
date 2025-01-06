@@ -83,7 +83,7 @@ M.config = function()
       },
       list = {
         selection = function(ctx)
-          return ctx.mode == 'cmdline' and 'auto_insert' or 'preselect'
+          return ctx.mode == 'cmdline' and 'auto_insert' or 'manual'
         end
       }
       -- ghost_text = {

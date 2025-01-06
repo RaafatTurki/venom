@@ -12,6 +12,7 @@ M.dependencies = {
   plugins_info.lspconfig,
   plugins_info.mason_lspconfig,
   plugins_info.omnisharp_ext,
+  plugins_info.sqls,
   plugins_info.schemastore,
   { plugins_info.typescript_tools, dependencies = plugins_info.plenary },
   plugins_info.fmt_ts_errors,
@@ -164,6 +165,30 @@ M.config_lsp = function()
         end
 
         M.setup_lsp_server_lspconfig('jsonls', opt)
+      end,
+      sqls = function()
+        local opt = {
+          settings = {
+            sqls = {
+              connections = {
+                {
+                  driver = 'postgresql',
+                  dataSourceName = 'host=127.0.0.1 port=5432 user=admin password=admin dbname=tam sslmode=disable',
+                },
+              },
+            },
+          },
+        }
+
+        -- use sqls plugin if available
+        local sqls_nvim = prequire 'sqls'
+        if sqls_nvim then
+          opt.on_attach = function(client, bufnr)
+            sqls_nvim.on_attach(client, bufnr)
+          end
+        end
+
+        M.setup_lsp_server_lspconfig('sqls', opt)
       end,
       omnisharp = function()
         local opt = {}

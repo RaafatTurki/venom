@@ -1,4 +1,4 @@
-local U = require "helpers.utils"
+-- TODO: disolve this file into helpers
 
 -- filename based filetypes
 vim.api.nvim_create_autocmd({ "BufEnter" }, {

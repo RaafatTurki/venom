@@ -2,7 +2,7 @@ local U = require "helpers.utils"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
 
--- better logging
+-- better logging (lsp log file)
 vim.lsp.log.set_format_func(vim.inspect)
 -- vim.lsp.set_log_level(vim.log.levels.DEBUG)
 
@@ -49,19 +49,11 @@ local function lsp_rename()
 end
 
 local function lsp_references()
-  if prequire "telescope" then
-    vim.cmd [[Telescope lsp_references]]
-  else
-    vim.lsp.buf.references()
-  end
+  vim.lsp.buf.references()
 end
 
 local function lsp_definition()
-  if prequire "telescope" then
-    vim.cmd [[Telescope lsp_definitions]]
-  else
-    vim.lsp.buf.definition()
-  end
+  vim.lsp.buf.definition()
 end
 
 local function lsp_code_action()
@@ -69,14 +61,7 @@ local function lsp_code_action()
 end
 
 local function lsp_hover()
-  local fold_preview = prequire "fold-preview"
-  if fold_preview then
-    if not fold_preview.toggle_preview() then
-      vim.lsp.buf.hover({ border = 'single' })
-    end
-  else
-    vim.lsp.buf.hover({ border = 'single' })
-  end
+  vim.lsp.buf.hover({ border = 'single' })
 end
 
 local function lsp_format()
@@ -249,10 +234,7 @@ local function lsp_inspect()
   display()
 end
 
-local function toggle_diags()
-  -- TODO: ...
-end
-
+-- TODO: disolve in favor of the new nvim 11 lsp stuff
 -- keys.map("n", "<leader>D",         lsp_toggle_diags)
 keys.map("n", "<leader>r",         lsp_rename)
 keys.map("n", "<leader>R",         lsp_references)
@@ -279,5 +261,5 @@ vim.api.nvim_create_user_command('LspInspect', lsp_inspect, {})
 for type, icon in pairs(icons.diag) do
   local hl = "DiagnosticSign" .. type
   -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
-  vim.fn.sign_define(hl, { text = icon, texthl = hl })
+  -- vim.fn.sign_define(hl, { text = icon, texthl = hl })
 end

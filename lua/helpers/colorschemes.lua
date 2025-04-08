@@ -20,4 +20,6 @@ function M.set_a_colorscheme(colorschemes)
   end
 end
 
+M.set_a_colorscheme({ "venom", "minischeme", "industry" })
+
 return M

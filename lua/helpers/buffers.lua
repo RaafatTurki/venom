@@ -279,7 +279,7 @@ M.populate = function(data)
       end
       return true
     else
-      log("file \"" .. path .. "\" missing from cwd")
+      -- log("file \"" .. path .. "\" missing from cwd")
       return false
     end
   end

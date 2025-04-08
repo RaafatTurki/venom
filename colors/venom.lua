@@ -665,7 +665,11 @@ local highlights = {
   ['MiniIconsPurple']           = { fg = M.shades.purple[0] },
   ['MiniIconsRed']              = { fg = M.shades.red[0] },
   ['MiniIconsYellow']           = { fg = M.shades.yellow[0] },
-
+  -- hipattern
+  ['MiniHipatternsFixme']       = { "DiagnosticVirtualTextError" },
+  ['MiniHipatternsHack']        = { "DiagnosticVirtualTextHint" },
+  ['MiniHipatternsTodo']        = { "DiagnosticVirtualTextWarn" },
+  ['MiniHipatternsNote']        = { "DiagnosticVirtualTextInfo" },
 
   -- Neotree
   -- NeoTreeBufferNumber       The buffer number shown in the buffers source.
@@ -714,6 +718,9 @@ local highlights = {
   --                           is set to "NC". This is derived from NeoTreeFloatBorder.
   -- NeoTreeWindowsHidden      Used for icons and names that are hidden on Windows.
 
+  SnacksInputNormal           = { "FloatNormal" },
+  SnacksInputBorder           = { "FloatBorder" },
+  SnacksInputTitle            = { "Folded" },
 
 }
 

@@ -1,12 +1,8 @@
-local U = require "helpers.utils"
 local icons = require "helpers.icons".icons
-
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_ruby_provider = 0
 
 -- misc
 vim.o.termguicolors   = true
-vim.o.confirm         = true
+vim.o.confirm         = false
 vim.o.updatetime      = 100  -- used for the CursorHold event
 vim.o.timeoutlen      = 200  -- used for keymap squences timeout
 
@@ -26,7 +22,7 @@ vim.o.writebackup     = false
 vim.o.viewoptions     = "cursor,folds"
 
 -- cursor
-vim.o.cursorline      = true
+-- vim.o.cursorline      = true
 vim.o.guicursor       = 'a:hor25,v:block,i:ver25'
 
 -- text display
@@ -36,7 +32,8 @@ vim.o.conceallevel    = 1
 -- UI layout
 vim.o.laststatus      = 3
 vim.o.showtabline     = 2
-vim.o.cmdheight       = 1
+vim.o.cmdheight       = 0
+vim.o.showcmdloc      = 'statusline'
 vim.o.splitkeep       = 'screen'
 vim.o.splitbelow      = true
 vim.o.splitright      = true
@@ -45,7 +42,6 @@ vim.o.inccommand      = 'split'
 vim.o.showcmdloc      = 'statusline'
 vim.o.signcolumn      = 'no'
 vim.o.number          = true
--- vim.o.colorcolumn     = U.seq(120, 999, ',', 1)
 -- vim.o.colorcolumn     = "120"
 
 -- mouse
@@ -61,10 +57,11 @@ vim.o.shell           = '/usr/bin/fish'
 
 -- folding
 vim.o.foldenable      = true
-vim.o.foldmethod      = 'indent'
-vim.o.foldtext        = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))"
+-- vim.o.foldmethod      = 'indent'
+vim.o.foldmethod      = 'expr'
 vim.o.foldcolumn      = '1'
--- vim.o.foldlevel       = 99
+vim.o.foldlevel       = 99
+vim.o.foldenable      = true
 -- vim.o.foldlevelstart  = -1
 -- vim.o.foldnestmax     = 10 -- Maximum amount of nested folds
 -- vim.o.foldminlines    = 1 -- Minimum amount of lines per fold
@@ -90,6 +87,7 @@ vim.opt.fillchars:append {
 vim.opt.listchars:append {
   trail = "."
 }
+vim.opt.nrformats:append 'unsigned'
 vim.opt.whichwrap:append '<,>,[,]' -- arrow keys can wrap around to next line
 vim.opt.display:append 'uhex'
 vim.opt.spelllang     = { 'en_us' }

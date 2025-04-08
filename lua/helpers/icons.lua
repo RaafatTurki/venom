@@ -2,9 +2,15 @@ local M = {}
 
 local icon_sets = {
   diag = {
-    cozette  = { Error = "", Warn = "", Hint = " ", Info = "" },
+    nerdfont  = { Error = "", Warn = "", Hint = " ", Info = "" },
     codicons = { Error = "", Warn = "", Hint = " ", Info = "" },
     ascii    = { Error = "E", Warn = "W", Hint = "H", Info = "I" },
+  },
+  log = {
+    nerdfont = {
+      debug = " ",
+      trace = " ",
+    },
   },
   code_action = {
     nerdfont = {
@@ -225,39 +231,11 @@ local icon_sets = {
       letter_case = '󰾹',
     },
   },
-  -- fs = {
-  --   some_icon_set = {
-  --     file = '',
-  --     dir = '',
-  --     dir_open = '',
-  --     dir_empty = '',
-  --     dir_empty_open = '',
-  --     symlink = '',
-  --     symlink_open = '',
-  --     symlink_empty = '',
-  --     symlink_empty_open = '',
-  --   },
-  --   ascii = {
-  --   }
-  -- },
-  -- common = {
-  --   some_icon_set = {
-  --     arrow_left = '',
-  --     arrow_right = '',
-  --     arrow_up = '',
-  --     arrow_down = '',
-  --     dot = '',
-  --     big_dot = '',
-  --     tree_start = '│',
-  --     tree_stem = '│',
-  --     tree_branch = '├',
-  --     tree_end = '└',
-  --   }
-  -- },
 }
 
 M.icons = {
-  diag = icon_sets.diag.cozette,
+  diag = icon_sets.diag.nerdfont,
+  log = icon_sets.log.nerdfont,
   code_action = icon_sets.code_action.nerdfont,
   kind = icon_sets.kind.blink,
   dap = icon_sets.dap.nerdfont,

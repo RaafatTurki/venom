@@ -1,4 +1,4 @@
-local U = require "helpers.utils"
+-- TODO: disolve this file into helpers
 
 -- filename based filetypes
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
@@ -44,8 +44,13 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
       ['prisma'] = "//%s",
       ['sql'] = "--%s",
       ['vue'] = "//%s",
+      ['go'] = "// %s",
       ['typst'] = "//%s",
       ['svelte'] = "<!-- %s -->",
+      -- ['javascriptreact'] = "{/*%s*/}",
+      -- ['typescriptreact'] = "{/*%s*/}",
+      -- ['javascript'] = "//%s}",
+      -- ['typescript'] = "//%s}",
     }
 
     local filetype = vim.bo.filetype

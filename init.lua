@@ -1,63 +1,55 @@
-if vim.env.PROF then
-  local snacks = vim.fn.stdpath("data") .. "/lazy/snacks.nvim"
-  vim.opt.rtp:append(snacks)
-  require("snacks.profiler").startup({
-    startup = {
-      -- event = "VimEnter", -- stop profiler on this event. Defaults to `VimEnter`
-      event = "UIEnter",
-      -- event = "VeryLazy",
-    },
-  })
-end
+require "options"
+require "keymaps"
+require "autocmds"
 
-log = require "helpers.logger"
+-- TODO: relocate those outside the helpers folder
+-- fold ffi
+-- icons
+-- keys
+-- logger
 
-function prequire(name)
-  -- return require(name)
-  local ok, val = pcall(require, name)
-  if ok then
-    return val
-  else
-    return nil
-  end
-end
+-- disolve this into many helper files
+-- utils
 
-require "core.options"
-require "core.keymaps"
-require "core.autocmds"
-
-require "helpers.bigfile"
-require "helpers.colorschemes".set_a_colorscheme({ "venom", "minischeme", "industry" })
-require "helpers.keys".set_leader(" ")
+-- check if the commented ones are even needed anymore
+require "helpers.colorschemes"
 require "helpers.disable_builtins"
+require "helpers.bigfile"
 require "helpers.buffers"
 require "helpers.sessions"
 require "helpers.mkview"
 require "helpers.mkdir_parents"
-require "helpers.open_uri"
+-- require "helpers.open_uri"
 require "helpers.highlight_yank"
 require "helpers.better_qflist"
-require "helpers.clean_paste"
+-- require "helpers.clean_paste"
 require "helpers.spell"
 require "helpers.ignorecase"
-require "helpers.fs_cmds"
-require "helpers.kill_xclip"
-require "helpers.qmacro"
+-- require "helpers.chmod"
+-- require "helpers.kill_xclip"
+-- require "helpers.qmacro"
 -- require "helpers.osc52"
 require "helpers.normal_mode_on_write"
 require "helpers.text_object_all"
 require "helpers.lsp_utils"
 
-require "core.lazy"
+require "rocks_pm"
 
--- External Tools
 
--- NOTE: IN USE
--- python-pynvim (nvim)
--- pnpm -g install neovim (nvim)
--- git (lazy.nvim, treesitter)
--- gcc (treesitter)
--- rg (mini.pick, telescope)
+-- require all files in plugins dir
+---@diagnostic disable-next-line: param-type-mismatch
+for _, file in ipairs(vim.fn.readdir(vim.fn.stdpath('config')..'/lua/plugins', [[v:val =~ '\.lua$']])) do
+  -- if (file ~= "8_mason.lua") then
+  -- vim.notify(file)
+  require('plugins.'..file:gsub('%.lua$', ''))
+  -- end
+end
 
--- NOTE: NOT IN USE
--- fzf (telescope-fzf)
+
+-- git
+-- xdg-open
+-- wget
+-- curl
+-- make
+-- unzip
+-- fzf

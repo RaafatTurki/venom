@@ -35,13 +35,13 @@ function M.open_uri_under_cursor()
   end
 
   if not uri then
-    log.warn("unrecognizable URI")
+    vim.notify("unrecognizable URI", vim.log.levels.WARN)
     return
   end
 
   vim.fn.jobstart(open_cmd .. ' "' .. uri .. '"', {
     detach = true,
-    on_exit = function(chan_id, data, name) log.info("URI opened") end,
+    -- on_exit = function(chan_id, data, name) log.info("URI opened") end,
   })
 end
 

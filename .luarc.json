@@ -1,10 +1,15 @@
 {
-  "diagnostics.globals": [ "vim" ],
-  "workspace.checkThirdParty": "Disable",
-  "diagnostics.disable": [
-    "lowercase-global",
-    "trailing-space",
-    "unused-local",
-    "missing-fields"
-  ]
+  "workspace.library": ["/usr/share/nvim/runtime"],
+  "diagnostics": {
+    "globals": [
+      "MiniMove",
+      "MiniTrailspace",
+      "MiniPick",
+      "MiniNotify",
+      "MiniBufremove",
+      "MiniIcons",
+      "MiniDiff",
+      "Snacks",
+    ],
+  }
 }

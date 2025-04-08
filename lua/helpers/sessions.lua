@@ -1,7 +1,7 @@
 local U = require "helpers.utils"
 local buffers = require "helpers.buffers"
-local mason = require "plugins.mason"
-local dap = mason and mason.dap or nil
+-- local mason = require "plugins.mason"
+-- local dap = mason and mason.dap or nil
 
 local M = {}
 

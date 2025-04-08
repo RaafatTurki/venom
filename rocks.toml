@@ -1,0 +1,35 @@
+[rocks]
+
+[treesitter]
+auto_install = true
+
+[plugins]
+# addons
+"rocks.nvim" = "2.44.0"
+"rocks-treesitter.nvim" = "1.3.0"
+"rocks-git.nvim" = "2.5.3"
+# luarocks plugins
+"mini.nvim" = "0.15.0"
+"snacks.nvim" = "2.22.0"
+"heirline.nvim" = "1.0.7"
+"nui.nvim" = "0.3.0"
+"plenary.nvim" = "scm"
+"mason.nvim" = "1.11.0"
+"mason-lspconfig.nvim" = "1.32.0"
+"nvim-lspconfig" = "1.8.0"
+# git plugins
+"blink.cmp" = { git = "saghen/blink.cmp", rev = "v1.1.1" }
+"fold-cycle.nvim" = { git = "jghauser/fold-cycle.nvim", rev = "20e9b468b771ebf33b6806a0e872eee53c5a20c9" }
+"neo-tree.nvim" = { git = "nvim-neo-tree/neo-tree.nvim", rev = "3.31.1" }
+"nvim-treesitter" = { git = "nvim-treesitter/nvim-treesitter", rev = "v0.9.3" }
+"supermaven-nvim" = { git = "supermaven-inc/supermaven-nvim", rev = "07d20fce48a5629686aefb0a7cd4b25e33947d50" }
+# parsers
+# "tree-sitter-toml" = "0.0.31"
+# "tree-sitter-json" = "0.0.36"
+# "tree-sitter-yaml" = "0.0.32"
+# "tree-sitter-sql" = "0.0.40"
+# "tree-sitter-javascript" = "0.0.36"
+# "tree-sitter-typescript" = "0.0.37"
+# tree-sitter-svelte = "0.0.33"
+# tree-sitter-css = "0.0.37"
+# tree-sitter-html = "0.0.36"

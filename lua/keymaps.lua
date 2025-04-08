@@ -1,4 +1,7 @@
-local map = require "helpers.keys".map
+local keys = require "helpers.keys"
+local map = keys.map
+
+keys.set_leader(" ")
 
 -- common
 map("n", "<C-s>",     vim.cmd.write, "Write")

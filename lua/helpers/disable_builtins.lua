@@ -1,5 +1,9 @@
 local M = {}
 
+-- disable legacy providers
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+
 M.built_in_plugins = {
   -- "editorconfig",
   -- "health",
@@ -10,7 +14,7 @@ M.built_in_plugins = {
 
   "matchit",
   "matchparen",
-  "netrwPlugin",
+  -- "netrwPlugin",
   "2html_plugin",
   "tutor_mode_plugin",
   "gzip",

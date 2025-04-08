@@ -1,68 +1,81 @@
 local U = require "helpers.utils"
 local icons = require "helpers.icons".icons
 
--- key-val options
-local opts = {
-  termguicolors   = true,
-  shiftwidth      = 2,
-  tabstop         = 2,
-  expandtab       = true,
-  swapfile        = false,
-  showmode        = false,
-  writebackup     = false,
-  splitbelow      = true,
-  splitright      = true,
-  -- ignorecase      = true,
-  wrapscan        = true,
-  -- smartcase       = true,
-  list            = true,
-  cursorline      = true,
-  confirm         = true,
-  undofile        = true,
-  wrap            = false,
-  updatetime      = 100, -- used for the CursorHold event
-  timeoutlen      = 200, -- used for keymap squences timeout
-  conceallevel    = 1,
-  laststatus      = 3,
-  showtabline     = 2,
-  -- mousescroll     = "ver:0,hor:0",
-  mouse           = 'a',
-  inccommand      = 'split',
-  showcmdloc      = 'statusline',
-  splitkeep       = 'screen',
-  clipboard       = 'unnamed,unnamedplus',
-  guicursor       = 'a:hor25,v:block,i:ver25',
-  backspace       = 'indent,eol,nostop',
-  shell           = '/usr/bin/fish',
-  foldmethod      = 'indent',
-  foldtext        = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))",
-  viewoptions     = "cursor,folds",
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
 
-  number          = true,
-  foldcolumn      = '1',
-  signcolumn      = 'no',
-  -- iskeyword       = '@,48-57,192-255', -- removed '_' so that motion commands work with underscores
+-- misc
+vim.o.termguicolors   = true
+vim.o.confirm         = true
+vim.o.updatetime      = 100  -- used for the CursorHold event
+vim.o.timeoutlen      = 200  -- used for keymap squences timeout
 
-  -- colorcolumn     = U.seq(120, 999, ',', 1),
-  -- colorcolumn     = "120",
+-- wrapping
+vim.o.wrap            = false
+vim.o.wrapscan        = true
 
-  -- cmdheight       = 0,
-  -- completeopt      = 'menuone,noinsert,noselect,popup',
+-- indentation
+vim.o.shiftwidth      = 2
+vim.o.tabstop         = 2
+vim.o.expandtab       = true
 
-  -- foldcolumn       = '1',
-  -- foldlevel        = 99
-  -- foldlevelstart   = -1
-  -- foldnestmax      = 10 -- Maximum amount of nested folds
-  -- foldminlines     = 1 -- Minimum amount of lines per fold
+-- auxilary files
+vim.o.swapfile        = false
+vim.o.undofile        = true
+vim.o.writebackup     = false
+vim.o.viewoptions     = "cursor,folds"
 
-  -- nvim 0.10
-  -- foldexpr       = "v:lua.vim.treesitter.foldexpr()",
-  -- foldtext       = "v:lua.vim.treesitter.foldtext()",
-}
+-- cursor
+vim.o.cursorline      = true
+vim.o.guicursor       = 'a:hor25,v:block,i:ver25'
 
-for opt, val in pairs(opts) do
-  vim.o[opt] = val
-end
+-- text display
+vim.o.list            = true
+vim.o.conceallevel    = 1
+
+-- UI layout
+vim.o.laststatus      = 3
+vim.o.showtabline     = 2
+vim.o.cmdheight       = 1
+vim.o.splitkeep       = 'screen'
+vim.o.splitbelow      = true
+vim.o.splitright      = true
+vim.o.showmode        = false
+vim.o.inccommand      = 'split'
+vim.o.showcmdloc      = 'statusline'
+vim.o.signcolumn      = 'no'
+vim.o.number          = true
+-- vim.o.colorcolumn     = U.seq(120, 999, ',', 1)
+-- vim.o.colorcolumn     = "120"
+
+-- mouse
+vim.o.mouse           = 'a'
+-- vim.o.mousescroll     = "ver:0,hor:0"
+
+-- keyboard
+vim.o.backspace       = 'indent,eol,nostop'
+
+-- os
+vim.o.clipboard       = 'unnamed,unnamedplus'
+vim.o.shell           = '/usr/bin/fish'
+
+-- folding
+vim.o.foldenable      = true
+vim.o.foldmethod      = 'indent'
+vim.o.foldtext        = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))"
+vim.o.foldcolumn      = '1'
+-- vim.o.foldlevel       = 99
+-- vim.o.foldlevelstart  = -1
+-- vim.o.foldnestmax     = 10 -- Maximum amount of nested folds
+-- vim.o.foldminlines    = 1 -- Minimum amount of lines per fold
+
+-- typing
+-- vim.o.iskeyword       = '@,48-57,192-255' -- removed '_' so that motion commands work with underscores
+-- vim.o.completeopt      = 'menuone,noinsert,noselect,popup'
+
+-- casing
+-- vim.o.ignorecase      = true
+-- vim.o.smartcase       = true
 
 
 -- opt options

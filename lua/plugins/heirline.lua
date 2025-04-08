@@ -503,13 +503,15 @@ M.config = function()
       end
     end,
     provider = function(self)
-      local num_count = vim.api.nvim_buf_line_count(0)
-
-      if vim.v.virtnum > 0 then
-        return U.str_pad('.', #tostring(num_count), ' ')
-      else
-        return U.str_pad(tostring(self.lnum), #tostring(num_count), ' ')
-      end
+      return '%l'
+      -- TODO: remove
+      -- local num_count = vim.api.nvim_buf_line_count(0)
+      --
+      -- if vim.v.virtnum > 0 then
+      --   return U.str_pad('.', #tostring(num_count), ' ')
+      -- else
+      --   return U.str_pad(tostring(self.lnum), #tostring(num_count), ' ')
+      -- end
     end,
     hl = function(self)
       if vim.v.relnum == 0 then

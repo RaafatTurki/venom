@@ -23,7 +23,7 @@ function M.save()
   local sdata = {}
 
   if buffers then sdata.buffers = buffers.aggregate() end
-  if dap then sdata.dap = dap.aggregate() end
+  -- if dap then sdata.dap = dap.aggregate() end
 
   -- write session file
   U.file_write(M.local_session_file, vim.fn.json_encode(sdata))
@@ -54,7 +54,7 @@ function M.load()
   -- populate modules with decoded data
   -- curr_branch = decoded_data.git_branches[U.get_curr_git_branch()]
   if sdata.buffers then buffers.populate(sdata.buffers) end
-  if sdata.dap then dap.populate(sdata.dap) end
+  -- if sdata.dap then dap.populate(sdata.dap) end
 
   -- set local session bool
   M.is_in_local_session = true

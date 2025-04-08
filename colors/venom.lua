@@ -380,7 +380,6 @@ local highlights = {
   ['Folded']          = { fg = c.fold },
 
   ['TermCursor']      = { underline = true },
-  ['TermCursorNC']    = { 'TermCursor' },
 
   ['SpecialKey']      = { fg = c.special },
   ['Whitespace']      = { fg = c.comment },

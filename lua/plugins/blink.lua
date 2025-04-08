@@ -54,19 +54,6 @@ M.config = function()
       ['<C-j>'] = { 'scroll_documentation_down', 'fallback' },
     },
 
-    cmdline = {
-      keymap = {
-        preset = 'none',
-        ['<C-Up>'] = { 'select_prev', 'fallback' },
-        ['<C-Down>'] = { 'select_next', 'fallback' },
-
-        ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-        ['<C-e>'] = { 'hide', 'fallback' },
-        ['<Tab>'] = { 'select_next', 'fallback' },
-        ['<S-Tab>'] = { 'select_prev', 'fallback' },
-      }
-    },
-
     completion = {
       trigger = {
         show_on_insert_on_trigger_character = false,
@@ -91,7 +78,7 @@ M.config = function()
             return false
           end
         }
-      }
+      },
       -- ghost_text = {
       --   enabled = true
       -- },

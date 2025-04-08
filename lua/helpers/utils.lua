@@ -47,17 +47,18 @@ function M.file_read(path)
   return content
 end
 
+-- TODO: remove
 --- deletes a file
-function M.file_del(path)
-  local success, error_message = os.remove(path)
-
-  if success then
-    return true
-  else
-    log.err("error deleting file: " .. error_message)
-    return false
-  end
-end
+-- function M.file_del(path)
+--   local success, error_message = os.remove(path)
+--
+--   if success then
+--     return true
+--   else
+--     log.err("error deleting file: " .. error_message)
+--     return false
+--   end
+-- end
 
 --- renames a file
 function M.file_rename(path, new_file_name)
@@ -76,28 +77,33 @@ function M.file_rename(path, new_file_name)
   end
 end
 
+-- TODO: remove in favor of vim.fs.abspath
 --- gets absolute path from a relative one
-function M.get_absolute_path(rel_path)
-  return vim.fn.fnamemodify(rel_path, ':p')
-end
+-- function M.get_absolute_path(rel_path)
+--   return vim.fn.fnamemodify(rel_path, ':p')
+-- end
 
+-- TODO: remove in favor of vim.fs.relpath
 --- gets relative path from an absolute one
 function M.get_relative_path(abs_path)
   return vim.fn.fnamemodify(abs_path, ':.')
 end
 
+-- TODO: remove in favor of vim.fs.find
 --- returns boolean if a file exists or not
 function M.is_file_exists(path)
   local stat = vim.loop.fs_stat(path)
   return stat and stat.type == 'file'
 end
 
+-- TODO: remove in favor of vim.fs.find
 --- returns boolean if a directory exists or not
 function M.is_dir_exists(path)
   local stat = vim.loop.fs_stat(path)
   return stat and stat.type == 'directory'
 end
 
+-- TODO: remove in favor of vim.fs.find
 --- returns array of file_names within a path
 function M.scan_dir(path)
   local res = {}

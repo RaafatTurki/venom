@@ -72,10 +72,10 @@ local function lsp_hover()
   local fold_preview = prequire "fold-preview"
   if fold_preview then
     if not fold_preview.toggle_preview() then
-      vim.lsp.buf.hover()
+      vim.lsp.buf.hover({ border = 'single' })
     end
   else
-    vim.lsp.buf.hover()
+    vim.lsp.buf.hover({ border = 'single' })
   end
 end
 

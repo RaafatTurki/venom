@@ -274,10 +274,11 @@ M.lsp.shared_opts_extender = function(opts)
 
   local shared_opts = {
     capabilities = shared_capabilities,
-    handlers = {
-      ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
-      ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
-    },
+    -- TODO: remove
+    -- handlers = {
+    --   ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
+    --   ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
+    -- },
     -- on_init = function(client, _)
     --   client.server_capabilities.semanticTokensProvider = nil
     -- end,

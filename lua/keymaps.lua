@@ -19,8 +19,8 @@ map("n", "<A-Right>", ":bnext<CR>", "Next buffer")
 map("n", "<A-Left>",  ":bprevious<CR>", "Previous buffer")
 
 -- goto and display to nex/prev lsp diagnositc
-map("n", 'd<Left>',           function() vim.diagnostic.goto_prev({ float = false }) end, "Go To Previous Diagnostic")
-map("n", 'd<Right>',          function() vim.diagnostic.goto_next({ float = false }) end, "Go To Next Diagnostic")
+map("n", 'd<Left>',           function() vim.diagnostic.jump({ float = false, count = -1 }) end, "Go To Previous Diagnostic")
+map("n", 'd<Right>',          function() vim.diagnostic.jump({ float = false, count = 1 }) end, "Go To Next Diagnostic")
 
 -- commenting
 -- VimEnter because it needs to be set after the _defaults.lua has executed

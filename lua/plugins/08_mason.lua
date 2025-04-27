@@ -41,6 +41,11 @@ shared_opts_extender = function(opts)
 
   shared_capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
 
+  -- shared_capabilities.textDocument.foldingRange = {
+  --   dynamicRegistration = false,
+  --   lineFoldingOnly = true
+  -- }
+
   local shared_opts = {
     capabilities = shared_capabilities,
     on_attach = function(client, bufnr)

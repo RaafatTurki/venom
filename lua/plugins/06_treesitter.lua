@@ -39,9 +39,19 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
     if ft == "bigfile" then return end
 
     -- folding
-    vim.o.foldmethod  = "expr"
-    vim.o.foldexpr    = "v:lua.vim.treesitter.foldexpr()"
-    vim.o.foldtext    = "substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))"
+    vim.o.foldenable = true
+    vim.o.foldmethod = 'expr'
+    vim.o.foldcolumn = '1'
+    vim.o.foldlevel = 99
+    vim.o.foldlevelstart = 99
+    vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    -- vim.o.foldtext = ''
+    -- vim.o.foldtext = [[substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))]]
+    vim.o.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ']]
+
+
+    -- vim.o.foldmethod  = "expr"
+    -- vim.o.foldexpr    = "v:lua.vim.treesitter.foldexpr()"
     -- vim.o.foldtext    = "v:lua.vim.treesitter.foldtext()"
   end
 })

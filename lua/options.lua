@@ -20,6 +20,7 @@ vim.o.swapfile        = false
 vim.o.undofile        = true
 vim.o.writebackup     = false
 vim.o.viewoptions     = "cursor,folds"
+-- vim.o.viewoptions     = "cursor"
 
 -- cursor
 -- vim.o.cursorline      = true
@@ -56,12 +57,10 @@ vim.o.clipboard       = 'unnamed,unnamedplus'
 vim.o.shell           = '/usr/bin/fish'
 
 -- folding
-vim.o.foldenable      = true
+-- vim.o.foldenable      = true
 -- vim.o.foldmethod      = 'indent'
-vim.o.foldmethod      = 'expr'
-vim.o.foldcolumn      = '1'
-vim.o.foldlevel       = 99
-vim.o.foldenable      = true
+-- vim.o.foldcolumn      = '1'
+-- vim.o.foldlevel       = 99
 -- vim.o.foldlevelstart  = -1
 -- vim.o.foldnestmax     = 10 -- Maximum amount of nested folds
 -- vim.o.foldminlines    = 1 -- Minimum amount of lines per fold

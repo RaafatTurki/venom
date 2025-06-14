@@ -81,10 +81,10 @@ do
       end
     },
   }
-  keys.map("n", "<leader><CR>", "<CMD>Pick resume<CR>", "Pick resume")
-  keys.map("n", "<leader>f",    "<CMD>Pick files<CR>", "Pick find files")
-  keys.map("n", "<leader>g",    "<CMD>Pick grep_live<CR>", "Pick grep string")
-  keys.map("n", "<leader>h",    "<CMD>Pick help<CR>", "Pick help pages")
+  keys.map("n", "<leader><CR>", MiniPick.builtin.resume, "Pick resume")
+  keys.map("n", "<leader>f",    MiniPick.builtin.files, "Pick find files")
+  keys.map("n", "<leader>g",    MiniPick.builtin.grep_live, "Pick grep string")
+  keys.map("n", "<leader>h",    MiniPick.builtin.help, "Pick help pages")
   -- keys.map("n", "<leader>b",    "<CMD>Pick buffer_lines<CR>", "Pick buffer lines")
   -- keys.map("n", "<leader>b",    "<CMD>Pick diagnostic<CR>", "Pick lsp diagnostics")
   -- keys.map("n", "<leader>b",    "<CMD>Pick explorer<CR>", "Pick file tree explorer")

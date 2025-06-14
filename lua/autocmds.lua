@@ -47,6 +47,7 @@ vim.api.nvim_create_autocmd({ "Filetype" }, {
       ['go'] = "// %s",
       ['typst'] = "//%s",
       ['svelte'] = "<!-- %s -->",
+      ['vue'] = "<!-- %s -->",
       -- ['javascriptreact'] = "{/*%s*/}",
       -- ['typescriptreact'] = "{/*%s*/}",
       -- ['javascript'] = "//%s}",

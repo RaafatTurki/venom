@@ -73,10 +73,20 @@ vim.lsp.config('lua_ls', {
   },
 })
 
+vim.lsp.config('jsonls', {
+  settings = {
+    json = {
+      schemas = require('schemastore').json.schemas(),
+      validate = { enable = true },
+    }
+  }
+})
 
 
 require "mason-lspconfig".setup {
   handlers = {
-    function(server_name) vim.lsp.enable(server_name) end,
+    function(server_name)
+      vim.lsp.enable(server_name)
+    end,
   }
 }

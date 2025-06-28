@@ -18,8 +18,6 @@
 "conform.nvim" = { git = "stevearc/conform.nvim", rev = "v9.0.0" }
 "neo-tree.nvim" = { git = "nvim-neo-tree/neo-tree.nvim", rev = "3.33" }
 "schemastore.nvim" = { git = "b0o/schemastore.nvim", rev = "df87d16fc4ea7c2c67cfc00b513861738693fe07" }
-"blink.cmp" = { git = "saghen/blink.cmp", rev = "v1.3.1" }
-
-[plugins."nvim-treesitter" ]
-git = "nvim-treesitter/nvim-treesitter"
-rev = "v0.10.0"
+"blink.cmp" = { git = "saghen/blink.cmp", rev = "v1.4.1" }
+"nvim-treesitter" = { git = "nvim-treesitter/nvim-treesitter", rev = "v0.10.0" }
+"kulala.nvim" = { git = "mistweaverco/kulala.nvim", rev = "v5.3.1" }

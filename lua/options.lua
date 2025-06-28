@@ -84,7 +84,10 @@ vim.opt.fillchars:append {
   foldsep   = ' ',
 }
 vim.opt.listchars:append {
-  trail = "."
+  tab = "▏ ",
+  trail = ".",
+  extends = "»",
+  precedes = "«",
 }
 vim.opt.nrformats:append 'unsigned'
 vim.opt.whichwrap:append '<,>,[,]' -- arrow keys can wrap around to next line

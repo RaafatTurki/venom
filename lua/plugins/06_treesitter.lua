@@ -46,8 +46,8 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
     vim.o.foldlevelstart = 99
     vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
     -- vim.o.foldtext = ''
-    -- vim.o.foldtext = [[substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))]]
-    vim.o.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ']]
+    vim.o.foldtext = [[substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))]]
+    -- vim.o.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ']]
 
 
     -- vim.o.foldmethod  = "expr"

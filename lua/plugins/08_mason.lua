@@ -82,7 +82,14 @@ vim.lsp.config('jsonls', {
   }
 })
 
+vim.lsp.config('qmlls', {
+  cmd = { 'qmlls6' },
+})
 
+-- non-mason lsp servers
+vim.lsp.enable('qmlls')
+
+-- mason lsp servers
 require "mason-lspconfig".setup {
   handlers = {
     function(server_name)

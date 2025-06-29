@@ -21,3 +21,4 @@
 "blink.cmp" = { git = "saghen/blink.cmp", rev = "v1.4.1" }
 "nvim-treesitter" = { git = "nvim-treesitter/nvim-treesitter", rev = "v0.10.0" }
 "kulala.nvim" = { git = "mistweaverco/kulala.nvim", rev = "v5.3.1" }
+"nvim-tinygit" = { git = "chrisgrieser/nvim-tinygit", rev = "v1.0" }

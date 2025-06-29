@@ -53,3 +53,4 @@ end
 -- make
 -- unzip
 -- fzf
+-- ripgrep

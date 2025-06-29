@@ -80,6 +80,14 @@ do
         }
       end
     },
+    mappings = {
+      sys_paste = {
+        char = "<C-v>",
+        func = function()
+          MiniPick.set_picker_query({ vim.fn.getreg("+") })
+        end,
+      },
+    }
   }
   keys.map("n", "<leader><CR>", MiniPick.builtin.resume, "Pick resume")
   keys.map("n", "<leader>f",    MiniPick.builtin.files, "Pick find files")
@@ -185,6 +193,7 @@ do
   highlighters["fixme"] = { pattern = 'FIXME:', group = 'MiniHipatternsFixme' }
   highlighters["hack"] = { pattern = 'HACK:',  group = 'MiniHipatternsHack' }
   highlighters["todo"] = { pattern = 'TODO:',  group = 'MiniHipatternsTodo' }
+  highlighters["todo"] = { pattern = 'DEPRECATED:',  group = 'MiniHipatternsFixme' }
   highlighters["note"] = { pattern = 'NOTE:',  group = 'MiniHipatternsNote' }
 
   highlighters["hex"] = hipatterns.gen_highlighter.hex_color()

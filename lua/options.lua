@@ -29,6 +29,8 @@ vim.o.guicursor       = 'a:hor25,v:block,i:ver25'
 -- text display
 vim.o.list            = true
 vim.o.conceallevel    = 1
+vim.o.termbidi        = true
+-- vim.o.arabic          = true
 
 -- UI layout
 vim.o.laststatus      = 3
@@ -51,6 +53,7 @@ vim.o.mouse           = 'a'
 
 -- keyboard
 vim.o.backspace       = 'indent,eol,nostop'
+vim.o.delcombine      = true
 
 -- os
 vim.o.clipboard       = 'unnamed,unnamedplus'

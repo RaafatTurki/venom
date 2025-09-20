@@ -1,3 +1,6 @@
+local keys = require "helpers.keys"
+local map = keys.map
+
 do
   -- Specifies where to install/use rocks.nvim
   local install_location = vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "rocks")
@@ -44,3 +47,5 @@ if not pcall(require, "rocks") then
 
   vim.fn.delete(rocks_location, "rf")
 end
+
+map("n", "<leader>p",     "<CMD>Rocks update<CR>", "Update rocks")

@@ -191,9 +191,10 @@ do
   end
 
   highlighters["fixme"] = { pattern = 'FIXME:', group = 'MiniHipatternsFixme' }
+  highlighters["xxx"] = { pattern = 'XXX:', group = 'MiniHipatternsFixme' }
   highlighters["hack"] = { pattern = 'HACK:',  group = 'MiniHipatternsHack' }
   highlighters["todo"] = { pattern = 'TODO:',  group = 'MiniHipatternsTodo' }
-  highlighters["todo"] = { pattern = 'DEPRECATED:',  group = 'MiniHipatternsFixme' }
+  highlighters["deprecated"] = { pattern = 'DEPRECATED:',  group = 'MiniHipatternsFixme' }
   highlighters["note"] = { pattern = 'NOTE:',  group = 'MiniHipatternsNote' }
 
   highlighters["hex"] = hipatterns.gen_highlighter.hex_color()

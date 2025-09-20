@@ -437,7 +437,7 @@ local highlights = {
   ['MsgArea']         = {},
   ['MsgSeparator']    = {},
   ['MoreMsg']         = {},
-  ['NonText']         = {},
+  ['NonText']         = { fg = c.comment },
 
   ['SpellCap']        = {},
   ['SpellLocal']      = {},

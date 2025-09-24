@@ -1,6 +1,20 @@
 local U = require "helpers.utils"
 local buffers = require "helpers.buffers"
 
+vim.o.foldmethod = 'expr'
+vim.o.foldcolumn = '1'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+-- vim.o.foldtext = ''
+vim.o.foldtext = [[substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))]]
+-- vim.o.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ']]
+
+-- vim.o.foldmethod  = "expr"
+-- vim.o.foldexpr    = "v:lua.vim.treesitter.foldexpr()"
+-- vim.o.foldtext    = "v:lua.vim.treesitter.foldtext()"
+
+
 local filetypes = {
   bigfile = { highlight = false, indent = false },
 }
@@ -31,27 +45,3 @@ require 'nvim-treesitter.configs'.setup {
     end,
   },
 }
-
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
-  callback = function(ev)
-    -- bigfile check
-    local ft = vim.api.nvim_get_option_value('filetype', { buf = ev.buf })
-    if ft == "bigfile" then return end
-
-    -- folding
-    vim.o.foldenable = true
-    vim.o.foldmethod = 'expr'
-    vim.o.foldcolumn = '1'
-    vim.o.foldlevel = 99
-    vim.o.foldlevelstart = 99
-    vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-    -- vim.o.foldtext = ''
-    vim.o.foldtext = [[substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))]]
-    -- vim.o.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ']]
-
-
-    -- vim.o.foldmethod  = "expr"
-    -- vim.o.foldexpr    = "v:lua.vim.treesitter.foldexpr()"
-    -- vim.o.foldtext    = "v:lua.vim.treesitter.foldtext()"
-  end
-})

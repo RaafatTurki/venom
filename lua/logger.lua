@@ -40,7 +40,7 @@ local process = function(val, opts)
   end)
 end
 
-M.log = {
+M.loggers = {
   dbg   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.DEBUG })) end,
   err   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.ERROR })) end,
   info  = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.INFO })) end,
@@ -49,7 +49,7 @@ M.log = {
   off   = function(val, opts) process(val, vim.tbl_deep_extend('force', opts or {}, { log_level = vim.log.levels.OFF })) end,
 }
 
-return setmetatable(M.log, {
+M.log = setmetatable(M.loggers, {
   __call = function(self, val, opts)
     ---@diagnostic disable-next-line: redefined-local
     local opts = opts or {}
@@ -58,4 +58,4 @@ return setmetatable(M.log, {
   end
 })
 
--- return M
+return M

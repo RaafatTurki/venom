@@ -16,7 +16,7 @@ M.Buf = function()
       self.bufnr = bufnr
       self.file_path = vim.api.nvim_buf_get_name(self.bufnr)
       self.is_persistable = is_persistable
-      -- self.event_listener = vim.loop.new_fs_event()
+      -- self.event_listener = vim.uv.new_fs_event()
       -- self:watch()
       return self
     end,
@@ -66,7 +66,7 @@ M.BufList = function()
       -- if not vim.fn.buflisted(bufnr) == 1 then return false end
       -- log(self:get_buf_data({ bufnr == bufnr }).buf)
 
-      if vim.api.nvim_buf_get_option(bufnr, 'buftype') ~= '' then return false end
+      if vim.api.nvim_get_option_value('buftype', { buf = bufnr }) ~= '' then return false end
       if self:get_buf_index({ bufnr = bufnr }) then return false end
       -- if vim.api.nvim_buf_get_name(bufnr) == '' then return false end
 

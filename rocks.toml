@@ -13,12 +13,11 @@
 "nvim-lspconfig" = "2.5.0"
 "fold-cycle.nvim" = { git = "jghauser/fold-cycle.nvim", rev = "20e9b468b771ebf33b6806a0e872eee53c5a20c9" }
 "supermaven-nvim" = { git = "supermaven-inc/supermaven-nvim", rev = "07d20fce48a5629686aefb0a7cd4b25e33947d50" }
-"nvim-ufo" = { git = "kevinhwang91/nvim-ufo", rev = "caa217754203de6b3b761c4940c32e1b0a8e54a1" }
+# "nvim-ufo" = { git = "kevinhwang91/nvim-ufo", rev = "caa217754203de6b3b761c4940c32e1b0a8e54a1" }
 "promise-async" = { git = "kevinhwang91/promise-async", rev = "119e8961014c9bfaf1487bf3c2a393d254f337e2" }
 "conform.nvim" = { git = "stevearc/conform.nvim", rev = "v9.1.0" }
 "neo-tree.nvim" = { git = "nvim-neo-tree/neo-tree.nvim", rev = "3.35.1" }
 "schemastore.nvim" = { git = "b0o/schemastore.nvim", rev = "df87d16fc4ea7c2c67cfc00b513861738693fe07" }
 "nvim-treesitter" = { git = "nvim-treesitter/nvim-treesitter", rev = "v0.10.0" }
-"kulala.nvim" = { git = "mistweaverco/kulala.nvim", rev = "v5.3.3" }
-"nvim-tinygit" = { git = "chrisgrieser/nvim-tinygit", rev = "v1.0" }
 "blink.cmp" = { git = "saghen/blink.cmp", rev = "v1.7.0" }
+"workspace-diagnostics.nvim" = { git = "https://github.com/artemave/workspace-diagnostics.nvim" }

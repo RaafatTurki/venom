@@ -6,7 +6,7 @@ require "autocmds"
 -- fold ffi
 -- icons
 -- keys
--- logger
+log = require "logger".log
 
 -- disolve this into many helper files
 -- utils
@@ -19,7 +19,7 @@ require "helpers.buffers"
 require "helpers.sessions"
 require "helpers.mkview"
 require "helpers.mkdir_parents"
--- require "helpers.open_uri"
+require "helpers.open_uri"
 require "helpers.highlight_yank"
 require "helpers.better_qflist"
 -- require "helpers.clean_paste"
@@ -28,7 +28,6 @@ require "helpers.ignorecase"
 -- require "helpers.chmod"
 -- require "helpers.kill_xclip"
 -- require "helpers.qmacro"
--- require "helpers.osc52"
 require "helpers.normal_mode_on_write"
 require "helpers.text_object_all"
 require "helpers.lsp_utils"

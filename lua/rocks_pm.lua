@@ -34,6 +34,7 @@ end
 if not pcall(require, "rocks") then
   local rocks_location = vim.fs.joinpath(vim.fn.stdpath("cache") --[[@as string]], "rocks.nvim")
 
+  --- @diagnostic disable-next-line: undefined-field
   if not vim.uv.fs_stat(rocks_location) then
     -- Pull down rocks.nvim
     local url = "https://github.com/nvim-neorocks/rocks.nvim"

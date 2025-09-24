@@ -16,14 +16,14 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
 
 ---@class SessionData
 ---@field buffers { current_file_index: number, file_paths: string[] }
----@field dap { breakpoints: { file_path: number[] } }
+------@field dap { breakpoints: { file_path: number[] } }
 
 function M.save()
   ---@type SessionData
-  local sdata = {}
-
-  if buffers then sdata.buffers = buffers.aggregate() end
-  -- if dap then sdata.dap = dap.aggregate() end
+  local sdata = {
+    buffers = buffers and buffers.aggregate() or nil,
+    -- dap = dap.aggregate or nil,
+  }
 
   -- write session file
   U.file_write(M.local_session_file, vim.fn.json_encode(sdata))

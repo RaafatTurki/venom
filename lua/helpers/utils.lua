@@ -1,19 +1,6 @@
 local M = {}
 
 -- Lua Utils
---- converts argument to hex format.
-function M.to_hex(n) if n then return string.format("#%06x", n) end end
-
---- generates a sequence
-function M.seq(min, max, sep, step)
-  step = step or 1
-  local res = ""
-  for i = min, max, step do
-    res = res .. i
-    if (i ~= max) then res = res .. sep end
-  end
-  return res
-end
 
 --- checks if number is within min - max range
 function M.is_within_range(n, min, max) return ((n >= min) and (n <= max)) end
@@ -47,126 +34,15 @@ function M.file_read(path)
   return content
 end
 
---- renames a file
-function M.file_rename(path, new_file_name)
-  local old_file_path = path
-  local path_arr = vim.split(path, '/')
-  path_arr[#path_arr] = new_file_name
-  local new_file_path = table.concat(path_arr, '/')
-
-  local success, error_message = os.rename(old_file_path, new_file_path)
-
-  if success then
-    return true
-  else
-    log.err("error renaming file: " .. error_message)
-    return false
-  end
-end
-
--- TODO: remove in favor of vim.fs.relpath
---- gets relative path from an absolute one
 function M.get_relative_path(abs_path)
-  return vim.fn.fnamemodify(abs_path, ':.')
+  return vim.fs.relpath(vim.fn.stdpath("config"), abs_path) or abs_path
 end
 
 -- TODO: remove in favor of vim.fs.find
 --- returns boolean if a file exists or not
 function M.is_file_exists(path)
-  local stat = vim.loop.fs_stat(path)
+  local stat = vim.uv.fs_stat(path)
   return stat and stat.type == 'file'
-end
-
--- TODO: remove in favor of vim.fs.find
---- returns boolean if a directory exists or not
-function M.is_dir_exists(path)
-  local stat = vim.loop.fs_stat(path)
-  return stat and stat.type == 'directory'
-end
-
--- TODO: remove in favor of vim.fs.find
---- returns array of file_names within a path
-function M.scan_dir(path)
-  local res = {}
-  handle, _ = vim.loop.fs_scandir(path)
-  if not handle then return {} end
-  file_name, _ = vim.loop.fs_scandir_next(handle)
-  while file_name do
-    table.insert(res, file_name)
-    file_name, _ = vim.loop.fs_scandir_next(handle)
-  end
-  return res
-end
-
---- returns the intersection of 2 flat tables
-function M.tbl_intersect(tbl1, tbl2)
-  local intersection = {}
-
-  for _, v1 in pairs(tbl1) do
-    for _, v2 in pairs(tbl2) do
-      if v1 == v2 then table.insert(intersection, v1) end
-    end
-  end
-  return intersection
-end
-
---- returns the union of 2 flat tables with not repeats
-function M.tbl_union(tbl1, tbl2)
-  local result = {}
-  local hash = {}
-  for _, v in pairs(tbl1) do
-    if not hash[v] then
-      table.insert(result, v)
-      hash[v] = true
-    end
-  end
-  for _, v in pairs(tbl2) do
-    if not hash[v] then
-      table.insert(result, v)
-      hash[v] = true
-    end
-  end
-  return result
-end
-
---- returns the merge of 2 flat tables
-function M.tbl_merge(tbl1, tbl2)
-  for i = 1, #tbl2 do
-    table.insert(tbl1, tbl2[i])
-  end
-  return tbl1
-end
-
---- returns the reverse of a table
-function M.tbl_reverse(tbl)
-  for i = 1, math.floor(#tbl / 2) do
-    local j = #tbl - i + 1
-    tbl[i], tbl[j] = tbl[j], tbl[i]
-  end
-  return tbl
-end
-
---- returns the string left padded
-function M.str_pad(str, width, char, right_side)
-  right_side = right_side or false
-  local pad_len = width - #str
-
-  if pad_len > 0 then
-    if not right_side then
-      return string.rep(char, pad_len) .. str
-    else
-      return str .. string.rep(char, pad_len)
-    end
-  else
-    return str
-  end
-end
-
---- returns current git branch name
-function M.get_curr_git_branch()
-  local branch = vim.fn.system("git branch --show-current 2> /dev/null | tr -d '\n'")
-  if branch == "" then return nil end
-  return branch
 end
 
 
@@ -280,9 +156,13 @@ end
 
 --- returns cursor line number/s
 function M.get_cursor_pos()
-  local _, ls, cs = unpack(vim.fn.getpos('v'))
-  local _, le, ce = unpack(vim.fn.getpos('.'))
-  return ls, cs, le, ce
+  local vpos = vim.fn.getpos('v')
+  local dpos = vim.fn.getpos('.')
+  return vpos[2], vpos[3], dpos[2], dpos[3]
+
+  -- local _, ls, cs = unpack(vim.fn.getpos('v'))
+  -- local _, le, ce = unpack(vim.fn.getpos('.'))
+  -- return ls, cs, le, ce
 end
 
 --- returns cursor line text
@@ -321,15 +201,15 @@ end
 function M.clear_prompt() vim.cmd([[echo '' | redraw]]) end
 
 --- changes the guifont by a step, with min and max bounds
-function M.change_guifont_size(amount, min, max, is_amount_delta)
-  is_amount_delta = is_amount_delta or false
-  vim.opt.guifont = string.gsub(vim.opt.guifont._value, ":h(%d+)", function(n)
-    local size = amount
-    if is_amount_delta then size = n + amount end
-    if size < min then size = min elseif size > max then size = max end
-    return string.format(":h%d", size)
-  end)
-end
+-- function M.change_guifont_size(amount, min, max, is_amount_delta)
+--   is_amount_delta = is_amount_delta or false
+--   vim.opt.guifont = string.gsub(vim.opt.guifont._value, ":h(%d+)", function(n)
+--     local size = amount
+--     if is_amount_delta then size = n + amount end
+--     if size < min then size = min elseif size > max then size = max end
+--     return string.format(":h%d", size)
+--   end)
+-- end
 
 --- returns nth field of a segmented string (much like unix cut) (omit field to return full array, fields <= 0 count from the end)
 function M.cut(str, delimiter, field)

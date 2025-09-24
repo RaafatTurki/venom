@@ -37,6 +37,9 @@ shared_capabilities.textDocument.completion.completionItem.insertReplaceSupport 
 
 vim.lsp.config("*", {
   capabilities = shared_capabilities,
+  on_attach = function(client, bufnr)
+    require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+  end
 })
 
 vim.lsp.config('lua_ls', {

@@ -60,7 +60,7 @@ vim.o.clipboard       = 'unnamed,unnamedplus'
 vim.o.shell           = '/usr/bin/fish'
 
 -- folding
--- vim.o.foldenable      = true
+vim.o.foldenable      = true
 -- vim.o.foldmethod      = 'indent'
 -- vim.o.foldcolumn      = '1'
 -- vim.o.foldlevel       = 99

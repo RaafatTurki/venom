@@ -51,9 +51,10 @@ vim.lsp.config('lua_ls', {
       },
       workspace = {
         checkThirdParty = false,
-        -- library = {
-        --   vim.env.VIMRUNTIME
-        -- }
+        library = {
+          vim.fn.stdpath("config") .. "/lls_addons/love2d/library/",
+          vim.fn.stdpath("config") .. "/lls_addons/luv/library/",
+        }
       },
       codeLens = {
         enable = true,

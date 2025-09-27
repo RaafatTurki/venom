@@ -8,16 +8,15 @@
 "heirline.nvim" = "1.0.8"
 "nui.nvim" = "0.4.0"
 "plenary.nvim" = "scm"
-"mason.nvim" = "1.11.0"
-"mason-lspconfig.nvim" = "1.32.0"
+"mason.nvim" = "2.0.1"
+"mason-lspconfig.nvim" = "2.1.0"
 "nvim-lspconfig" = "2.5.0"
-"fold-cycle.nvim" = { git = "jghauser/fold-cycle.nvim", rev = "20e9b468b771ebf33b6806a0e872eee53c5a20c9" }
+"fold-cycle.nvim" = { git = "jghauser/fold-cycle.nvim", rev = "6144567b3307bbcfed0e5b2dd23acb9576575d9e" }
 "supermaven-nvim" = { git = "supermaven-inc/supermaven-nvim", rev = "07d20fce48a5629686aefb0a7cd4b25e33947d50" }
-# "nvim-ufo" = { git = "kevinhwang91/nvim-ufo", rev = "caa217754203de6b3b761c4940c32e1b0a8e54a1" }
-"promise-async" = { git = "kevinhwang91/promise-async", rev = "119e8961014c9bfaf1487bf3c2a393d254f337e2" }
+"promise-async" = { git = "kevinhwang91/promise-async", rev = "v1.0.0" }
 "conform.nvim" = { git = "stevearc/conform.nvim", rev = "v9.1.0" }
-"neo-tree.nvim" = { git = "nvim-neo-tree/neo-tree.nvim", rev = "3.35.1" }
-"schemastore.nvim" = { git = "b0o/schemastore.nvim", rev = "df87d16fc4ea7c2c67cfc00b513861738693fe07" }
+"neo-tree.nvim" = { git = "nvim-neo-tree/neo-tree.nvim", rev = "3.35.2" }
+"schemastore.nvim" = { git = "b0o/schemastore.nvim", rev = "fea7b3eb30d6e7261529ae7e8e94bf717f9c428f" }
 "nvim-treesitter" = { git = "nvim-treesitter/nvim-treesitter", rev = "v0.10.0" }
 "blink.cmp" = { git = "saghen/blink.cmp", rev = "v1.7.0" }
-"workspace-diagnostics.nvim" = { git = "https://github.com/artemave/workspace-diagnostics.nvim" }
+"workspace-diagnostics.nvim" = { git = "https://github.com/artemave/workspace-diagnostics.nvim", rev = "60f9175b2501ae3f8b1aba9719c0df8827610c8e" }

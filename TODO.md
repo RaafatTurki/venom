@@ -1,1 +1,4 @@
 - make helpers.buffers work on file paths w special chars
+- implement a range line order reverser
+- implement a way to copy/cut without effecting the clipboard (esp in macros)
+- look into why sometime treesitter does't highlight files

@@ -1,6 +1,5 @@
 <div align="center">
     <img src="./nvim.png"/>
-
 </div>
 
 <div align="center">
@@ -10,3 +9,13 @@
 </div>
 
 > now let's see Paul Allen's code editor
+
+# Deps:
+- git
+- xdg-open
+- wget
+- curl
+- make
+- unzip
+- fzf
+- ripgrep

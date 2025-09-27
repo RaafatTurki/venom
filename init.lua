@@ -43,13 +43,3 @@ for _, file in ipairs(vim.fn.readdir(vim.fn.stdpath('config')..'/lua/plugins', [
   require('plugins.'..file:gsub('%.lua$', ''))
   -- end
 end
-
-
--- git
--- xdg-open
--- wget
--- curl
--- make
--- unzip
--- fzf
--- ripgrep

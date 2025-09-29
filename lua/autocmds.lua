@@ -36,19 +36,19 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
 })
 
 -- filename based commentstring
-vim.api.nvim_create_autocmd({ "Filetype" }, {
+vim.api.nvim_create_autocmd({ "FileType" }, {
   callback = function(ev)
 
     local ft_cms = {
-      ['cs'] = "//%s",
-      ['prisma'] = "//%s",
-      ['sql'] = "--%s",
-      ['go'] = "// %s",
-      ['pug'] = "// %s",
-      ['typst'] = "//%s",
-      ['svelte'] = "<!-- %s -->",
-      ['vue'] = "<!-- %s -->",
-      ['pro'] = "# %s",
+      -- ['cs'] = "//%s",
+      -- ['prisma'] = "//%s",
+      -- ['sql'] = "--%s",
+      -- ['go'] = "// %s",
+      -- ['pug'] = "// %s",
+      -- ['typst'] = "//%s",
+      -- ['svelte'] = "<!-- %s -->",
+      -- ['vue'] = "<!-- %s -->",
+      -- ['pro'] = "# %s",
       -- ['javascriptreact'] = "{/*%s*/}",
       -- ['typescriptreact'] = "{/*%s*/}",
       -- ['javascript'] = "//%s}",

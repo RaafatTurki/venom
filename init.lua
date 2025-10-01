@@ -6,6 +6,7 @@ log = require "logger".log
 
 require "helpers.colorschemes"
 require "helpers.disable_builtins"
+require "helpers.blackhole_blank_dy"
 require "helpers.bigfile"
 require "helpers.buffers"
 require "helpers.sessions"

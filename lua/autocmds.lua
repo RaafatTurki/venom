@@ -9,6 +9,10 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
       ['%.*%.svx'] = "sh",
       ['%.*%.swcrc'] = "json",
       ['xorg%.conf%a*'] = "xf86conf",
+      ['qt5ct%.conf'] = "ini",
+      ['qt6ct%.conf'] = "ini",
+      ['dunstrc'] = "ini",
+      ['renamerrc'] = "ini",
       -- ['docker-compose%.yaml'] = "yaml.docker-compose",
       -- ['docker-compose%.yml'] = "yaml.docker-compose",
       -- ['compose%.yaml'] = "yaml.docker-compose",
@@ -35,6 +39,28 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
   end
 })
 
+-- open help in a vertical split
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = "help",
+  callback = function(ev)
+    vim.cmd("wincmd L")
+  end
+})
+
+-- auto-resize splits on resize
+vim.api.nvim_create_autocmd({ "VimResized" }, {
+  callback = function(ev)
+    vim.cmd("wincmd =")
+  end
+})
+
+-- no auto-continue comments
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  callback = function(ev)
+    vim.opt.formatoptions:remove({"c", "r", "o"})
+  end
+})
+
 -- filename based commentstring
 vim.api.nvim_create_autocmd({ "FileType" }, {
   callback = function(ev)
@@ -43,7 +69,8 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
       -- ['cs'] = "//%s",
       -- ['prisma'] = "//%s",
       -- ['sql'] = "--%s",
-      -- ['go'] = "// %s",
+      ['go'] = "// %s",
+      ['rhai'] = "// %s",
       -- ['pug'] = "// %s",
       -- ['typst'] = "//%s",
       -- ['svelte'] = "<!-- %s -->",

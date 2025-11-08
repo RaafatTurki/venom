@@ -6,7 +6,7 @@ log = require "logger".log
 
 require "helpers.colorschemes"
 require "helpers.disable_builtins"
-require "helpers.blackhole_blank_dy"
+-- require "helpers.blackhole_blank_dy"
 require "helpers.bigfile"
 require "helpers.buffers"
 require "helpers.sessions"
@@ -45,6 +45,10 @@ vim.pack.add {
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/Saghen/blink.cmp", version = "v1.6.0" },
   { src = "https://github.com/artemave/workspace-diagnostics.nvim" },
+  { src = "https://github.com/rhaiscript/vim-rhai" }, -- remove once a rhai treesitter parser is available
+
+  { src = "https://github.com/KeepDrive/tts.nvim" }, -- are we even using this?
+  { src = "file:///home/potato/sectors/lua/nvim/hex.nvim"},
 }
 
 -- require all files in plugins dir

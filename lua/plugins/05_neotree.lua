@@ -15,15 +15,15 @@ require "neo-tree".setup {
 
   filesystem = {
     filtered_items = {
-      hide_dotfiles = true,
-      -- hide_gitignored = false,
-      -- hide_hidden = false,
+      hide_dotfiles = false,
+      hide_gitignored = false,
+      hide_hidden = false,
 
       hide_by_name = {
         "node_modules",
+        ".venom.json",
         -- "thumbs.db",
         -- ".git",
-        -- ".venom.json",
         -- ".DS_Store",
       },
     },

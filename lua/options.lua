@@ -8,7 +8,7 @@ vim.o.timeoutlen      = 200  -- used for keymap squences timeout
 
 -- wrapping
 vim.o.wrap            = false
-vim.o.wrapscan        = true
+-- vim.o.wrapscan        = true
 
 -- indentation
 vim.o.shiftwidth      = 2

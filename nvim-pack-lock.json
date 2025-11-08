@@ -1,0 +1,32 @@
+{
+  "plugins": {
+    "blink.cmp": {
+      "version": "'v1.6.0'"
+    },
+    "conform.nvim": [],
+    "fold-cycle.nvim": [],
+    "heirline.nvim": [],
+    "hex.nvim": [],
+    "mason-lspconfig.nvim": [],
+    "mason.nvim": [],
+    "mini.nvim": [],
+    "neo-tree.nvim": [],
+    "nui.nvim": [],
+    "nvim-lspconfig": [],
+    "nvim-treesitter": [],
+    "plenary.nvim": [],
+    "promise-async": [],
+    "schemastore.nvim": [],
+    "snacks.nvim": [],
+    "supermaven-nvim": [],
+    "tts.nvim": {
+      "rev": "b6f9ede",
+      "src": "https://github.com/KeepDrive/tts.nvim"
+    },
+    "vim-rhai": {
+      "rev": "b0585e2",
+      "src": "https://github.com/rhaiscript/vim-rhai"
+    },
+    "workspace-diagnostics.nvim": []
+  }
+}

@@ -1,10 +1,4 @@
--- require("hex.nvim")
 -- require("hex")
-
-
-
-
-
 
 -- local ffi = require("ffi")
 --
@@ -23,6 +17,4 @@
 --
 -- print(bufRead.buffer[1])
 -- print(bufRead.len == 64)
-
-
 

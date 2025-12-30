@@ -81,7 +81,7 @@ vim.o.foldenable      = true
 vim.opt.fillchars:append {
   fold = ' ',
   eob  = ' ',
-  diff = '╱',
+  diff = ' ', -- ╱▒▓█
   foldclose = icons.misc.collapsed,
   foldopen  = icons.misc.expanded,
   foldsep   = ' ',
@@ -91,6 +91,12 @@ vim.opt.listchars:append {
   trail = ".",
   extends = "»",
   precedes = "«",
+}
+vim.opt.diffopt = {
+  "internal",
+  "algorithm:patience",
+  "indent-heuristic",
+  "linematch:60"
 }
 vim.opt.nrformats:append 'unsigned'
 vim.opt.whichwrap:append '<,>,[,]' -- arrow keys can wrap around to next line

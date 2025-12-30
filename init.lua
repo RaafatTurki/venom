@@ -46,6 +46,7 @@ vim.pack.add {
   { src = "https://github.com/Saghen/blink.cmp", version = "v1.6.0" },
   { src = "https://github.com/artemave/workspace-diagnostics.nvim" },
   { src = "https://github.com/rhaiscript/vim-rhai" }, -- remove once a rhai treesitter parser is available
+  -- { src = "https://github.com/Chen-Yulin/ColorfulDiff.nvim" },
 
   { src = "https://github.com/KeepDrive/tts.nvim" }, -- are we even using this?
   { src = "file:///home/potato/sectors/lua/nvim/hex.nvim"},

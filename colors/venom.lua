@@ -176,12 +176,13 @@ local c = {
   hint_dim  = M.shades.purple[-4],
 
   -- diff
-  add       = M.shades.green[-1],
-  mod       = M.shades.blue[-1],
-  del       = M.shades.red[-1],
-  add_alt   = M.shades.green[-2],
-  mod_alt   = M.shades.blue[-2],
-  del_alt   = M.shades.red[-2],
+  add         = M.shades.green[-1],
+  mod         = M.shades.blue[-1],
+  del         = M.shades.red[-1],
+  add_dim     = M.shades.green[-5],
+  mod_dim     = M.shades.blue[-5],
+  del_dim     = M.shades.red[-5],
+  mod_dim_alt = M.shades.blue[-4],
 
   -- vcs
   staged    = M.shades.green[2],
@@ -384,10 +385,10 @@ local highlights = {
   ['SpecialKey']      = { fg = c.special },
   ['Whitespace']      = { fg = c.comment },
 
-  ['DiffAdd']         = { '@diff.plus' },
-  ['DiffChange']      = { '@diff.delta' },
-  ['DiffDelete']      = { '@diff.minus' },
-  ['DiffText']        = {},
+  ['DiffAdd']         = { bg = c.add_dim },
+  ['DiffChange']      = { bg = c.mod_dim },
+  ['DiffDelete']      = { bg = c.del_dim },
+  ['DiffText']        = { bg = c.mod_dim_alt },
 
   ['SpellBad']        = { undercurl = true, sp = c.warn },
 
@@ -686,11 +687,11 @@ local highlights = {
   NeoTreeFloatTitle         = { "Title" },
   NeoTreeTitleBar           = { "Title" },
 
-  NeoTreeGitAdded           = { 'DiffAdd' },
+  NeoTreeGitAdded           = { '@diff.plus' },
   NeoTreeGitConflict        = { fg = c.conflict },
   NeoTreeGitDeleted         = { fg = c.deleted },
   NeoTreeGitIgnored         = { 'Comment' },
-  NeoTreeGitModified        = { 'DiffAdd' },
+  NeoTreeGitModified        = { '@diff.plus' },
   NeoTreeGitUntracked       = { 'Folded' },
 
   NeoTreeGitUnstaged        = { fg = c.unstaged },

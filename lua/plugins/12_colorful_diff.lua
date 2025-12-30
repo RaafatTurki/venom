@@ -1,0 +1,7 @@
+-- require "colorful_diff".setup {
+--   colors = {
+--     origin = string.format("#%06x", vim.api.nvim_get_hl(0, { name = "DiffAdd" }).bg),
+--     diff = string.format("#%06x", vim.api.nvim_get_hl(0, { name = "DiffChange" }).bg),
+--   },
+--   refresh_cycle = 250,
+-- }

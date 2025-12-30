@@ -90,7 +90,7 @@ local buffer_abstract = {
     {
       condition = function(self) return vim.api.nvim_get_option_value('modified', { buf = self.bufnr }) end,
       provider = '• ',
-      hl = 'DiffAdd',
+      hl = '@diff.plus',
     },
     {
       condition = function(self)
@@ -174,7 +174,7 @@ local file_flag_modified = {
     return vim.bo.modified
   end,
   provider = icons.misc.modified,
-  hl = "DiffAdd",
+  hl = "@diff.plus",
 }
 
 local file_flag_readonly = {
@@ -214,7 +214,7 @@ local mini_git = {
       local count = self.summary.add or 0
       return count > 0 and ("+" .. count)
     end,
-    hl = "DiffAdd"
+    hl = "@diff.plus"
   },
   -- delete
   {
@@ -222,7 +222,7 @@ local mini_git = {
       local count = self.summary.delete or 0
       return count > 0 and ("-" .. count)
     end,
-    hl = "DiffDelete",
+    hl = "@diff.minus"
   },
   -- change
   {
@@ -230,7 +230,7 @@ local mini_git = {
       local count = self.summary.change or 0
       return count > 0 and ("~" .. count)
     end,
-    hl = "DiffChange"
+    hl = "@diff.delta"
   },
   -- hunks
   {

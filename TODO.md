@@ -1,6 +1,7 @@
 - disolve utils this into many helper files
 - make helpers.buffers work on file paths w special chars
-- implement a range line order reverser
-- implement a way to copy/cut without effecting the clipboard (esp in macros)
+- implement a line order reverser in visual mode
+- implement a way to copy/cut without effecting the clipboard (especially in macros)
 - look into why sometime treesitter does't highlight files
 - check if the commented helper requires in init.lua are even needed anymore
+- colorize git diff markers (https://github.com/akinsho/git-conflict.nvim)

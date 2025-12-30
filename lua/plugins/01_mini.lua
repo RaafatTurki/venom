@@ -196,6 +196,9 @@ do
   highlighters["todo"] = { pattern = 'TODO:',  group = 'MiniHipatternsTodo' }
   highlighters["deprecated"] = { pattern = 'DEPRECATED:',  group = 'MiniHipatternsFixme' }
   highlighters["note"] = { pattern = 'NOTE:',  group = 'MiniHipatternsNote' }
+  highlighters["<<<<<<<"] = { pattern = '<<<<<<<',  group = 'MiniHipatternsFixme' }
+  highlighters[">>>>>>>"] = { pattern = '>>>>>>>',  group = 'MiniHipatternsFixme' }
+  highlighters["======="] = { pattern = '=======',  group = 'MiniHipatternsFixme' }
 
   highlighters["hex"] = hipatterns.gen_highlighter.hex_color()
 

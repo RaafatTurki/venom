@@ -193,6 +193,7 @@ do
   highlighters["fixme"] = { pattern = 'FIXME:', group = 'MiniHipatternsFixme' }
   highlighters["xxx"] = { pattern = 'XXX:', group = 'MiniHipatternsFixme' }
   highlighters["hack"] = { pattern = 'HACK:',  group = 'MiniHipatternsHack' }
+  highlighters["sanity_check"] = { pattern = 'SANITY_CHECK:',  group = 'MiniHipatternsHack' }
   highlighters["todo"] = { pattern = 'TODO:',  group = 'MiniHipatternsTodo' }
   highlighters["deprecated"] = { pattern = 'DEPRECATED:',  group = 'MiniHipatternsFixme' }
   highlighters["note"] = { pattern = 'NOTE:',  group = 'MiniHipatternsNote' }

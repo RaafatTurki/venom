@@ -6,7 +6,6 @@
     "conform.nvim": [],
     "fold-cycle.nvim": [],
     "heirline.nvim": [],
-    "hex.nvim": [],
     "mason-lspconfig.nvim": [],
     "mason.nvim": [],
     "mini.nvim": [],
@@ -19,10 +18,6 @@
     "schemastore.nvim": [],
     "snacks.nvim": [],
     "supermaven-nvim": [],
-    "tts.nvim": {
-      "rev": "b6f9ede",
-      "src": "https://github.com/KeepDrive/tts.nvim"
-    },
     "vim-rhai": {
       "rev": "b0585e2",
       "src": "https://github.com/rhaiscript/vim-rhai"

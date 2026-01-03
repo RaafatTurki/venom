@@ -58,6 +58,7 @@ vim.o.delcombine      = true
 -- os
 vim.o.clipboard       = 'unnamed,unnamedplus'
 vim.o.shell           = '/usr/bin/fish'
+vim.o.winborder       = 'single' -- TODO: see what else this effects (to remove specific single border settings throughout the codebase)
 
 -- folding
 vim.o.foldenable      = true

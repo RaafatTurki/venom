@@ -27,7 +27,7 @@ require "helpers.lsp_utils"
 
 
 -- plugins
-vim.pack.add {
+vim.pack.add ({
   { src = "https://github.com/nvim-mini/mini.nvim" },
   { src = "https://github.com/folke/snacks.nvim" },
   { src = "https://github.com/rebelot/heirline.nvim" },
@@ -42,15 +42,25 @@ vim.pack.add {
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" },
   { src = "https://github.com/b0o/schemastore.nvim" },
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "master" },
+  -- { src = "https://github.com/mks-h/treesitter-autoinstall.nvim.git" },
   { src = "https://github.com/Saghen/blink.cmp", version = "v1.6.0" },
   { src = "https://github.com/artemave/workspace-diagnostics.nvim" },
   { src = "https://github.com/rhaiscript/vim-rhai" }, -- remove once a rhai treesitter parser is available
+  { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+
+  -- { src = "https://github.com/ravitemer/mcphub.nvim" },
+  -- { src = "https://github.com/yetone/avante.nvim", version = "v0.0.27" },
   -- { src = "https://github.com/Chen-Yulin/ColorfulDiff.nvim" },
 
-  { src = "https://github.com/KeepDrive/tts.nvim" }, -- are we even using this?
-  { src = "file:///home/potato/sectors/lua/nvim/hex.nvim"},
-}
+  -- { src = "https://github.com/KeepDrive/tts.nvim" }, -- are we even using this?
+  -- { src = "file:///home/potato/sectors/lua/nvim/hex.nvim"},
+}, { confirm = false })
+
+-- vim.pack.del({"nvim-treesitter"})
+-- vim.pack.del({"hex.nvim"})
+-- vim.pack.del({"tts.nvim"})
+-- vim.pack.update(nil, { force = true })
 
 -- require all files in plugins dir
 ---@diagnostic disable-next-line: param-type-mismatch

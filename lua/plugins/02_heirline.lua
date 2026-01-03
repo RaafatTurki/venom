@@ -309,7 +309,12 @@ local lsp_active = {
 }
 
 local search_count = {
-  condition = function() return vim.v.hlsearch ~= 0 end,
+  condition = function()
+    -- TODO: look into why this is not working
+    if vim.v.hlsearch == 0 then return false end
+    if vim.fn.searchcount == vim.empty_dict() then return false end
+    return true
+  end,
   init = function(self)
     local ok, search = pcall(vim.fn.searchcount)
     if ok and search.total then self.search = search end

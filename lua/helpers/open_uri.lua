@@ -2,17 +2,22 @@ local keys = require "helpers.keys"
 
 local M = {}
 
-local open_cmd = nil
+local open_cmd = {}
 
 if vim.fn.has("unix") == 1 then
-  open_cmd = 'xdg-open'
+  open_cmd = { 'xdg-open' }
 elseif vim.fn.has("mac") == 1 then
-  open_cmd = 'open'
+  open_cmd = { 'open' }
 elseif vim.fn.has("win64") == 1 or vim.fn.has("win32") then
-  open_cmd = 'start'
+  open_cmd = { 'cmd.exe', '/c', 'start' }
 end
 
 function M.open_uri_under_cursor()
+  if not open_cmd then
+    vim.notify("No supported opener found for this OS", vim.log.levels.ERROR)
+    return
+  end
+
   local word_under_cursor = vim.fn.expand("<cfile>")
   local uri = nil
 
@@ -39,7 +44,9 @@ function M.open_uri_under_cursor()
     return
   end
 
-  vim.fn.jobstart(open_cmd .. ' "' .. uri .. '"', {
+  table.insert(open_cmd, uri)
+
+  vim.fn.jobstart(open_cmd, {
     detach = true,
     -- on_exit = function(chan_id, data, name) log.info("URI opened") end,
   })

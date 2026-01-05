@@ -68,8 +68,8 @@ do
   require 'mini.pick'.setup {
     window = {
       config = function()
-        height = math.floor(0.6 * vim.o.lines)
-        width = math.floor(0.6 * vim.o.columns)
+        local height = math.floor(0.6 * vim.o.lines)
+        local width = math.floor(0.6 * vim.o.columns)
 
         return {
           anchor = 'NW',
@@ -163,7 +163,7 @@ do
 
     local segments = vim.split(group, '%.')
     table.remove(segments, #segments)
-    parent_group = table.concat(segments, '.')
+    local parent_group = table.concat(segments, '.')
     if not is_hl_empty(parent_group) then
       return lsp_hl_get_closest_defined_parent_group(parent_group)
     end

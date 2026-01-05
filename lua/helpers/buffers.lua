@@ -118,7 +118,7 @@ M.BufList = function()
       self.last_focused_buf_i = i
     end,
     swap_bufs = function(self, i1, i2)
-      if (U.is_within_range(i1, 1, #self.bufs) and U.is_within_range(i1, 1, #self.bufs)) then
+      if (U.is_within_range(i1, 1, #self.bufs) and U.is_within_range(i2, 1, #self.bufs)) then
         local buf_tmp = self.bufs[i1]
         self.bufs[i1] = self.bufs[i2]
         self.bufs[i2] = buf_tmp

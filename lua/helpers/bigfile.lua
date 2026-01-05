@@ -18,12 +18,12 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = "bigfile",
   callback = function(ev)
     -- vim
-    vim.opt.wrap = false
+    vim.opt_local.wrap = false
     vim.bo.undofile = false
     vim.wo.foldmethod = "manual"
     -- vim.wo.statuscolumn = ""
     vim.wo.conceallevel = 0
-    vim.o.syntax = "off"
+    vim.bo[ev.buf].syntax = "off"
     -- infer basic syntax highlighting from buffer contents
     -- vim.schedule(function()
       --   local ft = vim.filetype.match({ buf = ev.buf })

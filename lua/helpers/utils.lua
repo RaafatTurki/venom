@@ -34,6 +34,13 @@ function M.file_read(path)
   return content
 end
 
+--- deletes a file from disk
+function M.file_del(path)
+  path = vim.fs.normalize(path)
+  local ok = os.remove(path)
+  return ok == true
+end
+
 function M.get_relative_path(abs_path)
   return vim.fs.relpath(vim.fn.stdpath("config"), abs_path) or abs_path
 end
@@ -76,16 +83,15 @@ end
 
 --- returns the (strongest) severity level of the current line diagnostics (nil if none)
 function M.get_lnum_diag_severity()
-  diagnostics = vim.diagnostic.get(0, { lnum = vim.v.lnum - 1 })
+  local diagnostics = vim.diagnostic.get(0, { lnum = vim.v.lnum - 1 })
 
   local severity_level = nil
 
   for i, diag in ipairs(diagnostics) do
     if severity_level == nil then
       severity_level = diag.severity
-    else if diag.severity < severity_level then
-        severity_level = diag.severity
-      end
+    elseif diag.severity < severity_level then
+      severity_level = diag.severity
     end
   end
 

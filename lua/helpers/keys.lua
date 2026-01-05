@@ -23,7 +23,7 @@ M.map = function(mode, lhs, rhs, opts, autocmds)
 end
 
 M.buf_map = function(buf, mode, lhs, rhs, desc)
-  vim.api.nvim_buf_set_keymap(buf, mode, lhs, rhs, { silent = true, desc = desc })
+  vim.keymap.set(mode, lhs, rhs, { silent = true, desc = desc, buffer = buf })
 end
 
 M.set_leader = function(key)

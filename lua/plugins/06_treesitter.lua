@@ -30,10 +30,6 @@ vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 -- vim.o.foldtext    = "v:lua.vim.treesitter.foldtext()"
 
 
--- local filetypes = {
---   bigfile = { highlight = false, indent = false },
--- }
-
 -- require("treesitter-autoinstall").setup({
 --   ignore = { "minimap", "neo-tree" },
 --   highlight = true,
@@ -50,6 +46,7 @@ require 'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
     disable = function(lang, buf)
+      if vim.b[buf].large_buf then return true end
       -- local ft = vim.api.nvim_get_option_value('filetype', { buf = buf })
       -- local is_ft_blocked = vim.tbl_get(filetypes, ft, "highlight") == false
 
@@ -60,6 +57,7 @@ require 'nvim-treesitter.configs'.setup {
   indent = {
     enable = true,
     disable = function(lang, buf)
+      if vim.b[buf].large_buf then return true end
       -- local ft = vim.api.nvim_get_option_value('filetype', { buf = buf })
       -- local is_ft_blocked = vim.tbl_get(filetypes, ft, "indent") == false
       --

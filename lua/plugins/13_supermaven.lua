@@ -1,6 +1,8 @@
 require "supermaven-nvim".setup {
+  condition = function()
+    return not vim.b.large_buf
+  end,
   ignore_filetypes = {
-    bigfile = true,
     snacks_input = true,
   },
   keymaps = {

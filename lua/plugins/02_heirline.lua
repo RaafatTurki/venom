@@ -104,8 +104,7 @@ local buffer_abstract = {
     {
       condition = function(self)
         if self.bufnr == nil then return end
-        local ft = vim.bo[self.bufnr].filetype
-        return ft == 'bigfile'
+        return vim.b[self.bufnr].large_buf
       end,
       provider = ' ',
       hl = 'WarningMsg',

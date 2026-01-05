@@ -2,8 +2,7 @@ local icons = require "helpers.icons".icons
 
 require "blink-cmp".setup {
   enabled = function()
-    -- bigfile check
-    if vim.bo.filetype == "bigfile" then return false end
+    if vim.b.large_buf then return false end
     -- if vim.tbl_contains({ "cpp" }, vim.bo.filetype) then return false end
     if vim.bo.buftype == "prompt" then return false end
     if vim.b.completion == false then return false end
@@ -109,4 +108,3 @@ require "blink-cmp".setup {
     },
   },
 }
-

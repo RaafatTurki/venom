@@ -51,12 +51,13 @@ M.BufList = function()
       if not index then return end
       if not U.is_within_range(index, 1, #self.bufs) then return end
 
-      local file_path = self.bufs[index].file_path
+      local buf_name = self.bufs[index].file_path
 
-      -- TODO: instead of this check filepath is a real path for real (be mindful of relative vs absolute pathing)
-      if file_path == "" then return end
+      if buf_name == "" then return end
+      local file_path = vim.uv.fs_realpath(buf_name)
+      if file_path then file_path = file_path end
 
-      vim.cmd.edit(file_path)
+      vim.api.nvim_cmd({ cmd = "edit", args = { file_path } }, {})
 
       self.last_focused_buf_i = index
     end,
@@ -122,7 +123,7 @@ M.BufList = function()
         local buf_tmp = self.bufs[i1]
         self.bufs[i1] = self.bufs[i2]
         self.bufs[i2] = buf_tmp
-        vim.cmd.redrawtabline()
+        vim.api.nvim_cmd({ cmd = "redrawtabline" }, {})
         -- events.buflist_update()
       end
     end,
@@ -185,25 +186,27 @@ M.BufList = function()
     renamed_buf = function(self, i, new_path)
       local buf_info = self:get_buf_info(i)
 
-      vim.cmd("badd " .. vim.fn.fnameescape(U.get_relative_path(new_path)))
+      vim.api.nvim_cmd({ cmd = "badd", args = { U.get_relative_path(new_path) } }, {})
       local new_buf_info = self:get_buf_info(#self.bufs)
 
       vim.tbl_map(function(win_id)
         vim.api.nvim_win_set_buf(win_id, new_buf_info.buf.bufnr)
       end, vim.fn.win_findbuf(buf_info.buf.bufnr))
 
-      vim.cmd.bdelete(buf_info.buf.bufnr)
+      vim.api.nvim_buf_delete(buf_info.buf.bufnr, {})
 
       self:shift_buf(#self.bufs, i - #self.bufs)
-      vim.cmd.redrawtabline()
+      vim.api.nvim_cmd({ cmd = "redrawtabline" }, {})
     end,
   }
 end
 
 M.buflist = M.BufList()
 
+local group = vim.api.nvim_create_augroup("Buflist", { clear = true })
 
 vim.api.nvim_create_autocmd('VimEnter', {
+  group = group,
   callback = function(ev)
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
       M.buflist:add_buf(bufnr)
@@ -212,18 +215,21 @@ vim.api.nvim_create_autocmd('VimEnter', {
 })
 
 vim.api.nvim_create_autocmd('BufAdd', {
+  group = group,
   callback = function(ev)
     M.buflist:add_buf(ev.buf)
   end
 })
 
 vim.api.nvim_create_autocmd('BufDelete', {
+  group = group,
   callback = function(ev)
     M.buflist:remove_buf(ev.buf)
   end
 })
 
 vim.api.nvim_create_autocmd('FileType', {
+  group = group,
   callback = function(ev)
     if ev.match == "qf" then
       M.buflist:remove_buf(ev.buf)
@@ -273,9 +279,9 @@ M.populate = function(data)
 
     if U.is_file_exists(path) then
       if useEdit then
-        vim.cmd.edit(vim.fn.fnameescape(path))
+        vim.api.nvim_cmd({ cmd = "edit", args = { path } }, {})
       else
-        vim.cmd.badd(vim.fn.fnameescape(path))
+        vim.api.nvim_cmd({ cmd = "badd", args = { path } }, {})
       end
       return true
     else

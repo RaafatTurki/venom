@@ -45,11 +45,14 @@ function M.get_relative_path(abs_path)
   return vim.fs.relpath(vim.fn.stdpath("config"), abs_path) or abs_path
 end
 
--- TODO: remove in favor of vim.fs.find
 --- returns boolean if a file exists or not
 function M.is_file_exists(path)
-  local stat = vim.uv.fs_stat(path)
-  return stat and stat.type == 'file'
+  path = vim.fs.normalize(path)
+  local name = vim.fs.basename(path)
+  local dir = vim.fs.dirname(path)
+  local matches = vim.fs.find(name, { path = dir, type = "file", limit = 1 })
+  if not matches or #matches == 0 then return false end
+  return vim.fs.normalize(matches[1]) == path
 end
 
 
@@ -99,134 +102,6 @@ function M.get_lnum_diag_severity()
 end
 
 --- returns current vim mode name
-function M.get_mode_name()
-  local mode_names = {
-    n         = "no",
-    no        = "n?",
-    nov       = "n?",
-    noV       = "n?",
-    ["no\22"] = "n?",
-    niI       = "ni",
-    niR       = "nr",
-    niV       = "nv",
-    nt        = "nt",
-    v         = "vi",
-    vs        = "vs",
-    V         = "v_",
-    Vs        = "vs",
-    ["\22"]   = "^V",
-    ["\22s"]  = "^V",
-    s         = "se",
-    S         = "s_",
-    ["\19"]   = "^S",
-    i         = "in",
-    ic        = "ic",
-    ix        = "ix",
-    R         = "re",
-    Rc        = "rc",
-    Rx        = "rx",
-    Rv        = "rv",
-    Rvc       = "rv",
-    Rvx       = "rv",
-    c         = "co",
-    cv        = "ex",
-    r         = "..",
-    rm        = "m.",
-    ["r?"]    = "??",
-    ["!"]     = "!!",
-    t         = "te",
-  }
-  return mode_names[vim.api.nvim_get_mode().mode]
-end
-
---- returns current vim mode highlight
-function M.get_mode_hl()
-  local mode_hls = {
-    n       = 'NormalMode',
-    i       = 'InsertMode',
-    v       = 'VisualMode',
-    V       = 'VisualMode',
-    ['\22'] = 'VisualMode',
-    c       = 'CommandMode',
-    s       = 'SelectMode',
-    S       = 'SelectMode',
-    ['\19'] = "SelectMode",
-    R       = 'ControlMode',
-    r       = 'ControlMode',
-    ['!']   = 'NormalMode',
-    t       = 'TerminalMode',
-  }
-
-  return mode_hls[vim.api.nvim_get_mode().mode]
-end
-
---- returns cursor line number/s
-function M.get_cursor_pos()
-  local vpos = vim.fn.getpos('v')
-  local dpos = vim.fn.getpos('.')
-  return vpos[2], vpos[3], dpos[2], dpos[3]
-
-  -- local _, ls, cs = unpack(vim.fn.getpos('v'))
-  -- local _, le, ce = unpack(vim.fn.getpos('.'))
-  -- return ls, cs, le, ce
-end
-
---- returns cursor line text
-function M.get_cursor_text()
-  local ls, cs, le, ce = M.get_cursor_pos()
-  return vim.api.nvim_buf_get_text(0, ls-1, cs-1, le-1, ce, {})
-end
-
---- returns hilight group name or fallback
-function M.get_hl_fallback(group, fallback)
-  if vim.fn.hlexists(group) == 1 then
-    return group
-  else
-    return fallback
-  end
-end
-
---- returns a table containing the lsp changes counts from an lsp result
-function M.count_lsp_res_changes(lsp_res)
-  local count = { instances = 0, files = 0 }
-  if (lsp_res.documentChanges) then
-    for _, changed_file in pairs(lsp_res.documentChanges) do
-      count.files = count.files + 1
-      count.instances = count.instances + #changed_file.edits
-    end
-  elseif (lsp_res.changes) then
-    for _, changed_file in pairs(lsp_res.changes) do
-      count.instances = count.instances + #changed_file
-      count.files = count.files + 1
-    end
-  end
-  return count
-end
-
---- clears the command prompt
-function M.clear_prompt() vim.cmd([[echo '' | redraw]]) end
-
---- changes the guifont by a step, with min and max bounds
--- function M.change_guifont_size(amount, min, max, is_amount_delta)
---   is_amount_delta = is_amount_delta or false
---   vim.opt.guifont = string.gsub(vim.opt.guifont._value, ":h(%d+)", function(n)
---     local size = amount
---     if is_amount_delta then size = n + amount end
---     if size < min then size = min elseif size > max then size = max end
---     return string.format(":h%d", size)
---   end)
--- end
-
---- returns nth field of a segmented string (much like unix cut) (omit field to return full array, fields <= 0 count from the end)
-function M.cut(str, delimiter, field)
-  delimiter = delimiter or ' '
-  local arr = vim.split(str, delimiter)
-  if (field ~= nil) then
-    if (field > 0) then return arr[field] else return arr[#arr + field] end
-  else
-    return arr
-  end
-end
 
 --- prompts a multiple choice confirmation prompt
 function M.confirm(msg, choices)
@@ -238,19 +113,6 @@ end
 --- prompts a yes/no confirmation prompt
 function M.confirm_yes_no(msg)
   return true and M.confirm(msg, { 'Yes', 'No' }) == 1 or false
-end
-
---- moves cursor position if the jump file is the current buffer if not then print jump location
--- TODO: abort if jump line or column is out of range
-function M.request_jump(target_path, line, col)
-  target_path = vim.fs.normalize(target_path)
-  local buf_path = vim.fs.normalize(vim.fn.expand('%:p'))
-  if (target_path == buf_path) then
-    vim.api.nvim_win_set_cursor(0, { line, col })
-    print('jumping to ' .. tostring(line) .. ':' .. tostring(col))
-  else
-    print('jump attempt to ' .. tostring(line) .. ':' .. tostring(col) .. ' in ' .. vim.fs.basename(target_path))
-  end
 end
 
 --- change the mod of current file

@@ -1,6 +1,3 @@
-local icons = require "helpers.icons".icons
-local keys = require "helpers.keys"
-
 require "snacks".setup {
   -- picker = {},
 

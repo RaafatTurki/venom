@@ -1,4 +1,3 @@
-local U = require "helpers.utils"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
 
@@ -86,8 +85,10 @@ end
 
 
 -- lsp highlights
+local group = vim.api.nvim_create_augroup("LspReferenceHighlight", { clear = true })
+
 vim.api.nvim_create_autocmd("CursorMoved", {
-  group = vim.api.nvim_create_augroup("LspReferenceHighlight", { clear = true }),
+  group = group,
   desc = "Highlight references under cursor",
   callback = function()
     -- Only run if the cursor is not in insert mode
@@ -111,7 +112,7 @@ vim.api.nvim_create_autocmd("CursorMoved", {
 })
 
 vim.api.nvim_create_autocmd("CursorMovedI", {
-  group = "LspReferenceHighlight",
+  group = group,
   desc = "Clear highlights when entering insert mode",
   callback = function()
     vim.lsp.buf.clear_references()

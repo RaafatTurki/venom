@@ -1,6 +1,8 @@
 local map = require "helpers.keys".map
 
-function _G.qftf(info)
+local M = {}
+
+function M.qftf(info)
   local items
   local res = {}
 
@@ -49,7 +51,7 @@ function _G.qftf(info)
   return res
 end
 
-vim.o.quickfixtextfunc = '{info -> v:lua._G.qftf(info)}'
+vim.o.quickfixtextfunc = '{info -> v:lua.require("helpers.better_qflist").qftf(info)}'
 
 vim.cmd [[
   if exists('b:current_syntax')
@@ -76,3 +78,5 @@ map({ "x", "n" }, "<S-Down>", function()
   local ok = pcall(vim.cmd.cnext)
   -- if not ok then pcall(vim.cmd.cfirst) end
 end, "QFList next")
+
+return M

@@ -1,6 +1,8 @@
 local MAX_BYTES = 1024 * 1024 * 1
 local MAX_LINES = 50000
 
+local group = vim.api.nvim_create_augroup("LargeBuffer", { clear = true })
+
 local function is_large(bufnr)
   -- ensure buffer is valid
   if not vim.api.nvim_buf_is_valid(bufnr) then return false end
@@ -47,7 +49,7 @@ local function apply_large_buf_settings(bufnr)
 end
 
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile", "BufWinEnter", "BufWritePost", "TextChanged", "TextChangedI", }, {
-  group = vim.api.nvim_create_augroup("LargeBuffer", { clear = true }),
+  group = group,
   callback = function(ev)
     if is_large(ev.buf) then
       apply_large_buf_settings(ev.buf)

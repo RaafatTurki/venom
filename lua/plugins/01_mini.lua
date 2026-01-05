@@ -208,9 +208,9 @@ do
   }
 end
 
--- map
+-- minimap
 do
-local MiniMap = require "mini.map"
+local minimap = require "mini.map"
 require "mini.map".setup {
   window = {
     width = 1,
@@ -233,12 +233,12 @@ require "mini.map".setup {
 
 -- refresh on window resize
 vim.api.nvim_create_autocmd('VimResized', {
-  callback = function(ev) MiniMap.refresh() end
+  callback = function(ev) minimap.refresh() end
 })
 
 -- open on vim enter
 vim.api.nvim_create_autocmd('VimEnter', {
-  callback = function(ev) MiniMap.open() end
+  callback = function(ev) minimap.open() end
 })
 
 -- hide on insert
@@ -246,9 +246,9 @@ vim.api.nvim_create_autocmd('ModeChanged', {
   callback = function(ev)
     local mode = vim.api.nvim_get_mode().mode
     if mode == 'i' then
-      MiniMap.close()
+      minimap.close()
     else
-      MiniMap.open()
+      minimap.open()
     end
   end
 })

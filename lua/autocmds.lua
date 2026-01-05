@@ -1,7 +1,10 @@
 -- TODO: disolve this file into helpers
 
+local group = vim.api.nvim_create_augroup("UserAutocmds", { clear = true })
+
 -- filename based filetypes
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
+  group = group,
   callback = function(ev)
 
     local fn_pattern_ft = {
@@ -34,6 +37,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 
 -- set integrated terminal opts
 vim.api.nvim_create_autocmd({ "TermOpen" }, {
+  group = group,
   callback = function(ev)
     vim.wo.number = false
   end
@@ -42,20 +46,23 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
 -- open help in a vertical split
 vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = "help",
+  group = group,
   callback = function(ev)
-    vim.cmd("wincmd L")
+    vim.api.nvim_cmd({ cmd = "wincmd", args = { "L" } }, {})
   end
 })
 
 -- auto-resize splits on resize
 vim.api.nvim_create_autocmd({ "VimResized" }, {
+  group = group,
   callback = function(ev)
-    vim.cmd("wincmd =")
+    vim.api.nvim_cmd({ cmd = "wincmd", args = { "=" } }, {})
   end
 })
 
 -- no auto-continue comments
 vim.api.nvim_create_autocmd({ "FileType" }, {
+  group = group,
   callback = function(ev)
     vim.opt.formatoptions:remove({"c", "r", "o"})
   end
@@ -63,6 +70,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 
 -- filename based commentstring
 vim.api.nvim_create_autocmd({ "FileType" }, {
+  group = group,
   callback = function(ev)
 
     local ft_cms = {

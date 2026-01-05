@@ -1,7 +1,5 @@
-local U = require "helpers.utils"
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
-local buffers = require "helpers.buffers"
 
 
 require "mason".setup {

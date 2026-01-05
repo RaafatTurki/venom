@@ -1,6 +1,3 @@
-local U = require "helpers.utils"
-local buffers = require "helpers.buffers"
-
 local ts = require "nvim-treesitter"
 
 vim.api.nvim_create_autocmd("PackChanged", {

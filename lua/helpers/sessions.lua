@@ -1,14 +1,20 @@
 local U = require "helpers.utils"
 local buffers = require "helpers.buffers"
+local log = require "logger".log
 -- local mason = require "plugins.mason"
 -- local dap = mason and mason.dap or nil
 
 local M = {}
 
-M.local_session_file = vim.fn.getcwd() .. '/.venom.json'
+local function session_file()
+  return vim.fn.getcwd() .. '/.venom.json'
+end
+
+M.local_session_file = session_file
 M.is_in_local_session = false
 
 vim.api.nvim_create_autocmd('VimLeavePre', {
+  group = vim.api.nvim_create_augroup("LocalSessions", { clear = true }),
   callback = function(ev)
     if M.is_in_local_session then M.save() end
   end
@@ -26,7 +32,7 @@ function M.save()
   }
 
   -- write session file
-  U.file_write(M.local_session_file, vim.fn.json_encode(sdata))
+  U.file_write(session_file(), vim.fn.json_encode(sdata))
 
   -- load if session isn't already loaded
   if not M.is_in_local_session then M.load() end
@@ -34,7 +40,7 @@ end
 
 function M.load()
   -- prompt to save a new session if doesn't exist and exit
-  if not U.is_file_exists(M.local_session_file) then
+  if not U.is_file_exists(session_file()) then
     vim.schedule(function()
       if U.confirm_yes_no('Local session file does not exist. Create one?') then
         M.save()
@@ -45,7 +51,7 @@ function M.load()
 
   -- read session file
   ---@type SessionData?
-  local sdata = vim.fn.json_decode(U.file_read(M.local_session_file))
+  local sdata = vim.fn.json_decode(U.file_read(session_file()))
   if not sdata then
     log.err("local session data is corrupted")
     return
@@ -61,7 +67,7 @@ function M.load()
 end
 
 function M.delete()
-  local del_result = U.file_del(M.local_session_file)
+  local del_result = U.file_del(session_file())
   if del_result then
     if M.is_in_local_session then
       M.is_in_local_session = false

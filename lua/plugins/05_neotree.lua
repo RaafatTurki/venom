@@ -1,11 +1,11 @@
 local keys = require "helpers.keys"
 local icons = require "helpers.icons".icons
+local events = require "neo-tree.events"
 
-local function snack_move_handler(data)
+-- TODO: maybe put this somewhere globally reachable
+local function lsp_rename_handler(data)
   Snacks.rename.on_rename_file(data.source, data.destination)
 end
-
-local events = require("neo-tree.events")
 
 require "neo-tree".setup {
   popup_border_style = 'single',
@@ -30,8 +30,8 @@ require "neo-tree".setup {
   },
 
   event_handlers = {
-    { event = events.FILE_MOVED, handler = snack_move_handler },
-    { event = events.FILE_RENAMED, handler = snack_move_handler },
+    { event = events.FILE_MOVED, handler = lsp_rename_handler },
+    { event = events.FILE_RENAMED, handler = lsp_rename_handler },
   },
 
   window = {

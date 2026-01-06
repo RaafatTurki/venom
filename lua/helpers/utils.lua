@@ -120,4 +120,31 @@ function M.chmod(mod)
   vim.cmd([[silent! !chmod ]] .. mod .. [[ %]])
 end
 
+--- read .env
+function M.read_dotenv(path)
+  path = path or vim.fn.stdpath("config") .. "/.env"
+
+  local ok_read, lines = pcall(vim.fn.readfile, path)
+  if not ok_read then
+    return {}
+  end
+
+  local env = {}
+  for _, line in ipairs(lines) do
+    local trimmed = line:gsub("^%s+", ""):gsub("%s+$", "")
+    if trimmed ~= "" and not trimmed:match("^#") then
+      local key, value = trimmed:match("^([A-Za-z_][A-Za-z0-9_]*)=(.*)$")
+      if key then
+        value = value:gsub("^%s+", ""):gsub("%s+$", "")
+        value = value:gsub('^"(.*)"$', "%1"):gsub("^'(.*)'$", "%1")
+        if value ~= "" then
+          env[key] = value
+        end
+      end
+    end
+  end
+
+  return env
+end
+
 return M

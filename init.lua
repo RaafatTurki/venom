@@ -2,8 +2,6 @@ require "options"
 require "keymaps"
 require "autocmds"
 
-log = require "logger".log
-
 require "helpers.colorschemes"
 require "helpers.disable_builtins"
 -- require "helpers.blackhole_blank_dy"
@@ -48,9 +46,7 @@ vim.pack.add ({
   { src = "https://github.com/artemave/workspace-diagnostics.nvim" },
   { src = "https://github.com/rhaiscript/vim-rhai" }, -- remove once a rhai treesitter parser is available
   { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
-
-  -- { src = "https://github.com/ravitemer/mcphub.nvim" },
-  -- { src = "https://github.com/yetone/avante.nvim", version = "v0.0.27" },
+  { src = "https://github.com/yetone/avante.nvim", version = "v0.0.27" },
   -- { src = "https://github.com/Chen-Yulin/ColorfulDiff.nvim" },
 
   -- { src = "https://github.com/KeepDrive/tts.nvim" }, -- are we even using this?
@@ -58,7 +54,6 @@ vim.pack.add ({
 }, { confirm = false })
 
 -- vim.pack.del({"nvim-treesitter"})
--- vim.pack.del({"hex.nvim"})
 -- vim.pack.del({"tts.nvim"})
 -- vim.pack.update(nil, { force = true })
 

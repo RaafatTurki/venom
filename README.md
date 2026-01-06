@@ -19,3 +19,4 @@
 - unzip
 - fzf
 - ripgrep
+- codex-acp (bun i -g @zed-industries/codex-acp)

@@ -203,6 +203,33 @@ do
 
   highlighters["hex"] = hipatterns.gen_highlighter.hex_color()
 
+  -- highlighters["a"] = { pattern = 'a',  group = 'MiniHipatternsHack' }
+  -- highlighters["b"] = { pattern = 'b',  group = 'MiniHipatternsHack' }
+  -- highlighters["c"] = { pattern = 'c',  group = 'MiniHipatternsHack' }
+  -- highlighters["d"] = { pattern = 'd',  group = 'MiniHipatternsHack' }
+  -- highlighters["e"] = { pattern = 'e',  group = 'MiniHipatternsHack' }
+  -- highlighters["f"] = { pattern = 'f',  group = 'MiniHipatternsHack' }
+  -- highlighters["g"] = { pattern = 'g',  group = 'MiniHipatternsHack' }
+  -- highlighters["h"] = { pattern = 'h',  group = 'MiniHipatternsHack' }
+  -- highlighters["i"] = { pattern = 'i',  group = 'MiniHipatternsHack' }
+  -- highlighters["j"] = { pattern = 'j',  group = 'MiniHipatternsHack' }
+  -- highlighters["k"] = { pattern = 'k',  group = 'MiniHipatternsHack' }
+  -- highlighters["l"] = { pattern = 'l',  group = 'MiniHipatternsHack' }
+  -- highlighters["m"] = { pattern = 'm',  group = 'MiniHipatternsHack' }
+  -- highlighters["n"] = { pattern = 'n',  group = 'MiniHipatternsHack' }
+  -- highlighters["o"] = { pattern = 'o',  group = 'MiniHipatternsHack' }
+  -- highlighters["p"] = { pattern = 'p',  group = 'MiniHipatternsHack' }
+  -- highlighters["q"] = { pattern = 'q',  group = 'MiniHipatternsHack' }
+  -- highlighters["r"] = { pattern = 'r',  group = 'MiniHipatternsHack' }
+  -- highlighters["s"] = { pattern = 's',  group = 'MiniHipatternsHack' }
+  -- highlighters["t"] = { pattern = 't',  group = 'MiniHipatternsHack' }
+  -- highlighters["u"] = { pattern = 'u',  group = 'MiniHipatternsHack' }
+  -- highlighters["v"] = { pattern = 'v',  group = 'MiniHipatternsHack' }
+  -- highlighters["w"] = { pattern = 'w',  group = 'MiniHipatternsHack' }
+  -- highlighters["x"] = { pattern = 'x',  group = 'MiniHipatternsHack' }
+  -- highlighters["y"] = { pattern = 'y',  group = 'MiniHipatternsHack' }
+  -- highlighters["z"] = { pattern = 'z',  group = 'MiniHipatternsHack' }
+
   hipatterns.setup {
     highlighters = highlighters
   }

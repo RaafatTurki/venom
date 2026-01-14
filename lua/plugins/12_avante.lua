@@ -1,0 +1,24 @@
+-- local OPEN_API_KEY = vim.env["OPENAI_API_KEY"]
+
+-- require "avante".setup {
+--   -- auto_suggestions_provider = "codex",
+--   provider = "codex",
+--
+--   acp_providers = {
+--     ["codex"] = {
+--       command = "codex-acp",
+--       env = {
+--         NODE_NO_WARNINGS = "1",
+--         OPENAI_API_KEY = OPEN_API_KEY,
+--       },
+--     },
+--   },
+--   behaviour = {
+--     auto_suggestions = true,
+--   },
+--   mappings = {
+--     suggestion = {
+--       accept = "<M-z>",
+--     },
+--   },
+-- }

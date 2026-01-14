@@ -686,19 +686,15 @@ local highlights = {
   NeoTreeFloatBorder        = { "FloatBorder" }, --The border for pop-up windows.
   NeoTreeFloatTitle         = { "Title" },
   NeoTreeTitleBar           = { "Title" },
-
   NeoTreeGitAdded           = { '@diff.plus' },
   NeoTreeGitConflict        = { fg = c.conflict },
   NeoTreeGitDeleted         = { fg = c.deleted },
   NeoTreeGitIgnored         = { 'Comment' },
   NeoTreeGitModified        = { '@diff.plus' },
   NeoTreeGitUntracked       = { 'Folded' },
-
   NeoTreeGitUnstaged        = { fg = c.unstaged },
   NeoTreeGitStaged          = { fg = c.staged },
-
   NeoTreeMessage            = { fg = c.comment, italic = true },
-
   -- NeoTreeHiddenByName       Used for icons and names when `hide_by_name` is used.
   -- NeoTreeIndentMarker       The style of indentation markers (guides). By default,
   --                           the "Normal" highlight is used.
@@ -719,9 +715,15 @@ local highlights = {
   --                           is set to "NC". This is derived from NeoTreeFloatBorder.
   -- NeoTreeWindowsHidden      Used for icons and names that are hidden on Windows.
 
+  -- Snacks
   SnacksInputNormal           = { "FloatNormal" },
   SnacksInputBorder           = { "FloatBorder" },
   SnacksInputTitle            = { "Folded" },
+
+  -- NeoCodeium
+  NeoCodeiumSuggestion        = { "Comment" }
+  -- NeoCodeiumLabel            - color of the label that indicates the number of suggestions (default: inverted DiagnosticInfo)
+  -- NeoCodeiumSingleLineLabel  - color of the label of multi-line suggestion in single line mode (default: bold #808080)
 
 }
 

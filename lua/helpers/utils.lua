@@ -121,15 +121,15 @@ function M.chmod(mod)
 end
 
 --- read .env
-function M.read_dotenv(path)
+function M.load_dotenv(path)
   path = path or vim.fn.stdpath("config") .. "/.env"
 
-  local ok_read, lines = pcall(vim.fn.readfile, path)
-  if not ok_read then
-    return {}
-  end
-
   local env = {}
+
+  local ok_read, lines = pcall(vim.fn.readfile, path)
+  if not ok_read then return env end
+
+  -- parse and extract keys
   for _, line in ipairs(lines) do
     local trimmed = line:gsub("^%s+", ""):gsub("%s+$", "")
     if trimmed ~= "" and not trimmed:match("^#") then
@@ -142,6 +142,11 @@ function M.read_dotenv(path)
         end
       end
     end
+  end
+
+  -- set keys in vim.env
+  for key, value in pairs(env) do
+    vim.env[key] = value
   end
 
   return env

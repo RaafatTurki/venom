@@ -10,6 +10,9 @@
 
 > now let's see Paul Allen's code editor
 
+# Version
+NVIM v0.12.0 (nightly)
+
 # Deps:
 - git
 - xdg-open
@@ -19,4 +22,4 @@
 - unzip
 - fzf
 - ripgrep
-- codex-acp (bun i -g @zed-industries/codex-acp)
+- codex-acp

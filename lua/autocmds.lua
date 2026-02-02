@@ -68,7 +68,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   end
 })
 
--- filename based commentstring
+-- filetype based commentstring
 vim.api.nvim_create_autocmd({ "FileType" }, {
   group = group,
   callback = function(ev)
@@ -79,6 +79,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
       -- ['sql'] = "--%s",
       ['go'] = "// %s",
       ['rhai'] = "// %s",
+      ['systemd'] = "# %s",
       -- ['pug'] = "// %s",
       -- ['typst'] = "//%s",
       -- ['svelte'] = "<!-- %s -->",
@@ -97,5 +98,17 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         vim.bo.cms = cms
       end
     end
+  end
+})
+
+-- go uses literal tabs with 2-width display
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = "go",
+  group = group,
+  callback = function(ev)
+    vim.bo.expandtab = false
+    vim.bo.shiftwidth = 2
+    vim.bo.tabstop = 2
+    vim.bo.softtabstop = 2
   end
 })

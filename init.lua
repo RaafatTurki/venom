@@ -69,7 +69,7 @@ for _, file in ipairs(vim.fn.readdir(vim.fn.stdpath('config')..'/lua/plugins', [
 
   -- skip files that start with an underscore
   if (file:sub(1, 1) == "_") then
-    vim.notify(file)
+    -- vim.notify(file)
     goto continue_plugin_file_requiring_loop
   end
 

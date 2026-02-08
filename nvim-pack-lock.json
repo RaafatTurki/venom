@@ -10,11 +10,21 @@
     "mason.nvim": [],
     "mini.nvim": [],
     "neo-tree.nvim": [],
+    "neocodeium": {
+      "rev": "bfe790d",
+      "src": "https://github.com/monkoose/neocodeium"
+    },
     "nui.nvim": [],
     "nvim-lspconfig": [],
-    "nvim-treesitter": [],
+    "nvim-treesitter": {
+      "version": "'master'"
+    },
     "plenary.nvim": [],
     "promise-async": [],
+    "render-markdown.nvim": {
+      "rev": "c54380d",
+      "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
+    },
     "schemastore.nvim": [],
     "snacks.nvim": [],
     "supermaven-nvim": [],

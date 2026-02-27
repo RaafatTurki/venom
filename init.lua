@@ -51,7 +51,6 @@ vim.pack.add ({
 
   { src = "https://github.com/monkoose/neocodeium" },
   -- { src = "https://github.com/yetone/avante.nvim" }, -- build step: $ make
-  { src = "https://github.com/supermaven-inc/supermaven-nvim" },
 
   -- { src = "https://github.com/Chen-Yulin/ColorfulDiff.nvim" },
 

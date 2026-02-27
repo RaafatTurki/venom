@@ -48,6 +48,7 @@ vim.pack.add ({
   { src = "https://github.com/artemave/workspace-diagnostics.nvim" },
   { src = "https://github.com/rhaiscript/vim-rhai" }, -- remove once a rhai treesitter parser is available
   { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+  { src = "https://github.com/NTBBloodbath/color-converter.nvim" },
 
   { src = "https://github.com/monkoose/neocodeium" },
   -- { src = "https://github.com/yetone/avante.nvim" }, -- build step: $ make

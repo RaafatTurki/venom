@@ -80,6 +80,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
       ['go'] = "// %s",
       ['rhai'] = "// %s",
       ['systemd'] = "# %s",
+      ['gitconfig'] = "# %s",
       -- ['pug'] = "// %s",
       -- ['typst'] = "//%s",
       -- ['svelte'] = "<!-- %s -->",

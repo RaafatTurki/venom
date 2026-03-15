@@ -62,11 +62,20 @@ require "neo-tree".setup {
   },
 
   window = {
-    auto_expand_width = true,
+    auto_expand_width = false,
     width = 30,
   },
 
   default_component_configs = {
+    file_size = {
+      enabled = false,
+    },
+    type = {
+      enabled = false,
+    },
+    last_modified = {
+      enabled = false,
+    },
     git_status = {
       symbols = {
         added     = icons.vcs.staged,

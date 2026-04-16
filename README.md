@@ -11,7 +11,7 @@
 > now let's see Paul Allen's code editor
 
 # Version
-NVIM v0.12.0 (nightly)
+NVIM v0.12.1
 
 # Deps:
 - git

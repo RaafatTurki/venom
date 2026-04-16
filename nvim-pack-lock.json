@@ -1,20 +1,16 @@
 {
   "plugins": {
-    "ColorfulDiff.nvim": {
-      "rev": "91b1ec84a037fbdb630a2d86f669d2dc479f5510",
-      "src": "https://github.com/Chen-Yulin/ColorfulDiff.nvim"
-    },
     "blink.cmp": {
-      "rev": "bae4bae0eedd1fa55f34b685862e94a222d5c6f8",
+      "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/Saghen/blink.cmp",
-      "version": "'v1.6.0'"
+      "version": "'v1.10.2'"
     },
     "color-converter.nvim": {
       "rev": "5888e92cbccf0de202d2b617f6a8f3011a43bd52",
       "src": "https://github.com/NTBBloodbath/color-converter.nvim"
     },
     "conform.nvim": {
-      "rev": "c2526f1cde528a66e086ab1668e996d162c75f4f",
+      "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "fold-cycle.nvim": {
@@ -26,23 +22,23 @@
       "src": "https://github.com/rebelot/heirline.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "c953789db7fd28eafe5eb5659846d34b5024b3cc",
+      "rev": "0a3b42c3e503df87aef6d6513e13148381495c3a",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason.nvim": {
-      "rev": "44d1e90e1f66e077268191e3ee9d2ac97cc18e65",
+      "rev": "12ddd182d9efbdc848b540f16484a583d52da0fb",
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.nvim": {
-      "rev": "9b935c218ddba02e5dc75c94f90143bce1f7c646",
+      "rev": "5849ef04c32a6a8e55957b946c0a275801d87530",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "neo-tree.nvim": {
-      "rev": "466ba7ac7e4841a73d01afa48b6be8a4825a2372",
+      "rev": "4d0828d95adaf4250c1373d2cd9318d3509712b7",
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim"
     },
     "neocodeium": {
-      "rev": "bfe790d",
+      "rev": "bfe790d78e66adaa95cb50a8c75c64a752336e9c",
       "src": "https://github.com/monkoose/neocodeium"
     },
     "nui.nvim": {
@@ -50,16 +46,16 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "3f58aeca0c6ece8a9fb8782ea3fcb6024f285be3",
+      "rev": "e146efacbafed3789ac568abcc5a981c5decaa58",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
-      "rev": "42fc28ba918343ebfd5565147a42a26580579482",
+      "rev": "cf12346a3414fa1b06af75c79faebe7f76df080a",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'master'"
     },
     "plenary.nvim": {
-      "rev": "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
+      "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "promise-async": {
@@ -67,31 +63,23 @@
       "src": "https://github.com/kevinhwang91/promise-async"
     },
     "render-markdown.nvim": {
-      "rev": "c54380d",
+      "rev": "d67113f11384c0dad96fced2f7b91f1fc811e97f",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "schemastore.nvim": {
-      "rev": "9b6a3ab14cecc7da9f3aa4fa0ae2a7390748aca5",
+      "rev": "250aed7415ddd6cb3ea321490c7b35094ed9148d",
       "src": "https://github.com/b0o/schemastore.nvim"
     },
     "snacks.nvim": {
-      "rev": "fe7cfe9800a182274d0f868a74b7263b8c0c020b",
+      "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",
       "src": "https://github.com/folke/snacks.nvim"
     },
-    "supermaven-nvim": {
-      "rev": "07d20fce48a5629686aefb0a7cd4b25e33947d50",
-      "src": "https://github.com/supermaven-inc/supermaven-nvim"
-    },
-    "treesitter-autoinstall.nvim": {
-      "rev": "6582fa64957b6b1ffb31c327d14f6eb0076a7788",
-      "src": "https://github.com/mks-h/treesitter-autoinstall.nvim.git"
-    },
     "vim-rhai": {
-      "rev": "b0585e2",
+      "rev": "b0585e2c92a4a64edcd060836ae41d1e698ebc20",
       "src": "https://github.com/rhaiscript/vim-rhai"
     },
     "workspace-diagnostics.nvim": {
-      "rev": "60f9175b2501ae3f8b1aba9719c0df8827610c8e",
+      "rev": "0dcd7d0a6c8f6e1ddb5bb72e1412aa4c9388718f",
       "src": "https://github.com/artemave/workspace-diagnostics.nvim"
     }
   }

@@ -74,6 +74,10 @@
       "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",
       "src": "https://github.com/folke/snacks.nvim"
     },
+    "tree-sitter-manager.nvim": {
+      "rev": "48396293d84a8dd88b857f298ee5953fa3572e5f",
+      "src": "https://github.com/romus204/tree-sitter-manager.nvim"
+    },
     "vim-rhai": {
       "rev": "b0585e2c92a4a64edcd060836ae41d1e698ebc20",
       "src": "https://github.com/rhaiscript/vim-rhai"

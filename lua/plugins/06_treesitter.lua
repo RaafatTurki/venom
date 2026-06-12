@@ -32,11 +32,11 @@ local function patch_query_predicates_for_nvim_012()
 
     if strict_count then
       if arg_count ~= count then
-        vim.api.nvim_err_writeln(string.format("%s must have exactly %d arguments", name, count))
+        vim.notify(string.format("%s must have exactly %d arguments", name, count), vim.log.levels.ERROR)
         return false
       end
     elseif arg_count < count then
-      vim.api.nvim_err_writeln(string.format("%s must have at least %d arguments", name, count))
+      vim.notify(string.format("%s must have at least %d arguments", name, count), vim.log.levels.ERROR)
       return false
     end
 
@@ -77,7 +77,7 @@ local function patch_query_predicates_for_nvim_012()
 
     local locals = require "nvim-treesitter.locals"
     local node = capture_node(match, pred[2])
-    local types = { unpack(pred, 3) }
+    local types = { table.unpack(pred, 3) }
 
     if not node then
       return true
@@ -93,7 +93,7 @@ local function patch_query_predicates_for_nvim_012()
     end
 
     local node = capture_node(match, pred[2])
-    local types = { unpack(pred, 3) }
+    local types = { table.unpack(pred, 3) }
 
     if not node then
       return true

@@ -5,4 +5,4 @@ color_converter.setup {}
 
 -- #FFFFFF
 
-keys.map("n", "<leader>h", color_converter.cycle, "Cycle color format")
+-- keys.map("n", "H", color_converter.cycle, "Cycle color format")

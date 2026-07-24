@@ -280,3 +280,36 @@ vim.api.nvim_create_autocmd('ModeChanged', {
   end
 })
 end
+
+-- files
+do
+--   local files = require "mini.files"
+--
+--   files.setup {
+--     mappings = {
+--       close       = '<C-e>',
+--       go_in       = '<Right>',
+--       go_in_plus  = '<CR>',
+--       go_out      = '<Left>',
+--       go_out_plus = '<BS>',
+--       mark_goto   = "'",
+--       mark_set    = 'm',
+--       reset       = 'q',
+--       reveal_cwd  = '@',
+--       show_help   = 'g?',
+--       synchronize = '<C-s>',
+--       trim_left   = '<S-Left>',
+--       trim_right  = '<S-Right>',
+--     },
+--
+--     windows = {
+--       max_number = math.huge,
+--       preview = false,
+--       width_focus = 50,
+--       width_nofocus = 15,
+--       width_preview = 25,
+--     },
+--   }
+--
+--   keys.map("n", "<C-e>",      function() files.open(vim.api.nvim_buf_get_name(0)) end, "MiniFiles open")
+end

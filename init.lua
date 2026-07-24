@@ -25,6 +25,8 @@ require "helpers.qmacro"
 require "helpers.normal_mode_on_write"
 require "helpers.text_object_all"
 require "helpers.lsp_utils"
+require "helpers.typst"
+require "helpers.autosave"
 
 
 -- plugins
@@ -50,6 +52,8 @@ vim.pack.add ({
   { src = "https://github.com/NTBBloodbath/color-converter.nvim" },
 
   { src = "https://github.com/monkoose/neocodeium" },
+  { src = "https://github.com/lowitea/aw-watcher.nvim" },
+  { src = "https://github.com/jtprogru/pack-ui.nvim" }
   -- { src = "https://github.com/yetone/avante.nvim" }, -- build step: $ make
 
   -- { src = "https://github.com/KeepDrive/tts.nvim" }, -- are we even using this?

@@ -53,9 +53,6 @@ vim.pack.add ({
   { src = "https://github.com/monkoose/neocodeium" },
   { src = "https://github.com/lowitea/aw-watcher.nvim" },
   { src = "https://github.com/jtprogru/pack-ui.nvim" }
-  -- { src = "https://github.com/yetone/avante.nvim" }, -- build step: $ make
-
-  -- { src = "https://github.com/KeepDrive/tts.nvim" }, -- are we even using this?
   -- { src = "file:///home/potato/sectors/lua/nvim/hex.nvim"},
 }, { confirm = false })
 

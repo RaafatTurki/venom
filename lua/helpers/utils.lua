@@ -101,6 +101,33 @@ function M.get_lnum_diag_severity()
   return severity_level
 end
 
+--- checks if a highlight group (or its `link` target, recursively) has no attributes set
+function M.is_hl_empty(hls, group)
+  local hl = hls[group]
+  if hl == nil then return true end
+  if vim.tbl_isempty(hl) then return true end
+
+  local hl_link = hls[hl.link]
+  if hl_link ~= nil then return M.is_hl_empty(hls, hl.link) end
+
+  return false
+end
+
+--- walks up a dot-separated highlight group name (e.g. "@foo.bar.baz") to find
+--- the closest ancestor that is actually defined. falls back to "Comment"
+function M.get_closest_defined_hl_parent(hls, group)
+  if not M.is_hl_empty(hls, group) then return group end
+
+  local segments = vim.split(group, '%.')
+  table.remove(segments, #segments)
+  local parent_group = table.concat(segments, '.')
+  if not M.is_hl_empty(hls, parent_group) then
+    return M.get_closest_defined_hl_parent(hls, parent_group)
+  end
+
+  return "Comment"
+end
+
 --- returns current vim mode name
 
 --- prompts a multiple choice confirmation prompt
@@ -112,7 +139,7 @@ end
 
 --- prompts a yes/no confirmation prompt
 function M.confirm_yes_no(msg)
-  return true and M.confirm(msg, { 'Yes', 'No' }) == 1 or false
+  return M.confirm(msg, { 'Yes', 'No' }) == 1
 end
 
 --- read .env

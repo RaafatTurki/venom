@@ -76,12 +76,17 @@ vim.api.nvim_create_user_command('LspFormat', lsp_format, {})
 vim.api.nvim_create_user_command('LspSigHelp', lsp_signature_help, {})
 
 
--- setup lsp signs
-for type, icon in pairs(icons.diag) do
-  local hl = "DiagnosticSign" .. type
-  -- if (LSP_DIAG_ICONS == lsp_diag_icons.none) then icon = nil end
-  -- vim.fn.sign_define(hl, { text = icon, texthl = hl })
-end
+-- diagnostic sign icons (only visible if signcolumn is enabled)
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = icons.diag.Error,
+      [vim.diagnostic.severity.WARN]  = icons.diag.Warn,
+      [vim.diagnostic.severity.INFO]  = icons.diag.Info,
+      [vim.diagnostic.severity.HINT]  = icons.diag.Hint,
+    },
+  },
+})
 
 
 -- lsp highlights

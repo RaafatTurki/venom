@@ -3,8 +3,8 @@ local buffers = require "helpers.buffers"
 local sessions = require "helpers.sessions"
 local icons = require "helpers.icons".icons
 
-local utils = require 'heirline/utils'
-local conditions = require 'heirline/conditions'
+local utils = require 'heirline.utils'
+local conditions = require 'heirline.conditions'
 
 local align = { provider = "%=" }
 local space = { provider = " " }

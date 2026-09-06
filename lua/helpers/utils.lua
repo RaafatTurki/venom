@@ -115,11 +115,6 @@ function M.confirm_yes_no(msg)
   return true and M.confirm(msg, { 'Yes', 'No' }) == 1 or false
 end
 
---- change the mod of current file
-function M.chmod(mod)
-  vim.cmd([[silent! !chmod ]] .. mod .. [[ %]])
-end
-
 --- read .env
 function M.load_dotenv(path)
   path = path or vim.fn.stdpath("config") .. "/.env"

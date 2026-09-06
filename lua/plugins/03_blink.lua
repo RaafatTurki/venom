@@ -1,6 +1,10 @@
 local icons = require "helpers.icons".icons
 
-require "blink-cmp".setup {
+local cmp = require "blink-cmp"
+
+cmp.build():pwait()
+
+cmp.setup {
   enabled = function()
     if vim.b.large_buf then return false end
     -- if vim.tbl_contains({ "cpp" }, vim.bo.filetype) then return false end

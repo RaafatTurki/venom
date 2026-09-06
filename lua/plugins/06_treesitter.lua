@@ -162,23 +162,8 @@ vim.o.foldcolumn = '1'
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
--- vim.o.foldtext = ''
 vim.o.foldtext = [[substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g').' ... '.trim(getline(v:foldend))]]
--- vim.o.foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').' ... ']]
-
-
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-
--- vim.o.foldmethod  = "expr"
--- vim.o.foldexpr    = "v:lua.vim.treesitter.foldexpr()"
--- vim.o.foldtext    = "v:lua.vim.treesitter.foldtext()"
-
-
--- require("treesitter-autoinstall").setup({
---   ignore = { "minimap", "neo-tree" },
---   highlight = true,
---   regex = {},
--- })
 
 require 'nvim-treesitter.configs'.setup {
   -- ensure_installed = "all",

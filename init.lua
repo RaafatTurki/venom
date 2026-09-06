@@ -45,7 +45,8 @@ vim.pack.add ({
   { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" },
   { src = "https://github.com/b0o/schemastore.nvim" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "master" },
-  { src = "https://github.com/Saghen/blink.cmp", version = "v1.10.2" },
+  { src = "https://github.com/Saghen/blink.cmp" },
+  { src = "https://github.com/Saghen/blink.lib" },
   { src = "https://github.com/artemave/workspace-diagnostics.nvim" },
   { src = "https://github.com/rhaiscript/vim-rhai" }, -- remove once a rhai treesitter parser is available
   { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },

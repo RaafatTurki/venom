@@ -5,9 +5,12 @@
       "src": "https://github.com/lowitea/aw-watcher.nvim"
     },
     "blink.cmp": {
-      "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
-      "src": "https://github.com/Saghen/blink.cmp",
-      "version": "'v1.10.2'"
+      "rev": "cba53eff1948109ec0f47cbead4f07494d1e25c9",
+      "src": "https://github.com/Saghen/blink.cmp"
+    },
+    "blink.lib": {
+      "rev": "8b04d0e0acc8565cfa4dd291a89a9212b7262633",
+      "src": "https://github.com/saghen/blink.lib"
     },
     "color-converter.nvim": {
       "rev": "5888e92cbccf0de202d2b617f6a8f3011a43bd52",
@@ -18,7 +21,7 @@
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "diffs.nvim": {
-      "rev": "7ab445c39224160203ae692d3c883e2f51f2d442",
+      "rev": "e6d3aa4bb400287ba1a612e28b5cd55e0ba15726",
       "src": "https://github.com/barrettruth/diffs.nvim"
     },
     "fold-cycle.nvim": {
@@ -30,7 +33,7 @@
       "src": "https://github.com/rebelot/heirline.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "47059d71b42d74b0a1e9f61c1d99d301039c3b5b",
+      "rev": "67029ccdac1ef8941e13b826417bc0ffac24cc86",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason.nvim": {
@@ -38,11 +41,11 @@
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.nvim": {
-      "rev": "1599a473aa6f5290a5d740b1144846e6f0c3963d",
+      "rev": "3e47ec3709716177bf28e2d17e35c7ab39db126e",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "neo-tree.nvim": {
-      "rev": "b01ee1769144c4491ea44bc329cb84040e9793be",
+      "rev": "6679b9395526b52ddb2b137fcd5255dab71c5a58",
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim"
     },
     "neocodeium": {
@@ -54,7 +57,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "3371bf298c1f56efc26771ee961f461176958fb5",
+      "rev": "43ed3797b266e1ee8d222e491379ad471c9d3146",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
@@ -79,7 +82,7 @@
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "schemastore.nvim": {
-      "rev": "490afbd7fd3b316330550405ac74758a971104a4",
+      "rev": "a652fcc01bf03946ab94b815be8c80ee157cbe1a",
       "src": "https://github.com/b0o/schemastore.nvim"
     },
     "snacks.nvim": {
@@ -87,7 +90,7 @@
       "src": "https://github.com/folke/snacks.nvim"
     },
     "tree-sitter-manager.nvim": {
-      "rev": "ae305699da5e97b6cffdd5cc6f6045b1b0bd26ea",
+      "rev": "9dc4ffc4fb010e7abb976a92360c2c5a7d324c15",
       "src": "https://github.com/romus204/tree-sitter-manager.nvim"
     },
     "vim-rhai": {

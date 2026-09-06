@@ -36,6 +36,7 @@ shared_capabilities.textDocument.completion.completionItem.insertReplaceSupport 
 vim.lsp.config("*", {
   capabilities = shared_capabilities,
   on_attach = function(client, bufnr)
+    if vim.b.lsp_disabled then return end
     require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
   end
 })

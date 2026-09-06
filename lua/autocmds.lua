@@ -9,7 +9,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 
     local fn_pattern_ft = {
       ['%.env.*'] = "sh",
-      ['%.*%.svx'] = "sh",
+      ['.*%.svx'] = "markdown",
       ['%.*%.swcrc'] = "json",
       ['xorg%.conf%a*'] = "xf86conf",
       ['qt5ct%.conf'] = "ini",

@@ -212,6 +212,16 @@ local icon_sets = {
       CopilotWarn   = 'cplt-wrn',
     },
   },
+  fs = {
+    nerdfont = {
+      socket = '󰘊',
+      fifo   = '󰟥',
+    },
+    ascii = {
+      socket = 'soc',
+      fifo   = 'fio',
+    },
+  },
   misc = {
     nerdfont = {
       user = '',
@@ -242,6 +252,7 @@ M.icons = {
   vcs = icon_sets.vcs.nerdfont,
   navic = icon_sets.navic.nerdfont,
   copilot = icon_sets.copilot.nerdfont,
+  fs = icon_sets.fs.nerdfont,
   misc = icon_sets.misc.nerdfont,
 }
 

@@ -66,6 +66,31 @@ require "neo-tree".setup {
     width = 30,
   },
 
+  -- NOTE: some special files have no dedicated renderer by default,
+  --       which makes neo-tree fall back to showing "<type>: <name>"
+  renderers = {
+    socket = {
+      { "indent" },
+      { "icon" },
+      { "name" },
+    },
+    fifo = {
+      { "indent" },
+      { "icon" },
+      { "name" },
+    },
+    char = {
+      { "indent" },
+      { "icon" },
+      { "name" },
+    },
+    block = {
+      { "indent" },
+      { "icon" },
+      { "name" },
+    },
+  },
+
   default_component_configs = {
     file_size = {
       enabled = false,
@@ -109,9 +134,13 @@ require "neo-tree".setup {
     icon = {
       provider = function(icon, node)
         local text, hl
-        if node.type == "file" then -- if it's a file, set the text/hl
+        if node.type == "socket" then
+          text, hl = icons.fs.socket, "SpecialKey"
+        elseif node.type == "fifo" then
+          text, hl = icons.fs.fifo, "SpecialKey"
+        elseif node.type == "file" or node.type == "char" or node.type == "block" then
           text, hl = MiniIcons.get("file", node.name)
-        elseif node.type == "directory" then -- get directory icons
+        elseif node.type == "directory" then
           text, hl = MiniIcons.get("directory", node.name)
           -- only set the icon text if it is not expanded
           if node:is_expanded() then text = nil end

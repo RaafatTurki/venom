@@ -29,7 +29,7 @@ require "mason".setup {
 keys.map("n", "<leader>l", "<CMD>Mason<CR>", "Open mason")
 
 
-local shared_capabilities = vim.lsp.protocol.make_client_capabilities()
+local shared_capabilities = require("blink.cmp").get_lsp_capabilities(nil, true)
 shared_capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
 
 
@@ -92,11 +92,4 @@ vim.lsp.config('qmlls', {
 -- non-mason lsp servers
 vim.lsp.enable('qmlls')
 
--- mason lsp servers
-require "mason-lspconfig".setup {
-  handlers = {
-    function(server_name)
-      vim.lsp.enable(server_name)
-    end,
-  }
-}
+require "mason-lspconfig".setup {}

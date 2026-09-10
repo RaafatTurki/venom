@@ -24,6 +24,7 @@ require "helpers.qmacro"
 require "helpers.normal_mode_on_write"
 require "helpers.text_object_all"
 require "helpers.lsp_utils"
+require "helpers.format"
 require "helpers.typst"
 require "helpers.autosave"
 

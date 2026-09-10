@@ -329,6 +329,18 @@ local search_count = {
   space
 }
 
+local format_status = {
+  condition = function() return require("helpers.format").active end,
+  provider = function() return require("helpers.format").spinner_icon() .. " formatting" end,
+  space,
+  hl = "WarningMsg",
+  update = {
+    "User",
+    pattern = "FormatProgress",
+    callback = function() vim.cmd.redrawstatus() end,
+  },
+}
+
 local macro_rec = {
   condition = function() return vim.fn.reg_recording() ~= "" end,
   provider = function() return icons.misc.record .. " " .. vim.fn.reg_recording() end,
@@ -536,6 +548,7 @@ require "heirline".setup {
       spell,
       lsp_active,
       search_count,
+      format_status,
       macro_rec,
       local_session,
       root,

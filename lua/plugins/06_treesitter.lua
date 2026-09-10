@@ -21,6 +21,7 @@ vim.o.foldtext = [[substitute(getline(v:foldstart),'\t',repeat(' ',&tabstop),'g'
 -- some file types that aren't mapped by treesitter yet
 vim.treesitter.language.register("json", { "jsonc" })
 vim.treesitter.language.register("robots_txt", { "robots" })
+vim.treesitter.language.register("bash", { "env" })
 
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("treesitter-start", { clear = true }),

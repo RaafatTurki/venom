@@ -2,38 +2,21 @@
 
 local group = vim.api.nvim_create_augroup("UserAutocmds", { clear = true })
 
--- filename based filetypes
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
-  group = group,
-  callback = function(ev)
-
-    local fn_pattern_ft = {
-      ['%.env.*'] = "sh",
-      ['.*%.svx'] = "markdown",
-      ['%.*%.swcrc'] = "json",
-      ['xorg%.conf%a*'] = "xf86conf",
-      ['qt5ct%.conf'] = "ini",
-      ['qt6ct%.conf'] = "ini",
-      ['dunstrc'] = "ini",
-      ['renamerrc'] = "ini",
-      -- ['docker-compose%.yaml'] = "yaml.docker-compose",
-      -- ['docker-compose%.yml'] = "yaml.docker-compose",
-      -- ['compose%.yaml'] = "yaml.docker-compose",
-      -- ['compose%.yml'] = "yaml.docker-compose",
-
-      -- au BufRead,BufNewFile */xorg.conf.d/*.conf* setlocal ft=xf86conf
-    }
-
-    local filename = vim.fs.basename(ev.file)
-
-    for pattern, ft in pairs(fn_pattern_ft) do
-      local match = string.match(filename, pattern)
-      if match and #match == #filename then
-        vim.bo.filetype = ft
-      end
-    end
-  end
-})
+vim.filetype.add {
+  filename = {
+    ["dunstrc"] = "ini",
+    ["renamerrc"] = "ini",
+    ["qt5ct.conf"] = "ini",
+    ["qt6ct.conf"] = "ini",
+  },
+  pattern = {
+    [".*%.svx"] = "markdown",
+    [".*%.swcrc"] = "json",
+    ["xorg%.conf%a*"] = "xf86conf",
+    -- ["docker%-compose%.ya?ml"] = "yaml.docker-compose",
+    -- ["compose%.ya?ml"] = "yaml.docker-compose",
+  },
+}
 
 -- set integrated terminal opts
 vim.api.nvim_create_autocmd({ "TermOpen" }, {

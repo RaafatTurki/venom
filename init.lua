@@ -7,6 +7,7 @@ require "autocmds"
 
 require "helpers.colorschemes"
 require "helpers.disable_builtins"
+require "helpers.filetypes"
 -- require "helpers.blackhole_blank_dy"
 require "helpers.buffers"
 require "helpers.sessions"

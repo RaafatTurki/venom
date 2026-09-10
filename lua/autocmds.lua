@@ -2,22 +2,6 @@
 
 local group = vim.api.nvim_create_augroup("UserAutocmds", { clear = true })
 
-vim.filetype.add {
-  filename = {
-    ["dunstrc"] = "ini",
-    ["renamerrc"] = "ini",
-    ["qt5ct.conf"] = "ini",
-    ["qt6ct.conf"] = "ini",
-  },
-  pattern = {
-    [".*%.svx"] = "markdown",
-    [".*%.swcrc"] = "json",
-    ["xorg%.conf%a*"] = "xf86conf",
-    -- ["docker%-compose%.ya?ml"] = "yaml.docker-compose",
-    -- ["compose%.ya?ml"] = "yaml.docker-compose",
-  },
-}
-
 -- set integrated terminal opts
 vim.api.nvim_create_autocmd({ "TermOpen" }, {
   group = group,
@@ -52,36 +36,30 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 })
 
 -- filetype based commentstring
+local ft_cms = {
+  -- ['cs'] = "//%s",
+  -- ['prisma'] = "//%s",
+  -- ['sql'] = "--%s",
+  ['go'] = "// %s",
+  ['rhai'] = "// %s",
+  ['systemd'] = "# %s",
+  ['gitconfig'] = "# %s",
+  -- ['pug'] = "// %s",
+  -- ['typst'] = "//%s",
+  -- ['svelte'] = "<!-- %s -->",
+  -- ['vue'] = "<!-- %s -->",
+  -- ['pro'] = "# %s",
+  -- ['javascriptreact'] = "{/*%s*/}",
+  -- ['typescriptreact'] = "{/*%s*/}",
+  -- ['javascript'] = "//%s}",
+  -- ['typescript'] = "//%s}",
+}
+
 vim.api.nvim_create_autocmd({ "FileType" }, {
   group = group,
+  pattern = vim.tbl_keys(ft_cms),
   callback = function(ev)
-
-    local ft_cms = {
-      -- ['cs'] = "//%s",
-      -- ['prisma'] = "//%s",
-      -- ['sql'] = "--%s",
-      ['go'] = "// %s",
-      ['rhai'] = "// %s",
-      ['systemd'] = "# %s",
-      ['gitconfig'] = "# %s",
-      -- ['pug'] = "// %s",
-      -- ['typst'] = "//%s",
-      -- ['svelte'] = "<!-- %s -->",
-      -- ['vue'] = "<!-- %s -->",
-      -- ['pro'] = "# %s",
-      -- ['javascriptreact'] = "{/*%s*/}",
-      -- ['typescriptreact'] = "{/*%s*/}",
-      -- ['javascript'] = "//%s}",
-      -- ['typescript'] = "//%s}",
-    }
-
-    local filetype = vim.bo.filetype
-
-    for ft, cms in pairs(ft_cms) do
-      if ft == filetype then
-        vim.bo.cms = cms
-      end
-    end
+    vim.bo[ev.buf].commentstring = ft_cms[ev.match]
   end
 })
 

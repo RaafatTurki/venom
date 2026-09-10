@@ -1,6 +1,6 @@
 local map = require "helpers.keys".map
 
--- NOTE: this is a modified version of https://vi.stackexchange.com/a/24811
+-- NOTE: this is a lua ported & modified version of https://vi.stackexchange.com/a/24811
 
 map("o", "aa", function()
   local restore_view = vim.fn.winsaveview()

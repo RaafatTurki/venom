@@ -32,7 +32,7 @@ function M.save()
   }
 
   -- write session file
-  U.file_write(session_file(), vim.fn.json_encode(sdata))
+  U.file_write(session_file(), vim.json.encode(sdata))
 
   -- load if session isn't already loaded
   if not M.is_in_local_session then M.load() end
@@ -51,7 +51,7 @@ function M.load()
 
   -- read session file
   ---@type SessionData?
-  local sdata = vim.fn.json_decode(U.file_read(session_file()))
+  local sdata = vim.json.decode(U.file_read(session_file()))
   if not sdata then
     log.err("local session data is corrupted")
     return

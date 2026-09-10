@@ -2,20 +2,12 @@ local map = require "helpers.keys".map
 
 -- NOTE: this is a modified version of https://vi.stackexchange.com/a/24811
 
-map("n", "<Plug>(RestoreView)",        ":call winrestview(g:restore_position)<CR>")
+map("o", "aa", function()
+  local restore_view = vim.fn.winsaveview()
+  vim.cmd "normal! ggVG"
 
-vim.cmd [[
-  function TextObjectAll()
-    let g:restore_position = winsaveview()
-    normal! ggVG
+  -- for delete/change ALL, we don't wish to restore cursor position
+  if vim.tbl_contains({ "c", "d" }, vim.v.operator) then return end
 
-    if index(['c','d'], v:operator) != -1
-      " For delete/change ALL, we don't wish to restore cursor position.
-    else
-      call feedkeys("\<Plug>(RestoreView)")
-    end
-
-  endfunction
-]]
-
-map("o", "aa",        ":<c-u>call TextObjectAll()<CR>")
+  vim.schedule(function() vim.fn.winrestview(restore_view) end)
+end, "Whole buffer textobject")

@@ -42,7 +42,7 @@ vim.pack.add ({
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" },
   { src = "https://github.com/b0o/schemastore.nvim" },
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "master" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/Saghen/blink.cmp" },
   { src = "https://github.com/Saghen/blink.lib" },
   { src = "https://github.com/artemave/workspace-diagnostics.nvim" },

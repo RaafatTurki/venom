@@ -28,6 +28,7 @@ require "helpers.quickshell_vfs"
 require "helpers.format"
 require "helpers.typst"
 require "helpers.autosave"
+require "helpers.md_table"
 
 
 -- plugins
